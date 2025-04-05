@@ -1,0 +1,44 @@
+/* Style général des boutons */
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Espacement entre l'icône et le texte */
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Bouton Modifier */
+.btn-edit {
+  color: var(--main-orange); /* Vert */
+  display: flex;
+  align-items: center;
+}
+
+.btn-edit:hover {
+  color: #45a049; /* Vert foncé au survol */
+}
+
+/* Bouton Supprimer */
+.btn-delete {
+  color: var(--main-blue); /* Rouge */
+
+}
+
+.btn-delete:hover {
+  color: #d32f2f; /* Rouge foncé au survol */
+}
+
+/* Style des icônes */
+.icon {
+  width: 16px;
+  height: 16px;
+}
+
+td {
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Ajoute des "..." si le contenu dépasse */
+}

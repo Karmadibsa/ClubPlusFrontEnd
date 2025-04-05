@@ -1,0 +1,136 @@
+<div class="sidebar">
+  <app-sidebar></app-sidebar>
+</div>
+
+<div class="container-page">
+  <div class="account-container">
+    <div class="account-header">
+      <h1><lucide-icon name="user-cog"></lucide-icon> Mon Compte</h1>
+    </div>
+
+    <div class="section-cards">
+      <!-- Formulaire Informations personnelles -->
+      <form [formGroup]="infoForm" (ngSubmit)="updatePersonalInfo()">
+        <div class="account-section card-section">
+          <div class="section-header">
+            <h2><lucide-icon name="user"></lucide-icon> Informations personnelles</h2>
+            <p class="section-description">Vos informations personnelles principales</p>
+          </div>
+
+          <div class="card-content">
+            <div class="form-row">
+              <div class="form-group third">
+                <label for="firstname">Prénom</label>
+                <input type="text" id="firstname" formControlName="prenom" />
+              </div>
+              <div class="form-group third">
+                <label for="lastname">Nom</label>
+                <input type="text" id="lastname" formControlName="nom" />
+              </div>
+              <div class="form-group third">
+                <label for="birthdate">Date de naissance</label>
+                <input type="date" id="birthdate" formControlName="date_naissance" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group half">
+                <label for="email">Email</label>
+                <input type="email" id="email" formControlName="email" />
+              </div>
+              <div class="form-group half">
+                <label for="phone">Téléphone</label>
+                <input type="tel" id="phone" formControlName="telephone" />
+              </div>
+            </div>
+
+            <!-- Section Adresse -->
+            <div class='section-header'>
+              <h2><lucide-icon name='map-pin'></lucide-icon> Adresse</h2>
+              <p class='section-description'>Votre adresse postale complète</p>
+            </div>
+
+            <!-- Ligne pour numéro et rue -->
+            <div class='form-row'>
+              <div class='form-group quarter'>
+                <label for='street-number'>N°</label>
+                <input type='text' id='street-number' formControlName='numero_voie' />
+              </div>
+              <div class='form-group three-quarters'>
+                <label for='street'>Rue</label>
+                <input type='text' id='street' formControlName='rue' />
+              </div>
+            </div>
+
+            <!-- Ligne pour code postal et ville -->
+            <div class='form-row'>
+              <div class='form-group half'>
+                <label for='postal-code'>Code postal</label>
+                <input type='text' id='postal-code' formControlName='codepostal' />
+              </div>
+              <div class='form-group half'>
+                <label for='city'>Ville</label>
+                <input type='text' id='city' formControlName='ville' />
+              </div>
+            </div>
+
+            <!-- Bouton Mettre à jour -->
+            <button type="submit" class='btn btn-primary'>
+              Mettre à jour mes informations
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Formulaire Changer le mot de passe -->
+      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+        <!-- Section Changer le mot de passe -->
+        <div class='account-section card-section'>
+          <!-- En-tête de la section -->
+          <div class="section-header">
+
+
+            <h2><lucide-icon name='lock'></lucide-icon> Changer le mot de passe</h2>
+          <p>Mettez à jour votre mot de passe pour sécuriser votre compte.</p>
+
+          </div>
+          <!-- Formulaire mot de passe -->
+          <!-- Mot de passe actuel -->
+          <div class="form-group">
+            <label for="current-password">Mot de passe actuel</label>
+            <input
+              type="password"
+              id="current-password"
+              formControlName="current_password"
+            />
+          </div>
+
+          <!-- Nouveau mot de passe -->
+          <div class="form-group">
+            <label for="new-password">Nouveau mot de passe</label>
+            <input
+              type="password"
+              id="new-password"
+              formControlName="new_password"
+            />
+          </div>
+
+          <!-- Confirmation du nouveau mot de passe -->
+          <div class="form-group">
+            <label for="confirm-password">Confirmer le nouveau mot de passe</label>
+            <input
+              type="password"
+              id="confirm-password"
+              formControlName="confirm_password"
+            />
+          </div>
+
+          <!-- Bouton pour changer le mot de passe -->
+          <button type="submit" class='btn btn-secondary'>
+            Changer le mot de passe
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

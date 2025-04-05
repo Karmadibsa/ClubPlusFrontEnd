@@ -1,0 +1,31 @@
+<div class="event-modal" [class.show]="isOpen">
+  <div class="modal-content">
+    <div class="modal-title">
+      <lucide-icon name="ticket"></lucide-icon>
+      <span>QR Code de votre billet</span>
+    </div>
+    <button class="close-modal" (click)="onClose()">
+      <lucide-icon name="x"></lucide-icon>
+    </button>
+
+    <div class="zoomed-qr-container">
+      <qrcode
+        [qrdata]="qrData"
+        [width]="280"
+        [errorCorrectionLevel]="'M'">
+      </qrcode>
+    </div>
+
+    <div class="modal-info" *ngIf="ticketInfo">
+      <p><strong>{{ ticketInfo.membre.prenom }} {{ ticketInfo.membre.nom }}</strong></p>
+      <p>{{ ticketInfo.event.title }}</p>
+      <p>{{ ticketInfo.event.start | date:'dd/MM/yyyy HH:mm' }}</p>
+      <p>{{ ticketInfo.event.location }}</p>
+      <p>{{ ticketInfo.categorie.nom }}</p>
+    </div>
+
+    <div class="modal-footer">
+      <p>Présentez ce QR code à l'entrée de l'événement</p>
+    </div>
+  </div>
+</div>

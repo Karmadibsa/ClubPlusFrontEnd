@@ -1,0 +1,59 @@
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <a href="#" class="back-btn" (click)="closeModal()">
+      <span class="back-arrow">&#8592;</span> Retour au calendrier
+    </a>
+
+    <div class="event-details">
+      <div class="event-name">{{ events.title }}</div>
+      <div class="event-info">
+        <div class="info-item">
+          <span class="info-label">Lieu:</span>
+          <span class="info-value">{{ events.location }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Date:</span>
+          <span class="info-value">{{ events.start | date:'dd/MM/yyyy HH:mm' }}
+            - {{ events.end | date: 'HH:mm' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Description:</span>
+          <span class="info-value">{{ events.description }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Places:</span>
+          <span class="info-value">{{ events.placeReserve }} / {{ events.placeTotal }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="reservation-form">
+      <div class="places-question">Sélectionnez votre catégorie</div>
+
+      <div class="reservation-notice">
+        <p>
+          Attention : une seule réservation est possible à la fois par adhérent et maximum deux places par événement.
+        </p>
+      </div>
+
+      <!-- Formulaire de réservation -->
+      <form (ngSubmit)="onSubmit()">
+        <div class="categories">
+          <div *ngFor="let category of events.categories; let i = index" class="category-item">
+            <!-- Utilisation de l'index pour générer un ID unique -->
+            <input type="radio" [id]="'category-' + i" name="category" [(ngModel)]="selectedCategory" [value]="category"
+                   required/>
+            <label [for]="'category-' + i" class="category-label">
+              <div class="category-name">{{ category.nom }}</div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Bouton de réservation -->
+        <div class="btn-container">
+          <button type="submit" class="btn btn-primary">Réserver</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

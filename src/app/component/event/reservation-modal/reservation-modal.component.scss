@@ -1,0 +1,141 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.35);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.175);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Assure que la modal est au-dessus de tout */
+}
+
+.modal-content {
+  background-color: var(--main-white, #ffffff);
+  padding: 40px; /* Plus d'espace intérieur */
+  border-radius: 25px; /* Coins arrondis modernes */
+  box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.4); /* Ombre plus prononcée */
+  max-width: 700px; /* Largeur maximale */
+  width: 90%; /* Responsive */
+  max-height: 90vh; /* Hauteur maximale */
+  overflow-y: auto; /* Scroll si nécessaire */
+}
+
+.back-btn {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: #ff6f00; /* Orange vif pour attirer l'attention */
+  color: #ffffff;
+  border-radius: 30px; /* Coins arrondis élégants */
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color, transform, box-shadow ease-in-out .3s;
+}
+
+.back-btn:hover {
+  background-color: #e65c00; /* Orange légèrement plus foncé au survol */
+}
+
+.event-name {
+  font-size: 2.5rem; /* Texte plus grand pour le titre */
+  color: var(--main-blue, #0056b3); /* Couleur principale bleue */
+  margin-bottom: 20px;
+}
+
+.event-info {
+  background-color: #f9f9f9; /* Fond léger pour les informations */
+  padding: 20px;
+  border-radius: 20px; /* Coins arrondis modernes */
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.info-label {
+  min-width: 120px; /* Alignement amélioré des labels */
+  font-weight: bold;
+  color: var(--main-orange);
+}
+
+.info-label {
+  min-width: 120px; /* Alignement amélioré des labels */
+  font-weight: bold;
+  color: #ff6f00; /* Couleur orange pour les labels */
+}
+
+.info-value {
+  flex: 1;
+  color: #333; /* Texte sombre pour une meilleure lisibilité */
+}
+
+.reservation-notice {
+  background-color: #fff4e5; /* Fond légèrement orange */
+  border: 1px solid #ffc107; /* Bordure orange clair */
+  color: #856404; /* Texte brun pour contraste */
+  padding: 15px;
+  border-radius: 15px; /* Coins arrondis modernes */
+  margin-bottom: 20px;
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Espacement entre les catégories */
+  margin-bottom: 30px;
+  justify-content: space-around;
+  user-select: none;
+}
+
+.category-item {
+  border: 2px solid #e0e0e0; /* Bordure grise légère */
+  border-radius: 20px; /* Coins arrondis modernes */
+  overflow: hidden;
+  transition: all 0.3s ease;
+  width: 40%;
+}
+
+.category-item:hover {
+  transform: scale(1.05); /* Effet de zoom au survol */
+}
+
+.category-label {
+  padding: 20px;
+  text-align: center;
+}
+
+.category-name {
+  font-size: 1.2rem; /* Texte légèrement agrandi */
+}
+
+input[type="radio"] {
+  display: none; /* Cache le bouton radio par défaut */
+}
+
+input[type="radio"]:checked + .category-label {
+  background-color: var(--main-orange); /* Fond orange vif quand sélectionné */
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 15px;
+  font-size: 1.2rem; /* Bouton légèrement agrandi */
+  background-color: #ff6f00; /* Orange vif pour le bouton principal */
+  color: white;
+  border-radius: 30px; /* Coins arrondis élégants */
+  border: none;
+  cursor: pointer;
+  transition: background-color, transform, box-shadow ease-in-out .3s;
+}
+
+.btn-primary:hover {
+  background-color: #e65c00; /* Orange légèrement plus foncé au survol */
+}
+

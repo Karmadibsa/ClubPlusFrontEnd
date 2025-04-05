@@ -1,0 +1,82 @@
+<div class="filters">
+  <!-- Champ de recherche -->
+  <input
+    type="text"
+    placeholder="Rechercher un événement..."
+    [(ngModel)]="searchQuery"
+    (input)="applyFilters()"
+    class="search-bar"
+  />
+
+  <!-- Filtres date/heure de début -->
+  <div class="date-picker picker">
+    <label>Date de début :</label>
+    <input
+      class="date"
+      type="date"
+      [(ngModel)]="startDate"
+      (change)="applyFilters()"
+    />
+  </div>
+  <div class="time-picker picker">
+    <label>Heure de début :</label>
+    <input
+      class="time"
+      type="time"
+      [(ngModel)]="startTime"
+      (change)="applyFilters()"
+    />
+  </div>
+
+  <!-- Filtres date/heure de fin -->
+  <div class="date-picker picker">
+    <label>Date de fin :</label>
+    <input
+      class="date"
+      type="date"
+      [(ngModel)]="endDate"
+      (change)="applyFilters()"
+    />
+  </div>
+  <div class="time-picker picker">
+    <label>Heure de fin :</label>
+    <input
+      class="time"
+      type="time"
+      [(ngModel)]="endTime"
+      (change)="applyFilters()"
+    />
+  </div>
+
+  <!-- Checkboxes -->
+  <div class="checkbox-container">
+    <input
+      type="checkbox"
+      [(ngModel)]="filterAvailablePlaces"
+      (change)="applyFilters()"
+      id="available-places-checkbox"
+    />
+    <label for="available-places-checkbox">Places disponibles uniquement</label>
+  </div>
+
+  <div class="checkbox-container">
+    <input
+      type="checkbox"
+      [(ngModel)]="filterWithFriends"
+      (change)="applyFilters()"
+      id="with-friends-checkbox"
+    />
+    <label for="with-friends-checkbox">Avec amis</label>
+  </div>
+
+  <!-- Bouton de tri -->
+  <div class="sort-controls">
+    <button (click)="toggleSortDirection()" class="sort-button">
+      Trier par date
+      <lucide-icon
+        [name]="sortDirection === 'asc' ? 'chevron-up' : 'chevron-down'"
+        class="sort-icon">
+      </lucide-icon>
+    </button>
+  </div>
+</div>

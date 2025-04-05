@@ -1,0 +1,33 @@
+<td>{{ event.id }}</td>
+<td>{{ event.title }}</td>
+<td>{{ event.start | date:'dd/MM/yyyy HH:mm' }} - {{ event.end | date:'HH:mm' }}</td>
+<td>{{ event.description }}</td>
+<td>1 / 110</td>
+<td>{{ event.location }}</td>
+<td>
+  <!-- Parcourir les catégories et afficher leurs noms -->
+  <span *ngFor="let category of event.categories; let last = last">
+    {{ category.name }}{{ last ? '' : ', ' }}
+  </span>
+</td>
+<td>
+  <div class="btn">
+
+    <!-- Bouton Modifier -->
+    <button class="btn btn-edit" (click)="openEditModal()">
+      <lucide-icon name="pen" class="icon"></lucide-icon>
+    </button>
+
+    <!-- Bouton Supprimer -->
+    <button class="btn btn-delete" (click)="onDelete(event)">
+      <lucide-icon name="trash" class="icon"></lucide-icon>
+    </button>
+  </div>
+</td>
+
+<app-edit-event
+  [isVisible]="isEditModalVisible"
+  [event]="event"
+  (saveEvent)="onSave($event)"
+  (close)="closeEditModal()"
+></app-edit-event>

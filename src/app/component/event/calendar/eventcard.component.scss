@@ -1,0 +1,104 @@
+.event-card {
+  display: flex;
+  flex-direction: column;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+
+  &:hover {
+    transform: translateY(-5px); /* Légère élévation */
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2); /* Ombre plus prononcée */
+    background-color: #ffffff; /* Optionnel : léger changement de couleur */
+  }
+}
+
+mat-card-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--main-blue); /* Couleur primaire */
+  color: white;
+  border-radius: 8px 8px 0 0;
+  min-height: 96px;
+}
+
+mat-card-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  height: 56px;
+}
+
+mat-card-subtitle {
+  margin-top: auto;
+  font-size: 1rem;
+  color: var(--main-white);
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin-top: auto;
+}
+
+
+.event-time {
+  font-style: italic;
+}
+
+.event-section {
+  margin-top: 16px;
+}
+
+.section-title {
+  font-weight: bold;
+}
+
+.reserve-button {
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Espace entre l'icône et le texte */
+  padding: 8px 16px;
+  border-radius: 20px;
+  background-color: var(--main-orange);
+  color: white;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #ff7a00; /* Couleur légèrement plus foncée au survol */
+    cursor: pointer; /* Indique que c'est cliquable */
+    box-shadow: inset -2px -2px rgba(255, 255, 255, 0.5);
+    transform: scale(1.05);
+  }
+}
+
+.reserve-button lucide-icon {
+  vertical-align: middle;
+}
+
+.event-section p {
+  display: -webkit-box; /* Utilise un conteneur flexible */
+  -webkit-line-clamp: 3; /* Limite à 3 lignes */
+  -webkit-box-orient: vertical; /* Définit l'orientation verticale */
+  overflow: hidden; /* Cache le contenu dépassant */
+  text-overflow: ellipsis; /* Ajoute "..." pour le texte coupé */
+}
+
+.amis-list {
+  color: var(--main-blue);
+  font-weight: 500;
+  margin-top: 5px;
+  display: block;
+}

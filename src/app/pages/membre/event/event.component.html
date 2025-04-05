@@ -1,0 +1,27 @@
+<div class="sidebar">
+  <app-sidebar></app-sidebar>
+</div>
+
+<div class="title">
+  <h1 class="page-title">Les événements de mon club</h1>
+
+</div>
+<div class="event-container">
+  <!--  <app-filter-event-->
+  <!--    [events]="allEvents"-->
+  <!--    (filteredEventsChange)="handleFilteredEvents($event)"-->
+  <!--  ></app-filter-event>-->
+
+  <div class="event-grid">
+    <!-- Utilisation du composant EventCard -->
+    <app-event-card
+      *ngFor="let event of events"
+      [event]="event"
+    >
+    </app-event-card>
+
+  </div>
+</div>
+
+
+

@@ -1,0 +1,136 @@
+<div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <header class="modal-header">
+      <h2>Modifier l'Événement</h2>
+      <button class="close-btn" (click)="closeModal()">×</button>
+    </header>
+    <main class="modal-body">
+      <!-- Formulaire pour modifier l'événement -->
+      <form>
+        <div class="form-row">
+
+          <!-- Titre -->
+          <div class="form-group">
+            <label for="title">Titre</label>
+            <input
+              id="title"
+              name="title"
+              [(ngModel)]="event.title"
+              [ngModelOptions]="{ standalone: true }"
+              type="text"
+              required
+            />
+          </div>
+          <!-- Lieu -->
+          <div class="form-group">
+            <label for="location">Lieu</label>
+            <input
+              id="location"
+              name="location"
+              [(ngModel)]="event.location"
+              [ngModelOptions]="{ standalone: true }"
+              type="text"
+              required
+            />
+          </div>
+        </div>
+        <!-- Description -->
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea
+            id="description"
+            name="description"
+            [(ngModel)]="event.description"
+            [ngModelOptions]="{ standalone: true }"
+            rows="5"
+            required
+          ></textarea>
+        </div>
+
+        <!-- Date et heure -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="start">Date et Heure de début</label>
+            <input
+              id="start"
+              name="start"
+              [(ngModel)]="event.start"
+              [ngModelOptions]="{ standalone: true }"
+              type="datetime-local"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="end">Date et Heure de fin</label>
+            <input
+              id="end"
+              name="end"
+              [(ngModel)]="event.end"
+              [ngModelOptions]="{ standalone: true }"
+              type="datetime-local"
+              required
+            />
+          </div>
+        </div>
+
+
+        <!-- Catégories avec nombre de places -->
+        <div class="form-group">
+          <label>Catégories</label>
+          <div class="scroll">
+            <div *ngFor="let category of categories; let i = index; trackBy: trackByIndex" class="category-item">
+              <!-- Nom de la catégorie -->
+              <input
+                id="category-{{ i }}"
+                name="categories"
+                [(ngModel)]="categories[i].name"
+                [ngModelOptions]="{ standalone: true }"
+                type="text"
+                placeholder="Ex: Musique, Sport"
+                required
+              />
+
+              <!-- Nombre de places pour la catégorie -->
+              <input
+                id="places-{{ i }}"
+                name="places-{{ i }}"
+                [(ngModel)]="categories[i].places"
+                [ngModelOptions]="{ standalone: true }"
+                type="number"
+                min="1"
+                placeholder="# Places"
+                required
+              />
+
+              <!-- Bouton pour supprimer la catégorie -->
+              <button type="button" class="btn btn-outline" (click)="removeCategory(i)">
+                <lucide-icon name="trash-2"></lucide-icon>
+                Supprimer
+              </button>
+            </div>
+          </div>
+
+          <!-- Nouvelle structure avec div englobante -->
+          <div class="category-actions">
+            <button type="button" class="btn btn-primary" (click)="addCategory()">
+              <lucide-icon name="circle-plus"></lucide-icon>
+              Ajouter une catégorie
+            </button>
+
+            <!-- Boutons d'action déplacés ici -->
+            <div class="form-actions" style="margin-top: 0; padding-top: 0; border-top: none;">
+              <button type="button" (click)="closeModal()">
+                <lucide-icon name="circle-x"></lucide-icon>
+                Annuler
+              </button>
+              <button type="submit" (click)="save()">
+                <lucide-icon name="save"></lucide-icon>
+                Enregistrer
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </main>
+  </div>
+</div>
