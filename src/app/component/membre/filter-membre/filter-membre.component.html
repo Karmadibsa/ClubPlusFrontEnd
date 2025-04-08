@@ -1,0 +1,21 @@
+<div class="filters">
+  <!-- Champ de recherche -->
+  <input
+    type="text"
+    placeholder="Rechercher un événement..."
+    [(ngModel)]="searchQuery"
+    (input)="applyFilters()"
+    class="search-bar"
+  />
+
+  <!-- Bouton de tri -->
+  <div class="sort-controls">
+    <button (click)="toggleSortDirection()" class="sort-button">
+      Trier par Nom
+      <lucide-icon
+        [name]="sortDirection === 'asc' ? 'chevron-up' : 'chevron-down'"
+        class="sort-icon">
+      </lucide-icon>
+    </button>
+  </div>
+</div>

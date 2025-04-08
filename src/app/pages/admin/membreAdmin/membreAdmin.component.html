@@ -1,0 +1,34 @@
+<div class="sidebar">
+  <app-sidebar></app-sidebar>
+</div>
+<div class="membre-container">
+  <div class="header">
+    <h1>Liste des Membres</h1>
+
+  </div>
+  <table>
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nom</th>
+      <th>Date de naissance</th>
+      <th>Date d'inscription</th>
+      <th>Adresse</th>
+      <th>Téléphone</th>
+      <th>E-mail</th>
+      <th>Role</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr
+      *ngFor="let membre of displayedMembres"
+      app-membre-row
+      [membre]="membre"
+      (edit)="onEditMembre($event)"
+      (delete)="onDeleteMembre($event)">
+      >
+    </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,130 @@
+.dashboard-container {
+  padding: 20px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.tables-grid {
+  gap: 20px;
+}
+
+.table-container {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.header h1 {
+  font-size: 2rem;
+  color: var(--main-blue);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header h1 i {
+  color: var(--main-orange);
+}
+
+.card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Conteneur principal */
+.event-container {
+  padding: 20px;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Conteneur pour le tableau avec défilement horizontal */
+.table-wrapper {
+  overflow-x: auto; /* Active le défilement horizontal */
+  width: 100%; /* S'assure que le conteneur prend toute la largeur disponible */
+}
+
+/* Table générale */
+table {
+  width: 100%; /* S'assure que le tableau utilise tout l'espace disponible */
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  background-color: #ffffff;
+}
+
+/* En-tête du tableau */
+thead {
+  background-color: var(--main-blue);
+  color: white;
+}
+
+thead th {
+  font-weight: bold;
+}
+
+/* Cellules générales */
+th,
+td {
+  padding: 15px;
+  text-align: left; /* Alignement à gauche pour plus de lisibilité */
+}
+
+/* Bordures entre les lignes */
+tr {
+  border-bottom: solid 1px #ddd;
+}
+
+tbody tr:hover {
+  background-color: #f1f1f1; /* Surbrillance au survol */
+}
+
+/* Boutons d'action */
+td:last-child {
+  display: flex;
+  justify-content: center;
+}
+
+button {
+  padding: 8px;
+  margin-left: 5px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.table-container h3 {
+  font-size: 1.5rem;
+  color: var(--main-blue);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

@@ -20,6 +20,7 @@
     "@angular/platform-browser-dynamic": "^19.2.0",
     "@angular/router": "^19.2.0",
     "angularx-qrcode": "^19.0.0",
+    "highcharts-angular": "^4.0.1",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.1",
     "jspdf-html2canvas": "^1.5.2",

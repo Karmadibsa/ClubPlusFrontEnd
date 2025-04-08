@@ -1,33 +1,33 @@
-<td>{{ event.id }}</td>
-<td>{{ event.title }}</td>
-<td>{{ event.start | date:'dd/MM/yyyy HH:mm' }} - {{ event.end | date:'HH:mm' }}</td>
-<td>{{ event.description }}</td>
-<td>1 / 110</td>
-<td>{{ event.location }}</td>
+<td>{{ evenement.id }}</td>
+<td>{{ evenement.title }}</td>
+<td>{{ evenement.start | date:'dd/MM/yyyy HH:mm' }} - {{ evenement.end | date:'HH:mm' }}</td>
+<td>{{ evenement.description }}</td>
+<td>{{ evenement.placeReserve }} / {{ evenement.placeTotal }}</td>
+<td>{{ evenement.location }}</td>
 <td>
-  <!-- Parcourir les catégories et afficher leurs noms -->
-  <span *ngFor="let category of event.categories; let last = last">
-    {{ category.name }}{{ last ? '' : ', ' }}
+  <span *ngFor="let categorie of evenement.categories; let last = last">
+    {{ categorie.nom }}{{ last ? '' : ', ' }}
   </span>
 </td>
 <td>
-  <div class="btn">
-
+  <div class="btn-actions">
     <!-- Bouton Modifier -->
-    <button class="btn btn-edit" (click)="openEditModal()">
+    <button class="btn btn-edit" (click)="ouvrirModal()">
       <lucide-icon name="pen" class="icon"></lucide-icon>
     </button>
 
     <!-- Bouton Supprimer -->
-    <button class="btn btn-delete" (click)="onDelete(event)">
+    <button class="btn btn-delete" (click)="supprimerEvenement()">
       <lucide-icon name="trash" class="icon"></lucide-icon>
     </button>
   </div>
 </td>
 
+<!-- Modal d'édition -->
 <app-edit-event
-  [isVisible]="isEditModalVisible"
-  [event]="event"
-  (saveEvent)="onSave($event)"
-  (close)="closeEditModal()"
-></app-edit-event>
+  *ngIf="isModalVisible"
+  [isVisible]="isModalVisible"
+  [event]="evenement"
+  (saveEvent)="sauvegarderEvenement($event)"
+  (close)="fermerModal()">
+</app-edit-event>

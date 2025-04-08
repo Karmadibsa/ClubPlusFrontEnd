@@ -1,0 +1,35 @@
+<div class="sidebar">
+  <app-sidebar></app-sidebar>
+</div>
+
+<div class="event-container">
+  <div class="header">
+    <h1>Liste des Événements</h1>
+  </div>
+
+  <table>
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Titre</th>
+      <th>Horaire</th>
+      <th>Description</th>
+      <th>Participants</th>
+      <th>Lieu</th>
+      <th>Catégories</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let evenement of evenements"
+        app-event-row
+        [evenement]="evenement"
+        (supprimer)="supprimerEvenement($event)"
+        (modifier)="mettreAJourEvenement($event)">
+    </tr>
+    <tr *ngIf="evenements.length === 0">
+      <td colspan="8" class="no-data">Aucun événement trouvé</td>
+    </tr>
+    </tbody>
+  </table>
+</div>

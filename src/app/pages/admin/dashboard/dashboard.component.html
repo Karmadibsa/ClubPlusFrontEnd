@@ -1,0 +1,92 @@
+<div class="sidebar">
+  <app-sidebar></app-sidebar>
+</div>
+
+<!-- dashboard.component.html -->
+<div class="dashboard-container">
+  <div class="header">
+    <h1>Dashboard</h1>
+  </div>
+  <!-- Section Statistiques -->
+  <div class="stats-grid">
+    <div class="card stat-card">
+      <h3>Nombre d'evenement organisé</h3>
+      <p class="stat-value">{{ totalEvents }}</p>
+    </div>
+    <div class="card stat-card">
+      <h3>Événements à venir dans le mois</h3>
+      <p class="stat-value">{{ upcomingEventsCount }}</p>
+    </div>
+    <div class="card stat-card">
+      <h3>Taux de participation moyen</h3>
+      <p class="stat-value">{{ averageParticipation }}%</p>
+    </div>
+  </div>
+
+  <!-- Section Graphiques -->
+  <div class="charts-grid">
+    <div class="card chart-container">
+      <highcharts-chart
+        [Highcharts]="Highcharts"
+        [options]="membersChartOptions"
+        style="width: 100%; height: 400px;">
+      </highcharts-chart>
+    </div>
+    <div class="card chart-container">
+      <highcharts-chart
+        [Highcharts]="Highcharts"
+        [options]="eventsChartOptions"
+        style="width: 100%; height: 400px;">
+      </highcharts-chart>
+    </div>
+  </div>
+
+<!--  &lt;!&ndash; Section Tableaux &ndash;&gt;-->
+<!--  <div class="tables-grid">-->
+<!--    &lt;!&ndash; Derniers membres inscrits &ndash;&gt;-->
+<!--    <div class="table-container">-->
+<!--      <h3>Derniers membres inscrits</h3>-->
+<!--      <table class="full-width-table">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--          <th>ID</th>-->
+<!--          <th>Nom et Prénom</th>-->
+<!--          <th>Date de Naissance</th>-->
+<!--          <th>Date d'Inscription</th>-->
+<!--          <th>Adresse</th>-->
+<!--          <th>Téléphone</th>-->
+<!--          <th>Actions</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        &lt;!&ndash; Utilisation de member-row &ndash;&gt;-->
+<!--        <tr *ngFor="let member of membre" app-membre-row [membre]="member"></tr>-->
+<!--        </tbody>-->
+<!--      </table>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; Prochains événements &ndash;&gt;-->
+<!--    <div class="table-container">-->
+<!--      <h3>Prochains événements</h3>-->
+<!--      <table class="full-width-table">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--          <th>ID</th>-->
+<!--          <th>Titre</th>-->
+<!--          <th>Début - Fin</th>-->
+<!--          <th>Description</th>-->
+<!--          <th>Participants</th>-->
+<!--          <th>Lieu</th>-->
+<!--          <th>Catégories</th>-->
+<!--          <th>Actions</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        &lt;!&ndash; Utilisation de event-row &ndash;&gt;-->
+<!--        <tr *ngFor="let event of evenements" app-event-row [event]="evenements"></tr>-->
+<!--        </tbody>-->
+<!--      </table>-->
+<!--    </div>-->
+
+  </div>
+
+

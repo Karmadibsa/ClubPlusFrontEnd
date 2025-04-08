@@ -1,0 +1,73 @@
+/* Conteneur principal */
+.membre-container {
+  padding: 20px;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Conteneur pour le tableau avec défilement horizontal */
+.table-wrapper {
+  overflow-x: auto; /* Active le défilement horizontal */
+  width: 100%; /* S'assure que le conteneur prend toute la largeur disponible */
+}
+
+/* Table générale */
+table {
+  width: 100%; /* S'assure que le tableau utilise tout l'espace disponible */
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  background-color: #ffffff;
+}
+
+/* En-tête du tableau */
+thead {
+  background-color: var(--main-blue);
+  color: white;
+}
+
+thead th {
+  font-weight: bold;
+}
+
+/* Cellules générales */
+th,
+td {
+  padding: 10px;
+  text-align: center; /* Alignement à gauche pour plus de lisibilité */
+}
+
+/* Bordures entre les lignes */
+tr {
+  border-bottom: solid 1px #ddd;
+  height: 40px;
+}
+
+tbody tr:hover {
+  background-color: #f1f1f1; /* Surbrillance au survol */
+}
+
+/* Boutons d'action */
+td:last-child {
+  display: flex;
+  justify-content: center;
+}
+
+button {
+  padding: 8px;
+  margin-left: 5px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.header h1 {
+  font-size: 2rem;
+  color: var(--main-blue);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

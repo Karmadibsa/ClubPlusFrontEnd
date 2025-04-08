@@ -5,43 +5,39 @@
       <button class="close-btn" (click)="closeModal()">×</button>
     </header>
     <main class="modal-body">
-      <!-- Formulaire pour modifier l'événement -->
       <form>
         <div class="form-row">
-
           <!-- Titre -->
           <div class="form-group">
-            <label for="title">Titre</label>
+            <label for="titre">Titre</label>
             <input
-              id="title"
-              name="title"
-              [(ngModel)]="event.title"
-              [ngModelOptions]="{ standalone: true }"
+              id="titre"
+              name="titre"
+              [(ngModel)]="eventCopy.title"
               type="text"
               required
             />
           </div>
           <!-- Lieu -->
           <div class="form-group">
-            <label for="location">Lieu</label>
+            <label for="lieu">Lieu</label>
             <input
-              id="location"
-              name="location"
-              [(ngModel)]="event.location"
-              [ngModelOptions]="{ standalone: true }"
+              id="lieu"
+              name="lieu"
+              [(ngModel)]="eventCopy.location"
               type="text"
               required
             />
           </div>
         </div>
+
         <!-- Description -->
         <div class="form-group">
           <label for="description">Description</label>
           <textarea
             id="description"
             name="description"
-            [(ngModel)]="event.description"
-            [ngModelOptions]="{ standalone: true }"
+            [(ngModel)]="eventCopy.description"
             rows="5"
             required
           ></textarea>
@@ -50,59 +46,49 @@
         <!-- Date et heure -->
         <div class="form-row">
           <div class="form-group">
-            <label for="start">Date et Heure de début</label>
+            <label for="dateDebut">Date et Heure de début</label>
             <input
-              id="start"
-              name="start"
-              [(ngModel)]="event.start"
-              [ngModelOptions]="{ standalone: true }"
+              id="dateDebut"
+              name="dateDebut"
+              [(ngModel)]="eventCopy.start"
               type="datetime-local"
               required
             />
           </div>
           <div class="form-group">
-            <label for="end">Date et Heure de fin</label>
+            <label for="dateFin">Date et Heure de fin</label>
             <input
-              id="end"
-              name="end"
-              [(ngModel)]="event.end"
-              [ngModelOptions]="{ standalone: true }"
+              id="dateFin"
+              name="dateFin"
+              [(ngModel)]="eventCopy.end"
               type="datetime-local"
               required
             />
           </div>
         </div>
 
-
-        <!-- Catégories avec nombre de places -->
+        <!-- Catégories -->
         <div class="form-group">
           <label>Catégories</label>
           <div class="scroll">
-            <div *ngFor="let category of categories; let i = index; trackBy: trackByIndex" class="category-item">
-              <!-- Nom de la catégorie -->
+            <div *ngFor="let categorie of categories; let i = index; trackBy: trackByIndex" class="category-item">
               <input
                 id="category-{{ i }}"
-                name="categories"
-                [(ngModel)]="categories[i].name"
-                [ngModelOptions]="{ standalone: true }"
+                name="categorie-nom-{{ i }}"
+                [(ngModel)]="categories[i].nom"
                 type="text"
-                placeholder="Ex: Musique, Sport"
+                placeholder="Nom de la catégorie"
                 required
               />
-
-              <!-- Nombre de places pour la catégorie -->
               <input
                 id="places-{{ i }}"
-                name="places-{{ i }}"
-                [(ngModel)]="categories[i].places"
-                [ngModelOptions]="{ standalone: true }"
+                name="categorie-capacite-{{ i }}"
+                [(ngModel)]="categories[i].capacite"
                 type="number"
                 min="1"
-                placeholder="# Places"
+                placeholder="Nombre de places"
                 required
               />
-
-              <!-- Bouton pour supprimer la catégorie -->
               <button type="button" class="btn btn-outline" (click)="removeCategory(i)">
                 <lucide-icon name="trash-2"></lucide-icon>
                 Supprimer
@@ -110,20 +96,18 @@
             </div>
           </div>
 
-          <!-- Nouvelle structure avec div englobante -->
           <div class="category-actions">
             <button type="button" class="btn btn-primary" (click)="addCategory()">
               <lucide-icon name="circle-plus"></lucide-icon>
               Ajouter une catégorie
             </button>
 
-            <!-- Boutons d'action déplacés ici -->
-            <div class="form-actions" style="margin-top: 0; padding-top: 0; border-top: none;">
+            <div class="form-actions">
               <button type="button" (click)="closeModal()">
                 <lucide-icon name="circle-x"></lucide-icon>
                 Annuler
               </button>
-              <button type="submit" (click)="save()">
+              <button type="button" (click)="save()">
                 <lucide-icon name="save"></lucide-icon>
                 Enregistrer
               </button>

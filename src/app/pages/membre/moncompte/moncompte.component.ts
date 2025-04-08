@@ -66,10 +66,14 @@ export class MonCompteComponent implements OnInit {
     }
 
     const updatedInfo = this.infoForm.value;
-    this.http.put('http://localhost:8080/api/membres/1', updatedInfo).subscribe(response => {
-      console.log('Informations mises à jour avec succès :', response);
-    });
+    this.http.patch('http://localhost:8080/api/membres/1', updatedInfo, { responseType: 'text' })
+      .subscribe(response => {
+        console.log('Informations mises à jour avec succès :', response);
+      }, error => {
+        console.error('Erreur lors de la mise à jour :', error);
+      });
   }
+
 
   changePassword() {
     if (this.passwordForm.invalid) {

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {DatePipe, NgForOf} from '@angular/common';
+import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import {LucideAngularModule} from 'lucide-angular';
 import {EditEventComponent} from '../edit-event/edit-event.component';
 
@@ -10,51 +10,32 @@ import {EditEventComponent} from '../edit-event/edit-event.component';
     DatePipe,
     LucideAngularModule,
     EditEventComponent,
-    NgForOf
+    NgForOf,
+    NgIf
   ],
   styleUrls: ['./event-row.component.scss']
 })
 export class EventRowComponent {
-  @Input() event!: Event; // Typage avec l'interface Event
-  @Output() edit = new EventEmitter<Event>(); // Émet un événement typé
-  @Output() delete = new EventEmitter<Event>();
+  @Input() evenement: any;
+  @Output() supprimer = new EventEmitter<any>();
+  @Output() modifier = new EventEmitter<any>();
 
-  isEditModalVisible = false; // Contrôle de visibilité de la modal
+  isModalVisible = false;
 
-  openEditModal(): void {
-    this.isEditModalVisible = true; // Affiche la modal
+  ouvrirModal(): void {
+    this.isModalVisible = true;
   }
 
-  closeEditModal(): void {
-    this.isEditModalVisible = false; // Ferme la modal
+  fermerModal(): void {
+    this.isModalVisible = false;
   }
 
-  onSave(updatedEvent: any): void {
-    console.log('Événement mis à jour :', updatedEvent);
-    this.closeEditModal();
-    // Ajoutez ici votre logique pour sauvegarder les modifications
+  sauvegarderEvenement(evenementModifie: any): void {
+    this.modifier.emit(evenementModifie);
+    this.fermerModal();
   }
 
-  onDelete(event: Event): void {
-    this.delete.emit(event); // Émet un événement au parent pour suppression
-    console.log('Suppression demandée pour :', event);
+  supprimerEvenement(): void {
+    this.supprimer.emit(this.evenement);
   }
-
-}
-
-export interface Event {
-  id: number;
-  title: string;
-  start: Date;
-  end: Date;
-  description: string;
-  amis: string[];
-  participants: number;
-  location: string;
-  categories: Category[];
-}
-
-export interface Category {
-  name: string;
-  places: number;
 }

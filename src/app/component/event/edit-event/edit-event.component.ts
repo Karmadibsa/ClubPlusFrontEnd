@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {LucideAngularModule} from 'lucide-angular';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-edit-event',
@@ -11,46 +12,52 @@ import {LucideAngularModule} from 'lucide-angular';
     FormsModule, CommonModule, LucideAngularModule
   ]
 })
-export class EditEventComponent implements OnInit {
-  categories = [
-    {name: '', places: 0}
-  ];
-  amisString: string = ''; // Propriété intermédiaire pour les amis
-  categoriesString: string = ''; // Propriété intermédiaire
-  @Input() isVisible = false; // Contrôle de visibilité
-  @Input() event: any = {}; // Données de l'événement
+export class EditEventComponent {
+  @Input() isVisible = false;
+  @Input() event: any = {};
   @Output() saveEvent = new EventEmitter<any>();
   @Output() close = new EventEmitter<void>();
+  constructor(private http: HttpClient) {}
 
+  categories: any[] = [];
+  eventCopy: any = {};
 
   ngOnInit(): void {
-    this.categoriesString = this.event.categories?.join(', ') || ''; // Convertit le tableau en chaîne
-    this.amisString = this.event.amis?.join(', ') || '';
-    // Initialisation des catégories depuis l'événement
-    this.categories = this.event.categories ? [...this.event.categories] : [];
+    // Créer une copie profonde pour éviter de modifier l'original
+    this.eventCopy = JSON.parse(JSON.stringify(this.event));
+    this.categories = this.eventCopy.categories || [];
+
+    // S'assurer qu'il y a au moins une catégorie
+    if (this.categories.length === 0) {
+      this.addCategory();
+    }
   }
 
-  addCategory() {
-    this.categories.push({name: '', places: 0});
+  addCategory(): void {
+    this.categories.push({ nom: '', places: 0 });
   }
 
-  removeCategory(index: number) {
+  removeCategory(index: number): void {
     this.categories.splice(index, 1);
   }
 
-  trackByIndex(index: number, item: any): number {
+  trackByIndex(index: number): number {
     return index;
   }
 
   closeModal(): void {
-    this.isVisible = false;
     this.close.emit();
   }
 
   save(): void {
-    // Synchronise les catégories avec l'objet événement avant la sauvegarde
-    this.event.categories = [...this.categories];
-    this.saveEvent.emit(this.event); // Émet les données mises à jour au parent
+    // Synchronise les catégories avec l'objet événement
+    this.eventCopy.categories = [...this.categories];
+
+    // Émet l'événement avec les données mises à jour
+    this.saveEvent.emit(this.eventCopy);
+
+    // Ferme la modal
     this.closeModal();
   }
+
 }
