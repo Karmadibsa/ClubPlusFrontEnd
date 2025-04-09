@@ -6,6 +6,7 @@ import {BilletComponent} from './pages/membre/billet/billet.component';
 import {DashboardComponent} from './pages/admin/dashboard/dashboard.component';
 import {EventAdminComponent} from './pages/admin/eventAdmin/eventAdmin.component';
 import {MembreAdminComponent} from './pages/admin/membreAdmin/membreAdmin.component';
+import {MonclubComponent} from './pages/admin/monclub/monclub.component';
 
 
 
@@ -33,6 +34,10 @@ export const routes: Routes = [
   {
     path: "membreadmin",
     component: MembreAdminComponent,
+  },
+  {
+    path: "monclub",
+    component: MonclubComponent,
   },
 
   {path: "", redirectTo: "event", pathMatch: "full"},

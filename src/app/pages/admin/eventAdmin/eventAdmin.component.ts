@@ -5,6 +5,7 @@ import {FilterEventComponent} from '../../../component/event/filter-event/filter
 import {SidebarComponent} from '../../../component/sidebar/sidebar.component';
 import {EditEventComponent} from '../../../component/event/edit-event/edit-event.component';
 import {HttpClient} from '@angular/common/http';
+import {LucideAngularModule} from 'lucide-angular';
 
 @Component({
   selector: 'app-event',
@@ -15,12 +16,15 @@ import {HttpClient} from '@angular/common/http';
     FilterEventComponent,
     SidebarComponent,
     EditEventComponent,
-    NgIf
+    NgIf,
+    LucideAngularModule
   ],
   styleUrls: ['./eventAdmin.component.scss']
 })
 export class EventAdminComponent {
   evenements: any[] = [];
+  isModalVisible = false; // Contrôle la visibilité de la modal
+  evenementEnCours: any = {}; // Stocke l'événement en cours d'édition ou de création
 
   constructor(private http: HttpClient) {}
 
@@ -62,4 +66,41 @@ export class EventAdminComponent {
         error: (err) => console.error('Erreur de mise à jour:', err)
       });
   }
+
+  /**
+   * Ouvre la modal pour créer un nouvel événement
+   */
+  ouvrirModalCreation(): void {
+    this.evenementEnCours = {}; // Initialise un nouvel objet vide pour un nouvel événement
+    this.isModalVisible = true; // Affiche la modal
+  }
+
+  /**
+   * Ferme la modal
+   */
+  fermerModal(): void {
+    this.isModalVisible = false; // Cache la modal
+  }
+
+  /**
+   * Sauvegarde l'événement (création ou modification)
+   */
+  sauvegarderEvenement(evenement: any): void {
+    if (evenement.id) {
+      // Si l'événement a un ID, il s'agit d'une modification
+      this.mettreAJourEvenement(evenement);
+    } else {
+      // Sinon, il s'agit d'une création
+      this.http.post('http://localhost:8080/api/events', evenement).subscribe({
+        next: (nouvelEvenement) => {
+          console.log('Événement créé avec succès:', nouvelEvenement);
+          this.evenements.push(nouvelEvenement); // Ajoute le nouvel événement à la liste
+          this.fermerModal();
+        },
+        error: (err) => console.error('Erreur lors de la création de l\'événement:', err)
+      });
+    }
+  }
+
+
 }

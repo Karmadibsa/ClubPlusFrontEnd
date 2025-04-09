@@ -182,5 +182,17 @@ export class BilletComponent {
       console.log('Formulaire invalide');
     }
   }
+
+  onDeleteReservation(reservation: any): void {
+    this.http.delete(`http://localhost:8080/api/reservations/${reservation.id}`)
+      .subscribe({
+        next: () => {
+          console.log('Réservation supprimée avec succès');
+          // Mettre à jour la liste localement après suppression
+          this.reservations = this.reservations.filter(r => r.id !== reservation.id);
+        },
+        error: (err) => console.error('Erreur lors de la suppression de la réservation:', err)
+      });
+  }
 }
 

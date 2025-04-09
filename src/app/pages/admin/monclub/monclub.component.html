@@ -1,0 +1,105 @@
+<div class="sidebar">
+  <app-sidebar></app-sidebar>
+</div>
+
+<div class="container-page">
+  <div class="container">
+    <div class="header">
+      <h1>Modifier les Informations du Club</h1>
+      <button class="btn btn-primary" (click)="copyCodeClub()">
+        <lucide-icon class="icon" name="copy"></lucide-icon>
+        Copier le Code Club
+      </button>
+    </div>
+
+    <main class="club-main">
+      <form [formGroup]="clubForm" (ngSubmit)="onSubmit()" class="info-form">
+        <!-- Nom du club -->
+        <div class="form-group">
+          <label for="nom">Nom du Club</label>
+          <input
+            type="text"
+            id="nom"
+            formControlName="nom"
+            placeholder="Nom du club"
+            class="form-control"
+          />
+        </div>
+
+        <!-- Adresse -->
+        <div class="form-group">
+          <label for="numero_voie">Numéro de Voie</label>
+          <input
+            type="text"
+            id="numero_voie"
+            formControlName="numero_voie"
+            placeholder="Numéro de voie"
+            class="form-control"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="rue">Rue</label>
+          <input
+            type="text"
+            id="rue"
+            formControlName="rue"
+            placeholder="Rue"
+            class="form-control"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="codepostal">Code Postal</label>
+          <input
+            type="text"
+            id="codepostal"
+            formControlName="codepostal"
+            placeholder="Code postal"
+            class="form-control"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="ville">Ville</label>
+          <input
+            type="text"
+            id="ville"
+            formControlName="ville"
+            placeholder="Ville"
+            class="form-control"
+          />
+        </div>
+
+        <!-- Contact -->
+        <div class="form-group">
+          <label for="telephone">Téléphone</label>
+          <input
+            type="text"
+            id="telephone"
+            formControlName="telephone"
+            placeholder="Téléphone"
+            class="form-control"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            placeholder="Email du club"
+            class="form-control"
+          />
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="actions-container">
+          <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+          <button type="button" (click)="onReset()" class="btn btn-secondary">Réinitialiser</button>
+        </div>
+      </form>
+    </main>
+  </div>
+</div>

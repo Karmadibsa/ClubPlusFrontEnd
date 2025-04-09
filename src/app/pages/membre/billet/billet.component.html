@@ -10,10 +10,10 @@
     <table>
       <thead>
       <tr>
-        <th>Nom</th>
         <th>Date</th>
         <th>Heure</th>
         <th>Nom de l'événement</th>
+        <th>Categorie</th>
         <th>Actions</th>
       </tr>
       </thead>
@@ -23,7 +23,8 @@
           *ngFor="let reservation of reservations"
           [reservation]="reservation"
           (openQrModal)="openQrModal($event)"
-          (generatePDF)="generatePDF($event)">
+          (generatePDF)="generatePDF($event)"
+          (deleteReservation)="onDeleteReservation($event)">
       </tr>
       </tbody>
     </table>

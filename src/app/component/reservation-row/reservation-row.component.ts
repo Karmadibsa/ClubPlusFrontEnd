@@ -18,6 +18,7 @@ export class ReservationRowComponent {
 
   @Output() openQrModal = new EventEmitter<any>();
   @Output() generatePDF = new EventEmitter<any>();
+  @Output() deleteReservation = new EventEmitter<any>(); // Événement pour informer le parent
 
   onOpenQrModal() {
     this.openQrModal.emit(this.reservation);
@@ -26,4 +27,12 @@ export class ReservationRowComponent {
   onGeneratePDF() {
     this.generatePDF.emit(this.reservation);
   }
+
+  onDelete(): void {
+    if (confirm(`Êtes-vous sûr de vouloir supprimer la réservation pour ${this.reservation.membre.prenom} ${this.reservation.membre.nom} ?`)) {
+      this.deleteReservation.emit(this.reservation);
+    }
+  }
+
+
 }

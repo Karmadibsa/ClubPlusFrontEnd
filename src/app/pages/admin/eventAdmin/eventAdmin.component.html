@@ -5,6 +5,11 @@
 <div class="event-container">
   <div class="header">
     <h1>Liste des Événements</h1>
+    <!-- Bouton pour ouvrir la modal de création -->
+    <button class="btn btn-primary" (click)="ouvrirModalCreation()">
+      <lucide-icon class="icon" name="circle-plus"></lucide-icon>
+      Créer un événement
+    </button>
   </div>
 
   <table>
@@ -32,4 +37,13 @@
     </tr>
     </tbody>
   </table>
+
+  <!-- Modal de création/modification -->
+  <app-edit-event
+    *ngIf="isModalVisible"
+    [isVisible]="isModalVisible"
+    [event]="evenementEnCours"
+    (saveEvent)="sauvegarderEvenement($event)"
+    (close)="fermerModal()">
+  </app-edit-event>
 </div>

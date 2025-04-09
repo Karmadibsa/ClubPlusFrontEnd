@@ -36,3 +36,13 @@ td {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+.actions-cell .btn-danger {
+  background-color: #f26122;
+  border-color: #f26122;
+  color: #fff;
+}
+
+.actions-cell .btn-danger:hover {
+  background-color: #d9541e;
+}

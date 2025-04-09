@@ -1,14 +1,15 @@
-<td>{{ reservation.membre.prenom }} {{ reservation.membre.nom }}</td>
 <td>{{ reservation.event.start | date:'dd/MM/yyyy' }}</td>
 <td>{{ reservation.event.start | date:'HH:mm' }}</td>
 <td>{{ reservation.event.title }}</td>
+<td>{{ reservation.categorie.nom }}</td>
 <td class="actions-cell">
   <button class="btn btn-primary show-qr-btn" (click)="onOpenQrModal()">
     <lucide-icon name="qr-code"></lucide-icon>
-    Voir QR Code
   </button>
   <button class="btn btn-secondary" (click)="onGeneratePDF()">
     <lucide-icon name="download"></lucide-icon>
-    Télécharger le PDF
+  </button>
+  <button class="btn btn-danger" (click)="onDelete()">
+    <lucide-icon name="trash"></lucide-icon>
   </button>
 </td>
