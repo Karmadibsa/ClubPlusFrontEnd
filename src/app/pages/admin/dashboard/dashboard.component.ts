@@ -5,7 +5,7 @@ import {DecimalPipe, NgForOf, NgIf} from '@angular/common';
 import {EventRowComponent} from '../../../component/event/event-row/event-row.component';
 import {MembreRowComponent} from '../../../component/membre/membre-row/membre-row.component';
 import {HighchartsChartModule} from 'highcharts-angular';
-import {SidebarComponent} from '../../../component/sidebar/sidebar.component';
+import {SidebarComponent} from '../../../component/navigation/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-dashboard',

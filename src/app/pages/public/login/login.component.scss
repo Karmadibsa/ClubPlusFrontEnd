@@ -1,0 +1,222 @@
+// --- Conteneur Principal & Login ---
+.container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.login-container {
+  background: var(--container-background);
+  padding: 30px 40px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 450px; // Largeur typique pour un formulaire de connexion
+  text-align: center; // Centrer le titre et les liens du bas
+
+  h1 {
+    color: var(--text-color);
+    margin-bottom: 25px;
+    font-size: 2rem;
+    font-weight: 600;
+  }
+}
+
+// --- Formulaire ---
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px; // Espace entre les groupes
+  text-align: left; // Aligner labels et inputs à gauche
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  label {
+    margin-bottom: 6px;
+    color: var(--text-color);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  input[type="email"],
+  input[type="password"] {
+    padding: 12px 15px;
+    border: 1px solid var(--input-border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+    &:focus {
+      border-color: var(--main-blue);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(var(--main-blue), 0.2);
+    }
+  }
+
+  // Style pour input invalide
+  input.ng-invalid.ng-touched {
+    border-color: var(--danger-red);
+  }
+}
+
+// --- Champ Mot de Passe avec Bouton Toggle ---
+.password-input {
+  position: relative;
+  display: flex;
+  align-items: center; // Aligner input et bouton verticalement
+
+  input[type="password"],
+  input[type="text"] { // S'applique aussi quand le type change en 'text'
+    // Le padding à droite laisse la place pour l'icône
+    padding-right: 45px;
+  }
+
+  .toggle-password {
+    position: absolute;
+    right: 0px; // Positionné à droite
+    top: 0;
+    bottom: 0;
+    background: none;
+    border: none;
+    padding: 0 12px; // Zone cliquable
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777; // Couleur de l'icône
+
+    i { // Style pour l'icône (ex: taille)
+      width: 18px;
+      height: 18px;
+    }
+
+    &:hover {
+      color: var(--main-blue);
+    }
+  }
+}
+
+// --- Options (Remember Me, Forgot Password) ---
+.form-options {
+  display: flex;
+  justify-content: space-between; // Éléments aux extrémités
+  align-items: center;
+  margin-top: 5px; // Petit espace au-dessus
+  font-size: 0.85rem;
+
+  .remember-me {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    input[type="checkbox"] {
+      width: auto; // Taille naturelle
+      margin: 0;
+      accent-color: var(--main-blue); // Couleur de la coche
+    }
+
+    label {
+      margin: 0; // Pas de marge pour ce label
+      font-weight: 400;
+      color: var(--text-color);
+    }
+  }
+
+  .forgot-password {
+    color: var(--link-color);
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// --- Bouton de Connexion ---
+.login-btn {
+  margin-top: 15px; // Espace au-dessus
+  background-color: var(--main-blue);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 12px 15px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+  width: 100%; // Pleine largeur
+
+  &:hover {
+    background-color: var(--main-orange);
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+}
+
+// --- Liens Inscription & Accueil ---
+.signup-link, .home-link {
+  margin-top: 25px;
+  font-size: 0.9rem;
+  color: var(--text-color);
+
+  a {
+    color: var(--link-color);
+    text-decoration: none;
+    font-weight: 600; // Le mot 'compte' en gras
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.home-link {
+  margin-top: 15px;
+
+  .home-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #666; // Couleur plus discrète
+    text-decoration: none;
+    font-size: 0.9rem;
+
+    i { // Style icône retour
+      width: 16px;
+      height: 16px;
+    }
+
+    &:hover {
+      color: var(--main-blue);
+    }
+  }
+}
+
+// --- Messages d'Erreur ---
+.error-message { // Bandeau erreur générale
+  color: white;
+  background-color: var(--danger-red);
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.validation-error { // Erreur sous un champ
+  color: var(--danger-red);
+  font-size: 0.8rem;
+  margin-top: 4px;
+  min-height: 1em; // Évite les sauts de layout
+  text-align: left; // Aligner à gauche sous le champ
+}

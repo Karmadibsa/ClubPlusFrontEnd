@@ -1,6 +1,10 @@
-.container-page {
+.container {
   padding: 20px;
-  font-family: Arial, sans-serif;
+  margin: 2% 2% 2% 17%;
+  background-color: var(--bg-light-gray);
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+  border-left: solid var(--main-orange) 2px;
 }
 
 .main-header {

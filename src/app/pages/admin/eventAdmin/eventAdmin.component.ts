@@ -2,7 +2,7 @@ import {Component} from '@angular/core'; // <-- Import correct
 import {EventRowComponent} from '../../../component/event/event-row/event-row.component';
 import {NgForOf, NgIf} from '@angular/common';
 import {FilterEventComponent} from '../../../component/event/filter-event/filter-event.component';
-import {SidebarComponent} from '../../../component/sidebar/sidebar.component';
+import {SidebarComponent} from '../../../component/navigation/sidebar/sidebar.component';
 import {EditEventComponent} from '../../../component/event/edit-event/edit-event.component';
 import {HttpClient} from '@angular/common/http';
 import {LucideAngularModule} from 'lucide-angular';

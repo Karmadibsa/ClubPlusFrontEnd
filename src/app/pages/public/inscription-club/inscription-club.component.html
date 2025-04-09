@@ -1,0 +1,221 @@
+<!-- Conteneur principal du formulaire -->
+<div class="form-container">
+
+  <!-- Optionnel: Lien de retour -->
+  <a class="return-link" routerLink="/accueil"> <!-- Adaptez routerLink -->
+    <i class="arrow-left">←</i> Retour
+  </a>
+
+  <h1>Inscription d'un Nouveau Club</h1>
+
+  <!-- Affichage des messages d'erreur généraux ou API -->
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Début du formulaire Angular -->
+  <!-- Assurez-vous que 'registrationForm' est le nom de votre FormGroup principal -->
+  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()"> <!-- onSubmit est la méthode de soumission -->
+
+    <!-- Section Informations sur le Club -->
+    <h2>Informations sur le Club</h2>
+    <div class="form-group">
+      <label for="club-nom"><strong>Nom du club :</strong></label>
+      <input type="text" id="club-nom" formControlName="nom" placeholder="Nom officiel du club" required />
+      <div *ngIf="registrationForm.get('nom')?.invalid && registrationForm.get('nom')?.touched" class="validation-error">
+        Le nom du club est requis.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="club-date-creation"><strong>Date de création :</strong></label>
+      <input type="date" id="club-date-creation" formControlName="date_creation" required />
+      <div *ngIf="registrationForm.get('date_creation')?.invalid && registrationForm.get('date_creation')?.touched" class="validation-error">
+        La date de création est requise.
+      </div>
+    </div>
+
+    <!-- Adresse du Club -->
+    <h2>Adresse du Siège Social</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="club-numero-voie">Numéro de voie :</label>
+        <input type="text" id="club-numero-voie" formControlName="numero_voie" placeholder="Numéro" required />
+        <div *ngIf="registrationForm.get('numero_voie')?.invalid && registrationForm.get('numero_voie')?.touched" class="validation-error">
+          Requis.
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="club-rue">Rue :</label>
+        <input type="text" id="club-rue" formControlName="rue" placeholder="Nom de la rue" required />
+        <div *ngIf="registrationForm.get('rue')?.invalid && registrationForm.get('rue')?.touched" class="validation-error">
+          Requis.
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="club-codepostal">Code postal :</label>
+        <input type="text" id="club-codepostal" formControlName="codepostal" placeholder="Code postal" required />
+        <div *ngIf="registrationForm.get('codepostal')?.invalid && registrationForm.get('codepostal')?.touched" class="validation-error">
+          Requis.
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="club-ville">Ville :</label>
+        <input type="text" id="club-ville" formControlName="ville" placeholder="Ville" required />
+        <div *ngIf="registrationForm.get('ville')?.invalid && registrationForm.get('ville')?.touched" class="validation-error">
+          Requis.
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact du Club -->
+    <h2>Contact du Club</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="club-telephone">Numéro de téléphone :</label>
+        <input type="tel" id="club-telephone" formControlName="telephone" placeholder="Téléphone principal du club" required />
+        <div *ngIf="registrationForm.get('telephone')?.invalid && registrationForm.get('telephone')?.touched" class="validation-error">
+          Requis.
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="club-email">Adresse e-mail :</label>
+        <input type="email" id="club-email" formControlName="email" placeholder="Email de contact du club" required />
+        <div *ngIf="registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched" class="validation-error">
+          <span *ngIf="registrationForm.get('email')?.errors?.['required']">L'email est requis.</span>
+          <span *ngIf="registrationForm.get('email')?.errors?.['email']">Format d'email invalide.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Administrateur (Représentant) -->
+    <!-- Utilisation de formGroupName pour lier au groupe 'admin' dans le FormGroup principal -->
+    <div formGroupName="admin">
+      <h2>Informations sur l'Administrateur (Représentant)</h2>
+
+      <!-- Nom et Prénom de l'Admin -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="admin-nom"><strong>Nom du représentant :</strong></label>
+          <!-- Accès au contrôle 'nom' DANS le groupe 'admin' -->
+          <input type="text" id="admin-nom" formControlName="nom" placeholder="Nom de famille" required />
+          <div *ngIf="registrationForm.get('admin.nom')?.invalid && registrationForm.get('admin.nom')?.touched" class="validation-error">
+            Le nom du représentant est requis.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="admin-prenom"><strong>Prénom du représentant :</strong></label>
+          <input type="text" id="admin-prenom" formControlName="prenom" placeholder="Prénom" required />
+          <div *ngIf="registrationForm.get('admin.prenom')?.invalid && registrationForm.get('admin.prenom')?.touched" class="validation-error">
+            Le prénom du représentant est requis.
+          </div>
+        </div>
+      </div>
+
+      <!-- Date de Naissance de l'Admin -->
+      <div class="form-group">
+        <label for="admin-date-naissance"><strong>Date de naissance :</strong></label>
+        <input type="date" id="admin-date-naissance" formControlName="date_naissance" required />
+        <div *ngIf="registrationForm.get('admin.date_naissance')?.invalid && registrationForm.get('admin.date_naissance')?.touched" class="validation-error">
+          La date de naissance est requise.
+        </div>
+      </div>
+
+      <!-- Adresse de l'Admin -->
+      <h2>Adresse de l'Administrateur</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="admin-numero-voie">Numéro de voie :</label>
+          <input type="text" id="admin-numero-voie" formControlName="numero_voie" placeholder="Numéro" required />
+          <div *ngIf="registrationForm.get('admin.numero_voie')?.invalid && registrationForm.get('admin.numero_voie')?.touched" class="validation-error">
+            Requis.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="admin-rue">Rue :</label>
+          <input type="text" id="admin-rue" formControlName="rue" placeholder="Nom de la rue" required />
+          <div *ngIf="registrationForm.get('admin.rue')?.invalid && registrationForm.get('admin.rue')?.touched" class="validation-error">
+            Requis.
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="admin-codepostal">Code postal :</label>
+          <input type="text" id="admin-codepostal" formControlName="codepostal" placeholder="Code postal" required />
+          <div *ngIf="registrationForm.get('admin.codepostal')?.invalid && registrationForm.get('admin.codepostal')?.touched" class="validation-error">
+            Requis.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="admin-ville">Ville :</label>
+          <input type="text" id="admin-ville" formControlName="ville" placeholder="Ville" required />
+          <div *ngIf="registrationForm.get('admin.ville')?.invalid && registrationForm.get('admin.ville')?.touched" class="validation-error">
+            Requis.
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact de l'Admin -->
+      <h2>Contact de l'Administrateur</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="admin-telephone">Numéro de téléphone :</label>
+          <input type="tel" id="admin-telephone" formControlName="telephone" placeholder="Téléphone personnel" required />
+          <div *ngIf="registrationForm.get('admin.telephone')?.invalid && registrationForm.get('admin.telephone')?.touched" class="validation-error">
+            Requis.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="admin-email">Adresse e-mail :</label>
+          <input type="email" id="admin-email" formControlName="email" placeholder="Email personnel" required />
+          <div *ngIf="registrationForm.get('admin.email')?.invalid && registrationForm.get('admin.email')?.touched" class="validation-error">
+            <span *ngIf="registrationForm.get('admin.email')?.errors?.['required']">L'email est requis.</span>
+            <span *ngIf="registrationForm.get('admin.email')?.errors?.['email']">Format d'email invalide.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section Mot de Passe Admin -->
+      <!-- Utilisation de formGroupName pour le groupe 'passwordGroup' DANS le groupe 'admin' -->
+      <div formGroupName="passwordGroup">
+        <h2>Création du Mot de Passe Administrateur</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="admin-password">Mot de passe :</label>
+            <!-- Accès au contrôle 'password' DANS 'admin.passwordGroup' -->
+            <input type="password" id="admin-password" formControlName="password" placeholder="Créez un mot de passe" required />
+            <div *ngIf="registrationForm.get('admin.passwordGroup.password')?.invalid && registrationForm.get('admin.passwordGroup.password')?.touched" class="validation-error">
+              <span *ngIf="registrationForm.get('admin.passwordGroup.password')?.errors?.['required']">Mot de passe requis.</span>
+              <span *ngIf="registrationForm.get('admin.passwordGroup.password')?.errors?.['minlength']">Au moins 6 caractères requis.</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="admin-confirm-password">Confirmer le mot de passe :</label>
+            <input type="password" id="admin-confirm-password" formControlName="confirmPassword" placeholder="Confirmez le mot de passe" required />
+            <div *ngIf="registrationForm.get('admin.passwordGroup.confirmPassword')?.invalid && registrationForm.get('admin.passwordGroup.confirmPassword')?.touched" class="validation-error">
+              <span *ngIf="registrationForm.get('admin.passwordGroup.confirmPassword')?.errors?.['required']">Confirmation requise.</span>
+            </div>
+          </div>
+        </div>
+        <!-- Erreur de validation pour le groupe passwordGroup (ex: correspondance) -->
+        <!-- Vérifie l'erreur 'passwordMismatch' sur le groupe 'admin.passwordGroup' -->
+        <div *ngIf="registrationForm.get('admin.passwordGroup')?.errors?.['passwordMismatch'] && (registrationForm.get('admin.passwordGroup.confirmPassword')?.touched || registrationForm.get('admin.passwordGroup.confirmPassword')?.dirty)" class="validation-error" style="margin-top: 5px;">
+          Les mots de passe ne correspondent pas.
+        </div>
+      </div> <!-- Fin de formGroupName="passwordGroup" -->
+
+    </div> <!-- Fin de formGroupName="admin" -->
+
+    <!-- Bouton de Soumission -->
+    <button type="submit" [disabled]="registrationForm.invalid || isLoading">
+      <strong *ngIf="!isLoading">Inscrire le Club</strong>
+      <strong *ngIf="isLoading">Inscription en cours...</strong>
+    </button>
+
+  </form>
+  <!-- Fin du formulaire Angular -->
+
+</div>
+<!-- Fin du conteneur principal -->

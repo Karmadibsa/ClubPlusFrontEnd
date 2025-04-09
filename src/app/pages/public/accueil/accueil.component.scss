@@ -1,0 +1,114 @@
+.hero-section {
+  background: linear-gradient(135deg, var(--bg-light-gray) 0%, var(--main-white) 100%);
+  padding: var(--spacing-xl) ;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+
+  .hero-content {
+    margin: auto;
+    padding: var(--spacing-lg);
+
+    .hero-title {
+      font-size: 3rem;
+      color: var(--text-dark);
+      margin-bottom: var(--spacing-md);
+
+      strong {
+        color: var(--main-orange);
+      }
+    }
+
+    .hero-description {
+      font-size: 1.2rem;
+      color: var(--text-medium);
+      line-height: 1.6;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .cta-btn {
+      background-color: var(--main-orange);
+      color: var(--main-white);
+      border: none;
+      padding: var(--spacing-md) var(--spacing-xl);
+      font-size: 1.1rem;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: var(--transition-standard);
+
+      &:hover {
+        background-color: (var(--main-orange), 10%);
+      }
+    }
+  }
+}
+
+.features-section {
+  display: flex;
+  justify-content: space-around;
+  padding: var(--spacing-lg) 0;
+  background-color: var(--bg-light-gray);
+  text-align: center;
+
+  .feature-item {
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    transition: var(--transition-standard);
+
+    &:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h3 {
+      font-size: 2rem;
+      color: var(--main-blue);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    p {
+      font-size: 1rem;
+      color: var(--text-medium);
+    }
+  }
+}
+
+.app-download {
+  background-color: var(--main-blue);
+  color: var(--main-white);
+  padding: var(--spacing-xl) 0;
+  text-align: center;
+
+  .download-content {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+
+    h2 {
+      font-size: 2.5rem;
+      margin-bottom: var(--spacing-md);
+    }
+
+    p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .download-btn {
+      background-color: var(--secondary-blue);
+      color: var(--main-white);
+      border: none;
+      padding: var(--spacing-md) var(--spacing-xl);
+      font-size: 1.1rem;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: var(--transition-standard);
+
+      &:hover {
+        background-color: var(--main-orange);
+      }
+    }
+  }
+}

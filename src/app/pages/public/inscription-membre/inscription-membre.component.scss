@@ -1,0 +1,164 @@
+// --- Conteneur du Formulaire ---
+.form-container {
+  background: var(--container-background);
+  padding: 25px 30px; // Un peu plus d'espace
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+}
+
+// --- Lien de Retour ---
+.return-link {
+  display: inline-flex; // Pour aligner icône et texte
+  align-items: center;
+  gap: 5px; // Espace entre icône et texte
+  color: var(--main-blue);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: var(--main-orange);
+  }
+
+  .arrow-left {
+    font-style: normal;
+    font-size: 1.2em; // Légèrement plus grande flèche
+  }
+}
+
+// --- Titres ---
+h1, h2 {
+  text-align: center;
+  color: var(--main-orange);
+  margin-bottom: 15px;
+}
+
+h1 {
+  font-size: 1.8rem; // Taille fixe
+  margin-bottom: 25px;
+}
+
+h2 {
+  font-size: 1.3rem; // Taille fixe
+  color: var(--main-blue); // Différencier H2
+  margin-top: 20px; // Espace avant section
+  border-bottom: 1px solid #eee; // Séparateur léger
+  padding-bottom: 8px;
+}
+
+// --- Formulaire ---
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; // Espace entre les éléments/groupes
+}
+
+// --- Rangée de Formulaire (pour champs côte à côte) ---
+.form-row {
+  display: flex;
+  gap: 15px; // Espace entre les groupes dans une rangée
+  flex-wrap: wrap; // Permet le passage à la ligne si pas assez de place
+}
+
+// --- Groupe de Formulaire (label + input + erreur) ---
+.form-group {
+  flex: 1; // Prend l'espace disponible dans une form-row
+  min-width: 200px; // Largeur minimale avant passage à la ligne dans form-row
+  display: flex;
+  flex-direction: column;
+}
+
+// --- Labels ---
+label {
+  margin-bottom: 5px; // Espace sous le label
+  color: var(--text-color);
+  font-size: 0.9rem; // Taille fixe
+  font-weight: 600; // Légèrement moins gras que 700
+  font-family: var(--font-family);
+
+  strong { // Pour le gras dans les labels
+    font-weight: 700;
+  }
+}
+
+// --- Inputs et Boutons (Styles communs) ---
+input[type="text"],
+input[type="date"],
+input[type="tel"],
+input[type="email"],
+input[type="password"],
+select, // Si vous en ajoutez
+button {
+  padding: 10px 12px; // Espace intérieur
+  border: 1px solid var(--input-border-color);
+  border-radius: 4px;
+  font-size: 0.9rem; // Taille fixe
+  width: 100%; // Prend toute la largeur du form-group
+  box-sizing: border-box; // Inclut padding et border dans la largeur/hauteur
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; // Transitions douces
+
+  &:focus { // Style au focus
+    border-color: var(--main-blue);
+    outline: none; // Supprime l'outline par défaut
+    box-shadow: 0 0 0 2px rgba(var(--main-blue), 0.2); // Ombre légère au focus
+  }
+}
+
+// Style spécifique Angular pour inputs invalides après interaction
+input.ng-invalid.ng-touched {
+  border-color: var(--danger-red);
+}
+
+// --- Bouton de Soumission ---
+button[type="submit"] {
+  margin-top: 25px; // Espace au-dessus du bouton
+  background-color: var(--main-blue);
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 12px 15px; // Padding fixe
+  font-size: 1.1rem; // Taille fixe
+  font-weight: 600;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+
+  &:hover {
+    background-color: var(--main-orange);
+  }
+
+  &:disabled { // Style lorsque désactivé
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  strong { // Texte dans le bouton
+    display: block; // Assure que le texte prend toute la place
+  }
+}
+
+// --- Messages d'Erreur ---
+
+// Erreur générale/API (bandeau en haut)
+.error-message {
+  color: white;
+  background-color: var(--danger-red);
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+// Erreur de validation spécifique à un champ
+.validation-error {
+  color: var(--danger-red);
+  font-size: 0.8rem; // Petit texte
+  margin-top: 4px; // Espace au-dessus
+  min-height: 1em; // Réserve l'espace même si vide, évite les sauts de layout
+}

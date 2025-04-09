@@ -5,7 +5,7 @@ import {
 } from "../../../component/event/calendar/eventcard.component";
 import {NgForOf} from "@angular/common";
 import {LucideAngularModule} from "lucide-angular";
-import {SidebarComponent} from '../../../component/sidebar/sidebar.component';
+import {SidebarComponent} from '../../../component/navigation/sidebar/sidebar.component';
 import {HttpClient} from '@angular/common/http';
 
 @Component({

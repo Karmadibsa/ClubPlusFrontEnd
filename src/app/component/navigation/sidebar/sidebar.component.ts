@@ -19,4 +19,9 @@ export class SidebarComponent {
     console.log("deconnexion")
   }
 
+  isCollapsed = false;
+
+  toggleSidebar(): void {
+    this.isCollapsed = !this.isCollapsed;
+  }
 }

@@ -3,10 +3,10 @@ import {CommonModule} from '@angular/common';
 
 import {LucideAngularModule} from 'lucide-angular';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {SidebarComponent} from "../../../component/sidebar/sidebar.component";
-import {QrCodeModalComponent} from '../../../component/qr-code-modal/qr-code-modal.component';
+import {SidebarComponent} from "../../../component/navigation/sidebar/sidebar.component";
+import {QrCodeModalComponent} from '../../../component/reservation/qr-code-modal/qr-code-modal.component';
 import {HttpClient} from '@angular/common/http';
-import {ReservationRowComponent} from '../../../component/reservation-row/reservation-row.component';
+import {ReservationRowComponent} from '../../../component/reservation/reservation-row/reservation-row.component';
 import html2canvas from 'html2canvas'; // Pour capturer le contenu HTML
 import jspdf from 'jspdf';
 import {QRCodeComponent} from 'angularx-qrcode';

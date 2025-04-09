@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import {SidebarComponent} from '../../../component/sidebar/sidebar.component';
+import {SidebarComponent} from '../../../component/navigation/sidebar/sidebar.component';
 import {LucideAngularModule} from 'lucide-angular';
 
 @Component({

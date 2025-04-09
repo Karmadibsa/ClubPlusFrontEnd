@@ -1,0 +1,129 @@
+<!-- Conteneur principal du formulaire -->
+<div class="form-container">
+
+  <!-- Optionnel: Lien de retour -->
+  <a class="return-link" routerLink="/accueil"> <!-- Adaptez routerLink -->
+    <i class="arrow-left">←</i> Retour
+  </a>
+
+  <h1>Inscription d'un Nouveau Membre</h1>
+
+  <!-- Affichage des messages d'erreur généraux ou API -->
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Début du formulaire Angular -->
+  <form [formGroup]="memberRegistrationForm" (ngSubmit)="registerMember()">
+
+    <!-- Section Informations Personnelles -->
+    <h2>Informations Personnelles</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="membre-nom"><strong>Nom :</strong></label>
+        <input type="text" id="membre-nom" formControlName="nom" placeholder="Nom de famille" required />
+        <div *ngIf="memberRegistrationForm.get('nom')?.invalid && memberRegistrationForm.get('nom')?.touched" class="validation-error">
+          Le nom est requis.
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="membre-prenom"><strong>Prénom :</strong></label>
+        <input type="text" id="membre-prenom" formControlName="prenom" placeholder="Prénom" required />
+        <div *ngIf="memberRegistrationForm.get('prenom')?.invalid && memberRegistrationForm.get('prenom')?.touched" class="validation-error">
+          Le prénom est requis.
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="membre-date-naissance"><strong>Date de naissance :</strong></label>
+      <input type="date" id="membre-date-naissance" formControlName="date_naissance" required />
+      <div *ngIf="memberRegistrationForm.get('date_naissance')?.invalid && memberRegistrationForm.get('date_naissance')?.touched" class="validation-error">
+        La date de naissance est requise.
+      </div>
+    </div>
+
+    <!-- Section Adresse -->
+    <h2>Adresse</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="membre-numero-voie">Numéro de voie :</label>
+        <input type="text" id="membre-numero-voie" formControlName="numero_voie" placeholder="Numéro" required />
+        <div *ngIf="memberRegistrationForm.get('numero_voie')?.invalid && memberRegistrationForm.get('numero_voie')?.touched" class="validation-error">
+          Requis.
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="membre-rue">Rue :</label>
+        <input type="text" id="membre-rue" formControlName="rue" placeholder="Nom de la rue" required />
+        <div *ngIf="memberRegistrationForm.get('rue')?.invalid && memberRegistrationForm.get('rue')?.touched" class="validation-error">
+          Requis.
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="membre-codepostal">Code postal :</label>
+        <input type="text" id="membre-codepostal" formControlName="codepostal" placeholder="Code postal" required />
+        <div *ngIf="memberRegistrationForm.get('codepostal')?.invalid && memberRegistrationForm.get('codepostal')?.touched" class="validation-error">
+          Requis.
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="membre-ville">Ville :</label>
+        <input type="text" id="membre-ville" formControlName="ville" placeholder="Ville" required />
+        <div *ngIf="memberRegistrationForm.get('ville')?.invalid && memberRegistrationForm.get('ville')?.touched" class="validation-error">
+          Requis.
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Contact -->
+    <h2>Contact</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="membre-telephone">Numéro de téléphone :</label>
+        <input type="tel" id="membre-telephone" formControlName="telephone" placeholder="Téléphone" required />
+        <div *ngIf="memberRegistrationForm.get('telephone')?.invalid && memberRegistrationForm.get('telephone')?.touched" class="validation-error">
+          Requis.
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="membre-email">Adresse e-mail :</label>
+        <input type="email" id="membre-email" formControlName="email" placeholder="exemple@domaine.com" required />
+        <div *ngIf="memberRegistrationForm.get('email')?.invalid && memberRegistrationForm.get('email')?.touched" class="validation-error">
+          <span *ngIf="memberRegistrationForm.get('email')?.errors?.['required']">L'email est requis.</span>
+          <span *ngIf="memberRegistrationForm.get('email')?.errors?.['email']">Format d'email invalide.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Identifiants -->
+    <h2>Identifiants</h2>
+    <div class="form-group">
+      <label for="codeClub"><strong>Code du Club :</strong></label>
+      <input type="text" id="codeClub" formControlName="codeClub" placeholder="Code d'accès du club" required />
+      <div *ngIf="memberRegistrationForm.get('codeClub')?.invalid && memberRegistrationForm.get('codeClub')?.touched" class="validation-error">
+        Le code du club est requis pour l'inscription.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="membre-password">Mot de passe :</label>
+      <input type="password" id="membre-password" formControlName="password" placeholder="Créez un mot de passe" required />
+      <div *ngIf="memberRegistrationForm.get('password')?.invalid && memberRegistrationForm.get('password')?.touched" class="validation-error">
+        <span *ngIf="memberRegistrationForm.get('password')?.errors?.['required']">Mot de passe requis.</span>
+        <span *ngIf="memberRegistrationForm.get('password')?.errors?.['minlength']">Au moins 6 caractères requis.</span>
+      </div>
+    </div>
+
+    <!-- Bouton de Soumission -->
+    <button type="submit" [disabled]="memberRegistrationForm.invalid || isLoading">
+      <strong *ngIf="!isLoading">Inscrire le Membre</strong>
+      <strong *ngIf="isLoading">Inscription en cours...</strong>
+    </button>
+
+  </form>
+  <!-- Fin du formulaire Angular -->
+
+</div>
+<!-- Fin du conteneur principal -->
+

@@ -2,7 +2,7 @@ import {Component} from '@angular/core'; // <-- Import correct
 import {MembreRowComponent} from '../../../component/membre/membre-row/membre-row.component';
 import {NgForOf} from '@angular/common';
 import {FilterMembreComponent} from '../../../component/membre/filter-membre/filter-membre.component';
-import {SidebarComponent} from '../../../component/sidebar/sidebar.component';
+import {SidebarComponent} from '../../../component/navigation/sidebar/sidebar.component';
 import {HttpClient} from '@angular/common/http';
 
 @Component({

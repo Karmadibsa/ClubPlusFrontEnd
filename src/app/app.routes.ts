@@ -7,6 +7,10 @@ import {DashboardComponent} from './pages/admin/dashboard/dashboard.component';
 import {EventAdminComponent} from './pages/admin/eventAdmin/eventAdmin.component';
 import {MembreAdminComponent} from './pages/admin/membreAdmin/membreAdmin.component';
 import {MonclubComponent} from './pages/admin/monclub/monclub.component';
+import {AccueilComponent} from './pages/public/accueil/accueil.component';
+import {InscriptionClubComponent} from './pages/public/inscription-club/inscription-club.component';
+import {InscriptionMembreComponent} from './pages/public/inscription-membre/inscription-membre.component';
+import {LoginComponent} from './pages/public/login/login.component';
 
 
 
@@ -38,6 +42,22 @@ export const routes: Routes = [
   {
     path: "monclub",
     component: MonclubComponent,
+  },
+  {
+    path: "accueil",
+    component: AccueilComponent,
+  },
+  {
+    path: "inscription-club",
+    component: InscriptionClubComponent,
+  },
+  {
+    path: "inscription-membres",
+    component: InscriptionMembreComponent,
+  },
+  {
+    path: "connexion",
+    component: LoginComponent,
   },
 
   {path: "", redirectTo: "event", pathMatch: "full"},

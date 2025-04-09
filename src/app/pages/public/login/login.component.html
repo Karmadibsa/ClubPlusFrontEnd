@@ -1,0 +1,97 @@
+<div class="container">
+  <div class="login-container">
+    <h1>Connexion</h1>
+
+    <!-- Affichage des erreurs générales -->
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Formulaire Angular -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+      <!-- Champ Email -->
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+        placeholder="Votre email"
+        required
+        />
+        <!-- Message d'erreur Email -->
+        <div *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)" class="validation-error">
+          <span *ngIf="loginForm.get('email')?.errors?.['required']">L'email est requis.</span>
+          <span *ngIf="loginForm.get('email')?.errors?.['email']">Format d'email invalide.</span>
+        </div>
+      </div>
+
+      <!-- Champ Mot de passe -->
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <div class="password-input">
+          <input
+            [type]="passwordFieldType"
+          id="password"
+          formControlName="password"
+          placeholder="Votre mot de passe"
+          required
+          />
+          <!-- Bouton pour afficher/masquer -->
+          <button
+            type="button"
+            id="toggle-password"
+            class="toggle-password"
+            aria-label="Afficher/Masquer le mot de passe"
+            (click)="togglePasswordVisibility()">
+          <!-- Icône Lucide (nécessite l'installation et l'import de Lucide Icons) -->
+          <!-- L'icône devrait changer en fonction de passwordFieldType -->
+          <lucide-icon *ngIf="passwordFieldType === 'password'"  name="eye"></lucide-icon>
+          <lucide-icon *ngIf="passwordFieldType === 'text'" name="eye-off"></lucide-icon>
+          </button>
+        </div>
+        <!-- Message d'erreur Mot de passe -->
+        <div *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)" class="validation-error">
+          <span *ngIf="loginForm.get('password')?.errors?.['required']">Le mot de passe est requis.</span>
+        </div>
+      </div>
+
+<!--      &lt;!&ndash; Options du formulaire &ndash;&gt;-->
+<!--      <div class="form-options">-->
+<!--        <div class="remember-me">-->
+<!--          <input type="checkbox" id="remember" formControlName="remember" /> &lt;!&ndash; Liaison au FormControl 'remember' &ndash;&gt;-->
+<!--          <label for="remember">Se <strong>souvenir</strong> de moi</label>-->
+<!--        </div>-->
+<!--        &lt;!&ndash; Utilisation de routerLink pour la navigation interne Angular &ndash;&gt;-->
+<!--        <a routerLink="/mot-de-passe-oublie" class="forgot-password"> &lt;!&ndash; Adaptez le chemin &ndash;&gt;-->
+<!--          <strong>Mot de passe oublié?</strong>-->
+<!--        </a>-->
+<!--      </div>-->
+
+      <!-- Bouton de connexion (type submit déclenche ngSubmit) -->
+      <button type="submit" class="login-btn" [disabled]="loginForm.invalid"> <!-- Désactivé si formulaire invalide -->
+        <strong>Se connecter</strong>
+      </button>
+    </form>
+
+    <!-- Lien vers l'inscription -->
+    <div class="signup-link">
+      <p>
+        Vous n'avez pas de
+        <a routerLink="/inscription-membre"><strong>compte</strong></a> <!-- Adaptez le chemin -->
+        ?
+      </p>
+    </div>
+
+    <!-- Lien Retour à l'accueil -->
+    <div class="home-link">
+      <a routerLink="/accueil" class="home-btn"> <!-- Adaptez le chemin vers l'accueil -->
+        <!-- Icône Lucide -->
+        <i data-lucide="arrow-left"></i>
+        <span>Retour à l'accueil</span>
+      </a>
+    </div>
+
+  </div>
+</div>

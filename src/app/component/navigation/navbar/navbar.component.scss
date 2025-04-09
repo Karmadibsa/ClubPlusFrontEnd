@@ -1,0 +1,90 @@
+.navbar {
+  background-color: var(--bg-medium-gray);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  font-family: var(--font-family);
+  padding: var(--spacing-md) var(--spacing-lg);
+
+  .navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 95%;
+    margin: auto;
+  }
+
+  .navbar-logo img {
+    max-height: calc(var(--icon-size) * 1.8); /* Agrandissement du logo */
+    transition: var(--transition-standard);
+
+    &:hover {
+      transform: scale(1.1);
+      opacity: 0.9; /* Effet visuel supplémentaire */
+    }
+  }
+
+  .navbar-menu {
+    list-style: none;
+    display: flex;
+    gap: var(--spacing-lg);
+
+    li a {
+      text-decoration: none; /* Suppression du soulignement */
+      color: var(--main-blue);
+      font-weight: bold;
+      font-size: 1.2rem; /* Texte légèrement agrandi */
+      transition: var(--transition-standard);
+
+      &:hover {
+        color: var(--main-orange); /* Accentuation au survol */
+      }
+    }
+  }
+
+  .navbar-buttons {
+    display: flex;
+    gap: var(--spacing-md);
+
+    .btn {
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      font-weight: bold;
+      text-decoration: none;
+      transition: var(--transition-standard);
+
+      &.btn-primary {
+        background-color: var(--main-blue); /* Utilisation de main-blue */
+        color: var(--main-white);
+
+        &:hover {
+          background-color: var(--main-white);
+          color: var(--main-blue);
+          box-shadow: 0px 4px 8px rgba(26, 95, 122, 0.3); /* Ajout d'un effet visuel */
+        }
+      }
+
+      &.btn-secondary {
+        background-color: var(--main-orange); /* Utilisation de main-orange */
+        color: var(--main-white);
+
+        &:hover {
+          background-color: rgba(var(--main-white));
+          color: var(--main-orange);
+          box-shadow: 0px 4px 8px rgba(255, 107, 53, 0.3); /* Accentuation au survol */
+        }
+      }
+
+      &.btn-outline {
+        border: 2px solid var(--main-blue);
+        background-color: transparent;
+        color: var(--main-blue);
+
+        &:hover {
+          background-color: var(--main-blue);
+          color: var(--main-white);
+          box-shadow: 0px 4px 8px rgba(26, 95, 122, 0.3); /* Ajout d'un effet visuel */
+        }
+      }
+    }
+  }
+}
