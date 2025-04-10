@@ -10,7 +10,7 @@ import {
 } from '@angular/forms';
 import {NgIf} from '@angular/common';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import { Router } from '@angular/router'; // <-- 1. Importer Router
+import {Router, RouterLink} from '@angular/router'; // <-- 1. Importer Router
 
 
 // Custom validator function for password matching
@@ -32,7 +32,8 @@ export function passwordMatchValidator(control: AbstractControl): ValidationErro
   imports: [
     FormsModule,
     NgIf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterLink
   ],
   templateUrl: './inscription-club.component.html',
   styleUrl: './inscription-club.component.scss'

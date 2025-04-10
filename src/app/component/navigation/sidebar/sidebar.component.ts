@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {LucideAngularModule} from 'lucide-angular';
-import {RouterLink, RouterLinkActive} from "@angular/router";
+import {Router, RouterLink, RouterLinkActive} from "@angular/router";
 import {FormsModule} from '@angular/forms';
 
 @Component({
@@ -15,8 +15,11 @@ import {FormsModule} from '@angular/forms';
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
+  private router = inject(Router); // Injecter si redirection utilisée
+
   logout() {
     console.log("deconnexion")
+    this.router.navigate(['/accueil']); // Ou '/login' selon votre route
   }
 
   isCollapsed = false;

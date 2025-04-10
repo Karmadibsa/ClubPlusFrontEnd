@@ -1,14 +1,15 @@
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Component, inject} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-inscription-membre',
   imports: [
     NgIf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterLink
   ],
   templateUrl: './inscription-membre.component.html',
   styleUrl: './inscription-membre.component.scss'
@@ -43,7 +44,7 @@ export class InscriptionMembreComponent {
       password: ['password123', [Validators.required, Validators.minLength(6)]], // [1]
 
       // Champ séparé pour construire l'URL, mais présent dans le formulaire
-      codeClub: ['CL0001', Validators.required] // [1]
+      codeClub: ['CL0002', Validators.required] // [1]
     });
   }
 
