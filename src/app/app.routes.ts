@@ -11,6 +11,7 @@ import {AccueilComponent} from './pages/public/accueil/accueil.component';
 import {InscriptionClubComponent} from './pages/public/inscription-club/inscription-club.component';
 import {InscriptionMembreComponent} from './pages/public/inscription-membre/inscription-membre.component';
 import {LoginComponent} from './pages/public/login/login.component';
+import {connecteGuard} from './service/connecte.guard';
 
 
 
@@ -18,30 +19,37 @@ export const routes: Routes = [
   {
     path: "event",
     component: EventComponent,
+    canActivate: [connecteGuard]
   },
   {
     path: "profil",
     component: MonCompteComponent,
+    canActivate: [connecteGuard]
   },
   {
     path: "billet",
     component: BilletComponent,
+    canActivate: [connecteGuard]
   },
   {
     path: "dashboard",
     component: DashboardComponent,
+    canActivate: [connecteGuard]
   },
   {
     path: "eventadmin",
     component: EventAdminComponent,
+    canActivate: [connecteGuard]
   },
   {
     path: "membreadmin",
     component: MembreAdminComponent,
+    canActivate: [connecteGuard]
   },
   {
     path: "monclub",
     component: MonclubComponent,
+    canActivate: [connecteGuard]
   },
   {
     path: "accueil",
@@ -60,6 +68,6 @@ export const routes: Routes = [
     component: LoginComponent,
   },
 
-  {path: "", redirectTo: "event", pathMatch: "full"},
+  {path: "", redirectTo: "accueil", pathMatch: "full"},
   {path: "**", component: Page404Component, pathMatch: "full"}
 ];

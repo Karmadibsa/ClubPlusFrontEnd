@@ -1,9 +1,13 @@
 // --- Conteneur Principal & Login ---
 .container {
   width: 100%;
+  height: 100vh; // Prend toute la hauteur de la fenêtre
   display: flex;
-  justify-content: center;
+  justify-content: center; // Centre horizontalement
+  align-items: center; // Centre verticalement
+  background-color: var(--background-color); // Optionnel : ajoute une couleur de fond
 }
+
 
 .login-container {
   background: var(--container-background);

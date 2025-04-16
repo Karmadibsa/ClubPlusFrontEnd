@@ -90,8 +90,10 @@ export class EventAdminComponent {
       // Si l'événement a un ID, il s'agit d'une modification
       this.mettreAJourEvenement(evenement);
     } else {
-      // Sinon, il s'agit d'une création
-      this.http.post('http://localhost:8080/api/events', evenement).subscribe({
+
+      const jwt = localStorage.getItem("jwt")
+      if(jwt){
+      this.http.post('http://localhost:8080/api/events', {headers : {Authorization : "Bearer" + localStorage.getItem("jwt")}}, evenement).subscribe({
         next: (nouvelEvenement) => {
           console.log('Événement créé avec succès:', nouvelEvenement);
           this.evenements.push(nouvelEvenement); // Ajoute le nouvel événement à la liste
@@ -99,8 +101,20 @@ export class EventAdminComponent {
         },
         error: (err) => console.error('Erreur lors de la création de l\'événement:', err)
       });
+      }
+      }
     }
-  }
+  //     // Sinon, il s'agit d'une création
+  //       this.http.post('http://localhost:8080/api/events', {headers : {Authorization : "Bearer" + localStorage.getItem("jwt")}} evenement).subscribe({
+  //       next: (nouvelEvenement) => {
+  //         console.log('Événement créé avec succès:', nouvelEvenement);
+  //         this.evenements.push(nouvelEvenement); // Ajoute le nouvel événement à la liste
+  //         this.fermerModal();
+  //       },
+  //       error: (err) => console.error('Erreur lors de la création de l\'événement:', err)
+  //     });
+  //   }
+  // }
 
 
 }

@@ -2,13 +2,8 @@
   <div class="login-container">
     <h1>Connexion</h1>
 
-    <!-- Affichage des erreurs générales -->
-    <div *ngIf="errorMessage" class="error-message">
-      {{ errorMessage }}
-    </div>
-
     <!-- Formulaire Angular -->
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="loginForm" (ngSubmit)="onConnexion()">
 
       <!-- Champ Email -->
       <div class="form-group">
@@ -57,32 +52,12 @@
         </div>
       </div>
 
-<!--      &lt;!&ndash; Options du formulaire &ndash;&gt;-->
-<!--      <div class="form-options">-->
-<!--        <div class="remember-me">-->
-<!--          <input type="checkbox" id="remember" formControlName="remember" /> &lt;!&ndash; Liaison au FormControl 'remember' &ndash;&gt;-->
-<!--          <label for="remember">Se <strong>souvenir</strong> de moi</label>-->
-<!--        </div>-->
-<!--        &lt;!&ndash; Utilisation de routerLink pour la navigation interne Angular &ndash;&gt;-->
-<!--        <a routerLink="/mot-de-passe-oublie" class="forgot-password"> &lt;!&ndash; Adaptez le chemin &ndash;&gt;-->
-<!--          <strong>Mot de passe oublié?</strong>-->
-<!--        </a>-->
-<!--      </div>-->
 
       <!-- Bouton de connexion (type submit déclenche ngSubmit) -->
-      <button type="submit" class="login-btn" [disabled]="loginForm.invalid"> <!-- Désactivé si formulaire invalide -->
+      <button type="submit" class="login-btn" > <!-- Désactivé si formulaire invalide -->
         <strong>Se connecter</strong>
       </button>
     </form>
-
-    <!-- Lien vers l'inscription -->
-    <div class="signup-link">
-      <p>
-        Vous n'avez pas de
-        <a routerLink="/inscription-membre"><strong>compte</strong></a> <!-- Adaptez le chemin -->
-        ?
-      </p>
-    </div>
 
     <!-- Lien Retour à l'accueil -->
     <div class="home-link">

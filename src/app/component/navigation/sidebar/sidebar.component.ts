@@ -2,6 +2,7 @@ import {Component, inject} from '@angular/core';
 import {LucideAngularModule} from 'lucide-angular';
 import {Router, RouterLink, RouterLinkActive} from "@angular/router";
 import {FormsModule} from '@angular/forms';
+import {AuthService} from '../../../service/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -15,12 +16,9 @@ import {FormsModule} from '@angular/forms';
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
+  auth = inject(AuthService)
   private router = inject(Router); // Injecter si redirection utilisée
 
-  logout() {
-    console.log("deconnexion")
-    this.router.navigate(['/accueil']); // Ou '/login' selon votre route
-  }
 
   isCollapsed = false;
 
