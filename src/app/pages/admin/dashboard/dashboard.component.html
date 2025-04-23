@@ -19,78 +19,80 @@
     </div>
     <div class="card stat-card">
       <h3>Taux de participation</h3>
-      <p class="stat-value">{{ averageParticipation }}%</p>
+      <p class="stat-value">{{ averageEventOccupancy }}%</p>
     </div>
   </div>
 
   <!-- Section Graphiques -->
   <div class="charts-grid">
     <div class="card chart-container">
+      <!-- Graphique des Membres -->
       <highcharts-chart
         [Highcharts]="Highcharts"
         [options]="membersChartOptions"
-        style="width: 100%; height: 400px;">
+      style="width: 100%; height: 400px;">
       </highcharts-chart>
     </div>
     <div class="card chart-container">
+      <!-- Graphique des Notes -->
       <highcharts-chart
         [Highcharts]="Highcharts"
         [options]="ratingsChartOptions"
-        style="width: 100%; height: 400px;">
+      style="width: 100%; height: 400px;">
       </highcharts-chart>
     </div>
   </div>
-  <!-- Section Tableaux -->
-  <div class="tables-grid">
-    <!-- Derniers membres inscrits -->
-    <div class="table-container">
-      <h3>Derniers membres inscrits</h3>
-      <table class="full-width-table">
-        <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nom et Prénom</th>
-          <th>Date de Naissance</th>
-          <th>Date d'Inscription</th>
-          <th>Adresse</th>
-          <th>Téléphone</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Utilisation de membre-row -->
-        <tr *ngFor="let member of lastFiveMembers" app-membre-row [membre]="member" (edit)="onEditMembre($event)"
-            (delete)="onDeleteMembre($event)"></tr>
-        </tbody>
-      </table>
-    </div>
+<!--  &lt;!&ndash; Section Tableaux &ndash;&gt;-->
+<!--  <div class="tables-grid">-->
+<!--    &lt;!&ndash; Derniers membres inscrits &ndash;&gt;-->
+<!--    <div class="table-container">-->
+<!--      <h3>Derniers membres inscrits</h3>-->
+<!--      <table class="full-width-table">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--          <th>ID</th>-->
+<!--          <th>Nom et Prénom</th>-->
+<!--          <th>Date de Naissance</th>-->
+<!--          <th>Date d'Inscription</th>-->
+<!--          <th>Adresse</th>-->
+<!--          <th>Téléphone</th>-->
+<!--          <th>Email</th>-->
+<!--          <th>Role</th>-->
+<!--          <th>Actions</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        &lt;!&ndash; Utilisation de membre-row &ndash;&gt;-->
+<!--        <tr *ngFor="let member of lastFiveMembers" app-membre-row [membre]="member" (edit)="onEditMembre($event)"-->
+<!--            (delete)="onDeleteMembre($event)"></tr>-->
+<!--        </tbody>-->
+<!--      </table>-->
+<!--    </div>-->
 
-    <!-- Prochains événements -->
-    <div class="table-container">
-      <h3>Prochains événements</h3>
-      <table class="full-width-table">
-        <thead>
-        <tr>
-          <th>ID</th>
-          <th>Titre</th>
-          <th>Début - Fin</th>
-          <th>Description</th>
-          <th>Participants</th>
-          <th>Lieu</th>
-          <th>Catégories</th>
-          <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Utilisation de event-row -->
-        <tr *ngFor="let event of nextFiveEvents" app-event-row [evenement]="event"         (supprimer)="supprimerEvenement($event)"
-            (modifier)="mettreAJourEvenement($event)"></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+<!--    &lt;!&ndash; Prochains événements &ndash;&gt;-->
+<!--    <div class="table-container">-->
+<!--      <h3>Prochains événements</h3>-->
+<!--      <table class="full-width-table">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--          <th>ID</th>-->
+<!--          <th>Titre</th>-->
+<!--          <th>Début - Fin</th>-->
+<!--          <th>Description</th>-->
+<!--          <th>Participants</th>-->
+<!--          <th>Lieu</th>-->
+<!--          <th>Catégories</th>-->
+<!--          <th>Actions</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        &lt;!&ndash; Utilisation de event-row &ndash;&gt;-->
+<!--        <tr *ngFor="let event of nextFiveEvents" app-event-row [evenement]="event"         (supprimer)="supprimerEvenement($event)"-->
+<!--            (modifier)="mettreAJourEvenement($event)"></tr>-->
+<!--        </tbody>-->
+<!--      </table>-->
+<!--    </div>-->
+<!--  </div>-->
 
   </div>
 
