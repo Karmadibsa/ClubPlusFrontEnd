@@ -1,305 +1,290 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import * as Highcharts from 'highcharts';
-import {DecimalPipe, NgForOf, NgIf} from '@angular/common';
-import {EventRowComponent} from '../../../component/event/event-row/event-row.component';
-import {MembreRowComponent} from '../../../component/membre/membre-row/membre-row.component';
-import {HighchartsChartModule} from 'highcharts-angular';
-import {SidebarComponent} from '../../../component/navigation/sidebar/sidebar.component';
-import {AuthService} from '../../../service/auth.service';
-import {NotificationService} from '../../../service/notification.service';
-import {Router} from '@angular/router';
+// dashboard.component.ts (Version SIMPLE, STABLE et COMMENTÉE)
+
+import { Component, inject, OnInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { CommonModule, DecimalPipe, PercentPipe } from '@angular/common';
+import { SidebarComponent } from '../../../component/navigation/sidebar/sidebar.component'; // Adapte chemin
+import { AuthService } from '../../../service/auth.service'; // Adapte chemin
+import { NotificationService } from '../../../service/notification.service'; // Adapte chemin
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+
+// --- Imports Chart.js & ng2-charts ---
+import { ChartData, ChartOptions, Chart, PointElement, LineElement, Title, Tooltip, Legend, CategoryScale, LinearScale, BarElement, LineController, BarController, Filler } from 'chart.js';
+import {BaseChartDirective} from 'ng2-charts';
+
+
+
+// --- CONSTANTES DE STYLE ---
+const MAIN_BLUE = '#1a5f7a';
+const MAIN_ORANGE = '#f26122';
+const FONT_FAMILY_POPPINS = "'Poppins', sans-serif";
+const CHART_GRID_COLOR = 'rgba(0, 0, 0, 0.05)';
+const CHART_TICK_COLOR = '#555';
+const CHART_TOOLTIP_BG = 'rgba(0, 0, 0, 0.85)';
+// -------------------------
 
 @Component({
   selector: 'app-dashboard',
+  standalone: true,
+  imports: [ CommonModule, PercentPipe, SidebarComponent, BaseChartDirective ], // Retire DecimalPipe si non utilisé
   templateUrl: './dashboard.component.html',
-  imports: [
-    HighchartsChartModule,
-    SidebarComponent
-  ],
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush // Optimisation possible
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
+
   // --- Injections ---
   private http = inject(HttpClient);
   private authService = inject(AuthService);
   private notification = inject(NotificationService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
-  // --- Propriétés pour le Template ---
-  // KPIs (comme avant)
-  totalEvents: number | string = 'Chargement...';
-  upcomingEventsCount: number | string = 'Chargement...';
-  averageEventOccupancy: number | string = 'Chargement...';
-  totalMembers: number | string = 'Chargement...';
+  // --- Propriétés KPIs ---
+  totalEvents: number | string = '...';
+  upcomingEventsCount: number | string = '...';
+  averageEventOccupancy: number | null | string = null;
 
-  // --- Propriétés pour Highcharts ---
-  Highcharts: typeof Highcharts = Highcharts; // Nécessaire pour le template
-  // Initialise les options avec un état "chargement" simple
-  membersChartOptions: Highcharts.Options = {
-    title: { text: 'Chargement des inscriptions...' },
-    series: [] // Important d'avoir au moins un tableau vide pour éviter les erreurs initiales
+  // --- Options de base communes (inclut animation simple par défaut) ---
+  private baseChartOptions: ChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        enabled: true, backgroundColor: CHART_TOOLTIP_BG,
+        titleFont: { family: FONT_FAMILY_POPPINS, weight: 'bold', size: 13 },
+        bodyFont: { family: FONT_FAMILY_POPPINS, size: 12 },
+        padding: 12, cornerRadius: 3, displayColors: false, boxPadding: 4
+      }
+    },
+    font: { family: FONT_FAMILY_POPPINS, size: 12 },
+    // L'animation par défaut de Chart.js sera utilisée (simple fondu/montée)
+    // On n'a plus besoin de 'animation: { duration: 600, ... }' ici
+    // ni de la section 'animations' complexe pour la ligne.
   };
-  ratingsChartOptions: Highcharts.Options = {
-    title: { text: 'Chargement des notes...' },
-    series: []
+
+  // --- Options spécifiques & Données Graphique Inscriptions (LIGNE) ---
+  public membersChartOptions: ChartOptions<'line'> = { // Type ligne spécifié
+    ...this.baseChartOptions, // Hérite des options communes
+    scales: {
+      y: { // Axe Y: Nombre
+        beginAtZero: true,
+        grid: { color: CHART_GRID_COLOR }, // Grille légère, pas de bordure d'axe
+        ticks: {
+          color: CHART_TICK_COLOR,
+          font: { family: FONT_FAMILY_POPPINS },
+          stepSize: 1, // Force les graduations entières
+          precision: 0 // Force l'affichage d'entiers
+        },
+        border: { display: false } // Cache la ligne de l'axe Y
+      },
+      x: { // Axe X: Mois
+        grid: { display: false }, // Pas de grille verticale
+        ticks: {
+          color: CHART_TICK_COLOR,
+          font: { family: FONT_FAMILY_POPPINS }
+        },
+        border: { display: false } // Cache la ligne de l'axe X
+      }
+    },
+    interaction: { // Améliore l'interaction avec la ligne
+      intersect: false, // Tooltip même si pas pile sur le point
+      mode: 'index', // Tooltip pour tous les points sur le même index X
+    },
   };
+  // Données pour le graphique ligne
+  public membersChartData: ChartData<'line'> = { labels: [], datasets: [] }; // Type ligne spécifié
 
-  isLoadingSummary = false;
-  private readonly baseApiUrl = 'http://localhost:8080/api'; // Adapte si nécessaire
+  // --- Options spécifiques & Données Graphique Notes (BARRES) ---
+  public ratingsChartOptions: ChartOptions<'bar'> = { // Type barre spécifié
+    ...this.baseChartOptions, // Hérite des options communes (et de l'animation simple)
+    scales: {
+      y: { // Axe Y: Note
+        beginAtZero: true, max: 5, // Echelle 0-5
+        grid: { color: CHART_GRID_COLOR },
+        ticks: {
+          color: CHART_TICK_COLOR,
+          font: { family: FONT_FAMILY_POPPINS },
+          stepSize: 1 // Pas de 1 pour les notes
+        },
+        border: { display: false }
+      },
+      x: { // Axe X: Catégories
+        grid: { display: false },
+        ticks: {
+          color: CHART_TICK_COLOR,
+          font: { family: FONT_FAMILY_POPPINS }
+        },
+        border: { display: false }
+      }
+    }
+  };
+  // Données pour le graphique barres
+  public ratingsChartData: ChartData<'bar'> = { labels: [], datasets: [] }; // Type barre spécifié
 
+  // --- État & Subscription ---
+  isLoading = false;
+  private apiSubscription: Subscription | null = null;
+  private readonly baseApiUrl = 'http://localhost:8080/api';
+
+  constructor() {} // Le constructeur est vide, c'est normal
+
+  /** Initialisation: Récupère l'ID et lance le chargement */
   ngOnInit(): void {
     const clubId = this.authService.getManagedClubId();
     if (clubId !== null) {
-      this.loadDashboardSummary(clubId);
+      this.loadDashboardData(clubId);
     } else {
       this.handleMissingClubId();
     }
   }
 
-  private loadDashboardSummary(clubId: number): void {
-    this.isLoadingSummary = true;
-    // Reset KPIs et options des graphiques à l'état "chargement"
-    this.totalEvents = "Chargement...";
-    // ... reset autres KPIs ...
-    this.membersChartOptions = { title: { text: 'Chargement des inscriptions...' }, series: [] };
-    this.ratingsChartOptions = { title: { text: 'Chargement des notes...' }, series: [] };
+  /** Nettoyage: Annule l'appel API si le composant est détruit */
+  ngOnDestroy(): void {
+    this.apiSubscription?.unsubscribe();
+  }
+
+  /** Charge toutes les données via l'API */
+  private loadDashboardData(clubId: number): void {
+    this.isLoading = true;
+    // Réinitialisation avant l'appel
+    this.totalEvents = "..."; this.upcomingEventsCount = "..."; this.averageEventOccupancy = null;
+    this.membersChartData = { labels: [], datasets: [] };
+    this.ratingsChartData = { labels: [], datasets: [] };
 
     const url = `${this.baseApiUrl}/stats/clubs/${clubId}/dashboard-summary`;
     console.log("Appel API:", url);
 
-    this.http.get<DashboardSummaryDTO>(url).subscribe({
+    this.apiSubscription = this.http.get<DashboardSummaryDTO>(url).subscribe({
+      /** Succès de l'appel API */
       next: (response) => {
-        console.log("Données reçues:", response); // TU VOIS BIEN CECI DANS LA CONSOLE
+        console.log("Données reçues:", response);
 
-        // Mise à jour des KPIs (comme avant)
+        // 1. Mettre à jour les KPIs
         this.totalEvents = response.totalEvents;
         this.upcomingEventsCount = response.upcomingEventsCount30d;
-        this.averageEventOccupancy = response.averageEventOccupancyRate;
-        this.totalMembers = response.totalMembers;
+        this.updateAverageOccupancy(response.averageEventOccupancyRate);
 
-        // --- Appel des fonctions pour mettre à jour CHAQUE graphique ---
-        this.updateSimpleMembersChart(response.monthlyRegistrations);
-        this.updateSimpleRatingsChart(response.averageEventRatings);
-        // -------------------------------------------------------------
+        // 2. Mettre à jour les données du graphique des inscriptions (LIGNE)
+        this.updateMembersChartData(response.monthlyRegistrations);
 
-        this.isLoadingSummary = false;
+        // 3. Mettre à jour les données du graphique des notes (BARRES)
+        this.updateRatingsChartData(response.averageEventRatings);
+
+        this.isLoading = false; // Fin du chargement
+        this.cdr.detectChanges(); // Notifier Angular pour rafraîchir la vue
+        console.log("Données mises à jour.");
       },
+      /** Erreur de l'appel API */
       error: (error: HttpErrorResponse) => {
         console.error("Erreur API:", error);
-        this.handleApiError(error, 'résumé dashboard');
-        // Mettre les graphiques en état d'erreur
-        this.membersChartOptions = { title: { text: 'Erreur chargement inscriptions' }, series: [] };
-        this.ratingsChartOptions = { title: { text: 'Erreur chargement notes' }, series: [] };
-        this.isLoadingSummary = false;
+        this.handleApiError(error, 'résumé dashboard'); // Gère l'erreur
       }
     });
   }
 
-
-  // --- Gestionnaires d'Erreurs et d'Actions ---
-  private handleApiError(error: HttpErrorResponse, context: string): void {
-    console.error(`Erreur chargement ${context}:`, error);
-    this.notification.show(`Erreur lors du chargement (${context}).`, "error");
-    // Pas besoin de onComplete ici car on arrête le loader dans le subscribe
-  }
-
-  private handleMissingClubId(): void {
-    const userRole = this.authService.getRole();
-    if (userRole === 'ADMIN' || userRole === 'RESERVATION') {
-      this.notification.show("Erreur critique : Impossible de récupérer l'ID du club géré.", "error");
+  /** Met à jour le KPI Taux d'Occupation (avec vérification) */
+  private updateAverageOccupancy(rate: number | undefined | null): void {
+    if (typeof rate === 'number') {
+      // Convertit en format 0-1 (ex: 3.4 => 0.034). Adapte si ton API est différente.
+      this.averageEventOccupancy = rate / 100;
     } else {
-      this.notification.show("Accès non autorisé.", "error");
-      this.router.navigate(['/']);
+      this.averageEventOccupancy = 'N/A'; // Valeur par défaut si donnée invalide
+      console.warn("Format incorrect pour averageEventOccupancyRate:", rate);
     }
-    this.isLoadingSummary = false; // Arrêter ce loader spécifique
-    // Mettre les valeurs en état d'erreur
-    this.totalEvents = 'Erreur';
   }
 
-  /**
-   * RETOUR À LA BASE : Graphique en COLONNES simple.
-   * Doit fonctionner si l'environnement est sain.
-   */
-  private updateSimpleMembersChart(data: MonthlyRegistrationPoint[] | undefined | null): void {
-    if (!data || data.length === 0) {
-      console.warn("Pas de données d'inscription à afficher.");
-      this.membersChartOptions = { title: { text: 'Aucune donnée d\'inscription' }, series: [] };
+  /** Prépare et assigne les données pour le graphique des inscriptions (LIGNE) */
+  private updateMembersChartData(registrations: MonthlyRegistrationPoint[] | undefined | null): void {
+    if (!registrations?.length) {
+      console.warn("Aucune donnée d'inscription.");
+      this.membersChartData = { labels: [], datasets: [] }; // Assure que c'est vide
       return;
     }
-
-    // Extraction des données (identique)
-    const categories = data.map(point => point.monthYear);
-    const seriesData = data.map(point => point.count);
-
-    console.log("Catégories Membres:", categories);
-    console.log("Données Série Membres:", seriesData);
-
-    // Création des options pour un graphique en COLONNES
-    this.membersChartOptions = {
-      chart: {
-        type: 'column' // <-- Retour au type COLONNE
-      },
-      title: {
-        text: 'Inscriptions Mensuelles' // Titre simple
-      },
-      xAxis: {
-        categories: categories,
-        title: { text: 'Mois' }
-        // PAS de crosshair ici
-      } as Highcharts.XAxisOptions, // Assertion pour la compilation si nécessaire
-      yAxis: {
-        min: 0,
-        title: { text: 'Nombre d\'inscriptions' },
-        allowDecimals: false
-      },
-      series: [{
-        name: 'Inscriptions',
-        type: 'column', // <-- Retour au type COLONNE
-        data: seriesData
-        // PAS de marker ici (pas très utile pour les colonnes)
-      }],
-      legend: { enabled: false },
-      credits: { enabled: false },
-      tooltip: {
-        // Tooltip simple pour colonnes
-        headerFormat: '<span style="font-size: 10px">{point.key}</span><br/>', // Affiche la catégorie (mois)
-        pointFormat: '{series.name}: <b>{point.y}</b>'
-      }
+    this.membersChartData = {
+      labels: registrations.map(p => p.monthYear), // Mois sur l'axe X
+      datasets: [{
+        data: registrations.map(p => p.count), // Nombre d'inscriptions
+        label: 'Inscriptions',
+        // Styles pour la ligne
+        fill: true,
+        backgroundColor: 'rgba(26, 95, 122, 0.1)', // Remplissage bleu très léger
+        borderColor: MAIN_BLUE, // Ligne bleue
+        pointBackgroundColor: MAIN_BLUE,
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: MAIN_BLUE,
+        tension: 0.3, // Courbe douce
+        borderWidth: 2,
+        pointRadius: 3,
+        pointHoverRadius: 6
+      }]
     };
-    console.log("[RETOUR BASE] Options Membres (type Colonne) mises à jour:", this.membersChartOptions);
+    console.log("Données graphique Inscriptions préparées.");
   }
 
-
-
-  /**
-   * Crée les options SIMPLES pour le graphique des notes moyennes.
-   * Utilise les noms des critères comme catégories sur l'axe X.
-   */
-  private updateSimpleRatingsChart(data: AverageRatings | undefined | null): void {
-    if (!data || Object.keys(data).length === 0) {
-      console.warn("Pas de données de notes à afficher.");
-      this.ratingsChartOptions = { title: { text: 'Aucune donnée de note' }, series: [] };
+  /** Prépare et assigne les données pour le graphique des notes (BARRES) */
+  private updateRatingsChartData(ratings: AverageRatings | undefined | null): void {
+    if (!ratings || Object.keys(ratings).length === 0) {
+      console.warn("Aucune donnée de notes.");
+      this.ratingsChartData = { labels: [], datasets: [] }; // Assure que c'est vide
       return;
     }
+    const orderedKeys = ['organisation', 'proprete', 'ambiance', 'fairPlay', 'niveauJoueurs', 'moyenneGenerale'];
+    const displayLabels: Record<string, string> = { organisation: 'Organisation', proprete: 'Propreté', ambiance: 'Ambiance', fairPlay: 'Fairplay', niveauJoueurs: 'Niveau', moyenneGenerale: 'Moyenne' };
 
-    // 1. Définir l'ordre et les libellés qu'on veut afficher
-    const orderedKeys: (keyof AverageRatings)[] = ['organisation', 'proprete', 'ambiance', 'fairPlay', 'niveauJoueurs', 'moyenneGenerale'];
-    const displayLabels: { [key in keyof AverageRatings]?: string } = {
-      organisation: 'Organisation', proprete: 'Propreté', ambiance: 'Ambiance',
-      fairPlay: 'Fairplay', niveauJoueurs: 'Niveau Joueurs', moyenneGenerale: 'Moyenne'
+    this.ratingsChartData = {
+      labels: orderedKeys.map(key => displayLabels[key] || key), // Catégories sur l'axe X
+      datasets: [{
+        data: orderedKeys.map(key => ratings[key] ?? 0), // Notes (ou 0 si manquant)
+        label: 'Note',
+        // Styles pour les barres
+        backgroundColor: MAIN_ORANGE, // Couleur orange
+        borderColor: MAIN_ORANGE,
+        borderWidth: 0,
+        borderRadius: 5,
+        borderSkipped: false,
+        hoverBackgroundColor: 'rgba(242, 97, 34, 0.85)',
+        barPercentage: 0.6, // Largeur des barres
+        categoryPercentage: 0.7 // Espace entre groupes
+      }]
     };
-
-    // 2. Extraire les catégories (les libellés dans l'ordre)
-    const categories = orderedKeys.map(key => displayLabels[key] || key); // Prend le joli nom ou la clé
-    console.log("Catégories Notes:", categories);
-
-    // 3. Extraire les données (les notes dans le MÊME ordre)
-    const seriesData = orderedKeys.map(key => data[key] !== undefined ? data[key] : 0); // Prend la note ou 0 si absente
-    console.log("Données Série Notes:", seriesData);
-
-    // 4. Créer l'objet d'options Highcharts
-    this.ratingsChartOptions = {
-      chart: {
-        type: 'bar' // Type simple : barres horizontales
-      },
-      title: {
-        text: 'Notes Moyennes des Événements'
-      },
-      xAxis: {
-        // Utiliser les libellés comme catégories
-        categories: categories,
-        title: { text: 'Critère' }
-      }as Highcharts.XAxisOptions,
-      yAxis: {
-        min: 0,
-        max: 5, // IMPORTANT : Doit correspondre à ton échelle de notes
-        title: { text: 'Note Moyenne / 5' }, // Adapter si échelle différente
-        labels: { format: '{value:.1f}' } // Afficher une décimale
-      },
-      series: [{
-        name: 'Note Moyenne', // Nom de la série
-        type: 'bar',          // Répéter le type
-        data: seriesData      // Les données numériques extraites dans l'ordre
-      }],
-      legend: { enabled: false },
-      credits: { enabled: false }
-    };
-    console.log("Options Notes mises à jour:", this.ratingsChartOptions);
+    console.log("Données graphique Notes préparées.");
   }
 
 
-  // Gestion des membres
-  onEditMembre(memberUpdates: any): void {
-    // this.http.patch(`http://localhost:8080/api/membres/${memberUpdates.id}`, memberUpdates)
-    //   .subscribe({
-    //     next: () => {
-    //       const index = this.lastFiveMembers.findIndex(m => m.id === memberUpdates.id);
-    //       if (index !== -1) {
-    //         this.lastFiveMembers[index] = { ...this.lastFiveMembers[index], ...memberUpdates };
-    //       }
-    //     },
-    //     error: (err) => console.error('Erreur mise à jour membre:', err)
-    //   });
+  /** Gère les erreurs d'appel API */
+  private handleApiError(error: HttpErrorResponse, context: string): void {
+    this.notification.show(`Erreur chargement (${context}).`, "error");
+    this.totalEvents = "Erreur";
+    this.upcomingEventsCount = "Erreur";
+    this.averageEventOccupancy = "Erreur";
+    this.isLoading = false;
+    this.cdr.detectChanges(); // Met à jour la vue pour montrer l'état d'erreur
   }
 
-  onDeleteMembre(membre: any): void {
-    // if (confirm(`Supprimer ${membre.nom} ?`)) {
-    //   this.http.delete(`http://localhost:8080/api/membres/${membre.id}`)
-    //     .subscribe({
-    //       next: () => {
-    //         this.lastFiveMembers = this.lastFiveMembers.filter(m => m.id !== membre.id);
-    //       },
-    //       error: (err) => console.error('Erreur suppression membre:', err)
-    //     });
-    // }
-  }
-
-  // Gestion des événements
-  supprimerEvenement(event: any): void {
-    // if (confirm(`Supprimer "${event.titre}" ?`)) {
-    //   this.http.delete(`http://localhost:8080/api/events/${event.id}`)
-    //     .subscribe({
-    //       next: () => {
-    //         this.nextFiveEvents = this.nextFiveEvents.filter(e => e.id !== event.id);
-    //         this.totalEvents--;
-    //       },
-    //       error: (err) => console.error('Erreur suppression événement:', err)
-    //     });
-    // }
-  }
-
-  mettreAJourEvenement(eventUpdates: any): void {
-    // this.http.put(`http://localhost:8080/api/events/${eventUpdates.id}`, eventUpdates)
-    //   .subscribe({
-    //     next: () => {
-    //       const index = this.nextFiveEvents.findIndex(e => e.id === eventUpdates.id);
-    //       if (index !== -1) {
-    //         this.nextFiveEvents[index] = { ...this.nextFiveEvents[index], ...eventUpdates };
-    //       }
-    //     },
-    //     error: (err) => console.error('Erreur mise à jour événement:', err)
-    //   });
+  /** Gère le cas où l'ID du club est manquant */
+  private handleMissingClubId(): void {
+    this.notification.show("ID Club manquant.", "error");
+    this.totalEvents = 'Erreur ID';
+    this.upcomingEventsCount = 'Erreur ID';
+    this.averageEventOccupancy = 'Erreur ID';
+    this.isLoading = false;
+    this.cdr.detectChanges();
   }
 }
 
-
-export interface DashboardSummaryDTO {
+// --- Interfaces DTO ---
+interface DashboardSummaryDTO {
   totalEvents: number;
   upcomingEventsCount30d: number;
   averageEventOccupancyRate: number;
-  totalMembers: number;
   monthlyRegistrations: MonthlyRegistrationPoint[];
   averageEventRatings: AverageRatings;
+  totalMembers: number;
 }
-
-export interface MonthlyRegistrationPoint {
-  count: number;
-  monthYear: string; // Format "YYYY-MM"
-
-}
-
-// Interface pour les notes moyennes (optionnel mais propre)
-export interface AverageRatings {
-  [category: string]: number;
-}
+interface MonthlyRegistrationPoint { count: number; monthYear: string; }
+interface AverageRatings { [category: string]: number; }
+// ---------------------------
