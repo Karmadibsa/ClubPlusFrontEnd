@@ -45,6 +45,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   totalEvents: number | string = '...';
   upcomingEventsCount: number | string = '...';
   averageEventOccupancy: number | null | string = null;
+  totalActiveMembers: number | null | string = null;
+  totalParticipations: number | null | string = null;
 
   // --- Options de base communes (inclut animation simple par défaut) ---
   private baseChartOptions: ChartOptions = {
@@ -150,7 +152,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private loadDashboardData(clubId: number): void {
     this.isLoading = true;
     // Réinitialisation avant l'appel
-    this.totalEvents = "..."; this.upcomingEventsCount = "..."; this.averageEventOccupancy = null;
+    this.totalEvents = "..."; this.upcomingEventsCount = "..."; this.averageEventOccupancy = null;this.totalActiveMembers = null;this.totalParticipations = null;
     this.membersChartData = { labels: [], datasets: [] };
     this.ratingsChartData = { labels: [], datasets: [] };
 
@@ -165,7 +167,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
         // 1. Mettre à jour les KPIs
         this.totalEvents = response.totalEvents;
         this.upcomingEventsCount = response.upcomingEventsCount30d;
+        this.totalActiveMembers = response.totalActiveMembers;
+        this.totalParticipations = response.totalParticipations;
         this.updateAverageOccupancy(response.averageEventOccupancyRate);
+
 
         // 2. Mettre à jour les données du graphique des inscriptions (LIGNE)
         this.updateMembersChartData(response.monthlyRegistrations);
@@ -284,6 +289,8 @@ interface DashboardSummaryDTO {
   monthlyRegistrations: MonthlyRegistrationPoint[];
   averageEventRatings: AverageRatings;
   totalMembers: number;
+  totalActiveMembers : number;
+  totalParticipations : number;
 }
 interface MonthlyRegistrationPoint { count: number; monthYear: string; }
 interface AverageRatings { [category: string]: number; }

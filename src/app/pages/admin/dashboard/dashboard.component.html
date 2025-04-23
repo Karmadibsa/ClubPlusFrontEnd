@@ -24,20 +24,19 @@
       <p class="stat-value">{{ averageEventOccupancy | percent:'1.0-1' }}</p>
     </div>
     <div class="card stat-card">
-      <h3>Taux de participation</h3>
-      <!-- Assure-toi que averageEventOccupancy est bien entre 0 et 1 dans le .ts -->
-      <p class="stat-value">{{ averageEventOccupancy | percent:'1.0-1' }}</p>
+      <h3>Membres Actifs du club</h3>
+      <p class="stat-value">{{ totalActiveMembers }}</p>
     </div>
     <div class="card stat-card">
-      <h3>Taux de participation</h3>
+      <h3>Reservation validés</h3>
       <!-- Assure-toi que averageEventOccupancy est bien entre 0 et 1 dans le .ts -->
-      <p class="stat-value">{{ averageEventOccupancy | percent:'1.0-1' }}</p>
+      <p class="stat-value">{{ totalParticipations }}</p>
     </div>
   </div>
 
   <!-- Section Graphiques -->
   <div class="charts-grid">
-    <div class="card chart-container" style="position: relative; height:400px; display: block;">
+    <div class="card chart-container stat-card" style="position: relative; height:400px; display: block;">
       <h3>Évolution des Inscriptions</h3>
       <canvas baseChart
               *ngIf="membersChartData.datasets.length > 0 && !isLoading"
@@ -50,7 +49,7 @@
       </div>
     </div>
 
-    <div class="card chart-container" style="position: relative; height:400px; display: block;">
+    <div class="card chart-container stat-card" style="position: relative; height:400px; display: block;">
       <h3>Notes Moyennes</h3>
       <canvas baseChart
               *ngIf="ratingsChartData.datasets.length > 0 && !isLoading"
