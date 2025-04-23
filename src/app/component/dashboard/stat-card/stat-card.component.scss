@@ -1,0 +1,21 @@
+.stat-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 100%;
+}
+
+h3 {
+  height: 40%;
+  font-size: 15px;
+  text-align: center;
+}
+
+p {
+  height: 60%;
+  font-size: 30px;
+  text-align: center;
+  color: var(--main-blue);
+  font-weight: bold;
+}

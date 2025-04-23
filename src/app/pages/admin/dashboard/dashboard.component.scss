@@ -6,14 +6,7 @@
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
   border-left: solid var(--main-orange) 2px;
 }
-.chart-placeholder {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  color: #999;
-  font-style: italic;
-}
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -23,7 +16,7 @@
 
 .stat-card {
   background: #fff;
-  padding: 20px;
+  padding: 30px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

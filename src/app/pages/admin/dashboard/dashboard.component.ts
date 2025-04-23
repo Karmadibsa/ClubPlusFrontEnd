@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 // --- Imports Chart.js & ng2-charts ---
 import { ChartData, ChartOptions, Chart, PointElement, LineElement, Title, Tooltip, Legend, CategoryScale, LinearScale, BarElement, LineController, BarController, Filler } from 'chart.js';
 import {BaseChartDirective} from 'ng2-charts';
+import {StatCardComponent} from '../../../component/dashboard/stat-card/stat-card.component';
 
 
 
@@ -27,7 +28,7 @@ const CHART_TOOLTIP_BG = 'rgba(0, 0, 0, 0.85)';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [ CommonModule, PercentPipe, SidebarComponent, BaseChartDirective ], // Retire DecimalPipe si non utilisé
+  imports: [CommonModule, PercentPipe, SidebarComponent, BaseChartDirective, StatCardComponent], // Retire DecimalPipe si non utilisé
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush // Optimisation possible
@@ -246,12 +247,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
         data: orderedKeys.map(key => ratings[key] ?? 0), // Notes (ou 0 si manquant)
         label: 'Note',
         // Styles pour les barres
-        backgroundColor: MAIN_ORANGE, // Couleur orange
+        backgroundColor: 'rgba(242, 97, 34, 0.5)', // Couleur orange
         borderColor: MAIN_ORANGE,
         borderWidth: 0,
         borderRadius: 5,
         borderSkipped: false,
-        hoverBackgroundColor: 'rgba(242, 97, 34, 0.85)',
+        hoverBackgroundColor: 'rgba(242, 97, 34)',
         barPercentage: 0.6, // Largeur des barres
         categoryPercentage: 0.7 // Espace entre groupes
       }]
