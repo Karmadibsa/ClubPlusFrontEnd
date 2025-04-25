@@ -8,7 +8,7 @@ import {catchError} from 'rxjs/operators'; // Pour la gestion d'erreurs RxJS
 import {throwError} from 'rxjs';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {NotificationService} from '../../../service/notification.service';
-import {AuthService} from '../../../service/auth.service'; // Pour relancer les erreurs RxJS
+import {AuthService} from '../../../service/security/auth.service'; // Pour relancer les erreurs RxJS
 
 @Component({
   selector: 'app-login',

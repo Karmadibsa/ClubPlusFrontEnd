@@ -50,8 +50,65 @@
     </div>
   </div>
 
-  <!-- Tes sections Tableaux (commentées, comme dans ton code) -->
-  <!-- <div class="tables-grid"> ... </div> -->
+  <!-- Section Tableaux -->
+  <div class="tables-grid">
+    <!-- Derniers membres inscrits -->
+    <div class="table-container">
+      <h3>Derniers membres inscrits</h3>
+      <table class="full-width-table">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nom et Prénom</th>
+          <th>Date de Naissance</th>
+          <th>Date d'Inscription</th>
+          <th>Adresse</th>
+          <th>Téléphone</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Utilisation de membre-row -->
+<!--        <tr *ngFor="let member of lastFiveMembers" app-membre-row [membre]="member" (viewDetails)="handleViewMemberDetails($event)"></tr>-->
+        <tr *ngFor="let member of lastFiveMembers" app-membre-row [membre]="member"></tr>
+        </tbody>
+      </table>
+    </div>
 
+    <!-- Prochains événements -->
+    <div class="table-container">
+      <h3>Prochains événements</h3>
+      <table class="full-width-table">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Titre</th>
+          <th>Début - Fin</th>
+          <th>Description</th>
+          <th>Participants</th>
+          <th>Lieu</th>
+          <th>Catégories</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Utilisation de event-row -->
+        <tr *ngFor="let event of nextFiveEvents" app-event-row [evenement]="event"         (supprimer)="supprimerEvenement($event)"
+            (modifier)="mettreAJourEvenement($event)"></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- === MODALE DÉTAILS MEMBRE === -->
+  <app-membre-detail-modal
+    *ngIf="isDetailModalVisible"
+    [isVisible]="isDetailModalVisible"
+    [membre]="selectedMemberForDetail"
+    (close)="closeMemberDetailModal()">
+  </app-membre-detail-modal>
+  <!-- ============================ -->
 </div>
 

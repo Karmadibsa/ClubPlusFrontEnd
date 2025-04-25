@@ -2,7 +2,7 @@ import {Component, inject} from '@angular/core';
 import {LucideAngularModule} from 'lucide-angular';
 import {Router, RouterLink, RouterLinkActive} from "@angular/router";
 import {FormsModule} from '@angular/forms';
-import {AuthService} from '../../../service/auth.service';
+import {AuthService} from '../../../service/security/auth.service';
 
 @Component({
   selector: 'app-sidebar',

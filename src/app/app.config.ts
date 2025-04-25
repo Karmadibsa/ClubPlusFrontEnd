@@ -4,7 +4,7 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {icons, LucideAngularModule} from 'lucide-angular';
-import {jwtInterceptor} from './service/jwt.interceptor';
+import {jwtInterceptor} from './service/security/jwt.interceptor';
 import {provideCharts, withDefaultRegisterables} from 'ng2-charts';
 
 export const appConfig: ApplicationConfig = {

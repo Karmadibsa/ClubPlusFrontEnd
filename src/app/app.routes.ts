@@ -11,7 +11,7 @@ import {AccueilComponent} from './pages/public/accueil/accueil.component';
 import {InscriptionClubComponent} from './pages/public/inscription-club/inscription-club.component';
 import {InscriptionMembreComponent} from './pages/public/inscription-membre/inscription-membre.component';
 import {LoginComponent} from './pages/public/login/login.component';
-import {connecteGuard} from './service/connecte.guard';
+import {connecteGuard} from './service/security/connecte.guard';
 
 
 

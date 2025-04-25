@@ -1,0 +1,116 @@
+<div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
+  <!-- Utiliser ngIf="membre" pour s'assurer que les données sont là avant d'afficher -->
+  <div class="modal-content detail-modal" *ngIf="membre" (click)="$event.stopPropagation()">
+    <header class="modal-header">
+      <!-- Titre mis à jour -->
+      <h2>Détails du Membre</h2>
+      <button class="close-btn" title="Fermer" (click)="closeModal()">
+        <lucide-icon name="x" size="20"></lucide-icon>
+      </button>
+    </header>
+    <main class="modal-body">
+      <!-- Pas besoin de <form> pour l'affichage -->
+      <!-- Informations personnelles -->
+      <div class="form-section">
+        <h3>Informations personnelles</h3>
+
+        <div class="form-row">
+          <!-- Groupe Nom -->
+          <div class="form-group">
+            <label>Nom</label>
+            <div class="read-only-value">{{ membre.nom }}</div>
+          </div>
+          <!-- Groupe Prénom -->
+          <div class="form-group">
+            <label>Prénom</label>
+            <div class="read-only-value">{{ membre.prenom }}</div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <!-- Groupe Date de naissance -->
+          <div class="form-group">
+            <label>Date de naissance</label>
+            <!-- Utiliser le DatePipe -->
+            <div class="read-only-value">{{ membre.date_naissance | date:'dd/MM/yyyy' }}</div>
+          </div>
+          <!-- Groupe Email -->
+          <div class="form-group">
+            <label>Email</label>
+            <div class="read-only-value">{{ membre.email }}</div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <!-- Groupe Téléphone -->
+          <div class="form-group">
+            <label>Téléphone</label>
+            <div class="read-only-value">{{ membre.telephone || 'N/A' }}</div>
+          </div>
+          <!-- Groupe Rôle -->
+          <div class="form-group">
+            <label>Rôle</label>
+            <div class="read-only-value">{{ membre.role }}</div>
+            <!-- Plus besoin de select ou de note sur la modification -->
+          </div>
+        </div>
+        <!-- Groupe Date d'inscription (ajouté car potentiellement utile) -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Inscrit le</label>
+            <div class="read-only-value">{{ membre.date_inscription | date:'dd/MM/yyyy' }}</div>
+          </div>
+          <!-- Vous pouvez ajouter un autre champ ici si la mise en page le permet -->
+          <div class="form-group"> <!-- Placeholder pour garder la grille alignée si besoin -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Adresse -->
+      <div class="form-section">
+        <h3>Adresse</h3>
+
+        <!-- Regrouper l'adresse pour une meilleure lisibilité -->
+        <div class="form-row">
+          <div class="form-group full-width"> <!-- Utiliser une classe pour prendre toute la largeur -->
+            <label>Adresse complète</label>
+            <div class="read-only-value">
+              {{ membre.numero_voie }} {{ membre.rue }}, {{ membre.codepostal }} {{ membre.ville }}
+            </div>
+          </div>
+        </div>
+        @if (authService.role == "ROLE_ADMIN"){
+          <p>ici bouton changement role</p>}
+
+        <!-- Les anciens form-row séparés pour l'adresse sont supprimés -->
+
+      </div>
+
+      <!-- Plus besoin de div.form-actions ici, géré dans modal-footer -->
+    </main>
+    <footer class="modal-footer">
+      @if (authService.role == "ROLE_ADMIN"){
+        <!-- Uniquement le bouton Fermer -->
+<!--        <button type="button" class="btn btn-secondary" (click)="saveRoleChange()">-->
+        <button type="button" class="btn btn-secondary" >
+          <lucide-icon name="save" size="16"></lucide-icon> Changer role
+        </button>}
+
+      <!-- Uniquement le bouton Fermer -->
+      <button type="button" class="btn btn-secondary" (click)="closeModal()">
+        <lucide-icon name="x-circle" size="16"></lucide-icon> Fermer
+      </button>
+    </footer>
+  </div>
+
+  <!-- Sécurité: Affichage si membre est null -->
+  <div class="modal-content" *ngIf="!membre" (click)="$event.stopPropagation()">
+    <p style="padding: 20px; text-align: center;">Erreur : Données du membre non disponibles.</p>
+    <footer class="modal-footer" style="justify-content: center;">
+<!--      <button type="button" class="btn btn-secondary" (click)="closeModal()">Fermer</button>-->
+      <button type="button" class="btn btn-secondary">Fermer</button>
+    </footer>
+  </div>
+
+</div>

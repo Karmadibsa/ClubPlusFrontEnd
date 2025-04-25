@@ -4,15 +4,21 @@ import { Component, inject, OnInit, ChangeDetectorRef, OnDestroy, ChangeDetectio
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { CommonModule, DecimalPipe, PercentPipe } from '@angular/common';
 import { SidebarComponent } from '../../../component/navigation/sidebar/sidebar.component'; // Adapte chemin
-import { AuthService } from '../../../service/auth.service'; // Adapte chemin
+import { AuthService } from '../../../service/security/auth.service'; // Adapte chemin
 import { NotificationService } from '../../../service/notification.service'; // Adapte chemin
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import {forkJoin, Observable, of, Subscription} from 'rxjs';
+import { MembreService } from '../../../service/membre.service';
+import { EventService } from '../../../service/event.service';
 
 // --- Imports Chart.js & ng2-charts ---
 import { ChartData, ChartOptions, Chart, PointElement, LineElement, Title, Tooltip, Legend, CategoryScale, LinearScale, BarElement, LineController, BarController, Filler } from 'chart.js';
 import {BaseChartDirective} from 'ng2-charts';
 import {StatCardComponent} from '../../../component/dashboard/stat-card/stat-card.component';
+import {catchError} from 'rxjs/operators';
+import {EventRowComponent} from '../../../component/event/event-row/event-row.component';
+import {MembreRowComponent} from '../../../component/membre/membre-row/membre-row.component';
+import {MembreDetailModalComponent} from '../../../component/membre/membre-detail-modal/membre-detail-modal.component';
 
 
 
@@ -28,7 +34,7 @@ const CHART_TOOLTIP_BG = 'rgba(0, 0, 0, 0.85)';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, PercentPipe, SidebarComponent, BaseChartDirective, StatCardComponent], // Retire DecimalPipe si non utilisé
+  imports: [CommonModule, PercentPipe, SidebarComponent, BaseChartDirective, StatCardComponent, EventRowComponent, MembreRowComponent, MembreDetailModalComponent], // Retire DecimalPipe si non utilisé
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush // Optimisation possible
@@ -41,6 +47,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private notification = inject(NotificationService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  private membreService = inject(MembreService);
+  private eventService = inject(EventService);
 
   // --- Propriétés KPIs ---
   totalEvents: number | string = '...';
@@ -48,6 +56,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   averageEventOccupancy: number | null | string = null;
   totalActiveMembers: number | null | string = null;
   totalParticipations: number | null | string = null;
+  lastFiveMembers: Membre[] = [];
+  nextFiveEvents: Event[] = [];
+
+  isDetailModalVisible = false;
+  selectedMemberForDetail: Membre | null = null;
 
   // --- Options de base communes (inclut animation simple par défaut) ---
   private baseChartOptions: ChartOptions = {
@@ -131,6 +144,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   isLoading = false;
   private apiSubscription: Subscription | null = null;
   private readonly baseApiUrl = 'http://localhost:8080/api';
+  private dataSubscription: Subscription | null = null; // Renommé pour plus de clarté
 
   constructor() {} // Le constructeur est vide, c'est normal
 
@@ -138,7 +152,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const clubId = this.authService.getManagedClubId();
     if (clubId !== null) {
-      this.loadDashboardData(clubId);
+      this.loadAllDashboardData(clubId);
     } else {
       this.handleMissingClubId();
     }
@@ -149,46 +163,92 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.apiSubscription?.unsubscribe();
   }
 
-  /** Charge toutes les données via l'API */
-  private loadDashboardData(clubId: number): void {
+  private loadAllDashboardData(clubId: number): void {
     this.isLoading = true;
-    // Réinitialisation avant l'appel
-    this.totalEvents = "..."; this.upcomingEventsCount = "..."; this.averageEventOccupancy = null;this.totalActiveMembers = null;this.totalParticipations = null;
-    this.membersChartData = { labels: [], datasets: [] };
-    this.ratingsChartData = { labels: [], datasets: [] };
+    // Réinitialisation avant les appels
+    this.resetData();
 
-    const url = `${this.baseApiUrl}/stats/clubs/${clubId}/dashboard-summary`;
-    console.log("Appel API:", url);
+    const summaryUrl = `${this.baseApiUrl}/stats/clubs/${clubId}/dashboard-summary`;
 
-    this.apiSubscription = this.http.get<DashboardSummaryDTO>(url).subscribe({
-      /** Succès de l'appel API */
-      next: (response) => {
-        console.log("Données reçues:", response);
+    // Création des Observables pour chaque appel API
+    const summary$: Observable<DashboardSummaryDTO | null> = this.http.get<DashboardSummaryDTO>(summaryUrl).pipe(
+      catchError(err => {
+        console.error("Erreur API Summary:", err);
+        this.notification.show("Erreur chargement résumé dashboard.", "error");
+        return of(null); // Retourne null en cas d'erreur pour que forkJoin continue
+      })
+    );
 
-        // 1. Mettre à jour les KPIs
-        this.totalEvents = response.totalEvents;
-        this.upcomingEventsCount = response.upcomingEventsCount30d;
-        this.totalActiveMembers = response.totalActiveMembers;
-        this.totalParticipations = response.totalParticipations;
-        this.updateAverageOccupancy(response.averageEventOccupancyRate);
+    const latestMembers$: Observable<Membre[] | null> = this.membreService.getLatestMembers().pipe(
+      catchError(err => {
+        console.error("Erreur API Derniers Membres:", err);
+        this.notification.show("Erreur chargement derniers membres.", "error");
+        return of(null); // Retourne null en cas d'erreur
+      })
+    );
 
+    const nextEvents$: Observable<Event[] | null> = this.eventService.getNextEvents().pipe(
+      catchError(err => {
+        console.error("Erreur API Prochains Evénements:", err);
+        this.notification.show("Erreur chargement prochains événements.", "error");
+        return of(null); // Retourne null en cas d'erreur
+      })
+    );
 
-        // 2. Mettre à jour les données du graphique des inscriptions (LIGNE)
-        this.updateMembersChartData(response.monthlyRegistrations);
+    // Exécution des appels en parallèle avec forkJoin
+    this.dataSubscription = forkJoin([summary$, latestMembers$, nextEvents$]).subscribe({
+      next: ([summaryResponse, membersResponse, eventsResponse]) => {
+        console.log("Réponses API reçues (summary, membres, events):", summaryResponse, membersResponse, eventsResponse);
 
-        // 3. Mettre à jour les données du graphique des notes (BARRES)
-        this.updateRatingsChartData(response.averageEventRatings);
+        // Traitement de la réponse du résumé (si non nulle)
+        if (summaryResponse) {
+          this.updateSummaryData(summaryResponse);
+        } else {
+          // Gérer l'échec du chargement du résumé si nécessaire (ex: afficher des erreurs)
+          this.totalEvents = "Erreur";
+          // ... autres KPIs
+        }
 
-        this.isLoading = false; // Fin du chargement
+        // Traitement de la réponse des membres (si non nulle)
+        this.lastFiveMembers = membersResponse ?? []; // Assigne la liste ou un tableau vide
+
+        // Traitement de la réponse des événements (si non nulle)
+        this.nextFiveEvents = eventsResponse ?? []; // Assigne la liste ou un tableau vide
+
+        this.isLoading = false; // Fin du chargement global
         this.cdr.detectChanges(); // Notifier Angular pour rafraîchir la vue
-        console.log("Données mises à jour.");
+        console.log("Données Dashboard mises à jour.");
       },
-      /** Erreur de l'appel API */
       error: (error: HttpErrorResponse) => {
-        console.error("Erreur API:", error);
-        this.handleApiError(error, 'résumé dashboard'); // Gère l'erreur
+        // Ne devrait pas être atteint si catchError est bien utilisé, mais sécurité
+        console.error("Erreur inattendue dans forkJoin:", error);
+        this.handleApiError(error, 'global dashboard');
       }
     });
+  }
+  /** Réinitialise les données avant un nouveau chargement */
+  private resetData(): void {
+    this.totalEvents = "...";
+    this.upcomingEventsCount = "...";
+    this.averageEventOccupancy = null;
+    this.totalActiveMembers = null;
+    this.totalParticipations = null;
+    this.membersChartData = { labels: [], datasets: [] };
+    this.ratingsChartData = { labels: [], datasets: [] };
+    this.lastFiveMembers = []; // Réinitialise la liste des membres
+    this.nextFiveEvents = [];  // Réinitialise la liste des événements
+    this.cdr.detectChanges(); // S'assure que l'état 'chargement' est visible
+  }
+
+  /** Met à jour les KPIs et graphiques à partir des données du résumé */
+  private updateSummaryData(response: DashboardSummaryDTO): void {
+    this.totalEvents = response.totalEvents;
+    this.upcomingEventsCount = response.upcomingEventsCount30d;
+    this.totalActiveMembers = response.totalActiveMembers;
+    this.totalParticipations = response.totalParticipations;
+    this.updateAverageOccupancy(response.averageEventOccupancyRate);
+    this.updateMembersChartData(response.monthlyRegistrations);
+    this.updateRatingsChartData(response.averageEventRatings);
   }
 
   /** Met à jour le KPI Taux d'Occupation (avec vérification) */
@@ -260,6 +320,29 @@ export class DashboardComponent implements OnInit, OnDestroy {
     console.log("Données graphique Notes préparées.");
   }
 
+  /**
+   * Appelé lorsque l'événement (viewDetails) est émis par app-membre-row.
+   * Prépare et affiche la modale de détails du membre.
+   * @param membre Le membre dont il faut afficher les détails.
+   */
+  handleViewMemberDetails(membre: Membre): void {
+    console.log("Affichage détails pour:", membre);
+    this.selectedMemberForDetail = membre;
+    this.isDetailModalVisible = true;
+    this.cdr.detectChanges(); // Important car l'état change potentiellement en dehors d'un cycle standard
+  }
+
+  /**
+   * Appelé lorsque la modale de détails émet l'événement (close).
+   * Cache la modale et réinitialise le membre sélectionné.
+   */
+  closeMemberDetailModal(): void {
+    console.log("Fermeture modale détails membre");
+    this.isDetailModalVisible = false;
+    this.selectedMemberForDetail = null;
+    // Pas besoin de detectChanges ici car la fermeture est souvent initiée par un clic utilisateur
+    // qui déclenche la détection de changements.
+  }
 
   /** Gère les erreurs d'appel API */
   private handleApiError(error: HttpErrorResponse, context: string): void {
@@ -279,6 +362,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.averageEventOccupancy = 'Erreur ID';
     this.isLoading = false;
     this.cdr.detectChanges();
+  }
+
+
+
+  supprimerEvenement(event: Event): void {
+    console.log("Supprimer événement:", event);
+    // Logique de confirmation et appel API de suppression (probablement deactivateEvent)
+    // Attention: recharger les données ou retirer l'élément de la liste après succès
+    // this.eventService.deactivateEvent(event.id).subscribe(...) etc.
+  }
+
+  mettreAJourEvenement(event: Event): void {
+    console.log("Modifier événement:", event);
+    // Logique de navigation vers la page d'édition ou ouverture d'un modal
+    // this.router.navigate(['/events', event.id, 'edit']);
   }
 }
 

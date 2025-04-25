@@ -1,3 +1,4 @@
+<!-- membre-row.component.html -->
 <td>{{ membre.id }}</td>
 <td>{{ membre.nom }} {{ membre.prenom }}</td>
 <td>{{ membre.date_naissance | date:'dd/MM/yyyy' }}</td>
@@ -6,25 +7,12 @@
 <td>{{ membre.telephone }}</td>
 <td>{{ membre.email }}</td>
 <td>{{ membre.role }}</td>
+<!-- === NOUVELLE COLONNE ACTIONS === -->
 <td>
   <div class="btn-actions">
-    <!-- Bouton Modifier -->
-    <button class="btn btn-edit" (click)="openEditModal()">
-      <lucide-icon name="pen" class="icon"></lucide-icon>
-    </button>
-
-    <!-- Bouton Supprimer -->
-    <button class="btn btn-delete" (click)="onDelete()">
-      <lucide-icon name="trash" class="icon"></lucide-icon>
+    <button class="btn btn-view" title="Voir les détails" (click)="onOpenModalClick()">
+      <lucide-icon name="eye" class="icon"></lucide-icon> <!-- Icône Oeil -->
     </button>
   </div>
 </td>
-
-<!-- Modal d'édition -->
-<app-edit-membre
-  *ngIf="isEditModalVisible"
-  [isVisible]="isEditModalVisible"
-  [membre]="membre"
-  (saveMembre)="onSave($event)"
-  (close)="closeEditModal()">
-</app-edit-membre>
+<!-- ================================ -->
