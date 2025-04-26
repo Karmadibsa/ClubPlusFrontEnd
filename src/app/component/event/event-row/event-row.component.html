@@ -17,7 +17,7 @@
     </button>
 
     <!-- Bouton Supprimer -->
-    <button class="btn btn-delete" (click)="supprimerEvenement()">
+    <button class="btn btn-delete" (click)="requestDelete()">
       <lucide-icon name="trash" class="icon"></lucide-icon>
     </button>
   </div>
@@ -28,6 +28,6 @@
   *ngIf="isModalVisible"
   [isVisible]="isModalVisible"
   [event]="evenement"
-  (saveEvent)="sauvegarderEvenement($event)"
+  (saveSuccess)="sauvegarderEvenement($event)"
   (close)="fermerModal()">
 </app-edit-event>

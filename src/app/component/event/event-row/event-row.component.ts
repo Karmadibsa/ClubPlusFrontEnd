@@ -18,7 +18,7 @@ import {EditEventModalComponent} from '../edit-event/edit-event.component';
 })
 export class EventRowComponent {
   @Input() evenement: any;
-  @Output() supprimer = new EventEmitter<any>();
+  @Output() deleteRequest = new EventEmitter<any>(); // RENOMMÉ de 'supprimer'. Utilisez Evenement.
   @Output() modifier = new EventEmitter<any>();
 
   isModalVisible = false;
@@ -35,8 +35,14 @@ export class EventRowComponent {
     this.modifier.emit(evenementModifie);
     this.fermerModal();
   }
-
-  supprimerEvenement(): void {
-    this.supprimer.emit(this.evenement);
+  /**
+   * Appelée lorsque l'utilisateur clique sur le bouton "Supprimer" de CETTE ligne.
+   * Émet un événement `deleteRequest` vers le composant parent avec l'événement à supprimer.
+   */
+  requestDelete(): void {
+    console.log("Demande de suppression émise pour :", this.evenement);
+    // Émet l'événement vers le parent (DashboardComponent) qui contiendra la logique
+    // d'appel API et de confirmation.
+    this.deleteRequest.emit(this.evenement);
   }
 }

@@ -1,241 +1,388 @@
 // Importations nécessaires pour Angular, les formulaires, les icônes, etc.
-import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl } from '@angular/forms'; // FormBuilder, FormGroup, FormArray sont les outils des Reactive Forms
-import { CommonModule } from '@angular/common';
-import { LucideAngularModule } from 'lucide-angular';
-// Importations de vos services et modèles (interfaces)
-import { NotificationService } from '../../../service/notification.service';
-import { EventService } from '../../../service/event.service';
-// Importez les interfaces/types définis dans vos fichiers de modèles
-import { Evenement, CreateEventPayload, UpdateEventPayload } from '../../../model/evenement'; // Ajustez chemin
-import { Categorie, CategorieCreatePayload, CategorieUpdatePayload } from '../../../model/categorie'; // Ajustez chemin
+import {
+  ChangeDetectorRef,         // Pour forcer la détection de changements (utile avec OnPush ou setTimeout)
+  Component,                 // Décorateur pour définir un composant Angular
+  EventEmitter,              // Pour créer des événements personnalisés (@Output)
+  inject,                    // Fonction moderne pour l'injection de dépendances
+  Input,                     // Pour recevoir des données du parent
+  OnChanges,                 // Interface pour réagir aux changements des @Input
+  OnInit,                    // Interface pour exécuter du code à l'initialisation
+  Output,                    // Pour envoyer des événements au parent
+  SimpleChanges              // Type pour les changements détectés par ngOnChanges
+} from '@angular/core';
+import {
+  AbstractControl,           // Classe de base pour les contrôles de formulaire (FormControl, FormGroup, FormArray)
+  FormArray,                 // Pour gérer une liste de contrôles (nos catégories)
+  FormBuilder,               // Service pour créer facilement des FormGroup/FormArray
+  FormGroup,                 // Représente un groupe de contrôles (notre formulaire principal)
+  ReactiveFormsModule,       // Module nécessaire pour utiliser les Reactive Forms (FormGroup, formControlName...)
+  Validators                 // Fournit des fonctions de validation standard (required, minLength...)
+} from '@angular/forms';
+import { CommonModule, DatePipe } from '@angular/common'; // CommonModule (*ngIf...), DatePipe (formater les dates)
+import { LucideAngularModule } from 'lucide-angular';     // Pour utiliser les icônes Lucide
+
+// Importations de vos services et modèles (interfaces) - Adaptez les chemins si nécessaire
+import { NotificationService } from '../../../service/notification.service'; // Service pour afficher des notifications
+import { EventService } from '../../../service/event.service';             // Service pour interagir avec l'API des événements
+// Importez les interfaces définissant la structure des données événement/catégorie
+import { Evenement, CreateEventPayload, UpdateEventPayload } from '../../../model/evenement';
+import { CategorieCreatePayload, CategorieUpdatePayload } from '../../../model/categorie'; // On importe aussi les types spécifiques aux payloads API
 
 @Component({
-  selector: 'app-edit-event', // Le nom de la balise HTML pour utiliser ce composant: <app-edit-event>
-  standalone: true, // Indique que c'est un composant "autonome" (style Angular récent)
+  selector: 'app-edit-event',     // Nom de la balise HTML pour utiliser ce composant: <app-edit-event>
+  standalone: true,               // Composant "autonome" (approche moderne, gère ses propres dépendances)
   imports: [
-    CommonModule, // Pour *ngIf, *ngFor etc.
-    ReactiveFormsModule, // ESSENTIEL pour utiliser FormGroup, FormArray, formControlName etc.
-    LucideAngularModule // Pour les icônes
+    CommonModule,                 // Requis pour *ngIf, *ngFor, le pipe 'date', etc.
+    ReactiveFormsModule,          // INDISPENSABLE pour [formGroup], formControlName, formArrayName
+    LucideAngularModule           // Pour les balises <lucide-icon>
   ],
-  templateUrl: './edit-event.component.html', // Le fichier HTML associé
-  styleUrls: ['./edit-event.component.scss'] // Le fichier CSS/SCSS associé
+  providers: [
+    DatePipe                      // Doit être listé ici pour pouvoir être injecté via inject() ou constructeur
+  ],
+  templateUrl: './edit-event.component.html', // Chemin vers le fichier HTML de ce composant
+  styleUrls: ['./edit-event.component.scss']  // Chemin vers le fichier de style de ce composant
 })
 export class EditEventModalComponent implements OnInit, OnChanges {
 
-  // --- Inputs: Données venant du composant parent ---
-  @Input() isVisible = false; // Le parent dit si la modale doit être visible
-  @Input() event?: Evenement; // Reçoit l'événement à modifier (si en mode édition)
-  @Input() clubId?: number; // Reçoit l'ID du club (si en mode création)
+  // --- -------------------------------- ---
+  // --- INPUTS (Données venant du parent) ---
+  // --- -------------------------------- ---
 
-  // --- Outputs: Événements envoyés au composant parent ---
-  @Output() saveSuccess = new EventEmitter<Evenement>(); // Signale une sauvegarde réussie, en renvoyant l'événement créé/mis à jour
-  @Output() close = new EventEmitter<void>(); // Signale que la modale doit être fermée
+  /** Le parent contrôle la visibilité de la modale via ce booléen */
+  @Input() isVisible = false;
 
-  // --- Services Injectés (outils mis à disposition) ---
-  private fb = inject(FormBuilder); // Outil Angular pour créer des formulaires réactifs facilement
-  private eventService = inject(EventService); // Votre service pour parler à l'API backend
-  private notificationService = inject(NotificationService); // Votre service pour afficher des messages à l'utilisateur
+  /**
+   * L'événement à modifier.
+   * Si cet @Input reçoit une valeur (un objet Evenement), on est en mode ÉDITION.
+   * Si cet @Input est undefined ou null, on est en mode CRÉATION.
+   */
+  @Input() event: Evenement | undefined;
 
-  // --- Propriétés du Composant ---
-  eventForm!: FormGroup; // La variable qui contiendra notre structure de formulaire (créée avec FormBuilder)
-  isSaving = false; // Pour savoir si un appel API est en cours (utile pour désactiver boutons/afficher spinner)
-  isEditMode = false; // Pour savoir si on crée ou si on modifie un événement
+  /**
+   * L'ID du club auquel associer l'événement.
+   * Nécessaire SEULEMENT en mode CRÉATION pour savoir où créer l'événement.
+   */
+  @Input() clubId?: number;
 
-  // --- Méthodes du Cycle de Vie Angular ---
+  // --- --------------------------------- ---
+  // --- OUTPUTS (Événements vers le parent) ---
+  // --- --------------------------------- ---
 
-  // Exécutée une fois quand le composant est créé
+  /** Émis lorsque l'événement est sauvegardé (créé ou modifié) avec succès. Renvoie l'objet événement résultant. */
+  @Output() saveSuccess = new EventEmitter<Evenement>();
+
+  /** Émis lorsque l'utilisateur demande la fermeture de la modale (bouton Annuler, clic overlay, etc.). */
+  @Output() close = new EventEmitter<void>();
+
+  // --- ------------------------------------- ---
+  // --- SERVICES INJECTÉS (Outils externes) ---
+  // --- ------------------------------------- ---
+
+  // inject() est une manière moderne d'obtenir des instances de services/outils définis ailleurs
+  private fb = inject(FormBuilder);                   // Outil Angular pour construire des formulaires complexes facilement
+  private eventService = inject(EventService);         // Notre service pour communiquer avec l'API backend des événements
+  private notificationService = inject(NotificationService); // Notre service pour afficher des messages (succès, erreur)
+  private datePipe = inject(DatePipe);                 // Outil Angular pour formater les dates (ex: pour l'input datetime-local)
+  private cdr = inject(ChangeDetectorRef);             // Outil pour déclencher manuellement la détection de changements d'Angular
+
+  // --- ----------------------------------- ---
+  // --- PROPRIÉTÉS INTERNES DU COMPOSANT ---
+  // --- ----------------------------------- ---
+
+  /**
+   * La variable principale qui contient toute la structure et les valeurs de notre formulaire.
+   * Le '!' indique à TypeScript qu'on est sûr qu'elle sera initialisée (dans ngOnInit) avant d'être utilisée.
+   */
+  eventForm!: FormGroup;
+
+  /** Pour savoir si une opération de sauvegarde (appel API) est en cours. Utile pour désactiver le bouton "Enregistrer". */
+  isSaving = false;
+
+  /** Détermine si la modale est en mode 'Création' ou 'Modification'. Mis à jour dans ngOnChanges. */
+  isEditMode = false;
+
+  // --- --------------------------------------- ---
+  // --- MÉTHODES DU CYCLE DE VIE ANGULAR ---
+  // --- --------------------------------------- ---
+
+  /**
+   * ngOnInit est appelée par Angular UNE SEULE FOIS après la création du composant et l'initialisation des @Input.
+   * C'est l'endroit idéal pour initialiser le formulaire.
+   */
   ngOnInit(): void {
-    this.initForm(); // Initialise la structure vide du formulaire
+    this.initForm(); // Crée la structure vide du formulaire.
   }
 
-  // Exécutée quand les @Input() changent (ex: quand 'event' est fourni par le parent)
+  /**
+   * ngOnChanges est appelée par Angular AVANT ngOnInit et CHAQUE FOIS qu'un @Input change de valeur.
+   * C'est ici qu'on réagit à l'arrivée de l'@Input 'event' pour passer en mode édition et remplir le formulaire.
+   * @param changes Objet contenant les @Input qui ont changé.
+   */
   ngOnChanges(changes: SimpleChanges): void {
-    // Si l'@Input 'event' change ET qu'il a une valeur (on nous donne un événement à éditer)
-    if (changes['event'] && this.event) {
-      this.isEditMode = true; // On passe en mode édition
-      if (this.eventForm) { // Si le formulaire existe déjà
-        this.populateFormForEdit(); // On le remplit avec les données de l'événement
-      }
-      // Si 'event' change ET qu'il devient vide (on passe d'édition à création, peu probable)
-    } else if (changes['event'] && !this.event) {
-      this.isEditMode = false; // On passe en mode création
-      if (this.eventForm) { // Si le formulaire existe déjà
-        this.eventForm.reset(); // On le vide
-        this.categoriesFormArray.clear(); // On vide la liste des catégories
+    console.log('[Modal ngOnChanges] Changements détectés:', changes); // Log utile pour le débogage
+
+    // Vérifie si l'@Input 'event' a changé
+    if (changes['event']) {
+      console.log('[Modal ngOnChanges] Valeur de @Input event:', this.event); // Log utile
+
+      // CAS 1: On reçoit un objet 'event' (ou il change pour un nouvel objet event)
+      if (this.event) {
+        this.isEditMode = true;   // On passe en mode ÉDITION
+        // Si le formulaire est déjà initialisé (normalement oui grâce à ngOnInit)...
+        if (this.eventForm) {
+          this.populateFormForEdit(); // ... on remplit le formulaire avec les données reçues.
+        }
+        // CAS 2: L'@Input 'event' devient undefined/null (ex: le parent change d'avis)
+      } else {
+        this.isEditMode = false;  // On passe (ou reste) en mode CRÉATION
+        // Si le formulaire existe déjà...
+        if (this.eventForm) {
+          this.eventForm.reset(); // ... on le vide complètement.
+          this.categoriesFormArray.clear(); // On vide aussi la liste des catégories.
+        }
       }
     }
 
-    // Cas spécial: si la modale devient visible MAIS que le formulaire n'a pas encore été créé
-    // (peut arriver si ngOnChanges est appelée avant ngOnInit dans certains scénarios)
+    // Sécurité supplémentaire: Si la modale devient visible (`isVisible` passe à true)
+    // mais que pour une raison quelconque le formulaire n'était pas prêt, on l'initialise.
     if (changes['isVisible']?.currentValue === true && !this.eventForm) {
-      this.initForm(); // Créer le formulaire
-      if (this.isEditMode && this.event) { // Et le remplir si on est en mode édition
+      this.initForm();
+      // Et si on était censé être en mode édition, on tente de remplir le formulaire.
+      if (this.isEditMode && this.event) {
         this.populateFormForEdit();
       }
     }
   }
 
-  // --- Logique de Gestion du Formulaire ---
+  // --- ------------------------------------- ---
+  // --- LOGIQUE DE GESTION DU FORMULAIRE ---
+  // --- ------------------------------------- ---
 
-  // Crée la structure de base du formulaire avec FormBuilder
+  /**
+   * Initialise la structure du FormGroup `eventForm` avec tous ses contrôles et validateurs.
+   * Cette structure doit correspondre aux champs de votre formulaire HTML.
+   */
   initForm(): void {
     this.eventForm = this.fb.group({
-      // Champ 'nom': valeur initiale vide, règles (requis, longueur min/max)
+      // Champ 'nom': valeur initiale vide (''), règles de validation (requis, longueur min/max)
       nom: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(150)]],
-      // Champ 'start': valeur initiale vide, règle (requis)
+      // Champ 'start': requis. La valeur sera une chaîne formatée pour datetime-local.
       start: ['', Validators.required],
-      // Champ 'end': valeur initiale vide, règle (requis)
+      // Champ 'end': requis. Idem.
       end: ['', Validators.required],
-      // Champ 'description': valeur initiale vide, règles (requis, longueur max)
+      // Champ 'description': requis, longueur max.
       description: ['', [Validators.required, Validators.maxLength(2000)]],
-      // Champ 'location': valeur initiale vide, règle (longueur max)
+      // Champ 'location': optionnel, longueur max.
       location: ['', Validators.maxLength(255)],
-      // Champ 'categories': C'est une LISTE (FormArray) de groupes. Requis (doit contenir au moins une catégorie ? à vérifier)
-      categories: this.fb.array([], Validators.required) // Initialement vide
-    }, { validators: this.dateOrderValidator }); // Ajoute une règle globale au formulaire (start avant end)
+      // Champ 'categories': C'est un FormArray (une liste) qui contiendra des FormGroup (chaque catégorie).
+      // Il est requis d'avoir au moins une catégorie (grâce à Validators.required sur le FormArray lui-même).
+      categories: this.fb.array([], Validators.required) // Initialisé comme une liste vide.
+    }, {
+      // Options globales pour le FormGroup : ajout d'un validateur personnalisé pour tout le formulaire.
+      validators: this.dateOrderValidator
+    });
   }
 
-  // Remplit le formulaire avec les données d'un événement existant
+  /**
+   * Remplit le formulaire `eventForm` avec les données d'un événement existant (`this.event`).
+   * Appelée par `ngOnChanges` lorsqu'on passe en mode édition.
+   */
   populateFormForEdit(): void {
-    if (!this.event) return; // Sécurité: si pas d'événement, on ne fait rien
+    // 1. Sécurité: Si `this.event` est undefined, on ne fait rien.
+    if (!this.event) return;
+    console.log('[Modal populateForm] Événement à utiliser:', this.event); // Log
 
-    // Fonction interne pour formater une date ISO en 'YYYY-MM-DDTHH:mm' pour l'input HTML
-    const formatForInput = (dateString: string | undefined): string => {
-      // ... (logique de formatage comme avant) ...
-      if (!dateString) return '';
-      try {
-        const date = new Date(dateString);
-        const offset = date.getTimezoneOffset();
-        const adjustedDate = new Date(date.getTime() - (offset*60*1000));
-        return adjustedDate.toISOString().slice(0, 16);
-      } catch (e) {
-        console.error("Erreur formatage date:", dateString, e);
-        return '';
-      }
-    };
+    // 2. Capture de l'événement dans une constante pour satisfaire TypeScript dans setTimeout.
+    const eventData = this.event;
 
-    // Met à jour les valeurs des champs simples du formulaire
-    this.eventForm.patchValue({
-      nom: this.event.nom, // Utilise le champ 'nom'
-      start: formatForInput(this.event.start),
-      end: formatForInput(this.event.end),
-      description: this.event.description,
-      location: this.event.location || '' // Met une chaîne vide si location est null/undefined
-    });
+    // 3. Formatage des dates: L'input HTML type="datetime-local" attend "YYYY-MM-DDTHH:mm".
+    const formatForInput = 'yyyy-MM-ddTHH:mm'; // Format requis par <input type="datetime-local">
+    // On utilise DatePipe pour convertir la date (qui vient de l'API, ex: ISO string) au format attendu.
+    const formattedStart = this.datePipe.transform(eventData.start, formatForInput) ?? ''; // '?? '' ' = si transform échoue, mettre vide.
+    const formattedEnd = this.datePipe.transform(eventData.end, formatForInput) ?? '';
+    console.log('[Modal populateForm] Dates formatées (start, end):', formattedStart, formattedEnd); // Log
 
-    // Gérer la liste des catégories
-    this.categoriesFormArray.clear(); // Vider la liste actuelle dans le formulaire
-    // Pour chaque catégorie de l'événement reçu...
-    this.event.categories.forEach(cat => {
-      // ...on crée un groupe de formulaire pour elle et on l'ajoute à la liste (FormArray)
-      // On passe l'id, le nom, la capacité existants
-      this.categoriesFormArray.push(this.createCategoryGroup(cat.id, cat.nom, cat.capacite));
-    });
+    // 4. Utilisation de setTimeout(..., 0):
+    //    Corrige le problème où le formulaire ne se mettait pas à jour visuellement immédiatement
+    //    à cause de la stratégie ChangeDetectionStrategy.OnPush du parent.
+    //    Cela reporte l'exécution juste après le cycle actuel, donnant le temps à Angular de synchroniser.
+    setTimeout(() => {
+      // 5. Remplissage des champs simples: `patchValue` met à jour les contrôles correspondants dans eventForm.
+      this.eventForm.patchValue({
+        nom: eventData.nom,
+        start: formattedStart,         // Utilise la date formatée
+        end: formattedEnd,             // Utilise la date formatée
+        description: eventData.description,
+        location: eventData.location || '' // Met '' si la location est null/undefined
+      });
+      console.log('[Modal populateForm] APRES patchValue (dans setTimeout), valeurs formulaire:', this.eventForm.value); // Log
+
+      // 6. Remplissage de la liste des catégories (FormArray):
+      this.categoriesFormArray.clear(); // On vide d'abord le FormArray au cas où il contenait déjà des éléments.
+      console.log('[Modal populateForm] FormArray catégories vidé (dans setTimeout).'); // Log
+      // On boucle sur les catégories de l'événement reçu...
+      eventData.categories.forEach(cat => {
+        console.log('[Modal populateForm] Ajout catégorie au FormArray (dans setTimeout):', cat); // Log
+        // ...et pour chacune, on crée un FormGroup correspondant (avec id, nom, capacité)...
+        const categoryGroup = this.createCategoryGroup(cat.id, cat.nom, cat.capacite);
+        // ...puis on ajoute ce FormGroup au FormArray.
+        this.categoriesFormArray.push(categoryGroup);
+      });
+      console.log('[Modal populateForm] APRES remplissage catégories (dans setTimeout), valeur FormArray:', this.categoriesFormArray.value); // Log
+
+      // 7. Forcer la détection de changement:
+      //    Indique explicitement à Angular de vérifier ce composant et mettre à jour son template HTML.
+      //    Nécessaire ici à cause du setTimeout et potentiellement de OnPush dans le parent.
+      console.log('[Modal populateForm] Forçage détection de changements (dans setTimeout)...');
+      this.cdr.detectChanges();
+    }, 0); // Le délai 0 exécute ceci dès que possible après le cycle actuel.
   }
 
-
-  // Raccourci pratique pour accéder à la liste (FormArray) des catégories dans le template HTML
+  /**
+   * Raccourci pratique pour accéder au FormArray 'categories' depuis le template HTML.
+   * Ex: `*ngFor="let categoryCtrl of categoriesFormArray.controls; let i = index"`
+   */
   get categoriesFormArray(): FormArray {
-    // 'as FormArray' dit à TypeScript: "fais confiance, c'est bien un FormArray"
+    // On récupère le contrôle nommé 'categories' et on le "caste" en FormArray.
     return this.eventForm.get('categories') as FormArray;
   }
 
-  // Crée la structure (FormGroup) pour UNE SEULE catégorie dans la liste
+  /**
+   * Crée et retourne un FormGroup représentant UNE SEULE catégorie.
+   * Utilisé pour remplir le FormArray (`populateFormForEdit`) et pour ajouter de nouvelles catégories (`addCategory`).
+   * @param id - L'ID de la catégorie (venu de l'API si existante, sinon null). CRUCIAL pour les mises à jour.
+   * @param nom - Le nom initial de la catégorie.
+   * @param capacite - La capacité initiale de la catégorie.
+   * @returns Un FormGroup contenant les contrôles 'id', 'nom', 'capacite'.
+   */
   createCategoryGroup(id: number | null = null, nom: string = '', capacite: number | null = null): FormGroup {
-    // Utilise FormBuilder pour créer un groupe avec les champs 'id', 'nom', 'capacite'
     return this.fb.group({
-      id: [id], // Champ pour stocker l'ID (important pour la mise à jour). Sera null si nouvelle catégorie.
-      nom: [nom, [Validators.required, Validators.minLength(2), Validators.maxLength(100)]], // Champ nom avec règles
-      capacite: [capacite, [Validators.required, Validators.min(0)]] // Champ capacité avec règles
+      // Champ 'id': ne sera pas affiché à l'utilisateur mais est essentiel pour le backend lors de la mise à jour.
+      // Il est 'null' pour une catégorie qu'on vient d'ajouter via le bouton "Ajouter".
+      id: [id],
+      // Champ 'nom' avec ses validateurs.
+      nom: [nom, [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+      // Champ 'capacite' avec ses validateurs (requis, minimum 0).
+      capacite: [capacite, [Validators.required, Validators.min(0)]]
     });
   }
 
-  // Ajoute une nouvelle catégorie (vide) au formulaire
+  /**
+   * Ajoute un nouveau FormGroup (représentant une catégorie vide) au FormArray 'categories'.
+   * Appelée par le bouton "Ajouter une catégorie" dans le HTML.
+   */
   addCategory(): void {
-    // On crée un groupe vide avec createCategoryGroup() et on l'ajoute à la fin de la liste (FormArray)
-    this.categoriesFormArray.push(this.createCategoryGroup());
+    // Crée un groupe avec des valeurs par défaut (id=null, nom='', capacite=null)
+    const newCategoryGroup = this.createCategoryGroup();
+    // L'ajoute à la fin de la liste gérée par le FormArray.
+    this.categoriesFormArray.push(newCategoryGroup);
   }
 
-  // Supprime une catégorie du formulaire à une position donnée (index)
+  /**
+   * Supprime un FormGroup de catégorie du FormArray à une position (index) donnée.
+   * Appelée par le bouton "supprimer" à côté de chaque catégorie dans le HTML.
+   * @param index - La position de la catégorie à supprimer dans la liste.
+   */
   removeCategory(index: number): void {
-    // Retire l'élément à la position 'index' de la liste (FormArray)
     this.categoriesFormArray.removeAt(index);
   }
 
-  // Règle de validation personnalisée pour vérifier que start est avant end
+  /**
+   * Validateur personnalisé appliqué au FormGroup principal.
+   * Vérifie si la date de début est bien antérieure à la date de fin.
+   * @param control - Le contrôle auquel ce validateur est attaché (ici, c'est `eventForm`).
+   * @returns Un objet d'erreur `{ 'dateOrderInvalid': true }` si la validation échoue, sinon `null`.
+   */
   dateOrderValidator(control: AbstractControl): { [key: string]: boolean } | null {
-    // AbstractControl représente ici le FormGroup principal 'eventForm'
-    const start = control.get('start')?.value; // Récupère la valeur du champ 'start'
-    const end = control.get('end')?.value; // Récupère la valeur du champ 'end'
-    // Si les deux dates existent et que start est après ou en même temps que end...
-    if (start && end && new Date(start) >= new Date(end)) {
-      return { 'dateOrderInvalid': true }; // ...retourne un objet d'erreur
+    const startValue = control.get('start')?.value; // Récupère la valeur du champ 'start'
+    const endValue = control.get('end')?.value;     // Récupère la valeur du champ 'end'
+
+    // Si les deux dates sont présentes et que start >= end...
+    if (startValue && endValue && new Date(startValue) >= new Date(endValue)) {
+      return { 'dateOrderInvalid': true }; // ... signaler une erreur.
     }
-    return null; // ...sinon, retourne null (pas d'erreur)
+    return null; // ... sinon, tout va bien (pas d'erreur).
   }
 
-  // --- Logique de Sauvegarde ---
+  // --- ------------------------- ---
+  // --- LOGIQUE DE SAUVEGARDE ---
+  // --- ------------------------- ---
 
-  // Fonction appelée quand l'utilisateur clique sur "Enregistrer"
+  /**
+   * Fonction principale appelée lorsque l'utilisateur clique sur le bouton "Enregistrer".
+   * Gère à la fois la CRÉATION et la MISE À JOUR en fonction de `this.isEditMode`.
+   */
   saveChanges(): void {
-    // 1. Vérifier si le formulaire est valide (respecte toutes les règles Validators)
+    // 1. Vérifier la validité du formulaire
+    //    `this.eventForm.invalid` est true si AU MOINS UN validateur (requis, minLength, etc., y compris le validateur de date) échoue.
     if (this.eventForm.invalid) {
-      this.notificationService.show('Formulaire invalide. Veuillez vérifier les champs.', 'warning');
-      this.eventForm.markAllAsTouched(); // Force l'affichage des messages d'erreur dans le HTML
-      return; // Arrêter la sauvegarde
+      this.notificationService.show('Formulaire invalide. Veuillez vérifier les champs en rouge.', 'warning');
+      // `markAllAsTouched` force l'affichage des messages d'erreur associés aux champs invalides dans le HTML.
+      this.eventForm.markAllAsTouched();
+      return; // Arrêter le processus de sauvegarde.
     }
 
-    // 2. Préparer la sauvegarde
-    this.isSaving = true; // Indiquer qu'on sauvegarde (pour feedback UI)
-    // Récupère TOUTES les valeurs du formulaire, y compris les 'id' dans les catégories
+    // 2. Préparation de la sauvegarde
+    this.isSaving = true; // Activer l'état "sauvegarde en cours" (désactive bouton, affiche spinner...)
+
+    // `getRawValue()` récupère TOUTES les valeurs du formulaire, y compris celles des contrôles désactivés
+    // (ce qui n'est pas notre cas ici, mais c'est important pour les `id` des catégories qui ne sont pas
+    // directement modifiables par l'utilisateur mais font partie du groupe).
     const formValue = this.eventForm.getRawValue();
 
-    // Fonction interne pour formater la date pour l'envoi au backend (potentiellement format ISO complet)
+    // Fonction utilitaire pour s'assurer que le format de date envoyé au backend est correct.
+    // L'input datetime-local donne "YYYY-MM-DDTHH:mm". Si le backend attend des secondes, on les ajoute.
+    // Adaptez ce format si votre backend Spring attend autre chose (ex: avec fuseau horaire 'Z').
     const formatForBackend = (dateString: string): string => {
-      // Ajoute juste ':00' pour faire YYYY-MM-DDTHH:mm:ss. Adaptez si le backend attend un fuseau horaire.
-      return dateString ? dateString + ':00' : '';
-    }
+      return dateString ? dateString + ':00' : ''; // Ajoute ':00' pour les secondes.
+    };
 
-    // 3. Déterminer si on crée ou on met à jour
+    // 3. Logique différente selon le mode (Création ou Modification)
     if (this.isEditMode && this.event) {
-      // --- CAS MISE À JOUR ---
+      // --- CAS: MISE À JOUR D'UN ÉVÉNEMENT EXISTANT ---
 
-      // Préparer le Payload (l'objet à envoyer à l'API) en utilisant l'interface `UpdateEventPayload`
+      // Préparer l'objet (Payload) à envoyer à l'API, conformément à l'interface `UpdateEventPayload`.
       const updatePayload: UpdateEventPayload = {
         nom: formValue.nom,
         start: formatForBackend(formValue.start),
         end: formatForBackend(formValue.end),
         description: formValue.description,
-        location: formValue.location || undefined, // Mettre undefined si vide, pour ne pas envoyer "" si non souhaité
-        // La liste des catégories vient directement du formulaire.
-        // `formValue.categories` a déjà la structure [{id: number|null, nom: string, capacite: number}, ...]
-        // ce qui correspond à `CategorieUpdatePayload[]` attendu par l'interface `UpdateEventPayload`.
-        categories: formValue.categories as CategorieUpdatePayload[] // On dit à TS que ça correspond
+        // Si location est une chaîne vide, envoyer `undefined` pour éviter d'envoyer `location: ""` si non désiré.
+        // Adaptez selon ce que votre API attend pour une valeur optionnelle vide.
+        location: formValue.location || undefined,
+        // La partie cruciale: les catégories.
+        // `formValue.categories` contient la liste [{id: number|null, nom: string, capacite: number}, ...]
+        // Ceci correspond EXACTEMENT à ce qu'attend `CategorieUpdatePayload[]`.
+        // Le backend utilisera l'ID pour savoir s'il faut METTRE À JOUR (ID présent), CRÉER (ID null),
+        // ou SUPPRIMER (catégorie existante dans l'événement initial mais absente de cette liste).
+        categories: formValue.categories // Pas besoin de transformation ici !
       };
 
-      // Appeler le service pour mettre à jour
+      // Appel de la méthode du service pour la mise à jour. On passe l'ID de l'événement et le payload.
       this.eventService.updateEventWithCategories(this.event.id, updatePayload)
-        .subscribe({ // Attend la réponse de l'API
-          next: (updatedEvent) => { // Si succès...
+        .subscribe({ // On s'abonne pour recevoir la réponse de l'API.
+          next: (updatedEvent) => { // 'next' est exécuté si l'appel API réussit.
             this.notificationService.show('Événement mis à jour avec succès!', 'valid');
-            this.isSaving = false; // Arrêter l'indicateur de sauvegarde
-            this.saveSuccess.emit(updatedEvent); // Envoyer l'événement mis à jour au parent
-            this.closeModal(); // Fermer la modale
+            this.isSaving = false; // Désactiver l'état "sauvegarde en cours".
+            this.saveSuccess.emit(updatedEvent); // Émettre l'événement mis à jour au composant parent.
+            this.closeModal(); // Fermer la modale.
           },
-          error: (err) => { // Si erreur...
-            this.notificationService.show(`Erreur lors de la mise à jour: ${err.message}`, 'error');
-            this.isSaving = false; // Arrêter l'indicateur de sauvegarde
+          error: (err) => { // 'error' est exécuté si l'appel API échoue.
+            console.error("Erreur MàJ Événement:", err); // Log l'erreur pour le débogage.
+            this.notificationService.show(`Erreur lors de la mise à jour: ${err.message || 'Erreur inconnue'}`, 'error');
+            this.isSaving = false; // Désactiver l'état "sauvegarde en cours".
           }
         });
 
     } else if (!this.isEditMode && this.clubId) {
-      // --- CAS CRÉATION ---
+      // --- CAS: CRÉATION D'UN NOUVEL ÉVÉNEMENT ---
+      // On vérifie qu'on n'est PAS en mode édition ET qu'on a bien reçu un clubId du parent.
 
-      // Préparer le Payload (l'objet à envoyer à l'API) en utilisant l'interface `CreateEventPayload`
-      // Pour les catégories, on doit enlever l'ID (qui est null dans le formulaire pour les nouvelles)
-      const createCategoriesPayload: CategorieCreatePayload[] = formValue.categories.map((cat: CategorieUpdatePayload) => ({
-        // On crée un nouvel objet pour chaque catégorie avec seulement nom et capacite
+      // Préparer le Payload pour la création, conformément à l'interface `CreateEventPayload`.
+      // La différence principale est pour les catégories: l'API de création ne veut PAS d'ID.
+      const createCategoriesPayload: CategorieCreatePayload[] = formValue.categories.map((cat: any) => ({
+        // On utilise `map` pour transformer chaque objet catégorie du formulaire
+        // en un nouvel objet ne contenant que 'nom' et 'capacite'.
         nom: cat.nom,
         capacite: cat.capacite
       }));
@@ -246,38 +393,51 @@ export class EditEventModalComponent implements OnInit, OnChanges {
         end: formatForBackend(formValue.end),
         description: formValue.description,
         location: formValue.location || undefined,
-        categories: createCategoriesPayload // Utilise la liste sans les IDs
+        categories: createCategoriesPayload // On utilise la liste transformée sans les IDs.
       };
 
-      // Appeler le service pour créer
+      // Appel de la méthode du service pour la création. On passe l'ID du club et le payload.
       this.eventService.createEventWithCategories(this.clubId, createPayload)
-        .subscribe({ // Attend la réponse de l'API
+        .subscribe({ // On s'abonne à la réponse.
           next: (createdEvent) => { // Si succès...
             this.notificationService.show('Événement créé avec succès!', 'valid');
             this.isSaving = false;
-            this.saveSuccess.emit(createdEvent); // Envoyer l'événement créé au parent
+            this.saveSuccess.emit(createdEvent); // Émettre l'événement NOUVELLEMENT créé au parent.
             this.closeModal();
           },
           error: (err) => { // Si erreur...
-            this.notificationService.show(`Erreur lors de la création: ${err.message}`, 'error');
+            console.error("Erreur Création Événement:", err);
+            this.notificationService.show(`Erreur lors de la création: ${err.message || 'Erreur inconnue'}`, 'error');
             this.isSaving = false;
           }
         });
     } else {
-      // Cas d'erreur bizarre où le mode n'est pas clair ou clubId manque
-      console.error("Erreur: Mode indéfini ou clubId manquant pour la création.");
-      this.notificationService.show("Erreur interne lors de la sauvegarde.", "error");
+      // Sécurité: Cas anormal où on ne sait pas si on crée ou modifie, ou si clubId manque pour la création.
+      console.error("Erreur interne: Mode de sauvegarde indéfini ou clubId manquant pour la création.");
+      this.notificationService.show("Une erreur interne est survenue lors de la sauvegarde.", "error");
       this.isSaving = false;
     }
   }
 
-  // --- Fermeture ---
+  // --- ---------------- ---
+  // --- FERMETURE ---
+  // --- ---------------- ---
 
-  // Fonction appelée par le bouton "Annuler" ou le clic sur l'overlay
+  /**
+   * Fonction appelée par le bouton "Annuler" ou lorsque l'utilisateur clique sur l'overlay
+   * (grâce à `(click)="closeModal()"` sur `div.modal-overlay` dans le HTML).
+   */
   closeModal(): void {
-    // Optionnel: Vider le formulaire quand on ferme ?
-    // this.eventForm.reset();
-    // this.categoriesFormArray.clear();
-    this.close.emit(); // Signale au parent de fermer la modale
+    // Optionnel: Vider le formulaire lorsqu'on annule ?
+    // Avantage: Si l'utilisateur rouvre pour créer, le formulaire est propre.
+    // Inconvénient: Si l'utilisateur ferme par erreur et rouvre pour modifier, il doit recommencer.
+    // À choisir selon votre préférence utilisateur.
+    // if (this.eventForm) {
+    //   this.eventForm.reset();
+    //   this.categoriesFormArray.clear();
+    // }
+
+    // La seule chose essentielle: émettre l'événement 'close' pour que le parent sache qu'il doit cacher la modale.
+    this.close.emit();
   }
 }

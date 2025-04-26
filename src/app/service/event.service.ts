@@ -50,6 +50,23 @@ export class EventService {
     return this.http.put<Evenement>(url, eventData).pipe(/* ... */); // Attend un Evenement en retour
   }
 
+  /**
+   * Effectue une suppression logique (soft delete) d'un événement.
+   * Appelle l'endpoint DELETE /api/events/{eventId}
+   * @param eventId L'ID de l'événement à désactiver.
+   * @returns Un Observable<void> car l'API ne renvoie généralement rien (204 No Content) en cas de succès.
+   */
+  softDeleteEvent(eventId: number): Observable<void> {
+    const url = `${this.apiUrl}/${eventId}`; // Construit l'URL ex: http://localhost:8080/api/events/11
+    console.log(`Appel API Soft Delete: DELETE ${url}`);
+
+    // Effectue la requête DELETE.
+    // HttpClient.delete<void> indique qu'on n'attend pas de corps de réponse en cas de succès.
+    return this.http.delete<void>(url).pipe(
+      catchError(this.handleError) // Appelle notre fonction de gestion d'erreur en cas d'échec
+    );
+  }
+
   // --- Gestionnaire d'erreurs (peut être plus élaboré) ---
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'Une erreur inconnue est survenue lors de l\'opération sur l\'événement.';
@@ -65,10 +82,6 @@ export class EventService {
     return throwError(() => new Error(errorMessage));
   }
 
-  deactivateEvent(eventId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${eventId}`).pipe(
-      catchError(this.handleError)
-    );
-  }
+
 }
 

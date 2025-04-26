@@ -95,8 +95,8 @@
         </thead>
         <tbody>
         <!-- Utilisation de event-row -->
-        <tr *ngFor="let event of nextFiveEvents" app-event-row [evenement]="event"         (supprimer)="supprimerEvenement($event)"
-            (modifier)="mettreAJourEvenement($event)"></tr>
+        <tr *ngFor="let event of nextFiveEvents" app-event-row [evenement]="event" (modifier)="handleOpenEditModal($event)"
+        (deleteRequest)="handleDeleteEventRequest($event)"></tr>
         </tbody>
       </table>
     </div>

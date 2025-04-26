@@ -74,6 +74,8 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
   averageEventOccupancy: number | string | null = null; // Peut être null ou 'N/A' si pas de données
   totalActiveMembers: number | string | null = null;
   totalParticipations: number | string | null = null;
+  isEditEventModalVisible = false; // Contrôle la visibilité de la modale d'édition
+  selectedEventForEditModal: Evenement | undefined = undefined; // Stocke l'événement à modifier (ou undefined si création)
 
   // Listes pour les tableaux
   lastFiveMembers: Membre[] = []; // Tableau pour stocker les 5 derniers membres
@@ -362,6 +364,46 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
     }
   }
 
+  /**
+   * Gère la demande de suppression émise par une ligne d'événement.
+   * Affiche une confirmation, appelle le service si confirmé, et met à jour l'UI.
+   * @param eventToDelete L'objet événement reçu depuis le @Output deleteRequest de EventRowComponent.
+   */
+  handleDeleteEventRequest(eventToDelete: Evenement): void {
+    console.log("Demande de suppression reçue pour:", eventToDelete);
+
+    // 1. Confirmation utilisateur
+    const confirmation = confirm(`Êtes-vous sûr de vouloir désactiver l'événement "${eventToDelete.nom}" (ID: ${eventToDelete.id}) ? Cette action est généralement réversible.`);
+
+    if (confirmation) {
+      console.log("Confirmation reçue. Appel de l'API de suppression...");
+      // 2. Appel au service (si confirmé)
+      this.eventService.softDeleteEvent(eventToDelete.id).subscribe({
+        // 3. Traitement du succès
+        next: () => {
+          this.notification.show(`L'événement "${eventToDelete.nom}" a été désactivé.`, 'valid');
+
+          // 4. Mise à jour de la liste locale (création d'un NOUVEAU tableau sans l'élément supprimé)
+          this.nextFiveEvents = this.nextFiveEvents.filter(event => event.id !== eventToDelete.id);
+
+          // 5. Rafraîchissement de l'affichage (important avec OnPush)
+          this.cdr.detectChanges();
+          console.log("Événement retiré de la liste locale et affichage mis à jour.");
+        },
+        // 6. Traitement de l'erreur
+        error: (error) => {
+          console.error("Erreur lors de la désactivation de l'événement:", error);
+          // Affiche l'erreur formatée venant du service
+          this.notification.show(error.message || "Erreur inconnue lors de la désactivation.", 'error');
+          // On ne modifie pas la liste locale en cas d'erreur
+        }
+      });
+    } else {
+      console.log("Suppression annulée par l'utilisateur.");
+      // Optionnel: Afficher une notification "Annulé" ?
+      // this.notification.show("Désactivation annulée.", "info");
+    }
+  }
   /** Fonction appelée quand la modale membre émet (saveRole) */
   handleSaveRole(data: { membreId: number, newRole: RoleType }): void {
     const clubId = this.authService.getManagedClubId();
@@ -420,24 +462,22 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
 
   // --- Gestion des Événements (Placeholder) ---
 
-  // TODO: Fonction à appeler quand on clique sur "Supprimer" dans une ligne événement
-  supprimerEvenement(event: Evenement): void {
-    console.log("TODO: Supprimer (Désactiver) événement:", event.nom, event.id);
-    // 1. Afficher une confirmation à l'utilisateur ("Êtes-vous sûr ?")
-    // 2. Si confirmé, appeler this.eventService.deactivateEvent(event.id)
-    // 3. Dans le .subscribe():
-    //    - Si succès: afficher notif succès, retirer l'event de this.nextFiveEvents, appeler this.cdr.detectChanges()
-    //    - Si erreur: afficher notif erreur
+  // --- Gestion des Événements (Modification - Complétée) ---
+
+  /** Ouvre la modale pour modifier un événement existant */
+  handleOpenEditModal(eventToEdit: Evenement): void {
+    console.log("Ouverture modale d'édition demandée pour:", eventToEdit);
+    this.selectedEventForEditModal = eventToEdit; // Mémorise l'événement
+    this.isEditEventModalVisible = true; // Affiche la modale
+    this.cdr.detectChanges(); // Nécessaire avec OnPush
   }
 
-  // TODO: Fonction à appeler quand on clique sur "Modifier" dans une ligne événement
-  mettreAJourEvenement(event: Evenement): void {
-    console.log("TODO: Ouvrir modale d'édition pour événement:", event.nom, event.id);
-    // 1. Mémoriser l'événement à modifier dans une propriété (ex: this.eventAModifier = event;)
-    // 2. Rendre la modale d'édition d'événement visible (ex: this.isEditEventModalVisible = true;)
-    // 3. Passer l'événement à la modale via @Input (ex: [event]="eventAModifier")
-    // 4. S'assurer d'avoir une méthode pour gérer le (saveSuccess) émis par la modale d'édition
-    //    et une autre pour gérer le (close) pour remettre isEditEventModalVisible à false.
+  /** Ouvre la modale pour créer un nouvel événement */
+  openCreateEventModal(): void {
+    console.log("Ouverture modale de création d'événement demandée.");
+    this.selectedEventForEditModal = undefined; // Assure qu'aucun événement n'est passé (mode création)
+    this.isEditEventModalVisible = true; // Affiche la modale
+    this.cdr.detectChanges(); // Nécessaire avec OnPush
   }
 
   // --- Gestion des Erreurs (Simplifiée) ---
