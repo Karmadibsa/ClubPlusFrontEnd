@@ -1,10 +1,11 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
+import {Observable, throwError} from 'rxjs';
 import {environment} from '../../environments/environments';
 import {RoleType} from '../model/role';
-import {catchError} from 'rxjs/operators';
+import {catchError, tap} from 'rxjs/operators';
 import {Membre} from '../model/membre';
+import {Club} from '../model/club';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,32 @@ export class MembreService {
     // mais pourrait aussi être centralisée ici.
   }
 
+  /**
+   * Récupère le profil du membre actuellement authentifié.
+   * GET /api/membres/profile
+   */
+  getCurrentUserProfile(): Observable<Membre> {
+    const url = `${this.apiUrl}/profile`;
+    console.log(`MembreService: Appel GET ${url}`);
+    return this.http.get<Membre>(url).pipe(
+      tap(data => console.log(`MembreService: Profil reçu:`, data)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Met à jour le profil du membre actuellement authentifié.
+   * PUT /api/membres/profile
+   * @param data Données partielles ou complètes du membre à mettre à jour.
+   */
+  updateCurrentUserProfile(data: Partial<Membre>): Observable<Membre> {
+    const url = `${this.apiUrl}/profile`;
+    console.log(`MembreService: Appel PUT ${url} avec données:`, data);
+    return this.http.put<Membre>(url, data).pipe( // Utilise PUT comme spécifié
+      tap(updatedProfile => console.log(`MembreService: Profil mis à jour:`, updatedProfile)),
+      catchError(this.handleError)
+    );
+  }
   getMembersByClub(clubId: number): Observable<Membre[]> {
     const url = `${environment.apiUrl}/clubs/${clubId}/membres`;
     console.log('Appel API Membres:', url); // Pour le débogage
@@ -67,4 +94,19 @@ export class MembreService {
     return this.http.put<Membre>(url, null, { params: params }).pipe(
     );
   }
+
+  // Gestionnaire d'erreur générique (similaire à ClubService)
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Une erreur inconnue est survenue !';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Erreur: ${error.error.message}`;
+    } else {
+      const backendError = error.error;
+      const backendMessage = backendError?.message || backendError?.error || JSON.stringify(backendError);
+      errorMessage = `Erreur Serveur ${error.status}: ${backendMessage || error.message}`;
+    }
+    console.error('MembreService API Error:', errorMessage, error);
+    return throwError(() => new Error(errorMessage));
+  }
 }
+

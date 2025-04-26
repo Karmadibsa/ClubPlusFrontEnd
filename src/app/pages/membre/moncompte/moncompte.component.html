@@ -7,6 +7,7 @@
       <h1><lucide-icon name="user-cog"></lucide-icon> Mon Compte</h1>
     </div>
 
+@if (!isLoading) {
     <div class="section-cards">
       <!-- Formulaire Informations personnelles -->
       <form [formGroup]="infoForm" (ngSubmit)="updatePersonalInfo()">
@@ -81,54 +82,55 @@
         </div>
       </form>
 
-      <!-- Formulaire Changer le mot de passe -->
-      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
-        <!-- Section Changer le mot de passe -->
-        <div class='account-section card-section'>
-          <!-- En-tête de la section -->
-          <div class="section-header">
+<!--      &lt;!&ndash; Formulaire Changer le mot de passe &ndash;&gt;-->
+<!--      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">-->
+<!--        &lt;!&ndash; Section Changer le mot de passe &ndash;&gt;-->
+<!--        <div class='account-section card-section'>-->
+<!--          &lt;!&ndash; En-tête de la section &ndash;&gt;-->
+<!--          <div class="section-header">-->
 
 
-            <h2><lucide-icon name='lock'></lucide-icon> Changer le mot de passe</h2>
-          <p>Mettez à jour votre mot de passe pour sécuriser votre compte.</p>
+<!--            <h2><lucide-icon name='lock'></lucide-icon> Changer le mot de passe</h2>-->
+<!--          <p>Mettez à jour votre mot de passe pour sécuriser votre compte.</p>-->
 
-          </div>
-          <!-- Formulaire mot de passe -->
-          <!-- Mot de passe actuel -->
-          <div class="form-group">
-            <label for="current-password">Mot de passe actuel</label>
-            <input
-              type="password"
-              id="current-password"
-              formControlName="current_password"
-            />
-          </div>
+<!--          </div>-->
+<!--          &lt;!&ndash; Formulaire mot de passe &ndash;&gt;-->
+<!--          &lt;!&ndash; Mot de passe actuel &ndash;&gt;-->
+<!--          <div class="form-group">-->
+<!--            <label for="current-password">Mot de passe actuel</label>-->
+<!--            <input-->
+<!--              type="password"-->
+<!--              id="current-password"-->
+<!--              formControlName="current_password"-->
+<!--            />-->
+<!--          </div>-->
 
-          <!-- Nouveau mot de passe -->
-          <div class="form-group">
-            <label for="new-password">Nouveau mot de passe</label>
-            <input
-              type="password"
-              id="new-password"
-              formControlName="new_password"
-            />
-          </div>
+<!--          &lt;!&ndash; Nouveau mot de passe &ndash;&gt;-->
+<!--          <div class="form-group">-->
+<!--            <label for="new-password">Nouveau mot de passe</label>-->
+<!--            <input-->
+<!--              type="password"-->
+<!--              id="new-password"-->
+<!--              formControlName="new_password"-->
+<!--            />-->
+<!--          </div>-->
 
-          <!-- Confirmation du nouveau mot de passe -->
-          <div class="form-group">
-            <label for="confirm-password">Confirmer le nouveau mot de passe</label>
-            <input
-              type="password"
-              id="confirm-password"
-              formControlName="confirm_password"
-            />
-          </div>
+<!--          &lt;!&ndash; Confirmation du nouveau mot de passe &ndash;&gt;-->
+<!--          <div class="form-group">-->
+<!--            <label for="confirm-password">Confirmer le nouveau mot de passe</label>-->
+<!--            <input-->
+<!--              type="password"-->
+<!--              id="confirm-password"-->
+<!--              formControlName="confirm_password"-->
+<!--            />-->
+<!--          </div>-->
 
-          <!-- Bouton pour changer le mot de passe -->
-          <button type="submit" class='btn btn-secondary'>
-            Changer le mot de passe
-          </button>
-        </div>
-      </form>
+<!--          &lt;!&ndash; Bouton pour changer le mot de passe &ndash;&gt;-->
+<!--          <button type="submit" class='btn btn-secondary'>-->
+<!--            Changer le mot de passe-->
+<!--          </button>-->
+<!--        </div>-->
+<!--      </form>-->
     </div>
+}
   </div>
