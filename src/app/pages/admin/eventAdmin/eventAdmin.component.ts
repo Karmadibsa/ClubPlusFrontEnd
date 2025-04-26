@@ -1,119 +1,222 @@
-import {Component} from '@angular/core'; // <-- Import correct
-import {EventRowComponent} from '../../../component/event/event-row/event-row.component';
-import {NgForOf, NgIf} from '@angular/common';
-import {FilterEventComponent} from '../../../component/event/filter-event/filter-event.component';
-import {SidebarComponent} from '../../../component/navigation/sidebar/sidebar.component';
-import {HttpClient} from '@angular/common/http';
-import {LucideAngularModule} from 'lucide-angular';
-import {EditEventModalComponent} from '../../../component/event/edit-event/edit-event.component';
+// ----- IMPORTATIONS -----
+import { Component, inject, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common'; // Pour @if, @for si tu migres, ou NgIf/NgForOf
+import { Subscription } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+
+// Services
+import { EventService } from '../../../service/event.service';             // Service pour les événements
+import { AuthService } from '../../../service/security/auth.service';       // Pour l'ID du club/user
+import { NotificationService } from '../../../service/notification.service'; // Pour les notifications
+
+// Composants
+import { EventRowComponent } from '../../../component/event/event-row/event-row.component';
+import { SidebarComponent } from '../../../component/navigation/sidebar/sidebar.component';
+import { EditEventModalComponent } from '../../../component/event/edit-event/edit-event.component'; // Le nom semble être EditEventComponent basé sur tes imports
+import { CreateEventButtonComponent } from '../../../component/event/create-event-button/create-event-button.component';
+
+// Modèles
+import { Evenement } from '../../../model/evenement'; // Assure-toi que ce modèle existe et est correct
+
+// Autres
+import { LucideAngularModule } from 'lucide-angular'; // Si utilisé dans le template
+
 
 @Component({
   selector: 'app-event',
-  templateUrl: './eventAdmin.component.html',
+  standalone: true, // Important si tu utilises cette approche
   imports: [
-    EventRowComponent,
-    NgForOf,
+    CommonModule, // Contient NgIf, NgForOf OU les nouveaux @if, @for
     SidebarComponent,
-    NgIf,
+    EventRowComponent,
     LucideAngularModule,
-    EditEventModalComponent
+    EditEventModalComponent, // Assure-toi que le nom est correct
+    CreateEventButtonComponent
   ],
-  styleUrls: ['./eventAdmin.component.scss']
+  templateUrl: './eventAdmin.component.html',
+  styleUrls: ['./eventAdmin.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush // Recommandé pour les performances
 })
-export class EventAdminComponent {
-  evenements: any[] = [];
-  isModalVisible = false; // Contrôle la visibilité de la modal
-  evenementEnCours: any = {}; // Stocke l'événement en cours d'édition ou de création
+export class EventAdminComponent implements OnInit, OnDestroy {
+  // --- Injection des Services ---
+  private eventService = inject(EventService);
+  private authService = inject(AuthService); // Nécessaire si la modale ne récupère pas l'ID elle-même
+  private notification = inject(NotificationService);
+  private cdr = inject(ChangeDetectorRef); // Nécessaire avec OnPush
 
-  constructor(private http: HttpClient) {}
+  // --- État du Composant ---
+  evenements: Evenement[] = []; // Utilise le type Evenement
+  isLoading = false;
+  isEditEventModalVisible = false;
+  selectedEventForEditModal: Evenement | undefined = undefined; // Pour création ou modification
+  private eventsSubscription: Subscription | null = null; // Pour gérer la désinscription
 
   ngOnInit(): void {
     this.chargerEvenements();
   }
 
+  ngOnDestroy(): void {
+    this.eventsSubscription?.unsubscribe(); // Nettoyage
+  }
+
   chargerEvenements(): void {
-    this.http.get<any[]>('http://localhost:8080/api/events')
-      .subscribe({
-        next: (data) => {
-          this.evenements = data;
-          console.log('Événements chargés:', data);
-        },
-        error: (err) => console.error('Erreur de chargement des événements:', err)
-      });
-  }
+    this.isLoading = true;
+    this.evenements = []; // Vide la liste pendant le chargement
+    this.cdr.detectChanges(); // Met à jour l'UI pour montrer le chargement
 
-  supprimerEvenement(evenement: any): void {
-    if (confirm(`Êtes-vous sûr de vouloir supprimer l'événement "${evenement.titre}" ?`)) {
-      this.http.delete(`http://localhost:8080/api/events/${evenement.id}`)
-        .subscribe({
-          next: () => {
-            this.evenements = this.evenements.filter(e => e.id !== evenement.id);
-            console.log('Événement supprimé avec succès');
-          },
-          error: (err) => console.error('Erreur de suppression:', err)
-        });
-    }
-  }
-
-  mettreAJourEvenement(evenement: any): void {
-    this.http.put(`http://localhost:8080/api/events/${evenement.id}`, evenement)
-      .subscribe({
-        next: () => {
-          console.log('Événement mis à jour avec succès');
-          this.chargerEvenements(); // Recharger tous les événements
-        },
-        error: (err) => console.error('Erreur de mise à jour:', err)
-      });
+    // Assure-toi que this.eventService.getAllEvents() (ou la méthode appelée)
+    // fait bien GET /api/events?status=all dans le EventService.
+    this.eventsSubscription = this.eventService.getAllEvents().subscribe({
+      next: (data: Evenement[]) => { // Utilise le type Evenement[]
+        this.evenements = data;
+        this.isLoading = false;
+        console.log('Événements chargés:', data);
+        this.cdr.detectChanges(); // Met à jour l'UI avec les données
+      },
+      error: (err: HttpErrorResponse) => {
+        this.isLoading = false;
+        console.error('Erreur de chargement des événements:', err);
+        // Utilise le message d'erreur retourné par le handleError du service si possible
+        this.notification.show(err.message || 'Erreur de chargement des événements.', 'error');
+        this.cdr.detectChanges(); // Met à jour l'UI pour enlever l'état de chargement
+      }
+    });
   }
 
   /**
-   * Ouvre la modal pour créer un nouvel événement
+   * Gère la demande de suppression émise par EventRowComponent.
+   */
+  handleDeleteEventRequest(eventToDelete: Evenement): void {
+    // Optionnel: Ajouter une confirmation plus robuste (ex: modale de confirmation)
+    // const confirmation = confirm(`Êtes-vous sûr de vouloir désactiver l'événement "${eventToDelete.nom}" ?`);
+    // if (!confirmation) return;
+
+    // Utilise EventService pour la suppression (soft delete)
+    this.eventService.softDeleteEvent(eventToDelete.id).subscribe({
+      next: () => {
+        this.notification.show(`L'événement "${eventToDelete.nom}" a été désactivé.`, 'valid');
+        // Met à jour la liste locale SANS recharger toute la page
+        this.evenements = this.evenements.filter(e => e.id !== eventToDelete.id);
+        this.cdr.detectChanges(); // Met à jour l'affichage
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Erreur de désactivation:', err);
+        this.notification.show(err.message || 'Erreur lors de la désactivation.', 'error');
+      }
+    });
+  }
+
+
+  // --- Gestion de la Modale ---
+
+  /**
+   * Ouvre la modale en mode CRÉATION.
+   * Appelée par le clic sur (createClicked) du composant app-create-event-button.
    */
   ouvrirModalCreation(): void {
-    this.evenementEnCours = {}; // Initialise un nouvel objet vide pour un nouvel événement
-    this.isModalVisible = true; // Affiche la modal
+    this.selectedEventForEditModal = undefined; // Important pour indiquer le mode création à la modale
+    this.isEditEventModalVisible = true;
+    this.cdr.detectChanges(); // Met à jour l'UI pour afficher la modale
   }
 
   /**
-   * Ferme la modal
+   * Ouvre la modale en mode MODIFICATION.
+   * Appelée par l'événement (modifier) émis par app-event-row.
+   * @param eventToEdit L'événement à modifier.
    */
-  fermerModal(): void {
-    this.isModalVisible = false; // Cache la modal
+  ouvrirModalModification(eventToEdit: Evenement): void {
+    this.selectedEventForEditModal = eventToEdit; // Passe l'événement existant à la modale
+    this.isEditEventModalVisible = true;
+    this.cdr.detectChanges(); // Met à jour l'UI pour afficher la modale
   }
 
   /**
-   * Sauvegarde l'événement (création ou modification)
+   * Ferme la modale.
+   * Appelée par l'événement (close) émis par app-edit-event.
    */
-  sauvegarderEvenement(evenement: any): void {
-    if (evenement.id) {
-      // Si l'événement a un ID, il s'agit d'une modification
-      this.mettreAJourEvenement(evenement);
+  handleCloseModal(): void {
+    this.isEditEventModalVisible = false;
+    this.selectedEventForEditModal = undefined; // Nettoie l'événement en cours
+    this.cdr.detectChanges(); // Met à jour l'UI pour cacher la modale
+  }
+
+  /**
+   * Gère la sauvegarde réussie (création ou modification) émise par la modale.
+   * Appelée par l'événement (saveSuccess) émis par app-edit-event.
+   * @param savedEvent L'événement qui a été créé ou mis à jour.
+   */
+  handleSaveSuccess(savedEvent: Evenement): void {
+    const isUpdate = this.evenements.some(e => e.id === savedEvent.id);
+
+    if (isUpdate) {
+      // --- Mise à jour de l'élément dans la liste ---
+      this.evenements = this.evenements.map(event =>
+        event.id === savedEvent.id ? savedEvent : event // Remplace l'ancien par le nouveau
+      );
+      console.log('Événement mis à jour dans la liste locale.');
     } else {
-
-      const jwt = localStorage.getItem("jwt")
-      if(jwt){
-      this.http.post('http://localhost:8080/api/events', {headers : {Authorization : "Bearer" + localStorage.getItem("jwt")}}, evenement).subscribe({
-        next: (nouvelEvenement) => {
-          console.log('Événement créé avec succès:', nouvelEvenement);
-          this.evenements.push(nouvelEvenement); // Ajoute le nouvel événement à la liste
-          this.fermerModal();
-        },
-        error: (err) => console.error('Erreur lors de la création de l\'événement:', err)
-      });
-      }
-      }
+      // --- Ajout du nouvel élément à la liste ---
+      // Optionnel: Trier la liste ou simplement ajouter au début/fin
+      this.evenements = [savedEvent, ...this.evenements]; // Ajoute au début
+      console.log('Nouvel événement ajouté à la liste locale.');
     }
-  //     // Sinon, il s'agit d'une création
-  //       this.http.post('http://localhost:8080/api/events', {headers : {Authorization : "Bearer" + localStorage.getItem("jwt")}} evenement).subscribe({
-  //       next: (nouvelEvenement) => {
-  //         console.log('Événement créé avec succès:', nouvelEvenement);
-  //         this.evenements.push(nouvelEvenement); // Ajoute le nouvel événement à la liste
-  //         this.fermerModal();
-  //       },
-  //       error: (err) => console.error('Erreur lors de la création de l\'événement:', err)
-  //     });
-  //   }
-  // }
 
+    this.handleCloseModal(); // Ferme la modale après succès
+    // La notification est déjà gérée dans la modale, pas besoin ici en général.
+    this.cdr.detectChanges(); // Met à jour l'affichage de la liste
+  }
 
+  /** Ouvre la modale pour modifier un événement existant */
+  handleOpenEditModal(eventToEdit: Evenement): void {
+    console.log("Ouverture modale d'édition demandée pour:", eventToEdit);
+    this.selectedEventForEditModal = eventToEdit; // Mémorise l'événement
+    this.isEditEventModalVisible = true; // Affiche la modale
+    this.cdr.detectChanges(); // Nécessaire avec OnPush
+  }
+
+  /**
+   * Gère la sauvegarde réussie d'un événement depuis la modale.
+   * Appelée lorsque la modale émet l'événement (saveSuccess).
+   * @param savedEvent L'événement qui vient d'être créé ou mis à jour.
+   */
+  handleSaveEventSuccess(savedEvent: Evenement): void {
+    console.log('Sauvegarde réussie depuis la modale pour l\'événement:', savedEvent);
+
+    // 1. Fermer la modale
+    this.handleCloseEditModal(); // Réutilise la logique de fermeture
+
+    // 2. Mettre à jour la liste des événements affichée (nextFiveEvents)
+    // C'est l'étape la plus importante pour voir le résultat !
+    // Option A: Recharger simplement toute la liste (plus simple, mais peut causer un léger clignotement)
+    const clubId = this.authService.getManagedClubId();
+    if (clubId !== null) {
+      console.log("Rechargement des données du dashboard après sauvegarde...");
+      // Tu pourrais vouloir une méthode plus ciblée juste pour recharger les événements
+      this.chargerEvenements();
+    } else {
+      this.notification.show("Erreur: ID du club non trouvé pour recharger les données.", "error");
+    }
+
+    // Option B: Mettre à jour la liste 'nextFiveEvents' manuellement (plus complexe)
+    //    - Si c'était une création, vérifier si le nouvel événement doit apparaître dans les 5 prochains.
+    //    - Si c'était une mise à jour, trouver l'événement dans la liste et le remplacer.
+    //    - Nécessiterait probablement un appel ciblé à this.eventService.getNextEvents() ou une logique de tri/filtrage.
+    //    - N'oublie pas this.cdr.detectChanges() si tu choisis cette option et utilises OnPush.
+
+    // 3. Afficher une notification de succès
+    this.notification.show(`Événement "${savedEvent.nom}" sauvegardé avec succès.`, 'valid');
+  }
+
+  /**
+   * Gère la fermeture de la modale d'édition/création d'événement.
+   * Appelée lorsque la modale émet l'événement (close).
+   */
+  handleCloseEditModal(): void {
+    console.log("Fermeture de la modale d'édition/création demandée.");
+    this.isEditEventModalVisible = false; // Cache la modale
+    this.selectedEventForEditModal = undefined; // Réinitialise l'événement sélectionné (bonne pratique)
+
+    // Si tu utilises ChangeDetectionStrategy.OnPush:
+    this.cdr.detectChanges();
+  }
 }

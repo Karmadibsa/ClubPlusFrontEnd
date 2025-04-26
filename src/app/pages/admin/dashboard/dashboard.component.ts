@@ -27,7 +27,9 @@ import { RoleType } from '../../../model/role';         // Type pour les rôles 
 
 // Outils pour les graphiques (Chart.js via ng2-charts)
 import { ChartData, ChartOptions } from 'chart.js'; // Types pour configurer les graphiques
-import { BaseChartDirective } from 'ng2-charts';   // La directive pour afficher un graphique dans le HTML
+import { BaseChartDirective } from 'ng2-charts';
+import {CreateEventButtonComponent} from '../../../component/event/create-event-button/create-event-button.component';
+import {EditEventModalComponent} from '../../../component/event/edit-event/edit-event.component';   // La directive pour afficher un graphique dans le HTML
 
 // -------------------------
 
@@ -43,7 +45,8 @@ import { BaseChartDirective } from 'ng2-charts';   // La directive pour afficher
     StatCardComponent,
     EventRowComponent,
     MembreRowComponent,
-    MembreDetailModalComponent
+    CreateEventButtonComponent,
+    EditEventModalComponent,
   ],
   templateUrl: './dashboard.component.html', // Fichier HTML de ce composant
   styleUrls: ['./dashboard.component.scss'],   // Fichier CSS/SCSS de ce composant
@@ -374,12 +377,9 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
         // Mise à jour de la liste locale lastFiveMembers
         const index = this.lastFiveMembers.findIndex(m => m.id === data.membreId);
         if (index !== -1) {
-          // Crée une NOUVELLE liste pour déclencher la détection de changement (si OnPush)
-          // Crée une NOUVELLE liste en remplaçant l'ancien membre par le nouveau (ou en modifiant juste le rôle)
+
           this.lastFiveMembers = [
             ...this.lastFiveMembers.slice(0, index), // partie avant
-            // On met à jour uniquement le rôle car l'API ne renvoie peut-être pas le membre complet
-            // Si updatedMember est renvoyé et contient toutes les infos, utiliser: updatedMember
             { ...this.lastFiveMembers[index], role: data.newRole }, // membre mis à jour (juste le rôle ici)
             ...this.lastFiveMembers.slice(index + 1) // partie après
           ];
@@ -387,12 +387,9 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
           this.cdr.detectChanges(); // Rafraîchir l'affichage du tableau
         } else {
           console.warn(`Dashboard: Membre ID ${data.membreId} non trouvé dans lastFiveMembers après mise à jour.`);
-          // Optionnel: Recharger la liste si nécessaire
-          // this.loadLatestMembers(clubId); // Ou une méthode spécifique pour recharger les membres
+
         }
 
-        // La fermeture de la modale est gérée par MembreRowComponent maintenant
-        // this.closeMemberDetailModal(); // -> SUPPRIMÉ
       },
       error: (error) => {
         console.error("Dashboard: Erreur lors de la mise à jour du rôle:", error);
@@ -408,11 +405,11 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
   handleDeleteEventRequest(eventToDelete: Evenement): void {
     console.log("Demande de suppression reçue pour:", eventToDelete);
 
-    // 1. Confirmation utilisateur
-    const confirmation = confirm(`Êtes-vous sûr de vouloir désactiver l'événement "${eventToDelete.nom}" (ID: ${eventToDelete.id}) ? Cette action est généralement réversible.`);
-
-    if (confirmation) {
-      console.log("Confirmation reçue. Appel de l'API de suppression...");
+    // // 1. Confirmation utilisateur
+    // const confirmation = confirm(`Êtes-vous sûr de vouloir désactiver l'événement "${eventToDelete.nom}" ?`);
+    //
+    // if (confirmation) {
+    //   console.log("Confirmation reçue. Appel de l'API de suppression...");
       // 2. Appel au service (si confirmé)
       this.eventService.softDeleteEvent(eventToDelete.id).subscribe({
         // 3. Traitement du succès
@@ -434,15 +431,12 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
           // On ne modifie pas la liste locale en cas d'erreur
         }
       });
-    } else {
-      console.log("Suppression annulée par l'utilisateur.");
-      // Optionnel: Afficher une notification "Annulé" ?
-      // this.notification.show("Désactivation annulée.", "info");
-    }
+    // } else {
+    //   console.log("Suppression annulée par l'utilisateur.");
+    //   this.notification.show("Désactivation annulée.", "info");
+    // }
   }
 
-
-  // --- Gestion des Événements (Placeholder) ---
 
   // --- Gestion des Événements (Modification - Complétée) ---
 
@@ -460,6 +454,52 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
     this.selectedEventForEditModal = undefined; // Assure qu'aucun événement n'est passé (mode création)
     this.isEditEventModalVisible = true; // Affiche la modale
     this.cdr.detectChanges(); // Nécessaire avec OnPush
+  }
+
+  /**
+   * Gère la fermeture de la modale d'édition/création d'événement.
+   * Appelée lorsque la modale émet l'événement (close).
+   */
+  handleCloseEditModal(): void {
+    console.log("Fermeture de la modale d'édition/création demandée.");
+    this.isEditEventModalVisible = false; // Cache la modale
+    this.selectedEventForEditModal = undefined; // Réinitialise l'événement sélectionné (bonne pratique)
+
+    // Si tu utilises ChangeDetectionStrategy.OnPush:
+    this.cdr.detectChanges();
+  }
+
+  /**
+   * Gère la sauvegarde réussie d'un événement depuis la modale.
+   * Appelée lorsque la modale émet l'événement (saveSuccess).
+   * @param savedEvent L'événement qui vient d'être créé ou mis à jour.
+   */
+  handleSaveEventSuccess(savedEvent: Evenement): void {
+    console.log('Sauvegarde réussie depuis la modale pour l\'événement:', savedEvent);
+
+    // 1. Fermer la modale
+    this.handleCloseEditModal(); // Réutilise la logique de fermeture
+
+    // 2. Mettre à jour la liste des événements affichée (nextFiveEvents)
+    // C'est l'étape la plus importante pour voir le résultat !
+    // Option A: Recharger simplement toute la liste (plus simple, mais peut causer un léger clignotement)
+    const clubId = this.authService.getManagedClubId();
+    if (clubId !== null) {
+      console.log("Rechargement des données du dashboard après sauvegarde...");
+      // Tu pourrais vouloir une méthode plus ciblée juste pour recharger les événements
+      this.loadAllDashboardData(clubId);
+    } else {
+      this.notification.show("Erreur: ID du club non trouvé pour recharger les données.", "error");
+    }
+
+    // Option B: Mettre à jour la liste 'nextFiveEvents' manuellement (plus complexe)
+    //    - Si c'était une création, vérifier si le nouvel événement doit apparaître dans les 5 prochains.
+    //    - Si c'était une mise à jour, trouver l'événement dans la liste et le remplacer.
+    //    - Nécessiterait probablement un appel ciblé à this.eventService.getNextEvents() ou une logique de tri/filtrage.
+    //    - N'oublie pas this.cdr.detectChanges() si tu choisis cette option et utilises OnPush.
+
+    // 3. Afficher une notification de succès
+    this.notification.show(`Événement "${savedEvent.nom}" sauvegardé avec succès.`, 'valid');
   }
 
   // --- Gestion des Erreurs (Simplifiée) ---
@@ -485,35 +525,10 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
     // ...etc
     this.cdr.detectChanges();
   }
+
 } // Fin de la classe DashboardComponent
 
 
 // --- Interfaces DTO (Data Transfer Object) ---
-// Décrivent la structure des données ATTENDUES des réponses API spécifiques.
-// Idéalement, ces interfaces devraient être dans des fichiers séparés (ex: src/app/models/dto.model.ts)
 
-// Structure attendue de l'API /stats/clubs/{clubId}/dashboard-summary
-interface DashboardSummaryDTO {
-  totalEvents: number;
-  upcomingEventsCount30d: number;
-  averageEventOccupancyRate: number; // Ex: 75.5 pour 75.5%
-  monthlyRegistrations: MonthlyRegistrationPoint[];
-  averageEventRatings: AverageRatings;
-  totalMembers: number; // Ajouté car présent dans votre code initial
-  totalActiveMembers: number;
-  totalParticipations: number;
-}
-
-// Structure pour un point du graphique d'inscriptions
-interface MonthlyRegistrationPoint {
-  count: number;    // Nombre d'inscriptions
-  monthYear: string; // Label du mois (ex: "Jan 2024")
-}
-
-// Structure pour les notes moyennes
-interface AverageRatings {
-  // La clé est la catégorie de note (ex: 'organisation'), la valeur est la note moyenne
-  [category: string]: number | null | undefined;
-  // Ex: { organisation: 4.2, ambiance: 4.8, moyenneGenerale: 4.5 }
-}
 // --------------------------------------------------

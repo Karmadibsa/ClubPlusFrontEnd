@@ -26,7 +26,8 @@ import { NotificationService } from '../../../service/notification.service'; // 
 import { EventService } from '../../../service/event.service';             // Service pour interagir avec l'API des événements
 // Importez les interfaces définissant la structure des données événement/catégorie
 import { Evenement, CreateEventPayload, UpdateEventPayload } from '../../../model/evenement';
-import { CategorieCreatePayload, CategorieUpdatePayload } from '../../../model/categorie'; // On importe aussi les types spécifiques aux payloads API
+import { CategorieCreatePayload, CategorieUpdatePayload } from '../../../model/categorie';
+import {AuthService} from '../../../service/security/auth.service'; // On importe aussi les types spécifiques aux payloads API
 
 @Component({
   selector: 'app-edit-event',     // Nom de la balise HTML pour utiliser ce composant: <app-edit-event>
@@ -84,6 +85,7 @@ export class EditEventModalComponent implements OnInit, OnChanges {
   private notificationService = inject(NotificationService); // Notre service pour afficher des messages (succès, erreur)
   private datePipe = inject(DatePipe);                 // Outil Angular pour formater les dates (ex: pour l'input datetime-local)
   private cdr = inject(ChangeDetectorRef);             // Outil pour déclencher manuellement la détection de changements d'Angular
+  private authService = inject(AuthService)
 
   // --- ----------------------------------- ---
   // --- PROPRIÉTÉS INTERNES DU COMPOSANT ---
@@ -314,77 +316,80 @@ export class EditEventModalComponent implements OnInit, OnChanges {
    */
   saveChanges(): void {
     // 1. Vérifier la validité du formulaire
-    //    `this.eventForm.invalid` est true si AU MOINS UN validateur (requis, minLength, etc., y compris le validateur de date) échoue.
     if (this.eventForm.invalid) {
       this.notificationService.show('Formulaire invalide. Veuillez vérifier les champs en rouge.', 'warning');
-      // `markAllAsTouched` force l'affichage des messages d'erreur associés aux champs invalides dans le HTML.
       this.eventForm.markAllAsTouched();
       return; // Arrêter le processus de sauvegarde.
     }
 
     // 2. Préparation de la sauvegarde
-    this.isSaving = true; // Activer l'état "sauvegarde en cours" (désactive bouton, affiche spinner...)
+    this.isSaving = true; // Activer l'état "sauvegarde en cours"
+    // Si tu utilises OnPush, force la détection pour afficher le spinner/désactiver le bouton
+    // this.cdr.detectChanges(); // Décommente si nécessaire
 
-    // `getRawValue()` récupère TOUTES les valeurs du formulaire, y compris celles des contrôles désactivés
-    // (ce qui n'est pas notre cas ici, mais c'est important pour les `id` des catégories qui ne sont pas
-    // directement modifiables par l'utilisateur mais font partie du groupe).
     const formValue = this.eventForm.getRawValue();
 
-    // Fonction utilitaire pour s'assurer que le format de date envoyé au backend est correct.
-    // L'input datetime-local donne "YYYY-MM-DDTHH:mm". Si le backend attend des secondes, on les ajoute.
-    // Adaptez ce format si votre backend Spring attend autre chose (ex: avec fuseau horaire 'Z').
+    // Fonction utilitaire pour formater la date pour le backend
     const formatForBackend = (dateString: string): string => {
-      return dateString ? dateString + ':00' : ''; // Ajoute ':00' pour les secondes.
+      return dateString ? dateString + ':00' : ''; // Ajoute ':00' pour les secondes. Adapte si besoin.
     };
 
     // 3. Logique différente selon le mode (Création ou Modification)
-    if (this.isEditMode && this.event) {
+    if (this.isEditMode && this.event?.id) { // Utilise optional chaining pour l'ID
       // --- CAS: MISE À JOUR D'UN ÉVÉNEMENT EXISTANT ---
+      console.log('DEBUG: Préparation UPDATE pour event ID:', this.event.id);
 
-      // Préparer l'objet (Payload) à envoyer à l'API, conformément à l'interface `UpdateEventPayload`.
       const updatePayload: UpdateEventPayload = {
         nom: formValue.nom,
         start: formatForBackend(formValue.start),
         end: formatForBackend(formValue.end),
         description: formValue.description,
-        // Si location est une chaîne vide, envoyer `undefined` pour éviter d'envoyer `location: ""` si non désiré.
-        // Adaptez selon ce que votre API attend pour une valeur optionnelle vide.
         location: formValue.location || undefined,
-        // La partie cruciale: les catégories.
-        // `formValue.categories` contient la liste [{id: number|null, nom: string, capacite: number}, ...]
-        // Ceci correspond EXACTEMENT à ce qu'attend `CategorieUpdatePayload[]`.
-        // Le backend utilisera l'ID pour savoir s'il faut METTRE À JOUR (ID présent), CRÉER (ID null),
-        // ou SUPPRIMER (catégorie existante dans l'événement initial mais absente de cette liste).
-        categories: formValue.categories // Pas besoin de transformation ici !
+        categories: formValue.categories // Assume que le backend gère les IDs dans cette liste
       };
 
-      // Appel de la méthode du service pour la mise à jour. On passe l'ID de l'événement et le payload.
+      console.log('DEBUG: Appel UPDATE avec payload:', updatePayload);
+      // Appel de la méthode du service pour la mise à jour.
       this.eventService.updateEventWithCategories(this.event.id, updatePayload)
-        .subscribe({ // On s'abonne pour recevoir la réponse de l'API.
-          next: (updatedEvent) => { // 'next' est exécuté si l'appel API réussit.
+        .subscribe({
+          next: (updatedEvent) => {
             this.notificationService.show('Événement mis à jour avec succès!', 'valid');
-            this.isSaving = false; // Désactiver l'état "sauvegarde en cours".
-            this.saveSuccess.emit(updatedEvent); // Émettre l'événement mis à jour au composant parent.
-            this.closeModal(); // Fermer la modale.
+            this.isSaving = false;
+            this.saveSuccess.emit(updatedEvent); // Émettre l'événement mis à jour au parent.
+            // La fermeture peut être gérée par le parent ou ici
+            // this.closeModal();
           },
-          error: (err) => { // 'error' est exécuté si l'appel API échoue.
-            console.error("Erreur MàJ Événement:", err); // Log l'erreur pour le débogage.
+          error: (err) => {
+            console.error("Erreur MàJ Événement:", err);
             this.notificationService.show(`Erreur lors de la mise à jour: ${err.message || 'Erreur inconnue'}`, 'error');
-            this.isSaving = false; // Désactiver l'état "sauvegarde en cours".
+            this.isSaving = false;
+            // this.cdr.detectChanges(); // Si OnPush
           }
         });
 
-    } else if (!this.isEditMode && this.clubId) {
+    } else if (!this.isEditMode) {
       // --- CAS: CRÉATION D'UN NOUVEL ÉVÉNEMENT ---
-      // On vérifie qu'on n'est PAS en mode édition ET qu'on a bien reçu un clubId du parent.
+      console.log('DEBUG: Préparation CREATE');
 
-      // Préparer le Payload pour la création, conformément à l'interface `CreateEventPayload`.
-      // La différence principale est pour les catégories: l'API de création ne veut PAS d'ID.
+      // === CORRECTION ===
+      // Récupérer l'ID du club ICI, juste avant l'appel, depuis AuthService
+      const clubId = this.authService.getManagedClubId(); // Ou this.authService.getUserId() selon besoin API
+
+      // Vérifier si on a bien récupéré un ID de club
+      if (clubId === null) {
+        console.error("Erreur: Impossible de récupérer l'ID du club/organisateur pour la création.");
+        this.notificationService.show("ID du club/organisateur introuvable pour la création.", "error");
+        this.isSaving = false; // Arrêter l'état de sauvegarde
+        // this.cdr.detectChanges(); // Si OnPush
+        return; // Arrêter le processus
+      }
+      // === FIN CORRECTION ===
+
+      // Préparer le Payload pour la création.
       const createCategoriesPayload: CategorieCreatePayload[] = formValue.categories.map((cat: any) => ({
-        // On utilise `map` pour transformer chaque objet catégorie du formulaire
-        // en un nouvel objet ne contenant que 'nom' et 'capacite'.
         nom: cat.nom,
         capacite: cat.capacite
+        // On s'assure qu'aucun ID n'est envoyé pour les catégories en création
       }));
 
       const createPayload: CreateEventPayload = {
@@ -393,51 +398,45 @@ export class EditEventModalComponent implements OnInit, OnChanges {
         end: formatForBackend(formValue.end),
         description: formValue.description,
         location: formValue.location || undefined,
-        categories: createCategoriesPayload // On utilise la liste transformée sans les IDs.
+        categories: createCategoriesPayload
       };
 
-      // Appel de la méthode du service pour la création. On passe l'ID du club et le payload.
-      this.eventService.createEventWithCategories(this.clubId, createPayload)
-        .subscribe({ // On s'abonne à la réponse.
-          next: (createdEvent) => { // Si succès...
+      console.log('DEBUG: Appel CREATE pour club ID:', clubId, 'Payload:', createPayload);
+      // Appel de la méthode du service pour la création, en utilisant la variable locale clubId
+      this.eventService.createEventWithCategories(clubId, createPayload)
+        .subscribe({
+          next: (createdEvent) => {
             this.notificationService.show('Événement créé avec succès!', 'valid');
             this.isSaving = false;
             this.saveSuccess.emit(createdEvent); // Émettre l'événement NOUVELLEMENT créé au parent.
-            this.closeModal();
+            // La fermeture peut être gérée par le parent ou ici
+            // this.closeModal();
           },
-          error: (err) => { // Si erreur...
+          error: (err) => {
             console.error("Erreur Création Événement:", err);
             this.notificationService.show(`Erreur lors de la création: ${err.message || 'Erreur inconnue'}`, 'error');
             this.isSaving = false;
+            // this.cdr.detectChanges(); // Si OnPush
           }
         });
     } else {
-      // Sécurité: Cas anormal où on ne sait pas si on crée ou modifie, ou si clubId manque pour la création.
-      console.error("Erreur interne: Mode de sauvegarde indéfini ou clubId manquant pour la création.");
+      // Sécurité: Cas anormal où le mode n'est pas clair (devrait pas arriver si isEditMode est bien géré)
+      console.error("Erreur interne: Mode de sauvegarde indéfini.");
       this.notificationService.show("Une erreur interne est survenue lors de la sauvegarde.", "error");
       this.isSaving = false;
+      // this.cdr.detectChanges(); // Si OnPush
     }
   }
+
 
   // --- ---------------- ---
   // --- FERMETURE ---
   // --- ---------------- ---
 
-  /**
-   * Fonction appelée par le bouton "Annuler" ou lorsque l'utilisateur clique sur l'overlay
-   * (grâce à `(click)="closeModal()"` sur `div.modal-overlay` dans le HTML).
-   */
+  // Ajoute cette méthode si elle n'existe pas ou si tu veux que la modale se ferme elle-même après succès
+// Elle est aussi appelée par le bouton Annuler/Fermer de la modale
   closeModal(): void {
-    // Optionnel: Vider le formulaire lorsqu'on annule ?
-    // Avantage: Si l'utilisateur rouvre pour créer, le formulaire est propre.
-    // Inconvénient: Si l'utilisateur ferme par erreur et rouvre pour modifier, il doit recommencer.
-    // À choisir selon votre préférence utilisateur.
-    // if (this.eventForm) {
-    //   this.eventForm.reset();
-    //   this.categoriesFormArray.clear();
-    // }
-
-    // La seule chose essentielle: émettre l'événement 'close' pour que le parent sache qu'il doit cacher la modale.
-    this.close.emit();
+    if (this.isSaving) return; // Optionnel: Empêche de fermer pendant la sauvegarde
+    this.close.emit(); // Émet juste l'événement pour que le parent ferme (via isVisible = false)
   }
 }

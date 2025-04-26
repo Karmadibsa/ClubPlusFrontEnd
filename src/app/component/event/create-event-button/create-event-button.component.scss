@@ -1,0 +1,32 @@
+button {
+  padding: 8px;
+  margin-left: 5px;
+}
+
+.btn-primary {
+  background-color: #f26122; /* Couleur principale (orange) */
+  color: #fff; /* Texte en blanc */
+  border: none; /* Supprime les bordures */
+  padding: 10px 20px; /* Espacement interne */
+  font-size: 16px; /* Taille du texte */
+  border-radius: 5px; /* Coins arrondis */
+  cursor: pointer; /* Curseur en forme de main */
+  transition: background-color 0.3s ease; /* Animation au survol */
+  display: flex;
+  align-items: center;
+}
+
+.btn-primary:hover {
+  background-color: #d9541e; /* Couleur légèrement plus foncée au survol */
+}
+
+.btn-primary:active {
+  background-color: #c8431b; /* Couleur encore plus foncée lors du clic */
+}
+
+.icon{
+  display: flex;
+  align-items: center;
+  padding-right: 5px;
+
+}

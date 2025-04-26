@@ -1,13 +1,16 @@
 <td>{{ evenement.id }}</td>
 <td>{{ evenement.nom }}</td>
-<td>{{ evenement.start | date:'dd/MM/yyyy HH:mm' }} - {{ evenement.end | date:'HH:mm' }}</td>
+  <td>{{ evenement.start | date:'dd/MM/yyyy HH:mm' }} - {{ evenement.end | date:'dd/MM HH:mm' }}</td>
 <td>{{ evenement.description }}</td>
 <td>{{ evenement.placeReserve }} / {{ evenement.placeTotal }}</td>
 <td>{{ evenement.location }}</td>
 <td>
-  @for (categorie of evenement.categories; track categorie.id) {
+  @for (categorie of evenement.categories; track categorie.id;let last = $last) {
   <span>
     {{ categorie.nom }}
+    @if (!last) {
+      <span aria-hidden="true">, </span> <!-- Utilise un span avec aria-hidden car la virgule est purement visuelle -->
+    }
   </span>
   }
 </td>

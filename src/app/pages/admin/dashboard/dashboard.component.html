@@ -88,6 +88,7 @@
     <!-- Prochains événements -->
     <div class="table-container">
       <h3>Prochains événements</h3>
+      <app-create-event-button (createClicked)="openCreateEventModal()"></app-create-event-button>
       <table class="full-width-table">
         <thead>
         <tr>
@@ -113,3 +114,11 @@
   </div>
 </div>
 
+@if (isEditEventModalVisible) {
+  <app-edit-event
+    [isVisible]="isEditEventModalVisible"
+    [event]="selectedEventForEditModal"
+    (saveSuccess)="handleSaveEventSuccess($event)"
+    (close)="handleCloseEditModal()">
+  </app-edit-event>
+}

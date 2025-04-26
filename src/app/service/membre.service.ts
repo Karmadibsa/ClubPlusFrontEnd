@@ -28,6 +28,15 @@ export class MembreService {
     // mais pourrait aussi être centralisée ici.
   }
 
+  getMembersByClub(clubId: number): Observable<Membre[]> {
+    const url = `${environment.apiUrl}/clubs/${clubId}/membres`;
+    console.log('Appel API Membres:', url); // Pour le débogage
+    // Le backend détermine le club via l'utilisateur authentifié (pas besoin de passer d'ID ici)
+    return this.http.get<Membre[]>(url);
+    // Note: La gestion des erreurs (catchError) est faite dans le composant pour cet exemple,
+    // mais pourrait aussi être centralisée ici.
+  }
+
   /**
    * Met à jour le rôle d'un membre spécifique au sein d'un club.
    * Effectue un appel PUT vers /api/membres/{membreId}/role avec clubId et newRole en paramètres query.

@@ -5,6 +5,7 @@ import {Router, RouterLink} from '@angular/router';
 import {NgIf} from '@angular/common';
 import {NotificationService} from '../../../service/notification.service';
 import {passwordMatchValidator} from '../../../service/validator/password-match.validator';
+import {Membre} from '../../../model/membre';
 
 @Component({
   selector: 'app-inscription-membre',

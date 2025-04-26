@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import {LucideAngularModule} from 'lucide-angular';
 import {EditEventModalComponent} from '../edit-event/edit-event.component';
+import {Evenement} from '../../../model/evenement';
 
 @Component({
   selector: '[app-event-row]',
@@ -18,7 +19,7 @@ import {EditEventModalComponent} from '../edit-event/edit-event.component';
 })
 export class EventRowComponent {
   @Input() evenement: any;
-  @Output() deleteRequest = new EventEmitter<any>(); // RENOMMÉ de 'supprimer'. Utilisez Evenement.
+  @Output() deleteRequest = new EventEmitter<Evenement>(); // RENOMMÉ de 'supprimer'. Utilisez Evenement.
   @Output() modifier = new EventEmitter<any>();
 
   isModalVisible = false;
@@ -41,8 +42,12 @@ export class EventRowComponent {
    */
   requestDelete(): void {
     console.log("Demande de suppression émise pour :", this.evenement);
+    const confirmation = confirm(`Désactiver "${this.evenement.nom}" ?`);
+    if (confirmation) {
+      this.deleteRequest.emit(this.evenement);
+    }
     // Émet l'événement vers le parent (DashboardComponent) qui contiendra la logique
     // d'appel API et de confirmation.
-    this.deleteRequest.emit(this.evenement);
+    // this.deleteRequest.emit(this.evenement);
   }
 }

@@ -6,29 +6,28 @@
     <h1>Liste des Membres</h1>
 
   </div>
-  <table>
-    <thead>
-    <tr>
-      <th>ID</th>
-      <th>Nom</th>
-      <th>Date de naissance</th>
-      <th>Date d'inscription</th>
-      <th>Adresse</th>
-      <th>Téléphone</th>
-      <th>E-mail</th>
-      <th>Role</th>
-      <th>Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr
-      *ngFor="let membre of displayedMembres"
-      app-membre-row
-      [membre]="membre"
-      (edit)="onEditMembre($event)"
-      (delete)="onDeleteMembre($event)">
-      >
-    </tr>
-    </tbody>
-  </table>
+  <!-- Derniers membres inscrits -->
+  <div class="table-container">
+    <table class="full-width-table">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nom et Prénom</th>
+        <th>Date de Naissance</th>
+        <th>Date d'Inscription</th>
+        <th>Adresse</th>
+        <th>Téléphone</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (member of membres ; track member.id) {
+          <tr app-membre-row [membre]="member" (roleChangeRequested)="handleSaveRole($event)"></tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </div>
+

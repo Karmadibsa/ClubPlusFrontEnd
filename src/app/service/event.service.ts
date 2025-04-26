@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {environment} from '../../environments/environments';
 import {catchError} from 'rxjs/operators';
@@ -64,6 +64,23 @@ export class EventService {
     // HttpClient.delete<void> indique qu'on n'attend pas de corps de réponse en cas de succès.
     return this.http.delete<void>(url).pipe(
       catchError(this.handleError) // Appelle notre fonction de gestion d'erreur en cas d'échec
+    );
+  }
+  //
+  // getAllEvents(): Observable<Evenement[]> {
+  //   // Construit les paramètres de requête
+  //   const params = new HttpParams().set('status', 'all');
+  //   // Fait l'appel GET avec les paramètres
+  //   return this.http.get<Evenement[]>(this.apiUrl, { params: params }).pipe(
+  //     catchError(this.handleError) // Gestion d'erreur générique du service
+  //   );
+  // }
+
+  getAllEvents(): Observable<Evenement[]> {
+    // Construit les paramètres de requête
+    // Fait l'appel GET avec les paramètres
+    return this.http.get<Evenement[]>(this.apiUrl).pipe(
+      catchError(this.handleError) // Gestion d'erreur générique du service
     );
   }
 
