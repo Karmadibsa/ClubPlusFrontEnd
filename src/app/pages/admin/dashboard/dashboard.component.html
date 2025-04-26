@@ -72,7 +72,7 @@
         <tbody>
         <!-- Utilisation de membre-row -->
 <!--        <tr *ngFor="let member of lastFiveMembers" app-membre-row [membre]="member" (viewDetails)="handleViewMemberDetails($event)"></tr>-->
-        <tr *ngFor="let member of lastFiveMembers" app-membre-row [membre]="member"></tr>
+        <tr *ngFor="let member of lastFiveMembers" app-membre-row [membre]="member" (openModal)="handleOpenRoleModal($event)"></tr>
         </tbody>
       </table>
     </div>
@@ -104,10 +104,11 @@
 
   <!-- === MODALE DÉTAILS MEMBRE === -->
   <app-membre-detail-modal
-    *ngIf="isDetailModalVisible"
-    [isVisible]="isDetailModalVisible"
-    [membre]="selectedMemberForDetail"
-    (close)="closeMemberDetailModal()">
+    *ngIf="isRoleModalVisible"
+    [isVisible]="isRoleModalVisible"
+    [membre]="selectedMemberForRoleModal"
+  (saveRole)="handleSaveRole($event)"
+  (close)="closeMemberDetailModal()">
   </app-membre-detail-modal>
   <!-- ============================ -->
 </div>

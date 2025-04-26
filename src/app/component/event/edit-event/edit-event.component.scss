@@ -1,217 +1,288 @@
-/* Styles généraux */
+/* Styles pour edit-event.component.scss */
+/* Utilise les variables définies dans le :root global */
+
+/* --- Overlay & Conteneur Principal (Identique à MembreDetailModal) --- */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
 
-
-/* Ajustement de la hauteur de la modal */
 .modal-content {
-  background: #fff;
-  border-radius: 8px;
-  width: 80%;
-  max-height: 95vh; /* Limite la hauteur */
-  overflow-y: auto; /* Permet de scroller si nécessaire */
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  background: var(--main-white);
+  border-radius: var(--border-radius);
+  width: 90%;
+  max-width: 1000px; /* Légèrement plus large pour les formulaires complexes */
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
 }
 
+/* --- Entête (Identique) --- */
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
-  border-bottom: solid 1px #ddd;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
   background-color: var(--main-blue);
-  color: white;
-  border-radius: 8px 8px 0 0;
+  color: var(--main-white);
+  flex-shrink: 0;
 }
 
 .modal-header h2 {
   margin: 0;
+  font-size: 1.2rem;
   font-weight: 600;
 }
 
 .close-btn {
-  background-color: transparent;
+  background: none;
   border: none;
-  font-size: 24px;
+  color: var(--main-white);
+  font-size: 1.5rem;
+  line-height: 1;
+  padding: var(--spacing-sm);
   cursor: pointer;
-  color: white;
-  transition: transform 0.2s ease;
+  opacity: 0.8;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .close-btn:hover {
-  transform: scale(1.1);
+  opacity: 1;
+  transform: rotate(90deg);
 }
 
+/* --- Corps --- */
 .modal-body {
-  padding: 20px;
+  padding: var(--spacing-lg);
+  overflow-y: auto;
+  flex-grow: 1;
+  background-color: var(--main-white);
 }
 
-/* Optimisation de l'espace vertical */
+/* --- Styles Communs Formulaires (adaptés de MembreDetailModal) --- */
+/* Pas de .form-section ici, directement .form-group */
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg); /* Espace entre les lignes de champs */
+}
+
 .form-group {
-  margin-bottom: 15px; /* Réduit l'espace entre les groupes */
+  flex: 1 1 calc(50% - var(--spacing-md)); /* Base 50% pour les champs en ligne */
+  min-width: 200px;
+  margin-bottom: var(--spacing-lg); /* Espace sous chaque groupe */
+}
+/* Pour les champs pleine largeur comme textarea */
+.form-group:has(textarea) {
+  flex-basis: 100%;
+}
+/* Pour la section catégorie qui est un form-group */
+.form-group:has(.scroll) {
+  flex-basis: 100%;
 }
 
 .form-group label {
   display: block;
-  font-weight: 600;
-  color: var(--main-blue);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-medium);
+  margin-bottom: var(--spacing-sm);
 }
 
-.form-group input,
+/* --- Styles Inputs & Textarea --- */
+.form-group input[type="text"],
+.form-group input[type="datetime-local"],
+.form-group input[type="number"],
 .form-group textarea {
   width: 100%;
-  padding: 10px;
+  padding: 0.75rem 1rem;
   border-radius: 6px;
-  border: solid 2px #e0e0e0;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  box-sizing: border-box;
+  border: 1px solid var(--border-color);
+  background-color: var(--main-white);
+  color: var(--text-dark);
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box; /* Important */
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
   border-color: var(--main-blue);
-  box-shadow: 0 0 0 3px rgba(var(--main-blue-rgb), 0.1);
+  box-shadow: 0 0 0 3px var(--input-focus-shadow); /* Utilisation variable root */
 }
 
-/* Alignement des champs sur une ligne */
-.form-row {
-  display: flex;
-  gap: 16px;
+.form-group textarea {
+  min-height: 100px; /* Hauteur minimale pour textarea */
+  resize: vertical; /* Permet redimensionnement vertical */
 }
 
-.form-row .form-group {
-  flex-grow: 1;
+/* --- Section Catégories --- */
+.form-group > label:has(+ .scroll) { /* Style spécifique pour le label "Catégories" */
+  font-weight: 600;
+  color: var(--main-blue);
+  /* Optionnel: Ajouter une bordure ou un espacement avant la liste */
+  /* margin-bottom: var(--spacing-md); */
 }
 
-/* Scroll pour les catégories */
 .scroll {
-  max-height: 200px;
+  max-height: 250px; /* Hauteur max pour la liste scrollable */
   overflow-y: auto;
-  margin-top: 15px;
-  border: 2px solid #e0e0e0;
-  border-radius: 6px;
-  padding: 10px;
-  background-color: #f9f9f9;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md);
+  background-color: var(--bg-light-gray);
+  margin-bottom: var(--spacing-md); /* Espace avant les actions catégorie */
 }
 
 .category-item {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap; /* Pour petits écrans */
   align-items: center;
-  margin-bottom: 12px;
-  background-color: white;
-  padding: 10px;
+  gap: var(--spacing-md);
+  background-color: var(--main-white);
+  padding: var(--spacing-md);
   border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-color);
+  margin-bottom: var(--spacing-md);
+}
+.category-item:last-child {
+  margin-bottom: 0;
 }
 
-.category-item input {
-  flex: 1;
-  margin-right: 10px;
+/* Inputs dans category-item */
+.category-item input[type="text"] {
+  flex: 1 1 200px; /* Prend de l'espace mais peut réduire */
 }
-
 .category-item input[type="number"] {
-  max-width: 100px;
+  flex: 0 1 120px; /* Largeur plus limitée */
+}
+.category-item .btn-outline {
+  flex-shrink: 0; /* Empêche le bouton de réduire */
+  margin-left: auto; /* Pousse le bouton vers la droite si espace */
 }
 
-/* Styles des boutons */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
 
+/* --- Bouton Outline (pour Supprimer catégorie) --- */
 .btn-outline {
   background: none;
   border: 2px solid var(--main-orange);
   color: var(--main-orange);
+  padding: var(--spacing-sm) var(--spacing-md); /* Padding standard bouton */
 }
 
-.btn-outline:hover {
+.btn-outline:hover:not(:disabled) {
   background-color: var(--main-orange);
-  color: white;
+  color: var(--main-white);
 }
 
-.btn-primary {
-  background-color: var(--main-blue);
-  color: white;
-  border: none;
-  margin-top: 12px;
-}
-
-.btn-primary:hover {
-  background-color: var(--main-blue);
-  opacity: 0.9;
-  transform: translateY(-2px);
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid #e0e0e0;
-}
-
-.form-actions button {
-  padding: 10px 20px;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.form-actions button[type="button"] {
-  background-color: #f0f0f0;
-  border: 2px solid #ddd;
-  color: #555;
-}
-
-.form-actions button[type="submit"] {
-  background-color: var(--main-orange);
-  border: none;
-  color: white;
-}
-
-.form-actions button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Modification pour les boutons de catégorie et d'action */
+/* --- Actions Catégories & Formulaire --- */
 .category-actions {
   display: flex;
+  flex-wrap: wrap; /* Permet le retour à la ligne */
   justify-content: space-between;
   align-items: center;
-  margin-top: 12px;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md); /* Espace après la liste scrollable */
 }
 
-.category-actions .btn-primary {
-  margin-top: 0; /* Supprime la marge du bouton */
+/* Style pour le conteneur des boutons Annuler/Enregistrer */
+/* NOTE: Idéalement, ces boutons seraient dans un <footer class="modal-footer"> */
+/* Mais on style .form-actions ici car c'est dans l'HTML fourni */
+.form-actions {
+  display: flex;
+  gap: var(--spacing-md);
 }
 
 
+/* --- Pied de page (Si vous déplacez les boutons) --- */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-top: 1px solid var(--border-color);
+  background-color: var(--bg-light-gray);
+  flex-shrink: 0;
+}
 
 
+/* --- Styles des Boutons (Identique à MembreDetailModal) --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-align: center;
+  border: none;
+  transition: var(--transition-standard);
+}
+
+.btn lucide-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Bouton Primaire (Ajouter Catégorie, Enregistrer) */
+.btn-primary {
+  background-color: var(--main-blue);
+  color: var(--main-white);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-top: 0; /* Reset margin-top si appliqué ailleurs */
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: hsl(199, 64%, 25%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Bouton Secondaire (Annuler) */
+/* Créons une classe .btn-secondary si besoin ou stylons directement le bouton Annuler */
+/* Ici, on style le bouton 'Annuler' dans .form-actions */
+.form-actions button[type="button"]:not(.btn-primary), /* Cible Annuler */
+.modal-footer button:not(.btn-primary) { /* Cible Annuler si dans le footer */
+  background-color: var(--main-white);
+  color: var(--text-medium);
+  border: 1px solid var(--border-color);
+}
+
+.form-actions button[type="button"]:not(.btn-primary):hover:not(:disabled),
+.modal-footer button:not(.btn-primary):hover:not(:disabled) {
+  background-color: var(--bg-light-gray);
+  border-color: var(--text-light);
+  color: var(--text-dark);
+}
 
 
+/* État Désactivé (Général) */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}

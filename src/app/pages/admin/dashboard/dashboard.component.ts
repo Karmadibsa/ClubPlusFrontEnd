@@ -1,232 +1,265 @@
-// dashboard.component.ts (Version SIMPLE, STABLE et COMMENTÉE)
-
+// ----- IMPORTATIONS -----
+// Modules Angular essentiels
 import { Component, inject, OnInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { CommonModule, DecimalPipe, PercentPipe } from '@angular/common';
-import { SidebarComponent } from '../../../component/navigation/sidebar/sidebar.component'; // Adapte chemin
-import { AuthService } from '../../../service/security/auth.service'; // Adapte chemin
-import { NotificationService } from '../../../service/notification.service'; // Adapte chemin
-import { Router } from '@angular/router';
-import {forkJoin, Observable, of, Subscription} from 'rxjs';
-import { MembreService } from '../../../service/membre.service';
-import { EventService } from '../../../service/event.service';
+import { CommonModule, PercentPipe } from '@angular/common'; // Pour *ngIf, *ngFor, le pipe 'percent'
+import { HttpClient, HttpErrorResponse } from '@angular/common/http'; // Pour faire les appels API
+import { Router } from '@angular/router'; // Pour la navigation (si besoin)
+import { forkJoin, Observable, of, Subscription } from 'rxjs'; // Outils pour gérer plusieurs appels API en parallèle (forkJoin)
+import { catchError, map } from 'rxjs/operators'; // Outil pour gérer les erreurs API (catchError)
 
-// --- Imports Chart.js & ng2-charts ---
-import { ChartData, ChartOptions, Chart, PointElement, LineElement, Title, Tooltip, Legend, CategoryScale, LinearScale, BarElement, LineController, BarController, Filler } from 'chart.js';
-import {BaseChartDirective} from 'ng2-charts';
-import {StatCardComponent} from '../../../component/dashboard/stat-card/stat-card.component';
-import {catchError} from 'rxjs/operators';
-import {EventRowComponent} from '../../../component/event/event-row/event-row.component';
-import {MembreRowComponent} from '../../../component/membre/membre-row/membre-row.component';
-import {MembreDetailModalComponent} from '../../../component/membre/membre-detail-modal/membre-detail-modal.component';
+// Services de votre application
+import { AuthService } from '../../../service/security/auth.service';       // Pour savoir qui est connecté et quel club il gère
+import { NotificationService } from '../../../service/notification.service'; // Pour afficher des messages (succès, erreur)
+import { MembreService } from '../../../service/membre.service';           // Pour les opérations liées aux membres
+import { EventService } from '../../../service/event.service';             // Pour les opérations liées aux événements
 
+// Composants utilisés dans le template HTML
+import { SidebarComponent } from '../../../component/navigation/sidebar/sidebar.component'; // Votre menu latéral
+import { StatCardComponent } from '../../../component/dashboard/stat-card/stat-card.component'; // Carte pour afficher un chiffre clé
+import { EventRowComponent } from '../../../component/event/event-row/event-row.component';       // Ligne du tableau des événements
+import { MembreRowComponent } from '../../../component/membre/membre-row/membre-row.component';      // Ligne du tableau des membres
+import { MembreDetailModalComponent } from '../../../component/membre/membre-detail-modal/membre-detail-modal.component'; // Modale pour voir/modifier un membre
 
+// Types de données (Modèles)
+import { Membre } from '../../../model/membre'; // Interface décrivant un Membre (à créer/vérifier)
+import { Evenement } from '../../../model/evenement'; // Interface décrivant un Evenement (à créer/vérifier)
+import { RoleType } from '../../../model/role';         // Type pour les rôles ('MEMBRE', 'RESERVATION', 'ADMIN')
 
-// --- CONSTANTES DE STYLE ---
-const MAIN_BLUE = '#1a5f7a';
-const MAIN_ORANGE = '#f26122';
-const FONT_FAMILY_POPPINS = "'Poppins', sans-serif";
-const CHART_GRID_COLOR = 'rgba(0, 0, 0, 0.05)';
-const CHART_TICK_COLOR = '#555';
-const CHART_TOOLTIP_BG = 'rgba(0, 0, 0, 0.85)';
+// Outils pour les graphiques (Chart.js via ng2-charts)
+import { ChartData, ChartOptions } from 'chart.js'; // Types pour configurer les graphiques
+import { BaseChartDirective } from 'ng2-charts';   // La directive pour afficher un graphique dans le HTML
+
 // -------------------------
 
+// Configuration du composant Angular
 @Component({
-  selector: 'app-dashboard',
-  standalone: true,
-  imports: [CommonModule, PercentPipe, SidebarComponent, BaseChartDirective, StatCardComponent, EventRowComponent, MembreRowComponent, MembreDetailModalComponent], // Retire DecimalPipe si non utilisé
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush // Optimisation possible
+  selector: 'app-dashboard', // Nom de la balise HTML: <app-dashboard>
+  standalone: true,          // Composant "moderne" qui gère ses propres dépendances
+  imports: [                 // Liste des modules et composants nécessaires pour le template HTML
+    CommonModule,
+    PercentPipe,
+    SidebarComponent,
+    BaseChartDirective,      // Nécessaire pour <canvas baseChart ...>
+    StatCardComponent,
+    EventRowComponent,
+    MembreRowComponent,
+    MembreDetailModalComponent
+  ],
+  templateUrl: './dashboard.component.html', // Fichier HTML de ce composant
+  styleUrls: ['./dashboard.component.scss'],   // Fichier CSS/SCSS de ce composant
+  // Stratégie de détection de changement (Optimisation) :
+  // Angular ne vérifiera ce composant que si ses @Input changent ou si on le lui demande explicitement (via cdr.detectChanges()).
+  // Cela peut améliorer les performances mais demande plus d'attention (utiliser detectChanges après des mises à jour asynchrones).
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardComponent implements OnInit, OnDestroy {
+export class DashboardComponent implements OnInit, OnDestroy { // Implémente OnInit (pour l'init) et OnDestroy (pour le nettoyage)
 
-  // --- Injections ---
-  private http = inject(HttpClient);
-  private authService = inject(AuthService);
-  private notification = inject(NotificationService);
-  private router = inject(Router);
-  private cdr = inject(ChangeDetectorRef);
-  private membreService = inject(MembreService);
-  private eventService = inject(EventService);
+  // --- Dépendances Injectées ---
+  // On demande à Angular de nous fournir des instances des services dont on a besoin.
+  // 'inject()' est la façon moderne de le faire.
+  private http = inject(HttpClient); // Pour les appels directs (ici utilisé pour les stats, pourrait être dans un service)
+  private authService = inject(AuthService); // Pour obtenir l'ID du club géré
+  private notification = inject(NotificationService); // Pour afficher les popups de message
+  private router = inject(Router); // Pour changer de page (pas utilisé ici, mais souvent utile)
+  private cdr = inject(ChangeDetectorRef); // Outil pour dire à Angular "rafraîchis l'affichage" (nécessaire avec OnPush)
+  private membreService = inject(MembreService); // Service pour les opérations sur les membres
+  private eventService = inject(EventService); // Service pour les opérations sur les événements
 
-  // --- Propriétés KPIs ---
-  totalEvents: number | string = '...';
+  // --- État du Composant ---
+  // Propriétés pour stocker les données affichées sur le tableau de bord
+
+  // Indicateurs Clés (KPIs)
+  totalEvents: number | string = '...'; // Initialisé à '...' pour montrer un état de chargement
   upcomingEventsCount: number | string = '...';
-  averageEventOccupancy: number | null | string = null;
-  totalActiveMembers: number | null | string = null;
-  totalParticipations: number | null | string = null;
-  lastFiveMembers: Membre[] = [];
-  nextFiveEvents: Event[] = [];
+  averageEventOccupancy: number | string | null = null; // Peut être null ou 'N/A' si pas de données
+  totalActiveMembers: number | string | null = null;
+  totalParticipations: number | string | null = null;
 
-  isDetailModalVisible = false;
-  selectedMemberForDetail: Membre | null = null;
+  // Listes pour les tableaux
+  lastFiveMembers: Membre[] = []; // Tableau pour stocker les 5 derniers membres
+  nextFiveEvents: Evenement[] = []; // Tableau pour stocker les 5 prochains événements
 
-  // --- Options de base communes (inclut animation simple par défaut) ---
+  // État pour la modale Membre
+  isRoleModalVisible = false; // Est-ce que la modale de détail/rôle membre est ouverte ?
+  selectedMemberForRoleModal: Membre | null = null; // Quel membre est affiché dans la modale ?
+
+  // État pour le chargement global
+  isLoading = true; // Affiche un indicateur de chargement au début
+
+  // Pour garder une référence à l'appel API principal et pouvoir l'annuler si besoin
+  private dataSubscription: Subscription | null = null;
+
+  // URL de base de l'API (souvent mieux dans les fichiers environment.ts)
+  private readonly baseApiUrl = 'http://localhost:8080/api';
+
+  // --- Configuration des Graphiques ---
+  // Options de base partagées par les deux graphiques
   private baseChartOptions: ChartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        enabled: true, backgroundColor: CHART_TOOLTIP_BG,
-        titleFont: { family: FONT_FAMILY_POPPINS, weight: 'bold', size: 13 },
-        bodyFont: { family: FONT_FAMILY_POPPINS, size: 12 },
-        padding: 12, cornerRadius: 3, displayColors: false, boxPadding: 4
+    responsive: true, // Le graphique s'adapte à la taille du conteneur
+    maintainAspectRatio: false, // Permet de définir hauteur/largeur indépendamment
+    plugins: { // Configuration des extensions Chart.js
+      legend: { display: false }, // Cache la légende (souvent redondante pour des graphiques simples)
+      tooltip: { // Configuration de la bulle d'info au survol
+        enabled: true,
+        backgroundColor: 'rgba(0, 0, 0, 0.85)', // Fond sombre semi-transparent
+        titleFont: { family: "'Poppins', sans-serif", weight: 'bold', size: 13 },
+        bodyFont: { family: "'Poppins', sans-serif", size: 12 },
+        padding: 12,
+        cornerRadius: 3,
+        displayColors: false, // Cache la petite boîte de couleur dans le tooltip
       }
     },
-    font: { family: FONT_FAMILY_POPPINS, size: 12 },
-    // L'animation par défaut de Chart.js sera utilisée (simple fondu/montée)
-    // On n'a plus besoin de 'animation: { duration: 600, ... }' ici
-    // ni de la section 'animations' complexe pour la ligne.
+    font: { family: "'Poppins', sans-serif", size: 12 }, // Police par défaut pour le graphique
+    // L'animation simple par défaut de Chart.js est utilisée.
   };
 
-  // --- Options spécifiques & Données Graphique Inscriptions (LIGNE) ---
-  public membersChartOptions: ChartOptions<'line'> = { // Type ligne spécifié
-    ...this.baseChartOptions, // Hérite des options communes
-    scales: {
-      y: { // Axe Y: Nombre
-        beginAtZero: true,
-        grid: { color: CHART_GRID_COLOR }, // Grille légère, pas de bordure d'axe
-        ticks: {
-          color: CHART_TICK_COLOR,
-          font: { family: FONT_FAMILY_POPPINS },
-          stepSize: 1, // Force les graduations entières
-          precision: 0 // Force l'affichage d'entiers
-        },
-        border: { display: false } // Cache la ligne de l'axe Y
+  // Options spécifiques pour le graphique LIGNE des inscriptions
+  public membersChartOptions: ChartOptions<'line'> = {
+    ...this.baseChartOptions, // Copie les options de base
+    scales: { // Configuration des axes
+      y: { // Axe Y (vertical - Nombre d'inscriptions)
+        beginAtZero: true, // Commence à 0
+        grid: { color: 'rgba(0, 0, 0, 0.05)' }, // Couleur légère pour la grille
+        ticks: { color: '#555', precision: 0 }, // Couleur et format des graduations (entiers)
+        border: { display: false } // Cache la ligne de l'axe
       },
-      x: { // Axe X: Mois
-        grid: { display: false }, // Pas de grille verticale
-        ticks: {
-          color: CHART_TICK_COLOR,
-          font: { family: FONT_FAMILY_POPPINS }
-        },
-        border: { display: false } // Cache la ligne de l'axe X
+      x: { // Axe X (horizontal - Mois)
+        grid: { display: false }, // Cache la grille verticale
+        ticks: { color: '#555' },
+        border: { display: false }
       }
     },
-    interaction: { // Améliore l'interaction avec la ligne
-      intersect: false, // Tooltip même si pas pile sur le point
-      mode: 'index', // Tooltip pour tous les points sur le même index X
+    interaction: { // Comportement au survol
+      intersect: false, // Affiche le tooltip même si on n'est pas pile sur un point
+      mode: 'index', // Affiche le tooltip pour toutes les données au même point horizontal
     },
   };
-  // Données pour le graphique ligne
-  public membersChartData: ChartData<'line'> = { labels: [], datasets: [] }; // Type ligne spécifié
+  // Données pour le graphique ligne (initialement vide)
+  public membersChartData: ChartData<'line'> = { labels: [], datasets: [] };
 
-  // --- Options spécifiques & Données Graphique Notes (BARRES) ---
-  public ratingsChartOptions: ChartOptions<'bar'> = { // Type barre spécifié
-    ...this.baseChartOptions, // Hérite des options communes (et de l'animation simple)
+  // Options spécifiques pour le graphique BARRES des notes
+  public ratingsChartOptions: ChartOptions<'bar'> = {
+    ...this.baseChartOptions, // Copie les options de base
     scales: {
-      y: { // Axe Y: Note
-        beginAtZero: true, max: 5, // Echelle 0-5
-        grid: { color: CHART_GRID_COLOR },
-        ticks: {
-          color: CHART_TICK_COLOR,
-          font: { family: FONT_FAMILY_POPPINS },
-          stepSize: 1 // Pas de 1 pour les notes
-        },
+      y: { // Axe Y (vertical - Note moyenne)
+        beginAtZero: true, max: 5, // Échelle de 0 à 5
+        grid: { color: 'rgba(0, 0, 0, 0.05)' },
+        ticks: { color: '#555', stepSize: 1 }, // Graduation tous les 1 point
         border: { display: false }
       },
-      x: { // Axe X: Catégories
+      x: { // Axe X (horizontal - Catégories de notes)
         grid: { display: false },
-        ticks: {
-          color: CHART_TICK_COLOR,
-          font: { family: FONT_FAMILY_POPPINS }
-        },
+        ticks: { color: '#555' },
         border: { display: false }
       }
     }
   };
-  // Données pour le graphique barres
-  public ratingsChartData: ChartData<'bar'> = { labels: [], datasets: [] }; // Type barre spécifié
+  // Données pour le graphique barres (initialement vide)
+  public ratingsChartData: ChartData<'bar'> = { labels: [], datasets: [] };
 
-  // --- État & Subscription ---
-  isLoading = false;
-  private apiSubscription: Subscription | null = null;
-  private readonly baseApiUrl = 'http://localhost:8080/api';
-  private dataSubscription: Subscription | null = null; // Renommé pour plus de clarté
 
-  constructor() {} // Le constructeur est vide, c'est normal
+  // --- Cycle de Vie Angular ---
 
-  /** Initialisation: Récupère l'ID et lance le chargement */
+  // Fonction exécutée par Angular juste après la création du composant
   ngOnInit(): void {
+    console.log("DashboardComponent initialisé.");
+    // Récupère l'ID du club que l'utilisateur actuel gère (depuis AuthService)
     const clubId = this.authService.getManagedClubId();
     if (clubId !== null) {
+      // Si on a un ID de club, on lance le chargement de toutes les données
       this.loadAllDashboardData(clubId);
     } else {
+      // Si pas d'ID de club, on gère l'erreur (ex: afficher message, stopper chargement)
       this.handleMissingClubId();
     }
   }
 
-  /** Nettoyage: Annule l'appel API si le composant est détruit */
+  // Fonction exécutée par Angular juste avant la destruction du composant (ex: changement de page)
   ngOnDestroy(): void {
-    this.apiSubscription?.unsubscribe();
+    console.log("DashboardComponent détruit.");
+    // C'est TRÈS important d'annuler les appels API en cours pour éviter des erreurs ou fuites mémoire
+    this.dataSubscription?.unsubscribe();
   }
 
+  // --- Chargement des Données ---
+
+  /** Lance tous les appels API nécessaires pour le dashboard en parallèle */
   private loadAllDashboardData(clubId: number): void {
-    this.isLoading = true;
-    // Réinitialisation avant les appels
-    this.resetData();
+    this.isLoading = true; // Affiche l'indicateur de chargement
+    this.resetData(); // Vide les anciennes données pour montrer l'état de chargement
+    console.log(`Chargement des données pour le club ID: ${clubId}`);
 
+    // Préparation des différents appels API (sans les lancer tout de suite)
+    // Chaque appel est un "Observable" (un flux de données potentiel)
+
+    // 1. Appel pour les statistiques générales
     const summaryUrl = `${this.baseApiUrl}/stats/clubs/${clubId}/dashboard-summary`;
-
-    // Création des Observables pour chaque appel API
     const summary$: Observable<DashboardSummaryDTO | null> = this.http.get<DashboardSummaryDTO>(summaryUrl).pipe(
-      catchError(err => {
+      catchError(err => { // Si CET appel échoue...
         console.error("Erreur API Summary:", err);
         this.notification.show("Erreur chargement résumé dashboard.", "error");
-        return of(null); // Retourne null en cas d'erreur pour que forkJoin continue
+        return of(null); // ...on retourne 'null' pour que les autres appels continuent
       })
     );
 
+    // 2. Appel pour les 5 derniers membres (via MembreService)
     const latestMembers$: Observable<Membre[] | null> = this.membreService.getLatestMembers().pipe(
-      catchError(err => {
+      catchError(err => { // Si CET appel échoue...
         console.error("Erreur API Derniers Membres:", err);
         this.notification.show("Erreur chargement derniers membres.", "error");
-        return of(null); // Retourne null en cas d'erreur
+        return of(null); // ...on retourne 'null'
       })
     );
 
-    const nextEvents$: Observable<Event[] | null> = this.eventService.getNextEvents().pipe(
-      catchError(err => {
+    // 3. Appel pour les 5 prochains événements (via EventService)
+    const nextEvents$: Observable<Evenement[] | null> = this.eventService.getNextEvents().pipe(
+      catchError(err => { // Si CET appel échoue...
         console.error("Erreur API Prochains Evénements:", err);
         this.notification.show("Erreur chargement prochains événements.", "error");
-        return of(null); // Retourne null en cas d'erreur
+        return of(null); // ...on retourne 'null'
       })
     );
 
-    // Exécution des appels en parallèle avec forkJoin
+    // Lance tous les appels préparés ci-dessus en MÊME TEMPS (parallèle)
+    // et attend que TOUS aient répondu (ou échoué individuellement avec 'of(null)')
     this.dataSubscription = forkJoin([summary$, latestMembers$, nextEvents$]).subscribe({
+      // 'next' est exécuté quand TOUS les appels ont répondu
       next: ([summaryResponse, membersResponse, eventsResponse]) => {
         console.log("Réponses API reçues (summary, membres, events):", summaryResponse, membersResponse, eventsResponse);
 
-        // Traitement de la réponse du résumé (si non nulle)
+        // Traiter la réponse des stats (si elle n'est pas null)
         if (summaryResponse) {
-          this.updateSummaryData(summaryResponse);
+          this.updateSummaryData(summaryResponse); // Met à jour KPIs et données graphiques
         } else {
-          // Gérer l'échec du chargement du résumé si nécessaire (ex: afficher des erreurs)
+          // Indiquer une erreur si le résumé n'a pas pu être chargé
           this.totalEvents = "Erreur";
-          // ... autres KPIs
+          // ...on pourrait mettre "Erreur" pour les autres KPIs aussi
         }
 
-        // Traitement de la réponse des membres (si non nulle)
-        this.lastFiveMembers = membersResponse ?? []; // Assigne la liste ou un tableau vide
+        // Traiter la réponse des membres (si non null, sinon liste vide)
+        this.lastFiveMembers = membersResponse ?? []; // ?? [] veut dire: si membersResponse est null/undefined, utilise []
 
-        // Traitement de la réponse des événements (si non nulle)
-        this.nextFiveEvents = eventsResponse ?? []; // Assigne la liste ou un tableau vide
+        // Traiter la réponse des événements (si non null, sinon liste vide)
+        this.nextFiveEvents = eventsResponse ?? [];
 
-        this.isLoading = false; // Fin du chargement global
-        this.cdr.detectChanges(); // Notifier Angular pour rafraîchir la vue
-        console.log("Données Dashboard mises à jour.");
+        // Fin du chargement
+        this.isLoading = false;
+        // IMPORTANT (à cause de ChangeDetectionStrategy.OnPush):
+        // Dit à Angular de vérifier et mettre à jour l'affichage MAINTENANT,
+        // car les données ont changé suite à un événement asynchrone (réponse API).
+        this.cdr.detectChanges();
+        console.log("Données Dashboard mises à jour et affichage rafraîchi.");
       },
+      // 'error' ne devrait pas être appelé ici si on utilise `catchError(.. of(null))`
+      // mais c'est une sécurité au cas où.
       error: (error: HttpErrorResponse) => {
-        // Ne devrait pas être atteint si catchError est bien utilisé, mais sécurité
-        console.error("Erreur inattendue dans forkJoin:", error);
-        this.handleApiError(error, 'global dashboard');
+        console.error("Erreur inattendue dans forkJoin (ne devrait pas arriver):", error);
+        this.handleApiError(error, 'global dashboard'); // Gestion d'erreur générique
       }
     });
   }
-  /** Réinitialise les données avant un nouveau chargement */
+
+  /** Remet les propriétés à leur état initial avant le chargement */
   private resetData(): void {
     this.totalEvents = "...";
     this.upcomingEventsCount = "...";
@@ -235,162 +268,230 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.totalParticipations = null;
     this.membersChartData = { labels: [], datasets: [] };
     this.ratingsChartData = { labels: [], datasets: [] };
-    this.lastFiveMembers = []; // Réinitialise la liste des membres
-    this.nextFiveEvents = [];  // Réinitialise la liste des événements
-    this.cdr.detectChanges(); // S'assure que l'état 'chargement' est visible
+    this.lastFiveMembers = [];
+    this.nextFiveEvents = [];
+    this.cdr.detectChanges(); // Rafraîchir pour montrer l'état '...' ou vide
   }
 
-  /** Met à jour les KPIs et graphiques à partir des données du résumé */
+  // --- Mise à Jour des Données Spécifiques ---
+
+  /** Met à jour les KPIs et lance la mise à jour des graphiques */
   private updateSummaryData(response: DashboardSummaryDTO): void {
-    this.totalEvents = response.totalEvents;
-    this.upcomingEventsCount = response.upcomingEventsCount30d;
-    this.totalActiveMembers = response.totalActiveMembers;
-    this.totalParticipations = response.totalParticipations;
+    this.totalEvents = response.totalEvents ?? 'N/A'; // Utilise 'N/A' si la donnée est manquante
+    this.upcomingEventsCount = response.upcomingEventsCount30d ?? 'N/A';
+    this.totalActiveMembers = response.totalActiveMembers ?? 'N/A';
+    this.totalParticipations = response.totalParticipations ?? 'N/A';
     this.updateAverageOccupancy(response.averageEventOccupancyRate);
     this.updateMembersChartData(response.monthlyRegistrations);
     this.updateRatingsChartData(response.averageEventRatings);
   }
 
-  /** Met à jour le KPI Taux d'Occupation (avec vérification) */
+  /** Met à jour le KPI Taux d'Occupation (formatage si besoin) */
   private updateAverageOccupancy(rate: number | undefined | null): void {
     if (typeof rate === 'number') {
-      // Convertit en format 0-1 (ex: 3.4 => 0.034). Adapte si ton API est différente.
+      // Supposons que l'API renvoie un % (ex: 75.5 pour 75.5%)
+      // Le pipe 'percent' attend une valeur entre 0 et 1 (ex: 0.755)
       this.averageEventOccupancy = rate / 100;
     } else {
-      this.averageEventOccupancy = 'N/A'; // Valeur par défaut si donnée invalide
-      console.warn("Format incorrect pour averageEventOccupancyRate:", rate);
+      this.averageEventOccupancy = 'N/A'; // Valeur si donnée invalide/manquante
     }
   }
 
-  /** Prépare et assigne les données pour le graphique des inscriptions (LIGNE) */
+  /** Prépare les données pour le graphique LIGNE des inscriptions */
   private updateMembersChartData(registrations: MonthlyRegistrationPoint[] | undefined | null): void {
-    if (!registrations?.length) {
-      console.warn("Aucune donnée d'inscription.");
-      this.membersChartData = { labels: [], datasets: [] }; // Assure que c'est vide
+    if (!registrations || registrations.length === 0) {
+      console.log("Pas de données d'inscription pour le graphique.");
+      this.membersChartData = { labels: [], datasets: [] }; // Assurer que c'est vide
       return;
     }
+    // Transformation des données reçues en format attendu par Chart.js
     this.membersChartData = {
-      labels: registrations.map(p => p.monthYear), // Mois sur l'axe X
-      datasets: [{
-        data: registrations.map(p => p.count), // Nombre d'inscriptions
-        label: 'Inscriptions',
-        // Styles pour la ligne
+      labels: registrations.map(point => point.monthYear), // Les labels sur l'axe X (ex: "Jan 2024")
+      datasets: [{ // Un seul jeu de données (la ligne)
+        data: registrations.map(point => point.count), // Les valeurs Y (nombre d'inscriptions)
+        label: 'Inscriptions', // Nom du jeu de données (pour tooltip)
+        // Styles de la ligne et du remplissage
         fill: true,
-        backgroundColor: 'rgba(26, 95, 122, 0.1)', // Remplissage bleu très léger
-        borderColor: MAIN_BLUE, // Ligne bleue
-        pointBackgroundColor: MAIN_BLUE,
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: MAIN_BLUE,
-        tension: 0.3, // Courbe douce
-        borderWidth: 2,
-        pointRadius: 3,
-        pointHoverRadius: 6
+        backgroundColor: 'rgba(26, 95, 122, 0.1)', // Remplissage sous la ligne
+        borderColor: '#1a5f7a', // Couleur de la ligne
+        tension: 0.3, // Arrondi de la ligne
+        // ... autres styles ...
       }]
     };
     console.log("Données graphique Inscriptions préparées.");
   }
 
-  /** Prépare et assigne les données pour le graphique des notes (BARRES) */
+  /** Prépare les données pour le graphique BARRES des notes */
   private updateRatingsChartData(ratings: AverageRatings | undefined | null): void {
     if (!ratings || Object.keys(ratings).length === 0) {
-      console.warn("Aucune donnée de notes.");
-      this.ratingsChartData = { labels: [], datasets: [] }; // Assure que c'est vide
+      console.log("Pas de données de notes pour le graphique.");
+      this.ratingsChartData = { labels: [], datasets: [] }; // Assurer que c'est vide
       return;
     }
+    // Ordre et libellés souhaités pour l'axe X
     const orderedKeys = ['organisation', 'proprete', 'ambiance', 'fairPlay', 'niveauJoueurs', 'moyenneGenerale'];
-    const displayLabels: Record<string, string> = { organisation: 'Organisation', proprete: 'Propreté', ambiance: 'Ambiance', fairPlay: 'Fairplay', niveauJoueurs: 'Niveau', moyenneGenerale: 'Moyenne' };
+    const displayLabels: Record<string, string> = { /* ... comme avant ... */ organisation: 'Organisation', proprete: 'Propreté', ambiance: 'Ambiance', fairPlay: 'Fairplay', niveauJoueurs: 'Niveau', moyenneGenerale: 'Moyenne' };
 
+    // Transformation des données reçues
     this.ratingsChartData = {
-      labels: orderedKeys.map(key => displayLabels[key] || key), // Catégories sur l'axe X
-      datasets: [{
-        data: orderedKeys.map(key => ratings[key] ?? 0), // Notes (ou 0 si manquant)
-        label: 'Note',
-        // Styles pour les barres
-        backgroundColor: 'rgba(242, 97, 34, 0.5)', // Couleur orange
-        borderColor: MAIN_ORANGE,
-        borderWidth: 0,
+      labels: orderedKeys.map(key => displayLabels[key] || key), // Les labels sur l'axe X
+      datasets: [{ // Un seul jeu de données (les barres)
+        data: orderedKeys.map(key => ratings[key] ?? 0), // Les valeurs Y (la note, 0 si manquante)
+        label: 'Note Moyenne', // Nom du jeu de données
+        // Styles des barres
+        backgroundColor: 'rgba(242, 97, 34, 0.6)', // Couleur orange semi-transparente
+        borderColor: '#f26122',
         borderRadius: 5,
-        borderSkipped: false,
-        hoverBackgroundColor: 'rgba(242, 97, 34)',
-        barPercentage: 0.6, // Largeur des barres
-        categoryPercentage: 0.7 // Espace entre groupes
+        // ... autres styles ...
       }]
     };
     console.log("Données graphique Notes préparées.");
   }
 
-  /**
-   * Appelé lorsque l'événement (viewDetails) est émis par app-membre-row.
-   * Prépare et affiche la modale de détails du membre.
-   * @param membre Le membre dont il faut afficher les détails.
-   */
-  handleViewMemberDetails(membre: Membre): void {
-    console.log("Affichage détails pour:", membre);
-    this.selectedMemberForDetail = membre;
-    this.isDetailModalVisible = true;
-    this.cdr.detectChanges(); // Important car l'état change potentiellement en dehors d'un cycle standard
+  // --- Gestion Modale Membre ---
+
+  /** Fonction appelée quand une ligne membre émet (openModal) */
+  handleOpenRoleModal(membre: Membre): void {
+    console.log('Ouverture modale demandée pour:', membre);
+    if (membre) {
+      this.selectedMemberForRoleModal = membre; // Mémorise le membre à afficher
+      this.isRoleModalVisible = true; // Rend la modale visible (le *ngIf dans le HTML va réagir)
+      this.cdr.detectChanges(); // Important avec OnPush pour que l'affichage change
+    } else {
+      console.error('handleOpenRoleModal reçu sans données membre !');
+    }
   }
 
-  /**
-   * Appelé lorsque la modale de détails émet l'événement (close).
-   * Cache la modale et réinitialise le membre sélectionné.
-   */
+  /** Fonction appelée quand la modale membre émet (saveRole) */
+  handleSaveRole(data: { membreId: number, newRole: RoleType }): void {
+    const clubId = this.authService.getManagedClubId();
+    if (clubId === null) {
+      this.notification.show("Erreur: ID du club non trouvé.", "error");
+      return;
+    }
+    if (!data || !data.newRole) { // Vérification simple
+      this.notification.show("Erreur: Données de rôle invalides.", "error");
+      return;
+    }
+
+    console.log(`Sauvegarde du rôle demandée: Membre ID ${data.membreId}, Club ${clubId}, Rôle ${data.newRole}`);
+    // Appel au service pour effectuer la modification via l'API
+    this.membreService.changeMemberRole(data.membreId, clubId, data.newRole).subscribe({
+      next: (updatedMember) => { // API a répondu avec succès
+        this.notification.show("Rôle du membre mis à jour.", "valid");
+
+        // --- Mise à jour de la liste locale (IMPORTANT) ---
+        // Cherche l'index du membre modifié dans notre liste 'lastFiveMembers'
+        const index = this.lastFiveMembers.findIndex(m => m.id === data.membreId);
+        if (index !== -1) {
+          // Crée une NOUVELLE liste en remplaçant l'ancien membre par le nouveau (ou en modifiant juste le rôle)
+          this.lastFiveMembers = [
+            ...this.lastFiveMembers.slice(0, index), // partie avant
+            { ...this.lastFiveMembers[index], role: data.newRole }, // membre mis à jour (au moins le rôle)
+            // Si l'API renvoyait tout l'objet membre `updatedMember`, on utiliserait ça:
+            // updatedMember,
+            ...this.lastFiveMembers.slice(index + 1) // partie après
+          ];
+          console.log("Liste locale des membres mise à jour.");
+          this.cdr.detectChanges(); // Rafraîchir l'affichage du tableau
+        }
+        // --- Fin Mise à jour locale ---
+
+        this.closeMemberDetailModal(); // Ferme la modale
+      },
+      error: (error) => { // L'appel API a échoué
+        console.error("Erreur lors de la mise à jour du rôle:", error);
+        // Affiche le message d'erreur venant du service (qui l'a reçu de l'API)
+        this.notification.show(error.message || "Erreur inconnue lors de la mise à jour.", "error");
+        // On ne ferme PAS la modale ici, l'utilisateur peut réessayer.
+      }
+    });
+  }
+
+  /** Fonction appelée quand la modale membre émet (close) */
   closeMemberDetailModal(): void {
-    console.log("Fermeture modale détails membre");
-    this.isDetailModalVisible = false;
-    this.selectedMemberForDetail = null;
-    // Pas besoin de detectChanges ici car la fermeture est souvent initiée par un clic utilisateur
-    // qui déclenche la détection de changements.
+    console.log("Fermeture modale détails membre.");
+    this.isRoleModalVisible = false; // Cache la modale
+    this.selectedMemberForRoleModal = null; // Oublie le membre sélectionné
+    // Pas besoin de detectChanges ici si la fermeture est initiée par un clic (déjà détecté par Angular)
+    // Mais ça ne fait pas de mal si on veut être sûr:
+    // this.cdr.detectChanges();
   }
 
-  /** Gère les erreurs d'appel API */
+  // --- Gestion des Événements (Placeholder) ---
+
+  // TODO: Fonction à appeler quand on clique sur "Supprimer" dans une ligne événement
+  supprimerEvenement(event: Evenement): void {
+    console.log("TODO: Supprimer (Désactiver) événement:", event.nom, event.id);
+    // 1. Afficher une confirmation à l'utilisateur ("Êtes-vous sûr ?")
+    // 2. Si confirmé, appeler this.eventService.deactivateEvent(event.id)
+    // 3. Dans le .subscribe():
+    //    - Si succès: afficher notif succès, retirer l'event de this.nextFiveEvents, appeler this.cdr.detectChanges()
+    //    - Si erreur: afficher notif erreur
+  }
+
+  // TODO: Fonction à appeler quand on clique sur "Modifier" dans une ligne événement
+  mettreAJourEvenement(event: Evenement): void {
+    console.log("TODO: Ouvrir modale d'édition pour événement:", event.nom, event.id);
+    // 1. Mémoriser l'événement à modifier dans une propriété (ex: this.eventAModifier = event;)
+    // 2. Rendre la modale d'édition d'événement visible (ex: this.isEditEventModalVisible = true;)
+    // 3. Passer l'événement à la modale via @Input (ex: [event]="eventAModifier")
+    // 4. S'assurer d'avoir une méthode pour gérer le (saveSuccess) émis par la modale d'édition
+    //    et une autre pour gérer le (close) pour remettre isEditEventModalVisible à false.
+  }
+
+  // --- Gestion des Erreurs (Simplifiée) ---
+
+  /** Gère une erreur API générique pour l'affichage */
   private handleApiError(error: HttpErrorResponse, context: string): void {
-    this.notification.show(`Erreur chargement (${context}).`, "error");
+    console.error(`Erreur API (${context}):`, error);
+    this.notification.show(`Erreur chargement (${context}). Vérifiez la console.`, "error");
+    this.isLoading = false; // Arrêter le chargement
+    // Mettre les KPIs en état d'erreur pour l'utilisateur
     this.totalEvents = "Erreur";
     this.upcomingEventsCount = "Erreur";
-    this.averageEventOccupancy = "Erreur";
-    this.isLoading = false;
-    this.cdr.detectChanges(); // Met à jour la vue pour montrer l'état d'erreur
+    // ...etc
+    this.cdr.detectChanges(); // Rafraîchir pour montrer l'état d'erreur
   }
 
-  /** Gère le cas où l'ID du club est manquant */
+  /** Gère le cas où on ne trouve pas l'ID du club géré */
   private handleMissingClubId(): void {
-    this.notification.show("ID Club manquant.", "error");
-    this.totalEvents = 'Erreur ID';
-    this.upcomingEventsCount = 'Erreur ID';
-    this.averageEventOccupancy = 'Erreur ID';
+    console.error("Impossible de récupérer l'ID du club géré.");
+    this.notification.show("Erreur: Impossible de déterminer le club géré.", "error");
     this.isLoading = false;
+    this.totalEvents = 'Erreur Club ID'; // Afficher un message clair
+    // ...etc
     this.cdr.detectChanges();
   }
+} // Fin de la classe DashboardComponent
 
 
+// --- Interfaces DTO (Data Transfer Object) ---
+// Décrivent la structure des données ATTENDUES des réponses API spécifiques.
+// Idéalement, ces interfaces devraient être dans des fichiers séparés (ex: src/app/models/dto.model.ts)
 
-  supprimerEvenement(event: Event): void {
-    console.log("Supprimer événement:", event);
-    // Logique de confirmation et appel API de suppression (probablement deactivateEvent)
-    // Attention: recharger les données ou retirer l'élément de la liste après succès
-    // this.eventService.deactivateEvent(event.id).subscribe(...) etc.
-  }
-
-  mettreAJourEvenement(event: Event): void {
-    console.log("Modifier événement:", event);
-    // Logique de navigation vers la page d'édition ou ouverture d'un modal
-    // this.router.navigate(['/events', event.id, 'edit']);
-  }
-}
-
-// --- Interfaces DTO ---
+// Structure attendue de l'API /stats/clubs/{clubId}/dashboard-summary
 interface DashboardSummaryDTO {
   totalEvents: number;
   upcomingEventsCount30d: number;
-  averageEventOccupancyRate: number;
+  averageEventOccupancyRate: number; // Ex: 75.5 pour 75.5%
   monthlyRegistrations: MonthlyRegistrationPoint[];
   averageEventRatings: AverageRatings;
-  totalMembers: number;
-  totalActiveMembers : number;
-  totalParticipations : number;
+  totalMembers: number; // Ajouté car présent dans votre code initial
+  totalActiveMembers: number;
+  totalParticipations: number;
 }
-interface MonthlyRegistrationPoint { count: number; monthYear: string; }
-interface AverageRatings { [category: string]: number; }
-// ---------------------------
+
+// Structure pour un point du graphique d'inscriptions
+interface MonthlyRegistrationPoint {
+  count: number;    // Nombre d'inscriptions
+  monthYear: string; // Label du mois (ex: "Jan 2024")
+}
+
+// Structure pour les notes moyennes
+interface AverageRatings {
+  // La clé est la catégorie de note (ex: 'organisation'), la valeur est la note moyenne
+  [category: string]: number | null | undefined;
+  // Ex: { organisation: 4.2, ambiance: 4.8, moyenneGenerale: 4.5 }
+}
+// --------------------------------------------------

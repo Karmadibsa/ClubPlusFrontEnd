@@ -16,9 +16,14 @@
 
     <!-- Boutons d'action à droite -->
     <div class="navbar-buttons">
-      <a routerLink="/inscription-club" class="btn btn-primary">Créer un club</a>
+      @if (auth.connecte === false){
+        <a routerLink="/inscription-club" class="btn btn-primary">Créer un club</a>
       <a routerLink="/inscription-membres" class="btn btn-secondary">Rejoindre un club</a>
       <a routerLink="/connexion" class="btn btn-outline">Connexion</a>
+      }
+      @if (auth.role == "ROLE_ADMIN" || auth.role == "ROLE_RESERVATION" || auth.role == "ROLE_MEMBRE"){
+        <a (click)="MoveToEspace()" routerLink="/connexion" class="btn btn-primary">Acceder a mon espace</a>
+      }
     </div>
   </div>
 </nav>

@@ -1,1 +1,1 @@
-export type RoleType = 'MEMBRE' | 'RESERVATION' | 'ADMIN';
+export type RoleType = 'MEMBRE' | 'RESERVATION' | 'ADMIN' | 'ANONYME';

@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import {LucideAngularModule} from 'lucide-angular';
-import {EditEventComponent} from '../edit-event/edit-event.component';
+import {EditEventModalComponent} from '../edit-event/edit-event.component';
 
 @Component({
   selector: '[app-event-row]',
@@ -9,9 +9,10 @@ import {EditEventComponent} from '../edit-event/edit-event.component';
   imports: [
     DatePipe,
     LucideAngularModule,
-    EditEventComponent,
+
     NgForOf,
-    NgIf
+    NgIf,
+    EditEventModalComponent
   ],
   styleUrls: ['./event-row.component.scss']
 })

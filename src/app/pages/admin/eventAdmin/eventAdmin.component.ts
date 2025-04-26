@@ -3,9 +3,9 @@ import {EventRowComponent} from '../../../component/event/event-row/event-row.co
 import {NgForOf, NgIf} from '@angular/common';
 import {FilterEventComponent} from '../../../component/event/filter-event/filter-event.component';
 import {SidebarComponent} from '../../../component/navigation/sidebar/sidebar.component';
-import {EditEventComponent} from '../../../component/event/edit-event/edit-event.component';
 import {HttpClient} from '@angular/common/http';
 import {LucideAngularModule} from 'lucide-angular';
+import {EditEventModalComponent} from '../../../component/event/edit-event/edit-event.component';
 
 @Component({
   selector: 'app-event',
@@ -13,11 +13,10 @@ import {LucideAngularModule} from 'lucide-angular';
   imports: [
     EventRowComponent,
     NgForOf,
-    FilterEventComponent,
     SidebarComponent,
-    EditEventComponent,
     NgIf,
-    LucideAngularModule
+    LucideAngularModule,
+    EditEventModalComponent
   ],
   styleUrls: ['./eventAdmin.component.scss']
 })

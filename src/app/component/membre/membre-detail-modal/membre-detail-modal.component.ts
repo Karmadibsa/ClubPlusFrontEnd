@@ -3,71 +3,71 @@ import {LucideAngularModule} from 'lucide-angular';
 import {DatePipe, NgIf} from '@angular/common';
 import {RoleType} from '../../../model/role';
 import {AuthService} from '../../../service/security/auth.service';
+import {FormsModule} from '@angular/forms';
+import {Membre} from '../../../model/membre';
 
 @Component({
   selector: 'app-membre-detail-modal',
   imports: [
     LucideAngularModule,
     NgIf,
-    DatePipe
+    DatePipe,
+    FormsModule
   ],
   templateUrl: './membre-detail-modal.component.html',
   styleUrl: './membre-detail-modal.component.scss'
 })
 export class MembreDetailModalComponent {
-  authService = inject(AuthService)
+  authService = inject(AuthService);
   @Input() isVisible: boolean = false;
   @Input() membre: Membre | null = null;
-  // --- NOUVEL INPUT : Indique si le *visualiseur* est admin ---
-  @Input() isViewerAdmin: boolean = false;
-  // --------------------------------------------------------
   @Output() close = new EventEmitter<void>();
-  // --- NOUVEL OUTPUT : Émet l'ID et le nouveau rôle ---
-  @Output() saveRoleChange = new EventEmitter<{ membreId: number, newRole: RoleType }>();
-  // ----------------------------------------------------
+  @Output() saveRole = new EventEmitter<{ membreId: number, newRole: RoleType }>();
 
   selectedRole: RoleType | null = null;
-  // public UserRole = RoleType;
+  initialRole: RoleType | null = null; // Pour stocker le rôle initial
 
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   // Initialiser/Réinitialiser selectedRole quand le membre change ou la modale s'ouvre
-  //   if (changes['membre'] && this.membre) {
-  //     this.selectedRole = this.membre.role;
-  //   }
-  //   if (changes['isVisible'] && !this.isVisible && this.membre) {
-  //     // Réinitialise quand la modale se ferme pour éviter les états incohérents
-  //     this.selectedRole = this.membre.role;
-  //   }
-  // }
-  //
-  // saveRole(): void {
-  //   // La vérification des droits est implicite dans canSaveChanges
-  //   if (this.membre && this.selectedRole) {
-  //     this.saveRoleChange.emit({
-  //       membreId: this.membre.id,
-  //       newRole: this.selectedRole
-  //     });
-  //   } else {
-  //     console.warn("Sauvegarde du rôle non permise ou données manquantes.");
-  //     // Optionnel : Notifier l'utilisateur pourquoi le bouton est désactivé si ce n'est pas clair
-  //     if(!this.authService.isCurrentUserAdmin()){
-  //       console.log("Raison: l'utilisateur n'est pas admin.");
-  //     } else if (!this.membre || this.membre.role === RoleType.ADMIN) {
-  //       console.log("Raison: Le rôle de ce membre ne peut pas être modifié.");
-  //     } else if (this.selectedRole === this.membre.role) {
-  //       console.log("Raison: Le rôle sélectionné est identique au rôle actuel.");
-  //     }
-  //   }
-  // }
+  // Variable pour vérifier si l'utilisateur connecté est admin
+  isCurrentUserAdmin: boolean = false;
 
-  // closeModal(): void {
-  //   this.close.emit();
-  //   // Réinitialiser aussi ici
-  //   if (this.membre) {
-  //     this.selectedRole = this.membre.role;
-  //   }
-  closeModal() {
+  ngOnInit(): void {
+    // Vérifier le rôle une seule fois à l'initialisation
+    this.isCurrentUserAdmin = this.authService.role === 'ROLE_ADMIN'; // Ou 'ADMIN' selon votre AuthService
+  }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    // Si la visibilité passe à true ou si le membre change PENDANT que c'est visible
+    if (this.membre && (changes['isVisible']?.currentValue === true || changes['membre'])) {
+      this.initialRole = this.membre.role; // Stocker le rôle initial
+      this.selectedRole = this.membre.role; // Initialiser la sélection
+      console.log('Modal: ngOnChanges - Membre chargé:', this.membre, 'Rôle initial:', this.initialRole);
+    }
+    // Si la modale est fermée, on pourrait réinitialiser, mais c'est souvent géré par le parent
+    if (changes['isVisible'] && !changes['isVisible'].currentValue) {
+      this.selectedRole = null;
+      this.initialRole = null;
+    }
+  }
+
+  triggerSaveRole(): void {
+    // Vérifications robustes
+    if (this.membre && this.selectedRole && this.selectedRole !== this.initialRole) {
+      console.log(`Modal: Émission saveRole - Membre ID: ${this.membre.id}, Nouveau Rôle: ${this.selectedRole}`);
+      this.saveRole.emit({ membreId: this.membre.id, newRole: this.selectedRole });
+    } else {
+      console.warn("Modal: Aucun changement de rôle valide à enregistrer ou membre non défini.");
+      // Optionnel : Notification à l'utilisateur
+    }
+  }
+
+  closeModal(): void {
+    console.log("Modal: Émission close");
+    this.close.emit();
+  }
+
+  // Helper pour la condition [disabled] du bouton Enregistrer
+  get isSaveDisabled(): boolean {
+    return !this.selectedRole || this.selectedRole === this.initialRole;
   }
 }
 

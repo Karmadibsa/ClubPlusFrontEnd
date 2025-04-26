@@ -1,120 +1,151 @@
 <div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
+  <!-- Attention: *ngIf sur modal-content seulement si eventForm est prêt -->
+  <div class="modal-content" *ngIf="eventForm" (click)="$event.stopPropagation()">
     <header class="modal-header">
-      <h2>Modifier l'Événement</h2>
-      <button class="close-btn" (click)="closeModal()">×</button>
+      <h2>{{ isEditMode ? 'Modifier' : 'Créer' }} l'Événement</h2>
+      <button class="close-btn" (click)="closeModal()" title="Fermer">
+        <lucide-icon name="x" size="20"></lucide-icon>
+      </button>
     </header>
+
     <main class="modal-body">
-      <form>
+      <!-- Lier le formulaire principal -->
+      <form [formGroup]="eventForm" novalidate>
+
+        <!-- Titre & Lieu -->
         <div class="form-row">
-          <!-- Titre -->
           <div class="form-group">
-            <label for="titre">Titre</label>
-            <input
-              id="titre"
-              name="titre"
-              [(ngModel)]="eventCopy.title"
-              type="text"
-              required
-            />
+            <label for="nom">Titre</label>
+            <input id="nom" type="text" formControlName="nom" required />
+            <!-- Messages d'erreur -->
+            <div *ngIf="eventForm.get('nom')?.invalid && (eventForm.get('nom')?.dirty || eventForm.get('nom')?.touched)" class="error-message">
+              <small *ngIf="eventForm.get('nom')?.errors?.['required']">Le titre est requis.</small>
+              <small *ngIf="eventForm.get('nom')?.errors?.['minlength'] || eventForm.get('nom')?.errors?.['maxlength']">Le titre doit faire entre 3 et 150 caractères.</small>
+            </div>
           </div>
-          <!-- Lieu -->
           <div class="form-group">
-            <label for="lieu">Lieu</label>
-            <input
-              id="lieu"
-              name="lieu"
-              [(ngModel)]="eventCopy.location"
-              type="text"
-              required
-            />
+            <label for="location">Lieu</label>
+            <input id="location" type="text" formControlName="location" />
+            <div *ngIf="eventForm.get('location')?.invalid && (eventForm.get('location')?.dirty || eventForm.get('location')?.touched)" class="error-message">
+              <small *ngIf="eventForm.get('location')?.errors?.['maxlength']">Le lieu ne doit pas dépasser 255 caractères.</small>
+            </div>
           </div>
         </div>
 
         <!-- Description -->
         <div class="form-group">
           <label for="description">Description</label>
-          <textarea
-            id="description"
-            name="description"
-            [(ngModel)]="eventCopy.description"
-            rows="5"
-            required
-          ></textarea>
+          <textarea id="description" rows="5" formControlName="description" required></textarea>
+          <div *ngIf="eventForm.get('description')?.invalid && (eventForm.get('description')?.dirty || eventForm.get('description')?.touched)" class="error-message">
+            <small *ngIf="eventForm.get('description')?.errors?.['required']">La description est requise.</small>
+            <small *ngIf="eventForm.get('description')?.errors?.['maxlength']">La description ne doit pas dépasser 2000 caractères.</small>
+          </div>
         </div>
 
-        <!-- Date et heure -->
+        <!-- Dates -->
         <div class="form-row">
           <div class="form-group">
-            <label for="dateDebut">Date et Heure de début</label>
-            <input
-              id="dateDebut"
-              name="dateDebut"
-              [(ngModel)]="eventCopy.start"
-              type="datetime-local"
-              required
-            />
+            <label for="start">Date et Heure de début</label>
+            <input id="start" type="datetime-local" formControlName="start" required />
+            <div *ngIf="eventForm.get('start')?.invalid && (eventForm.get('start')?.dirty || eventForm.get('start')?.touched)" class="error-message">
+              <small *ngIf="eventForm.get('start')?.errors?.['required']">La date de début est requise.</small>
+            </div>
           </div>
           <div class="form-group">
-            <label for="dateFin">Date et Heure de fin</label>
-            <input
-              id="dateFin"
-              name="dateFin"
-              [(ngModel)]="eventCopy.end"
-              type="datetime-local"
-              required
-            />
+            <label for="end">Date et Heure de fin</label>
+            <input id="end" type="datetime-local" formControlName="end" required />
+            <div *ngIf="eventForm.get('end')?.invalid && (eventForm.get('end')?.dirty || eventForm.get('end')?.touched)" class="error-message">
+              <small *ngIf="eventForm.get('end')?.errors?.['required']">La date de fin est requise.</small>
+            </div>
+            <!-- Erreur validateur personnalisé -->
+            <div *ngIf="eventForm.errors?.['dateOrderInvalid'] && (eventForm.get('start')?.dirty || eventForm.get('end')?.dirty)" class="error-message">
+              <small>La date de fin doit être après la date de début.</small>
+            </div>
           </div>
         </div>
 
         <!-- Catégories -->
         <div class="form-group">
           <label>Catégories</label>
-          <div class="scroll">
-            <div *ngFor="let categorie of categories; let i = index; trackBy: trackByIndex" class="category-item">
-              <input
-                id="category-{{ i }}"
-                name="categorie-nom-{{ i }}"
-                [(ngModel)]="categories[i].nom"
-                type="text"
-                placeholder="Nom de la catégorie"
-                required
-              />
-              <input
-                id="places-{{ i }}"
-                name="categorie-capacite-{{ i }}"
-                [(ngModel)]="categories[i].capacite"
-                type="number"
-                min="1"
-                placeholder="Nombre de places"
-                required
-              />
-              <button type="button" class="btn btn-outline" (click)="removeCategory(i)">
-                <lucide-icon name="trash-2"></lucide-icon>
-                Supprimer
+
+          <!-- Itérer sur le FormArray -->
+          <div formArrayName="categories" class="scroll">
+            <div *ngFor="let categoryCtrl of categoriesFormArray.controls; let i = index"
+                 [formGroupName]="i" class="category-item">
+
+              <!-- Champ ID caché (utile pour débogage, mais pas nécessaire pour l'utilisateur) -->
+              <!-- <input type="hidden" formControlName="id"> -->
+
+              <div class="category-inputs">
+                <div class="form-group category-name">
+                  <label for="cat-nom-{{i}}" class="sr-only">Nom catégorie {{i+1}}</label>
+                  <input id="cat-nom-{{i}}" type="text" placeholder="Nom catégorie" formControlName="nom" required />
+                  <!-- Erreurs catégorie nom -->
+                  <div *ngIf="categoryCtrl.get('nom')?.invalid && (categoryCtrl.get('nom')?.dirty || categoryCtrl.get('nom')?.touched)" class="error-message">
+                    <small *ngIf="categoryCtrl.get('nom')?.errors?.['required']">Nom requis.</small>
+                    <small *ngIf="categoryCtrl.get('nom')?.errors?.['minlength'] || categoryCtrl.get('nom')?.errors?.['maxlength']">Entre 2 et 100 caractères.</small>
+                  </div>
+                </div>
+                <div class="form-group category-capacity">
+                  <label for="cat-cap-{{i}}" class="sr-only">Capacité catégorie {{i+1}}</label>
+                  <input id="cat-cap-{{i}}" type="number" min="0" placeholder="Capacité" formControlName="capacite" required />
+                  <!-- Erreurs catégorie capacité -->
+                  <div *ngIf="categoryCtrl.get('capacite')?.invalid && (categoryCtrl.get('capacite')?.dirty || categoryCtrl.get('capacite')?.touched)" class="error-message">
+                    <small *ngIf="categoryCtrl.get('capacite')?.errors?.['required']">Capacité requise.</small>
+                    <small *ngIf="categoryCtrl.get('capacite')?.errors?.['min']">Minimum 0.</small>
+                  </div>
+                </div>
+              </div>
+
+              <button type="button" class="btn btn-outline btn-delete-category" (click)="removeCategory(i)" title="Supprimer cette catégorie">
+                <lucide-icon name="trash-2" size="16"></lucide-icon>
               </button>
+            </div>
+            <div *ngIf="categoriesFormArray.length === 0" class="no-categories-message">
+              Aucune catégorie définie. Cliquez sur "Ajouter" pour en créer une.
+            </div>
+            <!-- Erreur si le FormArray lui-même est invalide (ex: requis mais vide) -->
+            <div *ngIf="categoriesFormArray.invalid && categoriesFormArray.touched && categoriesFormArray.errors?.['required']" class="error-message">
+              <small>Au moins une catégorie est requise.</small>
             </div>
           </div>
 
+          <!-- Bouton Ajouter Catégorie -->
           <div class="category-actions">
             <button type="button" class="btn btn-primary" (click)="addCategory()">
-              <lucide-icon name="circle-plus"></lucide-icon>
-              Ajouter une catégorie
+              <lucide-icon name="circle-plus" size="16"></lucide-icon> Ajouter une catégorie
             </button>
-
-            <div class="form-actions">
-              <button type="button" (click)="closeModal()">
-                <lucide-icon name="circle-x"></lucide-icon>
-                Annuler
-              </button>
-              <button type="button" (click)="save()">
-                <lucide-icon name="save"></lucide-icon>
-                Enregistrer
-              </button>
-            </div>
           </div>
         </div>
+
       </form>
     </main>
+
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeModal()" [disabled]="isSaving">
+        <lucide-icon name="x-circle" size="16"></lucide-icon> Annuler
+      </button>
+      <button type="button" class="btn btn-primary" (click)="saveChanges()" [disabled]="eventForm.invalid || isSaving">
+        <lucide-icon *ngIf="!isSaving" name="save" size="16"></lucide-icon>
+        <lucide-icon *ngIf="isSaving" name="loader-circle" size="16" class="animate-spin"></lucide-icon> <!-- Spinner simple -->
+        {{ isSaving ? 'Sauvegarde...' : 'Enregistrer' }}
+      </button>
+    </footer>
+
   </div>
 </div>
+
+<!-- Optionnel: CSS pour messages d'erreur et spinner -->
+<style>
+  .error-message small { color: var(--danger, #dc3545); display: block; margin-top: 4px; font-size: 0.8em; }
+  .form-group.invalid input, .form-group.invalid textarea { border-color: var(--danger, #dc3545); } /* Ajouter classe 'invalid' si besoin */
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
+  .category-item { display: flex; align-items: flex-start; gap: var(--spacing-md); margin-bottom: var(--spacing-md); }
+  .category-inputs { display: flex; flex-grow: 1; gap: var(--spacing-md); flex-wrap: wrap;}
+  .category-name { flex: 2 1 200px; }
+  .category-capacity { flex: 1 1 100px; }
+  .btn-delete-category { align-self: center; /* Aligner le bouton verticalement */ }
+  .no-categories-message { text-align: center; color: var(--text-medium); padding: var(--spacing-md); }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .animate-spin { animation: spin 1s linear infinite; }
+</style>

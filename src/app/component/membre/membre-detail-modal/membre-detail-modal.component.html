@@ -1,6 +1,6 @@
-<div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
+<div class="modal-overlay" *ngIf="isVisible" [class.active]="isVisible" (click)="closeModal()">
   <!-- Utiliser ngIf="membre" pour s'assurer que les données sont là avant d'afficher -->
-  <div class="modal-content detail-modal" *ngIf="membre" (click)="$event.stopPropagation()">
+  <div class="modal-content detail-modal" [class.active]="isVisible" *ngIf="membre" (click)="$event.stopPropagation()">
     <header class="modal-header">
       <!-- Titre mis à jour -->
       <h2>Détails du Membre</h2>
@@ -80,8 +80,26 @@
             </div>
           </div>
         </div>
-        @if (authService.role == "ROLE_ADMIN"){
-          <p>ici bouton changement role</p>}
+        @if (authService.role === 'ROLE_ADMIN') {
+          <ng-container>
+
+          <div class="form-section role-change-section">
+            <h3>Gérer le Rôle</h3>
+            <div class="radio-inputs">
+              <label>
+                <input class="radio-input" type="radio" name="roleOption"
+                       [(ngModel)]="selectedRole" value="MEMBRE"> <!-- Valeur String -->
+                <span>Membre</span>
+              </label>
+              <label>
+                <input class="radio-input" type="radio" name="roleOption"
+                       [(ngModel)]="selectedRole" value="RESERVATION"> <!-- Valeur String -->
+                <span>Réservation</span>
+              </label>
+            </div>
+          </div>
+          </ng-container>
+        }
 
         <!-- Les anciens form-row séparés pour l'adresse sont supprimés -->
 
@@ -90,26 +108,20 @@
       <!-- Plus besoin de div.form-actions ici, géré dans modal-footer -->
     </main>
     <footer class="modal-footer">
-      @if (authService.role == "ROLE_ADMIN"){
-        <!-- Uniquement le bouton Fermer -->
-<!--        <button type="button" class="btn btn-secondary" (click)="saveRoleChange()">-->
-        <button type="button" class="btn btn-secondary" >
-          <lucide-icon name="save" size="16"></lucide-icon> Changer role
-        </button>}
+      @if (authService.role === "ROLE_ADMIN"){
+        <ng-container>
+          <button type="button" class="btn btn-primary"
+                  (click)="triggerSaveRole()"
+                  [disabled]="isSaveDisabled"> <!-- Utilise le getter -->
+            Enregistrer Rôle
+          </button>
+        </ng-container>
+      }
 
       <!-- Uniquement le bouton Fermer -->
       <button type="button" class="btn btn-secondary" (click)="closeModal()">
         <lucide-icon name="x-circle" size="16"></lucide-icon> Fermer
       </button>
-    </footer>
-  </div>
-
-  <!-- Sécurité: Affichage si membre est null -->
-  <div class="modal-content" *ngIf="!membre" (click)="$event.stopPropagation()">
-    <p style="padding: 20px; text-align: center;">Erreur : Données du membre non disponibles.</p>
-    <footer class="modal-footer" style="justify-content: center;">
-<!--      <button type="button" class="btn btn-secondary" (click)="closeModal()">Fermer</button>-->
-      <button type="button" class="btn btn-secondary">Fermer</button>
     </footer>
   </div>
 

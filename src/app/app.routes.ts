@@ -12,6 +12,7 @@ import {InscriptionClubComponent} from './pages/public/inscription-club/inscript
 import {InscriptionMembreComponent} from './pages/public/inscription-membre/inscription-membre.component';
 import {LoginComponent} from './pages/public/login/login.component';
 import {connecteGuard} from './service/security/connecte.guard';
+import {managerGuard} from './service/security/manager.guard';
 
 
 
@@ -39,17 +40,17 @@ export const routes: Routes = [
   {
     path: "eventadmin",
     component: EventAdminComponent,
-    canActivate: [connecteGuard]
+    canActivate: [managerGuard]
   },
   {
     path: "membreadmin",
     component: MembreAdminComponent,
-    canActivate: [connecteGuard]
+    canActivate: [managerGuard]
   },
   {
     path: "monclub",
     component: MonclubComponent,
-    canActivate: [connecteGuard]
+    canActivate: [managerGuard]
   },
   {
     path: "accueil",

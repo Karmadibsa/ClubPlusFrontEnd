@@ -91,6 +91,7 @@ if(jwt != null){
   getRole(){
     return this.role;
   }
+
 }
 
 

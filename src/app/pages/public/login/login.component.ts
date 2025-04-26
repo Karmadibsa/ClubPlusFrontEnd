@@ -63,7 +63,7 @@ if(this.loginForm.valid){
           this.router.navigateByUrl('/');
           return;
         }
-        if (userRole === 'ROLE_ADMIN' || userRole === 'ROlE_RESERVATION') {
+        if (userRole === 'ROLE_ADMIN' || userRole === 'ROLE_RESERVATION') {
           this.router.navigateByUrl("/dashboard");
           this.notification.show(`Connexion réussie (${userRole}). Accès au tableau de bord.`, "valid");
         } else if (userRole === 'ROLE_MEMBRE') {
