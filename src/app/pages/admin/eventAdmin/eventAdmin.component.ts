@@ -19,7 +19,10 @@ import { CreateEventButtonComponent } from '../../../component/event/create-even
 import { Evenement } from '../../../model/evenement'; // Assure-toi que ce modèle existe et est correct
 
 // Autres
-import { LucideAngularModule } from 'lucide-angular'; // Si utilisé dans le template
+import { LucideAngularModule } from 'lucide-angular';
+import {
+  ReservationEventModalComponent
+} from '../../../component/event/reservation-event-modal/reservation-event-modal.component'; // Si utilisé dans le template
 
 
 @Component({
@@ -31,7 +34,8 @@ import { LucideAngularModule } from 'lucide-angular'; // Si utilisé dans le tem
     EventRowComponent,
     LucideAngularModule,
     EditEventModalComponent, // Assure-toi que le nom est correct
-    CreateEventButtonComponent
+    CreateEventButtonComponent,
+    ReservationEventModalComponent
   ],
   templateUrl: './eventAdmin.component.html',
   styleUrls: ['./eventAdmin.component.scss'],
@@ -50,6 +54,9 @@ export class EventAdminComponent implements OnInit, OnDestroy {
   isEditEventModalVisible = false;
   selectedEventForEditModal: Evenement | undefined = undefined; // Pour création ou modification
   private eventsSubscription: Subscription | null = null; // Pour gérer la désinscription
+  isReservationModalVisible = false;
+  selectedEventIdForReservationModal: number | null = null;
+  selectedEventTitleForReservationModal: string = '';
 
   ngOnInit(): void {
     this.chargerEvenements();
@@ -219,4 +226,35 @@ export class EventAdminComponent implements OnInit, OnDestroy {
     // Si tu utilises ChangeDetectionStrategy.OnPush:
     this.cdr.detectChanges();
   }
+
+  /**
+   * Ouvre la modale pour voir les réservations.
+   * Appelée par l'événement (viewReservationsRequest) émis par app-event-row.
+   * @param eventData Les données { id, title } émises par l'enfant.
+   */
+  handleViewReservationsRequest(eventData: { id: number, title: string }): void {
+    console.log('EventAdmin: handleViewReservationsRequest appelé avec:', eventData); // <-- LOG 3 (Vous devriez le voir)
+    this.selectedEventIdForReservationModal = eventData.id;
+    this.selectedEventTitleForReservationModal = eventData.title;
+
+    this.isReservationModalVisible = true; // <- La ligne critique
+
+    console.log('EventAdmin: isReservationModalVisible est maintenant:', this.isReservationModalVisible); // <-- LOG 4 (Le voyez-vous ?)
+    this.cdr.detectChanges(); // Important avec OnPush
+  }
+
+
+
+  /**
+   * Ferme la modale de visualisation des réservations.
+   * Appelée par l'événement (closeModal) émis par app-reservation-modal.
+   */
+  handleCloseReservationModal(): void {
+    console.log('EventAdmin: Fermeture de la modale de réservation');
+    this.isReservationModalVisible = false; // Cache la modale
+    this.selectedEventIdForReservationModal = null; // Réinitialise les données
+    this.selectedEventTitleForReservationModal = '';
+    this.cdr.detectChanges(); // Important avec OnPush
+  }
 }
+

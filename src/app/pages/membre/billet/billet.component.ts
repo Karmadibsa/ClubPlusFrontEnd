@@ -11,6 +11,7 @@ import html2canvas from 'html2canvas'; // Pour capturer le contenu HTML
 import jspdf from 'jspdf';
 import {QRCodeComponent} from 'angularx-qrcode';
 import {SafeUrl} from '@angular/platform-browser';
+import {Reservation} from '../../../model/reservation';
 
 
 
@@ -97,7 +98,7 @@ export class BilletComponent {
     // Section d'informations principales
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(14);
-    doc.text(`Événement: ${reservation.event?.title || ''}`, margin, 60);
+    doc.text(`Événement: ${reservation.event?.nom || ''}`, margin, 60);
 
     // Date et lieu avec couleur bleue
     doc.setTextColor(hexToRgb(mainBlue).r, hexToRgb(mainBlue).g, hexToRgb(mainBlue).b);
@@ -150,13 +151,13 @@ export class BilletComponent {
         doc.text('Présentez ce billet à l\'entrée de l\'événement', pageWidth/2, pageHeight - 10, { align: 'center' });
 
         // Sauvegarder le PDF
-        doc.save(`billet-${reservation.event?.title || 'evenement'}.pdf`);
+        doc.save(`billet-${reservation.event?.nom || 'evenement'}.pdf`);
       };
 
       document.head.appendChild(script);
     } else {
       // Fallback si pas de QR code
-      doc.save(`billet-${reservation.event?.title || 'evenement'}.pdf`);
+      doc.save(`billet-${reservation.event?.nom || 'evenement'}.pdf`);
     }
   }
 

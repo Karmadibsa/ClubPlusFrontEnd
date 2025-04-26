@@ -26,8 +26,12 @@
     <tbody>
     <!-- Utilisation de event-row -->
       @for (event of evenements ; track event.id) {
-        <tr app-event-row [evenement]="event" (modifier)="handleOpenEditModal($event)"
-            (deleteRequest)="handleDeleteEventRequest($event)"></tr>
+        <tr app-event-row
+            [evenement]="event"
+            (modifier)="handleOpenEditModal($event)"
+            (deleteRequest)="handleDeleteEventRequest($event)"
+            (viewReservationsRequest)="handleViewReservationsRequest($event)"
+        ></tr>
       }
     </tbody>
   </table>
@@ -40,4 +44,16 @@
       (close)="handleCloseEditModal()">
     </app-edit-event>
   }
+
+    <!-- **** NOUVELLE MODALE DE RÉSERVATION **** -->
+    @if (isReservationModalVisible) {
+      <app-reservation-event-modal
+        [eventId]="selectedEventIdForReservationModal"
+        [eventTitle]="selectedEventTitleForReservationModal"
+        (closeModal)="handleCloseReservationModal()">
+        <!-- ^^^ Écoute l'événement pour fermer ^^^ -->
+      </app-reservation-event-modal>
+    }
+
+
 </div>

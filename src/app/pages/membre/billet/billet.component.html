@@ -59,7 +59,7 @@
       <h1 style="font-size: 24px; color: #333;">Votre billet</h1>
     </div>
     <div class="ticket-info" style="font-size: 14px; line-height: 1.5;">
-      <p><strong>Événement:</strong> {{ selectedTicket.event?.title }}</p>
+      <p><strong>Événement:</strong> {{ selectedTicket.event?.nom }}</p>
       <p><strong>Date:</strong> {{ selectedTicket.event?.start | date:'dd/MM/yyyy' }}</p>
       <p><strong>Lieu:</strong> {{ selectedTicket.event?.location }}</p>
       <p><strong>Catégorie:</strong> {{ selectedTicket.categorie?.nom }}</p>
