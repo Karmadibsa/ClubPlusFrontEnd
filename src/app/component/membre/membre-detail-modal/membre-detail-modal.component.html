@@ -1,6 +1,8 @@
-<div class="modal-overlay" *ngIf="isVisible" [class.active]="isVisible" (click)="closeModal()">
+@if (isVisible){
+<div class="modal-overlay" [class.active]="isVisible" (click)="closeModal()">
   <!-- Utiliser ngIf="membre" pour s'assurer que les données sont là avant d'afficher -->
-  <div class="modal-content detail-modal" [class.active]="isVisible" *ngIf="membre" (click)="$event.stopPropagation()">
+  @if (membre) {
+  <div class="modal-content detail-modal" [class.active]="isVisible" (click)="$event.stopPropagation()">
     <header class="modal-header">
       <!-- Titre mis à jour -->
       <h2>Détails du Membre</h2>
@@ -124,5 +126,6 @@
       </button>
     </footer>
   </div>
-
+  }
 </div>
+}

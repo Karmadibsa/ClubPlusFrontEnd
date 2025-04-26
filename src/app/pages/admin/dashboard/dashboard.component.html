@@ -6,7 +6,9 @@
 <div class="container">
   <div class="header">
     <h1>Dashboard</h1>
-    <div *ngIf="isLoading" style="text-align: center; padding: 10px;">Chargement des données...</div>
+    @if (isLoading){
+    <div style="text-align: center; padding: 10px;">Chargement des données...</div>
+    }
   </div>
   <!-- Section Statistiques -->
   <div class="stats-grid">
@@ -25,28 +27,34 @@
   <div class="charts-grid">
     <div class="card  chart-container stat-card" style="position: relative; height:400px; display: block;">
       <h3>Évolution des Inscriptions</h3>
+      @if (membersChartData.datasets.length > 0 && !isLoading) {
       <canvas baseChart
-              *ngIf="membersChartData.datasets.length > 0 && !isLoading"
               [data]="membersChartData"
               [options]="membersChartOptions"
               [type]="'line'"> <!-- <<< CHANGEMENT ICI : 'line' >>> -->
       </canvas>
-      <div *ngIf="membersChartData.datasets.length === 0 && !isLoading" class="chart-placeholder">
+      }
+      @if (membersChartData.datasets.length === 0 && !isLoading) {
+      <div class="chart-placeholder">
         Aucune donnée d'inscription.
       </div>
+      }
     </div>
 
     <div class="card chart-container stat-card" style="position: relative; height:400px; display: block;">
       <h3>Notes Moyennes</h3>
+      @if (ratingsChartData.datasets.length > 0 && !isLoading) {
       <canvas baseChart
-              *ngIf="ratingsChartData.datasets.length > 0 && !isLoading"
               [data]="ratingsChartData"
               [options]="ratingsChartOptions"
               [type]="'bar'"> <!-- Reste en 'bar' -->
       </canvas>
-      <div *ngIf="ratingsChartData.datasets.length === 0 && !isLoading" class="chart-placeholder">
+      }
+      @if (ratingsChartData.datasets.length === 0 && !isLoading) {
+      <div class="chart-placeholder">
         Aucune donnée de notes.
       </div>
+      }
     </div>
   </div>
 
@@ -70,9 +78,9 @@
         </tr>
         </thead>
         <tbody>
-        <!-- Utilisation de membre-row -->
-<!--        <tr *ngFor="let member of lastFiveMembers" app-membre-row [membre]="member" (viewDetails)="handleViewMemberDetails($event)"></tr>-->
-        <tr *ngFor="let member of lastFiveMembers" app-membre-row [membre]="member" (openModal)="handleOpenRoleModal($event)"></tr>
+          @for (member of lastFiveMembers ; track member.id) {
+        <tr app-membre-row [membre]="member" (roleChangeRequested)="handleSaveRole($event)"></tr>
+          }
         </tbody>
       </table>
     </div>
@@ -95,21 +103,13 @@
         </thead>
         <tbody>
         <!-- Utilisation de event-row -->
-        <tr *ngFor="let event of nextFiveEvents" app-event-row [evenement]="event" (modifier)="handleOpenEditModal($event)"
+          @for (event of nextFiveEvents ; track event.id) {
+        <tr app-event-row [evenement]="event" (modifier)="handleOpenEditModal($event)"
         (deleteRequest)="handleDeleteEventRequest($event)"></tr>
+          }
         </tbody>
       </table>
     </div>
   </div>
-
-  <!-- === MODALE DÉTAILS MEMBRE === -->
-  <app-membre-detail-modal
-    *ngIf="isRoleModalVisible"
-    [isVisible]="isRoleModalVisible"
-    [membre]="selectedMemberForRoleModal"
-  (saveRole)="handleSaveRole($event)"
-  (close)="closeMemberDetailModal()">
-  </app-membre-detail-modal>
-  <!-- ============================ -->
 </div>
 

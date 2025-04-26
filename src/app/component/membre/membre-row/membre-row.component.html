@@ -4,15 +4,30 @@
 <td>{{ membre.date_naissance | date:'dd/MM/yyyy' }}</td>
 <td>{{ membre.date_inscription | date:'dd/MM/yyyy' }}</td>
 <td>{{ membre.numero_voie }} {{ membre.rue }}, {{ membre.codepostal }} {{ membre.ville }}</td>
-<td>{{ membre.telephone }}</td>
+<td>{{ membre.telephone || 'N/A' }}</td> <!-- Afficher N/A si le téléphone est null/vide -->
 <td>{{ membre.email }}</td>
 <td>{{ membre.role }}</td>
-<!-- === NOUVELLE COLONNE ACTIONS === -->
+
+<!-- === COLONNE ACTIONS MODIFIÉE === -->
 <td>
   <div class="btn-actions" style="justify-content: center;">
-    <button class="btn btn-edit" title="Gérer le rôle" (click)="onOpenModalClick()">
-      <lucide-icon name="user-cog" class="icon"></lucide-icon> <!-- Icône de gestion -->
+    <!-- Ce bouton appelle maintenant la méthode locale pour ouvrir la modale -->
+    <button class="btn btn-edit" title="Voir Détails / Gérer le rôle" (click)="openDetailsModal()">
+      <lucide-icon name="user-cog" class="icon"></lucide-icon>
     </button>
+    <!-- Autres boutons d'action potentiels peuvent être ajoutés ici -->
   </div>
 </td>
 <!-- ================================ -->
+
+<!-- === MODALE INTÉGRÉE DANS LA LIGNE === -->
+<!-- Elle n'est rendue dans le DOM que si isModalVisible est vrai -->
+@if (isModalVisible) {
+  <app-membre-detail-modal
+    [isVisible]="isModalVisible"
+    [membre]="membre"
+    (close)="handleCloseModal()"
+    (saveRole)="handleSaveRoleFromModal($event)">
+  </app-membre-detail-modal>
+}
+<!-- ==================================== -->

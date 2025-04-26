@@ -1,8 +1,9 @@
 <!-- edit-event.component.html - VERSION SIMPLIFIÉE -->
-
-<div class="modal-overlay" *ngIf="isVisible" (click)="closeModal()">
+@if (isVisible) {
+<div class="modal-overlay" (click)="closeModal()">
   <!-- Affiche le contenu seulement si le formulaire est prêt -->
-  <div class="modal-content" *ngIf="eventForm" (click)="$event.stopPropagation()">
+  @if (eventForm){
+  <div class="modal-content" (click)="$event.stopPropagation()">
 
     <header class="modal-header">
       <!-- Affiche "Modifier" ou "Créer" selon le mode -->
@@ -66,8 +67,8 @@
 
             <!-- Boucle pour afficher chaque catégorie dans le FormArray -->
             <!-- 'categoryCtrl' est une variable temporaire pour chaque groupe, 'i' est l'index (0, 1, 2...) -->
-            <div *ngFor="let categoryCtrl of categoriesFormArray.controls; let i = index"
-                 [formGroupName]="i" class="category-item">
+            @for (categoryCtrl of categoriesFormArray.controls; track i; let i = $index) {
+            <div [formGroupName]="i" class="category-item">
               <!-- LIAISON GROUPE LISTE : Chaque ligne est liée à un FormGroup dans le FormArray (index 0, 1, 2...) -->
 
               <div class="category-inputs">
@@ -90,11 +91,13 @@
                 <lucide-icon name="trash-2" size="16"></lucide-icon>
               </button>
             </div>
-
+            }
             <!-- Message si aucune catégorie n'est dans la liste -->
-            <div *ngIf="categoriesFormArray.length === 0" class="no-categories-message">
+            @if (categoriesFormArray.length === 0) {
+            <div class="no-categories-message">
               Aucune catégorie définie. Cliquez sur "Ajouter" pour en créer une.
             </div>
+            }
             <!-- *** Section erreur FormArray supprimée pour simplifier *** -->
           </div>
 
@@ -117,26 +120,14 @@
       <!-- Bouton Enregistrer (désactivé si sauvegarde en cours) -->
       <!-- Note: On a enlevé [disabled]="eventForm.invalid" pour l'instant pour simplifier -->
       <button type="button" class="btn btn-primary" (click)="saveChanges()" [disabled]="isSaving">
-        <lucide-icon *ngIf="!isSaving" name="save" size="16"></lucide-icon>
-        <lucide-icon *ngIf="isSaving" name="loader-circle" size="16" class="animate-spin"></lucide-icon>
+        @if (!isSaving){<lucide-icon name="save" size="16"></lucide-icon>}
+        @if (isSaving){<lucide-icon name="loader-circle" size="16" class="animate-spin"></lucide-icon>}
         {{ isSaving ? 'Sauvegarde...' : 'Enregistrer' }}
       </button>
     </footer>
 
   </div>
+  }
 </div>
+  }
 
-<!-- Garde les styles pour la mise en page de base -->
-<style>
-  /* Styles existants pour .sr-only, .category-item, .category-inputs, etc. */
-  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
-  .category-item { display: flex; align-items: flex-start; gap: var(--spacing-md); margin-bottom: var(--spacing-md); }
-  .category-inputs { display: flex; flex-grow: 1; gap: var(--spacing-md); flex-wrap: wrap;}
-  .category-name { flex: 2 1 200px; }
-  .category-capacity { flex: 1 1 100px; }
-  .btn-delete-category { align-self: center; }
-  .no-categories-message { text-align: center; color: var(--text-medium); padding: var(--spacing-md); }
-  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-  .animate-spin { animation: spin 1s linear infinite; }
-  /* NOTE: Les styles .error-message ne servent plus ici */
-</style>

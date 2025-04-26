@@ -5,9 +5,11 @@
 <td>{{ evenement.placeReserve }} / {{ evenement.placeTotal }}</td>
 <td>{{ evenement.location }}</td>
 <td>
-  <span *ngFor="let categorie of evenement.categories; let last = last">
-    {{ categorie.nom }}{{ last ? '' : ', ' }}
+  @for (categorie of evenement.categories; track categorie.id) {
+  <span>
+    {{ categorie.nom }}
   </span>
+  }
 </td>
 <td>
   <div class="btn-actions">
@@ -24,10 +26,11 @@
 </td>
 
 <!-- Modal d'édition -->
+@if (isModalVisible){
 <app-edit-event
-  *ngIf="isModalVisible"
   [isVisible]="isModalVisible"
   [event]="evenement"
   (saveSuccess)="sauvegarderEvenement($event)"
   (close)="fermerModal()">
 </app-edit-event>
+}

@@ -81,9 +81,6 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
   lastFiveMembers: Membre[] = []; // Tableau pour stocker les 5 derniers membres
   nextFiveEvents: Evenement[] = []; // Tableau pour stocker les 5 prochains événements
 
-  // État pour la modale Membre
-  isRoleModalVisible = false; // Est-ce que la modale de détail/rôle membre est ouverte ?
-  selectedMemberForRoleModal: Membre | null = null; // Quel membre est affiché dans la modale ?
 
   // État pour le chargement global
   isLoading = true; // Affiche un indicateur de chargement au début
@@ -352,18 +349,57 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
 
   // --- Gestion Modale Membre ---
 
-  /** Fonction appelée quand une ligne membre émet (openModal) */
-  handleOpenRoleModal(membre: Membre): void {
-    console.log('Ouverture modale demandée pour:', membre);
-    if (membre) {
-      this.selectedMemberForRoleModal = membre; // Mémorise le membre à afficher
-      this.isRoleModalVisible = true; // Rend la modale visible (le *ngIf dans le HTML va réagir)
-      this.cdr.detectChanges(); // Important avec OnPush pour que l'affichage change
-    } else {
-      console.error('handleOpenRoleModal reçu sans données membre !');
+  /**
+   * Fonction appelée quand une ligne membre (MembreRowComponent)
+   * émet l'événement (roleChangeRequested) après que l'utilisateur
+   * ait validé un changement de rôle dans la modale gérée par la ligne.
+   */
+  handleSaveRole(data: { membreId: number, newRole: RoleType }): void {
+    const clubId = this.authService.getManagedClubId();
+    if (clubId === null) {
+      this.notification.show("Erreur: ID du club non trouvé.", "error");
+      return;
     }
-  }
+    if (!data || !data.newRole) {
+      this.notification.show("Erreur: Données de rôle invalides.", "error");
+      return;
+    }
 
+    console.log(`Dashboard: Sauvegarde du rôle demandée via MembreRow: Membre ID ${data.membreId}, Club ${clubId}, Rôle ${data.newRole}`);
+    // Appel au service pour effectuer la modification via l'API
+    this.membreService.changeMemberRole(data.membreId, clubId, data.newRole).subscribe({
+      next: (updatedMember) => { // API a répondu avec succès
+        this.notification.show("Rôle du membre mis à jour.", "valid");
+
+        // Mise à jour de la liste locale lastFiveMembers
+        const index = this.lastFiveMembers.findIndex(m => m.id === data.membreId);
+        if (index !== -1) {
+          // Crée une NOUVELLE liste pour déclencher la détection de changement (si OnPush)
+          // Crée une NOUVELLE liste en remplaçant l'ancien membre par le nouveau (ou en modifiant juste le rôle)
+          this.lastFiveMembers = [
+            ...this.lastFiveMembers.slice(0, index), // partie avant
+            // On met à jour uniquement le rôle car l'API ne renvoie peut-être pas le membre complet
+            // Si updatedMember est renvoyé et contient toutes les infos, utiliser: updatedMember
+            { ...this.lastFiveMembers[index], role: data.newRole }, // membre mis à jour (juste le rôle ici)
+            ...this.lastFiveMembers.slice(index + 1) // partie après
+          ];
+          console.log("Dashboard: Liste locale des membres mise à jour.");
+          this.cdr.detectChanges(); // Rafraîchir l'affichage du tableau
+        } else {
+          console.warn(`Dashboard: Membre ID ${data.membreId} non trouvé dans lastFiveMembers après mise à jour.`);
+          // Optionnel: Recharger la liste si nécessaire
+          // this.loadLatestMembers(clubId); // Ou une méthode spécifique pour recharger les membres
+        }
+
+        // La fermeture de la modale est gérée par MembreRowComponent maintenant
+        // this.closeMemberDetailModal(); // -> SUPPRIMÉ
+      },
+      error: (error) => {
+        console.error("Dashboard: Erreur lors de la mise à jour du rôle:", error);
+        this.notification.show(error.message || "Erreur inconnue lors de la mise à jour.", "error");
+      }
+    });
+  }
   /**
    * Gère la demande de suppression émise par une ligne d'événement.
    * Affiche une confirmation, appelle le service si confirmé, et met à jour l'UI.
@@ -404,61 +440,7 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
       // this.notification.show("Désactivation annulée.", "info");
     }
   }
-  /** Fonction appelée quand la modale membre émet (saveRole) */
-  handleSaveRole(data: { membreId: number, newRole: RoleType }): void {
-    const clubId = this.authService.getManagedClubId();
-    if (clubId === null) {
-      this.notification.show("Erreur: ID du club non trouvé.", "error");
-      return;
-    }
-    if (!data || !data.newRole) { // Vérification simple
-      this.notification.show("Erreur: Données de rôle invalides.", "error");
-      return;
-    }
 
-    console.log(`Sauvegarde du rôle demandée: Membre ID ${data.membreId}, Club ${clubId}, Rôle ${data.newRole}`);
-    // Appel au service pour effectuer la modification via l'API
-    this.membreService.changeMemberRole(data.membreId, clubId, data.newRole).subscribe({
-      next: (updatedMember) => { // API a répondu avec succès
-        this.notification.show("Rôle du membre mis à jour.", "valid");
-
-        // --- Mise à jour de la liste locale (IMPORTANT) ---
-        // Cherche l'index du membre modifié dans notre liste 'lastFiveMembers'
-        const index = this.lastFiveMembers.findIndex(m => m.id === data.membreId);
-        if (index !== -1) {
-          // Crée une NOUVELLE liste en remplaçant l'ancien membre par le nouveau (ou en modifiant juste le rôle)
-          this.lastFiveMembers = [
-            ...this.lastFiveMembers.slice(0, index), // partie avant
-            { ...this.lastFiveMembers[index], role: data.newRole }, // membre mis à jour (au moins le rôle)
-            // Si l'API renvoyait tout l'objet membre `updatedMember`, on utiliserait ça:
-            // updatedMember,
-            ...this.lastFiveMembers.slice(index + 1) // partie après
-          ];
-          console.log("Liste locale des membres mise à jour.");
-          this.cdr.detectChanges(); // Rafraîchir l'affichage du tableau
-        }
-        // --- Fin Mise à jour locale ---
-
-        this.closeMemberDetailModal(); // Ferme la modale
-      },
-      error: (error) => { // L'appel API a échoué
-        console.error("Erreur lors de la mise à jour du rôle:", error);
-        // Affiche le message d'erreur venant du service (qui l'a reçu de l'API)
-        this.notification.show(error.message || "Erreur inconnue lors de la mise à jour.", "error");
-        // On ne ferme PAS la modale ici, l'utilisateur peut réessayer.
-      }
-    });
-  }
-
-  /** Fonction appelée quand la modale membre émet (close) */
-  closeMemberDetailModal(): void {
-    console.log("Fermeture modale détails membre.");
-    this.isRoleModalVisible = false; // Cache la modale
-    this.selectedMemberForRoleModal = null; // Oublie le membre sélectionné
-    // Pas besoin de detectChanges ici si la fermeture est initiée par un clic (déjà détecté par Angular)
-    // Mais ça ne fait pas de mal si on veut être sûr:
-    // this.cdr.detectChanges();
-  }
 
   // --- Gestion des Événements (Placeholder) ---
 
