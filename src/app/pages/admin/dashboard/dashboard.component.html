@@ -69,7 +69,7 @@
           <th>ID</th>
           <th>Nom et Prénom</th>
           <th>Date de Naissance</th>
-          <th>Date d'Inscription</th>
+<!--          <th>Date d'Inscription</th>-->
           <th>Adresse</th>
           <th>Téléphone</th>
           <th>Email</th>
@@ -87,8 +87,10 @@
 
     <!-- Prochains événements -->
     <div class="table-container">
+      <div class="header-event">
       <h3>Prochains événements</h3>
       <app-create-event-button (createClicked)="openCreateEventModal()"></app-create-event-button>
+      </div>
       <table class="full-width-table">
         <thead>
         <tr>

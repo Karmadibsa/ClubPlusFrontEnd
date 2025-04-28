@@ -5,7 +5,6 @@ import { Categorie } from './categorie'; // Assurez-vous que ce chemin est corre
 import { ReservationStatus } from './reservationstatus'; // Assurez-vous que ce chemin est correct
 
 export interface Reservation {
-  qrcodeurl: string;
   id: number;
   reservationUuid: string;
   membre: Partial<Membre>; // Utilisez Partial si vous n'avez pas tous les détails du membre

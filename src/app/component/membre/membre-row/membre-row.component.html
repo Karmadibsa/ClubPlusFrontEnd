@@ -2,8 +2,8 @@
 <td>{{ membre.id }}</td>
 <td>{{ membre.nom }} {{ membre.prenom }}</td>
 <td>{{ membre.date_naissance | date:'dd/MM/yyyy' }}</td>
-<td>{{ membre.date_inscription | date:'dd/MM/yyyy' }}</td>
-<td>{{ membre.numero_voie }} {{ membre.rue }}, {{ membre.codepostal }} {{ membre.ville }}</td>
+<!--<td>{{ membre.date_inscription | date:'dd/MM/yyyy' }}</td>-->
+<td>{{ membre.ville }}</td>
 <td>{{ membre.telephone || 'N/A' }}</td> <!-- Afficher N/A si le téléphone est null/vide -->
 <td>{{ membre.email }}</td>
 <td>{{ membre.role }}</td>

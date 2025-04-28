@@ -19,27 +19,34 @@
       </thead>
       <tbody>
       <!-- Utilisation du composant reservation-row -->
+        @for (reservation of reservations ; track reservation.id) {
       <tr app-reservation-row
-          *ngFor="let reservation of reservations"
           [reservation]="reservation"
           (openQrModal)="openQrModal($event)"
           (generatePDF)="generatePDF($event)"
-          (deleteReservation)="onDeleteReservation($event)">
+          (deleteReservation)="onCancelReservation($event)">
       </tr>
+        }
       </tbody>
     </table>
 
     <!-- Zone cachée pour générer les QR codes -->
     <div style="display: none;">
-      <div *ngFor="let reservation of reservations">
-        <qrcode
-          [qrdata]="reservation.qrcodeurl"
-          [width]="256"
-          [errorCorrectionLevel]="'M'"
-          (qrCodeURL)="onChangeURL($event, reservation)"
-          id="qr-code-{{reservation.id}}">
-        </qrcode>
+      @for ( reservation of reservations; track reservation.id) {
+      <div>
+
+
+        @if (reservation?.qrcodeData) {
+          <qrcode
+            [qrdata]="reservation.qrcodeData ?? ''"
+            [width]="256"
+            [errorCorrectionLevel]="'M'"
+            (qrCodeURL)="onChangeURL($event, reservation)"
+            id="qr-code-{{reservation.id}}">
+          </qrcode>
+        }
       </div>
+      }
     </div>
   </div>
 
@@ -47,14 +54,15 @@
 <!-- Composant modal pour afficher le QR code -->
 <app-qr-code-modal
   [isOpen]="isModalOpen"
-  [qrData]="selectedTicket?.qrcodeurl || ''"
+  [qrData]="selectedTicket?.qrcodeData || ''"
   [ticketInfo]="selectedTicket"
   (closeModal)="closeQrModal()">
 </app-qr-code-modal>
 
 <!-- Template pour le PDF - initialement caché mais correctement structuré -->
 <div id="pdf-content" style="display: none; width: 210mm; padding: 10mm;">
-  <div class="pdf-container" *ngIf="selectedTicket">
+  @if (selectedTicket){
+  <div class="pdf-container">
     <div class="header" style="text-align: center; margin-bottom: 20px;">
       <h1 style="font-size: 24px; color: #333;">Votre billet</h1>
     </div>
@@ -66,13 +74,16 @@
       <p><strong>Nom:</strong> {{ selectedTicket.membre?.prenom }} {{ selectedTicket.membre?.nom }}</p>
       <!-- QR code pour le PDF -->
       <div class="qr-code" style="text-align: center; margin-top: 20px;">
-        <qrcode
-          [qrdata]="selectedTicket.qrcodeurl"
-          [width]="200"
-          [errorCorrectionLevel]="'M'">
-        </qrcode>
+        @if (selectedTicket?.qrcodeData) {
+          <qrcode
+            [qrdata]="selectedTicket?.qrcodeData ?? ''"
+            [width]="200"
+            [errorCorrectionLevel]="'M'">
+          </qrcode>
+        }
       </div>
     </div>
   </div>
+  }
 </div>
 

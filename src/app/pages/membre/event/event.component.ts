@@ -2,11 +2,13 @@ import {Component, inject} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {
   EventCardComponent
-} from "../../../component/event/calendar/eventcard.component";
+} from "../../../component/event/eventcard/eventcard.component";
 import {NgForOf} from "@angular/common";
 import {LucideAngularModule} from "lucide-angular";
 import {SidebarComponent} from '../../../component/navigation/sidebar/sidebar.component';
 import {HttpClient} from '@angular/common/http';
+import {Evenement} from '../../../model/evenement';
+import {EventService} from '../../../service/event.service';
 
 @Component({
   selector: 'app-event',
@@ -21,11 +23,12 @@ import {HttpClient} from '@angular/common/http';
   styleUrls: ['./event.component.scss']
 })
 export class EventComponent {
+  private eventService = inject(EventService)
   http = inject(HttpClient)
-  events: Event[] = []
+  events: Evenement[] = []
 
   ngOnInit() {
-    this.http.get<Event[]>("http://localhost:8080/api/events")
+    this.eventService.getAllEvents()
       .subscribe(listeevents => this.events = listeevents)
   }
 

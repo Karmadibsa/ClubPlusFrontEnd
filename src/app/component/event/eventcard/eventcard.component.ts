@@ -5,6 +5,7 @@ import {LucideAngularModule} from 'lucide-angular';
 import {MatDialog} from '@angular/material/dialog';
 import {HttpClient} from '@angular/common/http';
 import {ReservationModalComponent} from '../reservation-modal/reservation-modal.component';
+import {Evenement} from '../../../model/evenement';
 
 @Component({
   selector: 'app-event-card',

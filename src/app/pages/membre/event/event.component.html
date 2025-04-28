@@ -7,18 +7,13 @@
   <h1 class="page-title">Les événements de mon club</h1>
 
 </div>
-  <!--  <app-filter-event-->
-  <!--    [events]="allEvents"-->
-  <!--    (filteredEventsChange)="handleFilteredEvents($event)"-->
-  <!--  ></app-filter-event>-->
 
   <div class="event-grid">
     <!-- Utilisation du composant EventCard -->
-    <app-event-card
-      *ngFor="let event of events"
-      [event]="event"
-    >
-    </app-event-card>
+    @for (event of events; track event.id) {
+      <app-event-card [event]="event"></app-event-card>
+    }
+
 
   </div>
 </div>

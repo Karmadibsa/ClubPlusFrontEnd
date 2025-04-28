@@ -6,7 +6,13 @@
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
   border-left: solid var(--main-orange) 2px;
 }
-
+.header-event {
+  text-align: center;
+  margin-bottom: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
