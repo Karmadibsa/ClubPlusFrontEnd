@@ -14,6 +14,7 @@ import {LoginComponent} from './pages/public/login/login.component';
 import {connecteGuard} from './service/security/connecte.guard';
 import {managerGuard} from './service/security/manager.guard';
 import {AmisComponent} from './pages/membre/amis/amis.component';
+import {NotationComponent} from './pages/membre/notation/notation.component';
 
 
 
@@ -36,6 +37,11 @@ export const routes: Routes = [
   {
     path: "amis",
     component: AmisComponent,
+    canActivate: [connecteGuard]
+  },
+  {
+    path: "notation",
+    component: NotationComponent,
     canActivate: [connecteGuard]
   },
   {

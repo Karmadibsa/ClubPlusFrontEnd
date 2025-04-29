@@ -2,9 +2,9 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {environment} from '../../environments/environments';
-import {catchError} from 'rxjs/operators';
+import {catchError, tap} from 'rxjs/operators';
 import {Evenement, CreateEventPayload, UpdateEventPayload} from '../model/evenement';
-import { Categorie } from '../model/categorie';
+import {EventRatingPayload, Notation} from '../model/notation';
 
 
 @Injectable({
@@ -81,6 +81,35 @@ export class EventService {
     // Fait l'appel GET avec les paramètres
     return this.http.get<Evenement[]>(this.apiUrl).pipe(
       catchError(this.handleError) // Gestion d'erreur générique du service
+    );
+  }
+
+  /**
+   * Récupère les événements participés (statut UTILISE) non encore notés par l'utilisateur courant.
+   * GET /api/events/notations/me/participated-events-unrated
+   */
+  getUnratedParticipatedEvents(): Observable<Evenement[]> {
+    // Utilise l'URL backend finale confirmée
+    const url = `${this.apiUrl}/notations/me/participated-events-unrated`;
+    console.log(`EventService: Appel GET ${url}`);
+    // Pas de HttpParams nécessaires pour ce nouvel endpoint
+    return this.http.get<Evenement[]>(url).pipe(
+      tap(events => console.log('EventService: Événements non notés reçus', events)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Soumet la notation pour un événement spécifique.
+   * POST /api/events/{eventId}/notations
+   */
+  // Le backend retourne l'objet Notation créé
+  submitEventRating(eventId: number, rating: EventRatingPayload): Observable<Notation> {
+    const url = `${this.apiUrl}/${eventId}/notations`;
+    console.log(`EventService: Appel POST ${url} avec notation`, rating);
+    return this.http.post<Notation>(url, rating).pipe( // Attend un objet Notation en retour
+      tap(response => console.log('EventService: Notation créée reçue', response)),
+      catchError(this.handleError)
     );
   }
 

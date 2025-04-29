@@ -1,0 +1,230 @@
+/* Importez vos variables globales si ce n'est pas déjà fait globalement */
+/* @import 'path/to/your/variables'; */
+
+/* Appliquer le style de base du conteneur principal des autres pages */
+.container {
+  padding: 20px;
+  // La marge suppose une sidebar fixe d'environ 17% de largeur
+  // Adaptez ce pourcentage si votre sidebar a une largeur différente
+  margin: 2% 2% 2% 17%;
+  background-color: var(--bg-light-gray); // Fond gris clair comme les autres pages
+  border-radius: 12px; // Rayon cohérent
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05); // Ombre cohérente
+  border-left: solid var(--main-orange) 2px; // Bordure orange distinctive
+}
+
+// Le container-page peut ne plus être nécessaire si le margin gère le positionnement
+// S'il est conservé, il assure juste que le contenu prend le reste de la place
+.container-page {
+  flex: 1;
+  // display: flex, justify-content, align-items ne sont plus utiles si .container a une marge
+}
+
+/* Harmonisation de l'en-tête */
+.header {
+  text-align: center;
+  margin-bottom: 30px; // Espace cohérent (peut être 25px comme l'autre CSS)
+}
+
+.header h1 {
+  font-size: 2rem; // Taille cohérente avec l'autre CSS
+  color: var(--main-blue);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px; // Espace sous le titre H1
+}
+
+.header h1 i { // Style de l'icône dans le H1
+  color: var(--main-orange);
+  // Assurez-vous que la taille est appropriée, les icônes lucide peuvent hériter la taille/couleur
+}
+
+.header-subtitle {
+  display: flex;
+  font-size: 1.1em;
+  color: var(--text-medium); // Variable pour le texte medium
+  font-style: italic;
+  margin-top: 0; // Enlève la marge par défaut du <p> si nécessaire
+}
+
+/* Style du sélecteur d'événement (harmonisé) */
+.event-selector {
+  margin-bottom: 30px;
+  padding: 15px;
+  background-color: white; // Fond blanc pour le distinguer sur le fond gris clair
+  border-radius: 8px; // Rayon cohérent (var(--border-radius))
+  border: 1px solid var(--border-color); // Bordure légère
+}
+
+.event-selector label {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--text-dark); // Utiliser la variable
+  font-weight: 600; // Police en gras comme dans l'autre CSS
+}
+
+.event-select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px; // Rayon légèrement plus petit pour les inputs
+  border: 1px solid var(--border-color); // Utiliser la variable
+  font-family: var(--font-family);
+  font-size: 1rem; // Taille de police standard
+  background-color: white;
+  cursor: pointer;
+  appearance: none; // Enlève l'apparence par défaut
+  // Flèche déroulante personnalisée (optionnel, mais cohérent si utilisé ailleurs)
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%231a5f7a' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 20px;
+
+  &:focus {
+    outline: none;
+    border-color: var(--main-blue); // Couleur focus cohérente
+    box-shadow: 0 0 0 2px var(--input-focus-shadow); // Ombre focus cohérente (si définie)
+  }
+}
+
+/* Style de la catégorie de notation */
+.rating-category {
+  margin-bottom: 30px; // Espace avant le bouton
+  // Plus besoin de fond gris, car le container l'est déjà
+  // Plus besoin de padding global ici, chaque item aura son propre style
+}
+
+.rating-category h2 {
+  font-size: 1.5rem; // Légèrement plus petit que le H1 principal
+  font-weight: 600; // Cohérent
+  color: var(--main-blue); // Utiliser la variable
+  margin-bottom: 20px; // Espace sous le titre H2
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--border-color); // Soulignement léger
+  padding-bottom: 10px; // Espace sous le soulignement
+}
+
+.rating-category h2 i {
+  color: var(--main-orange); // Utiliser la variable
+}
+
+/* Style pour chaque app-itemnotation (à appliquer dans itemnotation.component.scss ou via ::ng-deep si nécessaire) */
+/* Assumons que le container racine dans itemnotation est .rating-container */
+/* Si vous ne pouvez pas modifier itemnotation.scss, utilisez ::ng-deep avec prudence */
+// ::ng-deep app-itemnotation .rating-container { // Exemple avec ::ng-deep (moins idéal)
+.rating-container { // Idéalement, mettre ce style dans itemnotation.component.scss
+  background-color: white; // Fond blanc pour chaque item
+  padding: 20px;
+  border-radius: var(--border-radius, 8px); // Variable ou valeur cohérente
+  margin-bottom: 20px; // Espace entre les items
+  border: 1px solid var(--border-color); // Bordure légère pour délimiter
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); // Ombre subtile
+}
+
+.rating-title { // Titre dans app-itemnotation
+  font-weight: 600; // Cohérent
+  margin-bottom: 15px;
+  color: var(--main-blue); // Variable
+  font-size: 1.1rem; // Taille de police pour les titres de section
+}
+
+.stars-wrapper { // Container des étoiles
+  margin-bottom: 10px; // Espace avant la note texte
+}
+
+.star { // Style de chaque étoile
+  cursor: pointer;
+  padding: 2px 4px; // Ajuster l'espacement
+  transition: transform 0.2s ease, color 0.2s ease;
+  font-size: 1.8rem; // Taille des étoiles
+  color: #ccc; // Couleur par défaut (gris) - peut être une variable --star-inactive-color
+  display: inline-block; // Assurer l'espacement correct
+
+  &.filled {
+    color: var(--main-orange); // Utiliser la variable pour l'étoile remplie
+  }
+
+  &:hover {
+    transform: scale(1.1); // Effet au survol
+  }
+}
+
+.rating-value { // Affichage "Note actuelle : X/5"
+  margin-top: 10px;
+  font-weight: 500; // Cohérent
+  text-align: center;
+  color: var(--text-medium); // Utiliser la variable
+  font-size: 0.9rem; // Légèrement plus petit
+  padding: 5px 10px;
+  border-radius: 4px;
+  background-color: transparent; // Plus besoin de fond spécifique si l'item est blanc
+  width: fit-content;
+  margin: 10px auto 0;
+}
+
+/* Harmonisation du bouton de soumission */
+.btn {
+  // Styles du CSS cible
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center; // Centrer le contenu du bouton
+  gap: 8px;
+  width: 100%; // Prend toute la largeur dans ce contexte
+  margin-top: 20px; // Espace au-dessus du bouton
+}
+
+.btn-primary {
+  background-color: var(--main-orange); // Utiliser la variable
+  color: white; // Utiliser var(--main-white) si définie
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Ombre cohérente au survol
+}
+
+.btn:disabled { // Style pour le bouton désactivé
+  background-color: var(--bg-medium-gray); // Fond gris
+  color: var(--text-light); // Texte plus clair
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Styles pour indicateur de chargement et message "aucun événement" (optionnel) */
+.loading-indicator,
+.no-events {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-medium);
+  font-style: italic;
+}
+
+.loading-indicator lucide-icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+// Classe pour l'animation de rotation (si non fournie par une lib comme Tailwind)
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
