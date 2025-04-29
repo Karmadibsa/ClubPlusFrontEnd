@@ -133,4 +133,59 @@
 <!--      </form>-->
     </div>
 }
+
+  <!-- ZONE DANGEREUSE - Suppression de compte -->
+  @if (!isLoading) {
+    <div class="account-section danger-zone card-section">
+      <div class="section-header">
+        <h2><lucide-icon name="triangle-alert"></lucide-icon> Zone Dangereuse</h2>
+      </div>
+      <div class="card-content">
+        <p>Supprimer votre compte est une action <strong>irréversible</strong>. Toutes vos données, réservations, amitiés et informations seront définitivement anonymisées.</p>
+
+        @if (!showDeleteConfirmation) {
+          <!-- Bouton pour initier la suppression -->
+          <button type="button" class="btn btn-danger" (click)="initiateAccountDeletion()">
+            Supprimer mon compte
+          </button>
+        } @else {
+          <!-- Section de Confirmation -->
+          <div class="confirmation-section">
+            <p class="confirmation-prompt">Pour confirmer la suppression définitive de votre compte, veuillez taper la phrase suivante exactement comme indiqué ci-dessous :</p>
+            <p class="confirmation-phrase"><strong>{{ requiredConfirmationPhrase }}</strong></p>
+
+            <div class="form-group">
+              <label for="delete-confirm-input">Tapez la phrase ici :</label>
+              <!-- Utilisation de [(ngModel)] nécessite FormsModule -->
+              <input type="text"
+                     id="delete-confirm-input"
+                     class="form-control"
+                     [(ngModel)]="deleteConfirmationInput"
+                     placeholder="Recopiez la phrase de confirmation"
+                     autocomplete="off"
+              />
+            </div>
+
+            <div class="confirmation-actions">
+              <!-- Bouton Annuler -->
+              <button type="button" class="btn btn-secondary" (click)="cancelAccountDeletion()" [disabled]="isDeletingAccount">
+                Annuler
+              </button>
+              <!-- Bouton Confirmer la suppression -->
+              <button type="button"
+                      class="btn btn-danger"
+                      (click)="confirmAccountDeletion()"
+                      [disabled]="isDeletingAccount || deleteConfirmationInput !== requiredConfirmationPhrase">
+                @if (!isDeletingAccount) {
+                  <span><lucide-icon name="trash-2"></lucide-icon> Confirmer la suppression</span>
+                } @else {
+                  <span><lucide-icon name="loader" class="animate-spin"></lucide-icon> Suppression en cours...</span>
+                }
+              </button>
+            </div>
+          </div>
+        } <!-- Fin du @else (confirmation visible) -->
+      </div> <!-- Fin card-content -->
+    </div> <!-- Fin danger-zone -->
+  } <!-- Fin du @if (!isLoading) pour la danger-zone -->
   </div>

@@ -1,7 +1,15 @@
 // ----- IMPORTATIONS -----
-import { Component, inject, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Pour @if etc.
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; // ReactiveFormsModule requis pour [formGroup]
+import {
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  OnDestroy,
+  LOCALE_ID
+} from '@angular/core';
+import {CommonModule, DatePipe, formatDate} from '@angular/common'; // Pour @if etc.
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms'; // ReactiveFormsModule requis pour [formGroup]
 import { Subscription } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -17,6 +25,8 @@ import { Membre } from '../../../model/membre'; // L'interface Membre
 
 // Autres
 import { LucideAngularModule } from 'lucide-angular';
+import {Router} from '@angular/router';
+import {AuthService} from '../../../service/security/auth.service';
 
 @Component({
   selector: 'app-moncompte',
@@ -25,13 +35,19 @@ import { LucideAngularModule } from 'lucide-angular';
     CommonModule,
     ReactiveFormsModule, // Important pour utiliser [formGroup] et formControlName
     SidebarComponent,
-    LucideAngularModule
+    DatePipe,
+    LucideAngularModule,
+    FormsModule
   ],
   templateUrl: './moncompte.component.html',
   styleUrls: ['./moncompte.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush // Active OnPush
 })
 export class MonCompteComponent implements OnInit, OnDestroy {
+  private locale = inject(LOCALE_ID); // Injecter LOCALE_ID pour le formatage automatique
+
+  private router = inject(Router); // Injecter Router
+  private authService = inject(AuthService); // Injecter AuthService
   // --- État du Composant ---
   infoForm!: FormGroup;
   passwordForm!: FormGroup; // On ignore pour l'instant
@@ -50,6 +66,14 @@ export class MonCompteComponent implements OnInit, OnDestroy {
   private notification = inject(NotificationService);
   private cdr = inject(ChangeDetectorRef);
   // private authService = inject(AuthService); // Pas besoin si on ne gère pas le MDP ici
+  requiredConfirmationPhrase = ''; // Plus de readonly, sera défini dynamiquement
+
+  // --- État pour la suppression de compte ---
+  showDeleteConfirmation = false;
+  deleteConfirmationInput = '';
+  // Définir la phrase exacte requise
+  isDeletingAccount = false;
+  private deleteSubscription: Subscription | null = null; // Pour la suppression
 
   ngOnInit(): void {
     this.initializeInfoForm();
@@ -61,6 +85,7 @@ export class MonCompteComponent implements OnInit, OnDestroy {
     // Nettoyage des abonnements
     this.infoSubscription?.unsubscribe();
     this.updateInfoSubscription?.unsubscribe();
+    this.deleteSubscription?.unsubscribe(); // Nettoyer l'abonnement de suppression
     // this.changePasswordSubscription?.unsubscribe(); // Ignoré pour l'instant
   }
 
@@ -171,6 +196,56 @@ export class MonCompteComponent implements OnInit, OnDestroy {
       }
     });
   }
+  /** Affiche la section de confirmation de suppression */
+  initiateAccountDeletion(): void {
+      const today = new Date();
+      // Utiliser formatDate directement
+      // Le 3ème argument est le locale ID (ex: 'fr-FR'), le 4ème le fuseau horaire (optionnel)
+      const formattedDate = formatDate(today, 'dd/MM/yyyy', this.locale);
+      this.requiredConfirmationPhrase = `SUPPRIMER MON COMPTE LE ${formattedDate}`;
+
+      this.showDeleteConfirmation = true;
+      this.deleteConfirmationInput = '';
+      this.cdr.detectChanges();
+    }
+
+  /** Cache la section de confirmation */
+  cancelAccountDeletion(): void {
+    this.showDeleteConfirmation = false;
+    this.deleteConfirmationInput = '';
+    this.requiredConfirmationPhrase = ''; // Optionnel: vider la phrase
+    this.cdr.detectChanges();
+  }
+
+  /** Vérifie la phrase dynamique et lance la suppression */
+  confirmAccountDeletion(): void {
+    // Comparaison sensible à la casse (ou utiliser .toUpperCase() des deux côtés si insensible)
+    if (this.deleteConfirmationInput !== this.requiredConfirmationPhrase) {
+      this.notification.show('La phrase de confirmation ne correspond pas.', 'warning');
+      return;
+    }
+    if (this.isDeletingAccount) return;
+
+    this.isDeletingAccount = true;
+    this.cdr.detectChanges();
+
+    this.deleteSubscription = this.membreService.deleteCurrentUserProfile().subscribe({
+      next: () => {
+        this.isDeletingAccount = false;
+        this.notification.show('Votre compte a été supprimé avec succès.', 'valid');
+        this.authService.deconnexion();
+        this.router.navigate(['/login']); // Ou autre page d'accueil post-connexion
+        this.cdr.detectChanges();
+      },
+      error: (err: Error) => {
+        this.isDeletingAccount = false;
+        this.notification.show(`Erreur lors de la suppression du compte: ${err.message}`, 'error');
+        console.error("Erreur suppression compte:", err);
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
 
   // // Change le mot de passe (IGNORÉ POUR L'INSTANT)
   // changePassword(): void { /* ... */ }

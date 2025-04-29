@@ -95,6 +95,18 @@ export class MembreService {
     );
   }
 
+  /**
+   * Supprime le profil de l'utilisateur actuellement connecté.
+   * @returns Observable<void> - Ne retourne rien en cas de succès (généralement 204 No Content).
+   */
+  deleteCurrentUserProfile(): Observable<void> {
+    const url = `${this.apiUrl}/profile`; // L'URL pour la suppression
+    console.log(`MembreService: Appel DELETE ${url}`);
+    return this.http.delete<void>(url).pipe( // Utilisation de DELETE, attend void en retour
+      catchError(this.handleError)
+    );
+  }
+
   // Gestionnaire d'erreur générique (similaire à ClubService)
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Une erreur inconnue est survenue !';
