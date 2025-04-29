@@ -1,0 +1,183 @@
+<div class="sidebar">
+  <app-sidebar></app-sidebar>
+</div>
+
+<div class="container">
+  <div class="header"> <!-- Header est maintenant un conteneur flex -->
+    <h1>Gestion des Amis</h1>
+
+    <!-- La section code ami devient le bouton cliquable -->
+         @if (currentUser && currentUser.codeAmi) {
+    <div class="current-user-friend-code"
+         (click)="copyCode(currentUser.codeAmi)"
+         title="Copier votre code ami : {{ currentUser.codeAmi }}"
+         role="button" tabindex="0"  > <!-- Ajout role et tabindex pour accessibilité -->
+      <span class="label">Votre Code Ami</span> <!-- Ajout classe label -->
+      <code class="code-display">{{ currentUser.codeAmi }}</code> <!-- Ajout classe code-display -->
+      <!-- Icône directement dans le bouton -->
+      <lucide-icon name="copy" size="16" class="copy-icon"></lucide-icon>
+      <!-- L'ancien bouton interne est supprimé -->
+    </div>
+    }
+  </div>
+
+
+  <!-- Zone d'Ajout par Code -->
+  <div class="add-by-code-container" style="margin-bottom: 20px;">
+    <h2>Ajouter un ami par code</h2>
+    <input type="text" [(ngModel)]="friendCodeToAdd" placeholder="Entrez le code ami..." (keyup.enter)="addFriendByCode()" [disabled]="isLoading">
+    <!-- Bouton Ajouter avec icône -->
+    <button (click)="addFriendByCode()" [disabled]="isLoading">
+      <lucide-icon name="user-plus" size="16" class="icon"></lucide-icon>
+      <span>Ajouter</span>
+    </button>
+    <!-- Indicateur de chargement optionnel -->
+    @if (isLoading) {
+      <p>Traitement en cours...</p>
+    }
+  </div>
+
+  <!-- Onglets de navigation (icônes optionnelles ajoutées) -->
+  <div class="tabs" style="margin-bottom: 20px;">
+    <button (click)="setActiveTab('friends')" [class.active]="activeTab === 'friends'" [disabled]="isLoading">
+      <lucide-icon name="users" size="16" class="icon"></lucide-icon>
+      <span>Mes Amis</span>
+    </button>
+    <button (click)="setActiveTab('received')" [class.active]="activeTab === 'received'" [disabled]="isLoading">
+      <lucide-icon name="mail-check" size="16" class="icon"></lucide-icon>
+      <span>Demandes Reçues ({{ receivedRequests.length }})</span>
+    </button>
+    <button (click)="setActiveTab('sent')" [class.active]="activeTab === 'sent'" [disabled]="isLoading">
+      <lucide-icon name="send" size="16" class="icon"></lucide-icon>
+      <span>Demandes Envoyées ({{ sentRequests.length }})</span>
+    </button>
+  </div>
+
+  <!-- Contenu dynamique basé sur l'onglet actif -->
+
+  <!-- Onglet Mes Amis -->
+  @if (activeTab === 'friends') {
+    <div class="table-container">
+      <h2>Mes Amis</h2>
+      <div class="friend-search-container">
+        <lucide-icon name="search" size="18" class="search-icon"></lucide-icon>
+        <input type="text"
+               [(ngModel)]="friendSearchTerm"
+               (input)="filterFriendsList()"
+               placeholder="Rechercher un ami par nom ou prénom..."
+               class="friend-search-input">
+      </div>
+      @if (isLoading && !friends.length) { <p>Chargement des amis...</p> }
+      @else {
+        <table class="full-width-table">
+          <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Actions</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (friend of filteredFriends; track friend.id) {
+              <tr>
+                <td> {{ friend.nom }}</td>
+                <td>{{ friend.prenom }}</td>
+                <td>
+                  <!-- Bouton Retirer avec icône et classe -->
+                  <button (click)="removeFriend(friend.id)" [disabled]="isLoading" class="remove-btn">
+                    <lucide-icon name="user-minus" size="14" class="icon"></lucide-icon>
+                    <span>Retirer</span>
+                  </button>
+                </td>
+              </tr>
+            } @empty {
+              @if (!isLoading) {
+                <tr class="empty-message-row"> <td colspan="2">Vous n'avez pas encore d'amis.</td> </tr>
+              }
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  }
+
+  <!-- Onglet Demandes Reçues -->
+  @if (activeTab === 'received') {
+    <div class="table-container">
+      <h2>Demandes d'ami Reçues</h2>
+      @if (isLoading && !receivedRequests.length) { <p>Chargement des demandes...</p> }
+      @else {
+        <table class="full-width-table">
+          <thead>
+          <tr>
+            <th>De la part de</th>
+            <th>Actions</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (request of receivedRequests; track request.id) {
+              <tr>
+                <td>{{ request.envoyeur?.prenom }} {{ request.envoyeur?.nom }}</td>
+                <td>
+                  <!-- Bouton Accepter avec icône et classe -->
+                  <button (click)="acceptFriendRequest(request.id)" [disabled]="isLoading" class="accept-btn">
+                    <lucide-icon name="user-check" size="14" class="icon"></lucide-icon>
+                    <span>Accepter</span>
+                  </button>
+                  <!-- Bouton Refuser avec icône et classe -->
+                  <button (click)="rejectFriendRequest(request.id)" style="margin-left: 5px;" [disabled]="isLoading" class="reject-btn">
+                    <lucide-icon name="user-x" size="14" class="icon"></lucide-icon>
+                    <span>Refuser</span>
+                  </button>
+                </td>
+              </tr>
+            } @empty {
+              @if (!isLoading) {
+                <tr class="empty-message-row"> <td colspan="2">Aucune demande d'ami reçue.</td> </tr>
+              }
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  }
+
+  <!-- Onglet Demandes Envoyées -->
+  @if (activeTab === 'sent') {
+    <div class="table-container">
+      <h2>Demandes d'ami Envoyées</h2>
+      @if (isLoading && !sentRequests.length) { <p>Chargement des demandes...</p> }
+      @else {
+        <table class="full-width-table">
+          <thead>
+          <tr>
+            <th>Envoyée à</th>
+            <th>Statut</th>
+            <th>Action</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (request of sentRequests; track request.id) {
+              <tr>
+                <td>{{ request.recepteur?.prenom }} {{ request.recepteur?.nom }}</td>
+                <td>{{ request.statut }}</td> <!-- Affichage du statut réel -->
+                <td>
+                  <!-- Bouton Annuler avec icône et classe -->
+                  <button (click)="cancelSentFriendRequest(request.id)" [disabled]="isLoading" class="cancel-btn">
+                    <lucide-icon name="ban" size="14" class="icon"></lucide-icon>
+                    <span>Annuler</span>
+                  </button>
+                </td>
+              </tr>
+            } @empty {
+              @if (!isLoading) {
+                <tr class="empty-message-row"> <td colspan="3">Aucune demande d'ami en attente envoyée.</td> </tr>
+              }
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  }
+
+</div>

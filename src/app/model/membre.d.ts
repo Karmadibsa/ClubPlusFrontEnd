@@ -13,4 +13,5 @@ export interface Membre {
   telephone: string;
   email: string;
   role: RoleType;
+  codeAmi?: string;
 }

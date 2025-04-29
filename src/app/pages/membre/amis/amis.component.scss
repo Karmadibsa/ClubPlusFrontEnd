@@ -1,0 +1,335 @@
+// --- Styles Généraux du Composant ---
+:host {
+  display: block;
+}
+
+// --- Container Principal ---
+.container {
+  padding: var(--spacing-lg, 24px);
+  margin: 2% 2% 2% 17%;
+  background-color: var(--bg-light-gray, #f8f9fa);
+  border-radius: var(--border-radius, 8px);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+  border-left: solid var(--main-orange, #f26122) 2px;
+}
+
+// --- Header (Flexbox appliqué ici) ---
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xl, 32px);
+  gap: var(--spacing-lg, 24px);
+
+  h1 {
+    font-size: 2rem;
+    color: var(--main-blue, #1a5f7a);
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  // Style du "Bouton" Code Ami Utilisateur (dans le header)
+  .current-user-friend-code {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm, 8px);
+    padding: var(--spacing-xs, 4px) var(--spacing-md, 16px);
+    background-color: var(--main-blue, #1a5f7a);
+    color: var(--main-white, #ffffff);
+    border-radius: var(--border-radius, 8px);
+    cursor: pointer;
+    transition: var(--transition-standard, all 0.3s ease);
+    white-space: nowrap;
+    border: 1px solid transparent;
+
+    .label {
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+
+    .code-display {
+      font-family: monospace;
+      background-color: rgba(var(--main-white-rgb, 255, 255, 255), 0.15);
+      padding: 2px var(--spacing-xs, 4px);
+      border-radius: calc(var(--border-radius, 8px) / 2.5);
+      font-weight: bold;
+      color: var(--main-white, #ffffff);
+    }
+
+    .copy-icon {
+      color: var(--main-white, #ffffff);
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+      display: block;
+    }
+
+    &:hover {
+      background-color: var(--main-blue-dark, #124a5f);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      .copy-icon { opacity: 1; }
+    }
+
+    &:focus-visible {
+      outline: none;
+      border-color: var(--main-orange, #f26122);
+      box-shadow: 0 0 0 3px var(--input-focus-shadow, rgba(242, 97, 34, 0.25));
+    }
+
+    &:active {
+      transform: scale(0.98);
+      background-color: var(--main-blue-darker, #0e3c4d);
+    }
+  }
+}
+
+
+// --- Zone d'Ajout par Code ---
+.add-by-code-container {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md, 16px);
+  margin-bottom: var(--spacing-xl, 32px);
+
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--text-dark, #333);
+    white-space: nowrap;
+  }
+
+  input[type="text"] {
+    flex-grow: 1;
+    padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+    border: 1px solid var(--border-color, #dee2e6);
+    border-radius: var(--border-radius, 8px);
+    font-size: 1rem;
+    transition: var(--transition-standard, all 0.3s ease);
+
+    &:focus {
+      outline: none;
+      border-color: var(--main-orange, #f26122);
+      box-shadow: 0 0 0 3px var(--input-focus-shadow, rgba(242, 97, 34, 0.25));
+    }
+
+    &:disabled {
+      background-color: var(--bg-medium-gray, #e9ecef);
+      cursor: not-allowed;
+    }
+  }
+
+  button { // Bouton "Ajouter"
+    padding: var(--spacing-sm, 8px) var(--spacing-lg, 24px);
+    background-color: var(--main-orange, #f26122);
+    color: var(--main-white, #ffffff);
+    border: none;
+    border-radius: var(--border-radius, 8px);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: var(--transition-standard, all 0.3s ease);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm, 8px);
+
+    &:hover:not(:disabled) {
+      opacity: 0.9;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    &:disabled {
+      background-color: var(--text-light, #999999);
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    .icon, lucide-icon { display: block; }
+  }
+
+  p { // Indicateur de chargement
+    margin: 0 0 0 var(--spacing-md, 16px);
+    color: var(--text-medium, #666);
+    font-style: italic;
+  }
+}
+
+// --- Onglets de Navigation ---
+.tabs {
+  display: flex;
+  gap: var(--spacing-sm, 8px);
+  margin-bottom: var(--spacing-xl, 32px);
+  border-bottom: 1px solid var(--border-color, #dee2e6);
+
+  button { // Boutons d'onglets
+    padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+    background-color: transparent;
+    color: var(--text-medium, #666);
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: var(--transition-standard, all 0.3s ease);
+    margin-bottom: -1px;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm, 8px);
+
+    &:hover:not(:disabled):not(.active) {
+      color: var(--text-dark, #333);
+    }
+
+    &.active {
+      color: var(--main-orange, #f26122);
+      border-bottom-color: var(--main-orange, #f26122);
+      font-weight: 600;
+    }
+
+    &:disabled {
+      color: var(--text-light, #999999);
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    .icon, lucide-icon { display: block; }
+  }
+}
+
+// --- Conteneurs de Tableaux ---
+.table-container {
+  margin-bottom: var(--spacing-xl, 32px);
+
+  h2 {
+    font-size: 1.5rem;
+    color: var(--main-blue, #1a5f7a);
+    margin-bottom: var(--spacing-md, 16px);
+    padding-bottom: var(--spacing-sm, 8px);
+    border-bottom: 1px solid var(--border-color, #dee2e6);
+  }
+
+  // Message "Chargement..."
+  p {
+    color: var(--text-medium, #666);
+    padding: var(--spacing-lg, 24px);
+    text-align: center;
+    font-style: italic;
+  }
+
+  // Ligne @empty
+  .empty-message-row td {
+    text-align: center;
+    color: var(--text-medium, #666);
+    padding: var(--spacing-lg, 24px);
+    font-style: italic;
+    background-color: transparent;
+  }
+}
+
+// --- Barre de Recherche Amis (Déplacée ici, au bon niveau) ---
+.friend-search-container {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+  margin-bottom: var(--spacing-md, 16px); // Espace avant la table
+  padding: var(--spacing-xs, 4px) var(--spacing-sm, 8px);
+  background-color: var(--main-white, #ffffff);
+  border: 1px solid var(--border-color, #dee2e6);
+  border-radius: var(--border-radius, 8px);
+
+  .search-icon {
+    color: var(--text-light, #999999);
+    flex-shrink: 0;
+    display: block;
+  }
+
+  .friend-search-input {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    padding: var(--spacing-xs, 4px) 0;
+    font-size: 0.95rem;
+    color: var(--text-dark, #333);
+
+    &::placeholder {
+      color: var(--text-light, #999999);
+      font-style: italic;
+    }
+  }
+
+  &:focus-within {
+    border-color: var(--main-orange, #f26122);
+    box-shadow: 0 0 0 3px var(--input-focus-shadow, rgba(242, 97, 34, 0.25));
+    .search-icon {
+      color: var(--main-orange, #f26122);
+    }
+  }
+}
+
+
+// --- Styles Communs pour les Tableaux ---
+table.full-width-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: var(--spacing-md, 16px);
+    text-align: left;
+    border-bottom: 1px solid var(--border-color, #dee2e6);
+    vertical-align: middle;
+  }
+
+  th {
+    background-color: rgba(26, 95, 122, 0.05);
+    font-weight: 600;
+    color: var(--main-blue, #1a5f7a);
+  }
+
+  tbody tr {
+    transition: background-color 0.2s ease;
+
+    &:hover:not(.empty-message-row) {
+      background-color: var(--bg-medium-gray, #e9ecef);
+    }
+  }
+
+  // Styles pour les boutons d'action dans les tableaux
+  td button {
+    padding: var(--spacing-xs, 4px) var(--spacing-md, 16px);
+    border: none;
+    border-radius: var(--border-radius, 8px);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: var(--transition-standard, all 0.3s ease);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs, 4px);
+
+    &.accept-btn {
+      background-color: var(--secondary-green, #47b3a3);
+      color: var(--main-white, #ffffff);
+    }
+
+    &.reject-btn, &.cancel-btn, &.remove-btn {
+      background-color: var(--danger, #dc3545);
+      color: var(--main-white, #ffffff);
+    }
+
+    &:not(.accept-btn):not(.reject-btn):not(.cancel-btn):not(.remove-btn) {
+      background-color: var(--main-blue, #1a5f7a);
+      color: var(--main-white, #ffffff);
+    }
+
+    &:hover:not(:disabled) {
+      opacity: 0.85;
+    }
+
+    &:disabled {
+      background-color: var(--text-light, #999999);
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .icon, lucide-icon {
+      display: block;
+    }
+  }
+}

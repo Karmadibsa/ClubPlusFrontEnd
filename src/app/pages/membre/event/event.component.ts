@@ -16,7 +16,6 @@ import {EventService} from '../../../service/event.service';
   imports: [
     FormsModule,
     EventCardComponent,
-    NgForOf,
     LucideAngularModule,
     SidebarComponent,
   ],
