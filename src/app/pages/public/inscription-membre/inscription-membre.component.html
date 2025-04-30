@@ -102,18 +102,37 @@
     <div class="form-group">
       <label for="codeClub"><strong>Code du Club :</strong></label>
       <input type="text" id="codeClub" formControlName="codeClub" placeholder="Code d'accès du club" required />
-      <div *ngIf="memberRegistrationForm.get('codeClub')?.invalid && memberRegistrationForm.get('codeClub')?.touched" class="validation-error">
-        Le code du club est requis pour l'inscription.
-      </div>
+      @if (memberRegistrationForm.get('codeClub')?.invalid && memberRegistrationForm.get('codeClub')?.touched) {
+        <div class="validation-error">Le code du club est requis pour l'inscription.</div>
+      }
     </div>
     <div class="form-group">
       <label for="membre-password">Mot de passe :</label>
       <input type="password" id="membre-password" formControlName="password" placeholder="Créez un mot de passe" required />
-      <div *ngIf="memberRegistrationForm.get('password')?.invalid && memberRegistrationForm.get('password')?.touched" class="validation-error">
-        <span *ngIf="memberRegistrationForm.get('password')?.errors?.['required']">Mot de passe requis.</span>
-        <span *ngIf="memberRegistrationForm.get('password')?.errors?.['minlength']">Au moins 6 caractères requis.</span>
-      </div>
+      @if (memberRegistrationForm.get('password')?.invalid && memberRegistrationForm.get('password')?.touched) {
+        <div class="validation-error">
+          @if (memberRegistrationForm.get('password')?.errors?.['required']) {
+            <span>Mot de passe requis.</span>
+          }
+          <!-- Ajoutez d'autres @if pour minlength, pattern etc. si nécessaire -->
+        </div>
+      }
     </div>
+<div class="form-group">
+  <label for="membre-confirm-password">Confirmer le mot de passe :</label>
+  <input type="password" id="membre-confirm-password" formControlName="confirmPassword" placeholder="Retapez le mot de passe" required />
+  <!-- Utilisation de @if pour l'erreur de correspondance et le requis -->
+  @if (memberRegistrationForm.get('confirmPassword')?.touched) {
+    <div class="validation-error">
+      @if (memberRegistrationForm.errors?.['passwordMismatch']) {
+        <span>Les mots de passe ne correspondent pas.</span>
+      }
+      @if (memberRegistrationForm.get('confirmPassword')?.errors?.['required']) {
+        <span>La confirmation du mot de passe est requise.</span>
+      }
+    </div>
+  }
+</div>
 
     <!-- Bouton de Soumission -->
     <button type="submit" [disabled]="memberRegistrationForm.invalid || isLoading">

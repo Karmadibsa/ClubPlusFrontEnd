@@ -23,7 +23,6 @@
 }
 
 .account-header {
-  border-bottom: 2px solid var(--main-orange);
   padding-bottom: 15px;
   margin-bottom: 20px;
 }
@@ -237,7 +236,7 @@ input[type="date"]:focus {
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
   overflow: hidden;
-  border-top: 3px solid var(--main-blue);
+  border-top: 2px solid var(--main-blue);
 }
 
 .section-header {
@@ -275,4 +274,119 @@ input[type="date"]:focus {
   display: flex;
   justify-content: flex-end;
   padding-bottom: 5px;
+}
+
+.danger-zone {
+  border-left: 4px solid var(--danger, #dc3545); // Utiliser variable --danger si définie
+  margin-top: 30px; // Espacer des sections précédentes
+
+  .section-header h2 {
+    color: var(--danger, #dc3545); // Couleur du titre en rouge
+    lucide-icon { // Cibler l'icône dans le titre H2
+      color: var(--danger, #dc3545);
+    }
+  }
+
+  .card-content p {
+    margin-bottom: 15px;
+  }
+}
+
+// Style spécifique pour le bouton de suppression
+.btn-danger {
+  background-color: var(--danger, #dc3545);
+  color: white; // ou var(--main-white)
+
+  &:hover:not(:disabled) { // Ne pas appliquer l'effet hover si désactivé
+    background-color: darken(#dc3545, 10%); // Assombrir légèrement au survol
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+  }
+
+  &:disabled { // Style du bouton danger désactivé
+    background-color: lighten(#dc3545, 25%);
+    border-color: lighten(#dc3545, 25%);
+    color: rgba(255, 255, 255, 0.7);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+// Styles pour la section de confirmation
+.confirmation-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+
+  .confirmation-prompt {
+    font-style: italic;
+    color: var(--text-medium);
+  }
+
+  .confirmation-phrase {
+    user-select: none;
+    background-color: var(--bg-medium-gray); // Fond léger pour la phrase
+    padding: 10px;
+    border-radius: var(--border-radius, 4px);
+    font-family: monospace; // Police pour bien voir les caractères
+    margin-bottom: 15px;
+    word-break: break-all; // Assurer que ça ne déborde pas trop
+    text-align: center;
+
+    strong {
+      color: var(--text-dark);
+    }
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+
+  .form-control { // Style de base pour l'input de confirmation
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius, 4px);
+    font-size: 1rem;
+    margin-bottom: 20px;
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--input-focus-shadow);
+    }
+  }
+
+  .confirmation-actions {
+    display: flex;
+    justify-content: flex-end; // Aligner les boutons à droite
+    gap: 10px; // Espace entre les boutons
+  }
+}
+
+// Animation de rotation (si pas déjà définie globalement)
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.confirmation-phrase {
+  // ... (styles existants : background, padding, font-family, etc.) ...
+  user-select: none; /* Empêche la sélection du texte */
+  -webkit-user-select: none; /* Pour Safari */
+  -moz-user-select: none; /* Pour Firefox */
+  -ms-user-select: none; /* Pour IE/Edge */
+}
+
+// Classe CSS pour rendre un élément non sélectionnable (alternative plus générique)
+.non-selectable {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }

@@ -1,33 +1,43 @@
 <td>{{ evenement.id }}</td>
-<td>{{ evenement.title }}</td>
-<td>{{ evenement.start | date:'dd/MM/yyyy HH:mm' }} - {{ evenement.end | date:'HH:mm' }}</td>
+<td>{{ evenement.nom }}</td>
+  <td>{{ evenement.start | date:'dd/MM/yyyy HH:mm' }} - {{ evenement.end | date:'dd/MM HH:mm' }}</td>
 <td>{{ evenement.description }}</td>
 <td>{{ evenement.placeReserve }} / {{ evenement.placeTotal }}</td>
 <td>{{ evenement.location }}</td>
 <td>
-  <span *ngFor="let categorie of evenement.categories; let last = last">
-    {{ categorie.nom }}{{ last ? '' : ', ' }}
+  @for (categorie of evenement.categories; track categorie.id;let last = $last) {
+  <span>
+    {{ categorie.nom }}
+    @if (!last) {
+      <span aria-hidden="true">, </span> <!-- Utilise un span avec aria-hidden car la virgule est purement visuelle -->
+    }
   </span>
+  }
 </td>
 <td>
   <div class="btn-actions">
+    <!-- Bouton Voir les reservations -->
+    <button class="btn" (click)="onRequestViewReservations()">
+      <lucide-icon name="eye" class="icon"></lucide-icon>
+    </button>
     <!-- Bouton Modifier -->
     <button class="btn btn-edit" (click)="ouvrirModal()">
       <lucide-icon name="pen" class="icon"></lucide-icon>
     </button>
 
     <!-- Bouton Supprimer -->
-    <button class="btn btn-delete" (click)="supprimerEvenement()">
+    <button class="btn btn-delete" (click)="requestDelete()">
       <lucide-icon name="trash" class="icon"></lucide-icon>
     </button>
   </div>
 </td>
 
 <!-- Modal d'édition -->
+@if (isModalVisible){
 <app-edit-event
-  *ngIf="isModalVisible"
   [isVisible]="isModalVisible"
   [event]="evenement"
-  (saveEvent)="sauvegarderEvenement($event)"
+  (saveSuccess)="sauvegarderEvenement($event)"
   (close)="fermerModal()">
 </app-edit-event>
+}

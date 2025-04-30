@@ -1,30 +1,33 @@
+<!-- membre-row.component.html -->
 <td>{{ membre.id }}</td>
 <td>{{ membre.nom }} {{ membre.prenom }}</td>
 <td>{{ membre.date_naissance | date:'dd/MM/yyyy' }}</td>
-<td>{{ membre.date_inscription | date:'dd/MM/yyyy' }}</td>
-<td>{{ membre.numero_voie }} {{ membre.rue }}, {{ membre.codepostal }} {{ membre.ville }}</td>
-<td>{{ membre.telephone }}</td>
+<!--<td>{{ membre.date_inscription | date:'dd/MM/yyyy' }}</td>-->
+<td>{{ membre.ville }}</td>
+<td>{{ membre.telephone || 'N/A' }}</td> <!-- Afficher N/A si le téléphone est null/vide -->
 <td>{{ membre.email }}</td>
 <td>{{ membre.role }}</td>
-<td>
-  <div class="btn-actions">
-    <!-- Bouton Modifier -->
-    <button class="btn btn-edit" (click)="openEditModal()">
-      <lucide-icon name="pen" class="icon"></lucide-icon>
-    </button>
 
-    <!-- Bouton Supprimer -->
-    <button class="btn btn-delete" (click)="onDelete()">
-      <lucide-icon name="trash" class="icon"></lucide-icon>
+<!-- === COLONNE ACTIONS MODIFIÉE === -->
+<td>
+  <div class="btn-actions" style="justify-content: center;">
+    <!-- Ce bouton appelle maintenant la méthode locale pour ouvrir la modale -->
+    <button class="btn btn-edit" title="Voir Détails / Gérer le rôle" (click)="openDetailsModal()">
+      <lucide-icon name="user-cog" class="icon"></lucide-icon>
     </button>
+    <!-- Autres boutons d'action potentiels peuvent être ajoutés ici -->
   </div>
 </td>
+<!-- ================================ -->
 
-<!-- Modal d'édition -->
-<app-edit-membre
-  *ngIf="isEditModalVisible"
-  [isVisible]="isEditModalVisible"
-  [membre]="membre"
-  (saveMembre)="onSave($event)"
-  (close)="closeEditModal()">
-</app-edit-membre>
+<!-- === MODALE INTÉGRÉE DANS LA LIGNE === -->
+<!-- Elle n'est rendue dans le DOM que si isModalVisible est vrai -->
+@if (isModalVisible) {
+  <app-membre-detail-modal
+    [isVisible]="isModalVisible"
+    [membre]="membre"
+    (close)="handleCloseModal()"
+    (saveRole)="handleSaveRoleFromModal($event)">
+  </app-membre-detail-modal>
+}
+<!-- ==================================== -->

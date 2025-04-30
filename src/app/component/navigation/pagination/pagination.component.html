@@ -1,0 +1,27 @@
+@if (totalPages > 1) {
+  <div class="pagination-controls">
+    <button class="btn btn-secondary" (click)="goToPrevious()" [disabled]="currentPage === 1">
+      Précédent
+    </button>
+
+    <!-- Affichage simplifié des pages -->
+    @for (page of pages; track page) {
+      <button
+        class="btn page-number"
+        [class.btn-primary]="page === currentPage"
+        [class.btn-secondary]="page !== currentPage"
+        (click)="selectPage(page)">
+        {{ page }}
+      </button>
+    }
+    <!-- Amélioration possible : afficher "..." si trop de pages -->
+
+    <button class="btn btn-secondary" (click)="goToNext()" [disabled]="currentPage === totalPages">
+      Suivant
+    </button>
+
+    <span class="pagination-info">
+      Page {{ currentPage }} sur {{ totalPages }} ({{ totalItems }} éléments)
+    </span>
+  </div>
+}

@@ -1,0 +1,44 @@
+.rating-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  margin-top: 1%;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.rating-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333333;
+}
+
+.stars-wrapper {
+  display: flex;
+  gap: 5px;
+}
+
+.star {
+  font-size: 2rem;
+  color: #cccccc;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.2);
+    color: var(--main-blue); /* Couleur d'accent */
+  }
+
+  &.filled {
+    color: var(--main-orange); /* Couleur étoile remplie */
+    transform: scale(1.1);
+    transition: transform ease-in-out, color ease-in-out;
+  }
+}
+
+.rating-value {
+  font-size: 1rem;
+  color: #555555;
+}

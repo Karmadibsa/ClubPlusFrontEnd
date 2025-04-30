@@ -7,20 +7,35 @@
   <h1 class="page-title">Les événements de mon club</h1>
 
 </div>
-  <!--  <app-filter-event-->
-  <!--    [events]="allEvents"-->
-  <!--    (filteredEventsChange)="handleFilteredEvents($event)"-->
-  <!--  ></app-filter-event>-->
+  <app-filter-event
+    [events]="allEvents"
+    (filteredEventsChange)="handleFilteredEventsChange($event)">
 
+  </app-filter-event>
+
+  @if (isLoading) {
+    <div class="loading-indicator">Chargement des événements...</div>
+  }
+
+  <!-- Grille des événements - Utilise filteredEvents et ajoute @empty -->
   <div class="event-grid">
-    <!-- Utilisation du composant EventCard -->
-    <app-event-card
-      *ngFor="let event of events"
-      [event]="event"
-    >
-    </app-event-card>
-
+    @for (event of paginatedEvents; track event.id) {
+      <app-event-card [event]="event"></app-event-card>
+    } @empty {
+      <!-- Message si aucun événement n'est trouvé ou ne correspond au filtre -->
+      @if (!isLoading) { <!-- N'affiche pas ce message pendant le chargement initial -->
+        <p class="no-events-message">
+          Aucun événement à afficher pour le moment.
+        </p>
+      }
+    }
   </div>
+  <app-pagination
+    [currentPage]="currentPage"
+    [totalItems]="filteredEvents.length"
+    [itemsPerPage]="itemsPerPage"
+    (pageChange)="onPageChange($event)">
+  </app-pagination>
 </div>
 
 

@@ -1,0 +1,188 @@
+// Dans src/app/component/event/reservation-event-modal/reservation-event-modal.component.scss
+
+:host {
+  display: block; // Assure que le composant hôte prend de la place si nécessaire
+}
+
+.modal-overlay {
+  position: fixed; // ESSENTIEL : Positionne par rapport à la fenêtre
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(var(--neutral-blue-rgb, 44, 62, 80), 0.6); // Utilise --neutral-blue avec opacité (ajoutez --neutral-blue-rgb si besoin)
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050; // Au-dessus des autres éléments (valeur commune, adaptez si conflit)
+  padding: var(--spacing-md); // Utilise votre variable d'espacement
+}
+
+.modal-content {
+  background-color: var(--main-white); // Utilise votre variable blanc
+  padding: var(--spacing-lg);         // Utilise votre variable d'espacement
+  border-radius: var(--border-radius); // Utilise votre variable border-radius
+  box-shadow: 0 5px 15px rgba(var(--main-black-rgb, 0, 0, 0), 0.3); // Utilise noir avec opacité (ajoutez --main-black-rgb)
+  max-width: 900px; // Ajustez si nécessaire
+  width: 95%;       // Légèrement plus large sur petits écrans
+  max-height: 90vh;
+  overflow: hidden; // Important: Laisse le body gérer le scroll
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color); // Utilise votre variable bordure
+  padding-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  flex-shrink: 0; // Empêche l'en-tête de rétrécir
+
+  h2 {
+    margin: 0;
+    font-size: 1.4em;
+    color: var(--main-blue); // Utilise votre variable bleu principal
+  }
+
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 1.5em; // Taille de l'icône
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    line-height: 1;
+    color: var(--text-light); // Utilise votre variable texte clair
+
+    &:hover {
+      color: var(--text-dark); // Utilise votre variable texte sombre
+    }
+  }
+}
+
+.modal-body {
+  flex-grow: 1; // Prend l'espace disponible
+  overflow-y: auto; // *** C'EST LE CORPS QUI DOIT SCROLLER ***
+  color: var(--text-dark);
+  // Ajoute un peu de padding interne si le contenu colle aux bords
+  // padding-right: var(--spacing-sm); // Pour compenser la scrollbar si elle apparaît
+
+  .filter-section {
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+
+    span {
+      margin-right: var(--spacing-sm);
+      font-weight: bold;
+    }
+  }
+
+  // Adaptez ces styles .btn si vous avez déjà des styles globaux .btn
+  .btn, .btn-filter {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-light-gray);
+    cursor: pointer;
+    border-radius: var(--border-radius);
+    transition: var(--transition-standard);
+    color: var(--text-dark);
+    font-size: 0.9em; // Légèrement plus petit pour les filtres
+
+    &:hover {
+      background-color: var(--bg-medium-gray);
+      border-color: var(--border-color); // Fonction SASS ou valeur directe
+    }
+
+    &.active {
+      background-color: var(--main-blue);
+      color: var(--main-white);
+      border-color: var(--main-blue);
+    }
+  }
+
+  .loading-indicator, .error-message, .table-container p {
+    padding: var(--spacing-lg);
+    text-align: center;
+    color: var(--text-medium);
+  }
+
+  .error-message {
+    color: var(--danger);
+    font-weight: bold;
+  }
+
+  .table-container {
+    // Pas de max-height ici, c'est le .modal-body qui gère le scroll global
+    margin-top: var(--spacing-md);
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th, td {
+        border: 1px solid var(--border-color);
+        padding: var(--spacing-sm);
+        text-align: left;
+        vertical-align: middle;
+      }
+
+      th {
+        background-color: var(--bg-light-gray);
+        position: sticky; // Fige l'en-tête
+        top: -1px; // Compense le potentiel padding du parent scrollable
+        z-index: 1; // Au-dessus du contenu td lors du scroll
+      }
+    }
+  }
+
+  .status-badge {
+    padding: 3px var(--spacing-sm);
+    border-radius: 12px; // Forme pilule
+    font-size: 0.85em;
+    font-weight: bold;
+    color: var(--main-white);
+    text-transform: capitalize;
+    display: inline-block; // Assure que le padding est appliqué correctement
+
+    &.status-confirme { background-color: var(--success); }
+    &.status-utilise { background-color: var(--info); } // Utilise --info pour 'Utilisé'
+    &.status-annule { background-color: var(--danger); }
+  }
+}
+
+.modal-footer {
+  border-top: 1px solid var(--border-color);
+  padding-top: var(--spacing-md);
+  margin-top: var(--spacing-md);
+  text-align: right;
+  flex-shrink: 0; // Empêche le pied de page de rétrécir
+
+  .btn-secondary {
+    // Adaptez si vous avez une classe .btn-secondary globale
+    padding: var(--spacing-sm) var(--spacing-md);
+    background-color: var(--text-medium);
+    color: var(--main-white);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition-standard);
+    font-family: var(--font-family);
+
+    &:hover {
+      background-color: var(--text-dark);
+    }
+  }
+}
+
+// --- Ajout potentiel pour les variables RGB si elles n'existent pas ---
+// Ajoutez ceci si vous n'avez pas défini les versions RGB de vos couleurs
+// :root {
+//   --neutral-blue-rgb: 44, 62, 80; // Valeurs RGB de #2c3e50
+//   --main-black-rgb: 0, 0, 0;     // Valeurs RGB de #000000
+// }

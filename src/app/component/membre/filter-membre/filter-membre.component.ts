@@ -1,11 +1,12 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {LucideAngularModule} from 'lucide-angular';
+import {PaginationComponent} from '../../navigation/pagination/pagination.component';
 
 @Component({
   selector: 'app-filter-membre',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, LucideAngularModule],
+  imports: [ReactiveFormsModule, FormsModule, LucideAngularModule, PaginationComponent],
   templateUrl: './filter-membre.component.html',
   styleUrls: ['./filter-membre.component.scss']
 })

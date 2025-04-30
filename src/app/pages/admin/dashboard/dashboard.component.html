@@ -6,40 +6,58 @@
 <div class="container">
   <div class="header">
     <h1>Dashboard</h1>
+    @if (isLoading){
+    <div style="text-align: center; padding: 10px;">Chargement des données...</div>
+    }
   </div>
   <!-- Section Statistiques -->
   <div class="stats-grid">
-    <div class="card stat-card">
-      <h3>Événements organisés</h3>
-      <p class="stat-value">{{ totalEvents }}</p>
-    </div>
-    <div class="card stat-card">
-      <h3>Événements à venir</h3>
-      <p class="stat-value">{{ upcomingEventsCount }}</p>
-    </div>
-    <div class="card stat-card">
-      <h3>Taux de participation</h3>
-      <p class="stat-value">{{ averageParticipation }}%</p>
-    </div>
+    <app-stat-card title="Événements organisés" [value]="totalEvents"></app-stat-card>
+
+    <app-stat-card title="Événements à venir" [value]="upcomingEventsCount"></app-stat-card>
+
+    <app-stat-card title="Taux de participation" [value]="averageEventOccupancy | percent:'1.0-1'"></app-stat-card>
+
+    <app-stat-card title="Membres Actifs du club" [value]="totalActiveMembers"></app-stat-card>
+
+    <app-stat-card title="Réservations validées" [value]="totalParticipations"></app-stat-card>
   </div>
 
   <!-- Section Graphiques -->
   <div class="charts-grid">
-    <div class="card chart-container">
-      <highcharts-chart
-        [Highcharts]="Highcharts"
-        [options]="membersChartOptions"
-        style="width: 100%; height: 400px;">
-      </highcharts-chart>
+    <div class="card  chart-container stat-card" style="position: relative; height:400px; display: block;">
+      <h3>Évolution des Inscriptions</h3>
+      @if (membersChartData.datasets.length > 0 && !isLoading) {
+      <canvas baseChart
+              [data]="membersChartData"
+              [options]="membersChartOptions"
+              [type]="'line'"> <!-- <<< CHANGEMENT ICI : 'line' >>> -->
+      </canvas>
+      }
+      @if (membersChartData.datasets.length === 0 && !isLoading) {
+      <div class="chart-placeholder">
+        Aucune donnée d'inscription.
+      </div>
+      }
     </div>
-    <div class="card chart-container">
-      <highcharts-chart
-        [Highcharts]="Highcharts"
-        [options]="ratingsChartOptions"
-        style="width: 100%; height: 400px;">
-      </highcharts-chart>
+
+    <div class="card chart-container stat-card" style="position: relative; height:400px; display: block;">
+      <h3>Notes Moyennes</h3>
+      @if (ratingsChartData.datasets.length > 0 && !isLoading) {
+      <canvas baseChart
+              [data]="ratingsChartData"
+              [options]="ratingsChartOptions"
+              [type]="'bar'"> <!-- Reste en 'bar' -->
+      </canvas>
+      }
+      @if (ratingsChartData.datasets.length === 0 && !isLoading) {
+      <div class="chart-placeholder">
+        Aucune donnée de notes.
+      </div>
+      }
     </div>
   </div>
+
   <!-- Section Tableaux -->
   <div class="tables-grid">
     <!-- Derniers membres inscrits -->
@@ -51,7 +69,7 @@
           <th>ID</th>
           <th>Nom et Prénom</th>
           <th>Date de Naissance</th>
-          <th>Date d'Inscription</th>
+<!--          <th>Date d'Inscription</th>-->
           <th>Adresse</th>
           <th>Téléphone</th>
           <th>Email</th>
@@ -60,16 +78,19 @@
         </tr>
         </thead>
         <tbody>
-        <!-- Utilisation de membre-row -->
-        <tr *ngFor="let member of lastFiveMembers" app-membre-row [membre]="member" (edit)="onEditMembre($event)"
-            (delete)="onDeleteMembre($event)"></tr>
+          @for (member of lastFiveMembers ; track member.id) {
+        <tr app-membre-row [membre]="member" (roleChangeRequested)="handleSaveRole($event)"></tr>
+          }
         </tbody>
       </table>
     </div>
 
     <!-- Prochains événements -->
     <div class="table-container">
+      <div class="header-event">
       <h3>Prochains événements</h3>
+      <app-create-event-button (createClicked)="openCreateEventModal()"></app-create-event-button>
+      </div>
       <table class="full-width-table">
         <thead>
         <tr>
@@ -85,13 +106,21 @@
         </thead>
         <tbody>
         <!-- Utilisation de event-row -->
-        <tr *ngFor="let event of nextFiveEvents" app-event-row [evenement]="event"         (supprimer)="supprimerEvenement($event)"
-            (modifier)="mettreAJourEvenement($event)"></tr>
+          @for (event of nextFiveEvents ; track event.id) {
+        <tr app-event-row [evenement]="event" (modifier)="handleOpenEditModal($event)"
+        (deleteRequest)="handleDeleteEventRequest($event)"></tr>
+          }
         </tbody>
       </table>
     </div>
   </div>
+</div>
 
-  </div>
-
-
+@if (isEditEventModalVisible) {
+  <app-edit-event
+    [isVisible]="isEditEventModalVisible"
+    [event]="selectedEventForEditModal"
+    (saveSuccess)="handleSaveEventSuccess($event)"
+    (close)="handleCloseEditModal()">
+  </app-edit-event>
+}

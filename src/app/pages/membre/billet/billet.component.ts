@@ -11,6 +11,9 @@ import html2canvas from 'html2canvas'; // Pour capturer le contenu HTML
 import jspdf from 'jspdf';
 import {QRCodeComponent} from 'angularx-qrcode';
 import {SafeUrl} from '@angular/platform-browser';
+import {Reservation} from '../../../model/reservation';
+import {ReservationService} from '../../../service/reservation.service';
+import {NotificationService} from '../../../service/notification.service';
 
 
 
@@ -23,14 +26,16 @@ import {SafeUrl} from '@angular/platform-browser';
   styleUrl: './billet.component.scss'
 })
 export class BilletComponent {
-  selectedTicket: Reservation | null = null;
+  private reservationService = inject(ReservationService)
+  private notification = inject(NotificationService)
+  selectedTicket: Reservation | undefined;
   isModalOpen: boolean = false;
   reservations: Reservation[] = [];
   reservationForm!: FormGroup;
-
   private http = inject(HttpClient);
-
   constructor(private fb: FormBuilder) {}
+  errorMessage: string | null = null;
+  isLoading: boolean = false;
 
   ngOnInit(): void {
     this.reservationForm = this.fb.group({
@@ -41,15 +46,14 @@ export class BilletComponent {
       endTime: ['', Validators.required]
     });
 
-    this.fetchReservations();
-  }
-
-  fetchReservations(): void {
-    this.http.get<Reservation[]>("http://localhost:8080/api/reservations/membre/1")
-      .subscribe(listereservations => {
-        this.reservations = listereservations;
-        console.log('Réservations chargées:', this.reservations);
-      });
+    this.reservationService.getMyReservations().subscribe({
+      next: (reservations) => {
+        this.reservations = reservations;
+      },
+      error: (err) => {
+        this.notification.show("Erreur lors du chargement de vos reservations", 'error')
+      }
+  })
   }
 
   openQrModal(reservation: Reservation): void {
@@ -97,7 +101,7 @@ export class BilletComponent {
     // Section d'informations principales
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(14);
-    doc.text(`Événement: ${reservation.event?.title || ''}`, margin, 60);
+    doc.text(`Événement: ${reservation.event?.nom || ''}`, margin, 60);
 
     // Date et lieu avec couleur bleue
     doc.setTextColor(hexToRgb(mainBlue).r, hexToRgb(mainBlue).g, hexToRgb(mainBlue).b);
@@ -119,7 +123,7 @@ export class BilletComponent {
     doc.text('Scannez le QR code ci-dessous', pageWidth/2, 120, { align: 'center' });
 
     // Si nous avons l'URL du QR code
-    if (reservation.qrcodeurl) {
+    if (reservation.qrcodeData) {
       const script = document.createElement('script');
       script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js';
       script.onload = () => {
@@ -130,7 +134,7 @@ export class BilletComponent {
         // @ts-ignore - QRious est chargé dynamiquement
         new window.QRious({
           element: canvas,
-          value: reservation.qrcodeurl,
+          value: reservation.qrcodeData,
           size: 200,
           backgroundAlpha: 1
         });
@@ -150,13 +154,13 @@ export class BilletComponent {
         doc.text('Présentez ce billet à l\'entrée de l\'événement', pageWidth/2, pageHeight - 10, { align: 'center' });
 
         // Sauvegarder le PDF
-        doc.save(`billet-${reservation.event?.title || 'evenement'}.pdf`);
+        doc.save(`billet-${reservation.event?.nom || 'evenement'}.pdf`);
       };
 
       document.head.appendChild(script);
     } else {
       // Fallback si pas de QR code
-      doc.save(`billet-${reservation.event?.title || 'evenement'}.pdf`);
+      doc.save(`billet-${reservation.event?.nom || 'evenement'}.pdf`);
     }
   }
 
@@ -170,7 +174,7 @@ export class BilletComponent {
     const index = this.reservations.findIndex(r => r.id === reservation.id);
     if (index !== -1) {
       if (typeof url === "string") {
-        this.reservations[index].qrcodeurl = url;
+        this.reservations[index].qrcodeData = url;
       }
     }
   }
@@ -183,15 +187,45 @@ export class BilletComponent {
     }
   }
 
-  onDeleteReservation(reservation: any): void {
-    this.http.delete(`http://localhost:8080/api/reservations/${reservation.id}`)
+  // Méthode appelée lorsqu'on clique sur le bouton Annuler/Supprimer d'une réservation
+  onCancelReservation(reservation: any): void {
+    if (!reservation || !reservation.id) {
+      console.error("Impossible d'annuler : ID de réservation manquant.");
+      return;
+    }
+
+    // Confirmation utilisateur (recommandé)
+    if (!confirm(`Êtes-vous sûr de vouloir annuler la réservation pour ${reservation.event?.nom || 'cet événement'} ?`)) {
+      return;
+    }
+
+    this.isLoading = true; // Optionnel: indiquer un chargement
+    this.errorMessage = null;
+
+    console.log(`Composant: Tentative d'annulation de la réservation ID: ${reservation.id}`);
+
+    // Appeler la méthode du service
+    this.reservationService.cancelReservation(reservation.id)
       .subscribe({
         next: () => {
-          console.log('Réservation supprimée avec succès');
-          // Mettre à jour la liste localement après suppression
+          this.isLoading = false;
+          console.log(`Réservation ID: ${reservation.id} annulée avec succès.`);
+          this.errorMessage = null;
+
+          // Mettre à jour la liste localement pour refléter le changement immédiatement
           this.reservations = this.reservations.filter(r => r.id !== reservation.id);
+
+          // Afficher une notification de succès (optionnel)
+          this.notification.show('Réservation annulée.', 'valid');
         },
-        error: (err) => console.error('Erreur lors de la suppression de la réservation:', err)
+        error: (error) => {
+          this.isLoading = false;
+          console.error(`Erreur lors de l'annulation de la réservation ID: ${reservation.id}`, error);
+          // Afficher l'erreur à l'utilisateur
+          this.errorMessage = `Échec de l'annulation : ${error.message || 'Erreur inconnue du serveur'}`;
+          // Afficher une notification d'erreur (optionnel)
+          this.notification.show(this.errorMessage, 'error');
+        }
       });
   }
 }

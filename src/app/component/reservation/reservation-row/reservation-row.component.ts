@@ -29,9 +29,7 @@ export class ReservationRowComponent {
   }
 
   onDelete(): void {
-    if (confirm(`Êtes-vous sûr de vouloir supprimer la réservation pour ${this.reservation.membre.prenom} ${this.reservation.membre.nom} ?`)) {
       this.deleteReservation.emit(this.reservation);
-    }
   }
 
 

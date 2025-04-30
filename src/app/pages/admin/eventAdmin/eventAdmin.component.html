@@ -1,49 +1,70 @@
 <div class="sidebar">
   <app-sidebar></app-sidebar>
 </div>
-
 <div class="container">
   <div class="header">
     <h1>Liste des Événements</h1>
     <!-- Bouton pour ouvrir la modal de création -->
-    <button class="btn btn-primary" (click)="ouvrirModalCreation()">
-      <lucide-icon class="icon" name="circle-plus"></lucide-icon>
-      Créer un événement
-    </button>
+    <app-create-event-button (createClicked)="ouvrirModalCreation()"></app-create-event-button>
+
   </div>
 
-  <table>
+  <app-filter-event
+    [events]="allEvenements"
+    (filteredEventsChange)="handleFilteredEventsChange($event)">
+  </app-filter-event>
+
+  <table class="full-width-table">
     <thead>
     <tr>
       <th>ID</th>
       <th>Titre</th>
-      <th>Horaire</th>
+      <th>Début - Fin</th>
       <th>Description</th>
       <th>Participants</th>
       <th>Lieu</th>
       <th>Catégories</th>
-      <th>Action</th>
+      <th>Actions</th>
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let evenement of evenements"
-        app-event-row
-        [evenement]="evenement"
-        (supprimer)="supprimerEvenement($event)"
-        (modifier)="mettreAJourEvenement($event)">
-    </tr>
-    <tr *ngIf="evenements.length === 0">
-      <td colspan="8" class="no-data">Aucun événement trouvé</td>
-    </tr>
+    <!-- Utilisation de event-row -->
+      @for (event of paginatedEvenements ; track event.id) {
+        <tr app-event-row
+            [evenement]="event"
+            (modifier)="handleOpenEditModal($event)"
+            (deleteRequest)="handleDeleteEventRequest($event)"
+            (viewReservationsRequest)="handleViewReservationsRequest($event)"
+        ></tr>
+      }
     </tbody>
   </table>
+  <!-- Composant Pagination -->
+  <app-pagination
+    [currentPage]="currentPage"
+    [totalItems]="filteredEvenements.length"
+    [itemsPerPage]="itemsPerPage"
+    (pageChange)="onPageChange($event)">
+  </app-pagination>
 
-  <!-- Modal de création/modification -->
-  <app-edit-event
-    *ngIf="isModalVisible"
-    [isVisible]="isModalVisible"
-    [event]="evenementEnCours"
-    (saveEvent)="sauvegarderEvenement($event)"
-    (close)="fermerModal()">
-  </app-edit-event>
+  @if (isEditEventModalVisible) {
+    <app-edit-event
+      [isVisible]="isEditEventModalVisible"
+      [event]="selectedEventForEditModal"
+      (saveSuccess)="handleSaveEventSuccess($event)"
+      (close)="handleCloseEditModal()">
+    </app-edit-event>
+  }
+
+    <!-- **** NOUVELLE MODALE DE RÉSERVATION **** -->
+    @if (isReservationModalVisible) {
+      <app-reservation-event-modal
+        [eventId]="selectedEventIdForReservationModal"
+        [eventTitle]="selectedEventTitleForReservationModal"
+        (closeModal)="handleCloseReservationModal()">
+        <!-- ^^^ Écoute l'événement pour fermer ^^^ -->
+      </app-reservation-event-modal>
+    }
+
+
 </div>

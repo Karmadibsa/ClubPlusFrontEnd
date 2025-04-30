@@ -59,6 +59,26 @@
       </button>
     </form>
 
+    <!-- ========================================= -->
+    <!-- == BOUTONS DE SIMULATION (DEV ONLY) == -->
+    <!-- ========================================= -->
+    <div style="margin-top: 20px; border-top: 1px dashed #ccc; padding-top: 15px; text-align: center;">
+      <h4 style="margin-bottom: 10px; color: #555;">Simulations (Dev)</h4>
+      <div style="display: flex; justify-content: center; gap: 10px;">
+        <!-- Mettre à jour les appels (click) -->
+        <button type="button" (click)="simulateLoginAsMember()" class="dev-sim-btn">
+          Connexion MEMBRE
+        </button>
+        <button type="button" (click)="simulateLoginAsAdmin()" class="dev-sim-btn">
+          Connexion ADMIN
+        </button>
+        <button type="button" (click)="simulateLoginAsResa()" class="dev-sim-btn">
+          Connexion RESA
+        </button>
+      </div>
+      <p style="font-size: 0.8em; color: #777; margin-top: 5px;">(Pré-remplit et soumet le formulaire)</p>
+    </div>
+    <!-- ========================================= -->
     <!-- Lien Retour à l'accueil -->
     <div class="home-link">
       <a routerLink="/accueil" class="home-btn"> <!-- Adaptez le chemin vers l'accueil -->

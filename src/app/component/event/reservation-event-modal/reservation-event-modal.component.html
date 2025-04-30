@@ -1,0 +1,86 @@
+<div class="modal-overlay" (click)="onClose()">
+  <div class="modal-content" (click)="stopPropagation($event)">
+
+    <div class="modal-header">
+      <h2>Réservations pour : {{ eventTitle }}</h2>
+      <button class="close-button" (click)="onClose()" aria-label="Fermer">
+        <lucide-icon name="circle-x"></lucide-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Section Filtres -->
+      <div class="filter-section">
+        <span>Filtrer par statut :</span>
+        <button class="btn btn-filter"
+                [class.active]="isFilterActive(null)"
+                (click)="applyFilter(null)">
+          Tous
+        </button>
+        <button class="btn btn-filter"
+                [class.active]="isFilterActive(reservationStatus.CONFIRME)"
+                (click)="applyFilter(reservationStatus.CONFIRME)">
+          Confirmés
+        </button>
+        <button class="btn btn-filter"
+                [class.active]="isFilterActive(reservationStatus.UTILISE)"
+                (click)="applyFilter(reservationStatus.UTILISE)">
+          Utilisés
+        </button>
+        <button class="btn btn-filter"
+                [class.active]="isFilterActive(reservationStatus.ANNULE)"
+                (click)="applyFilter(reservationStatus.ANNULE)">
+          Annulés
+        </button>
+      </div>
+
+      <!-- Affichage Chargement / Erreur / Liste -->
+      @if (isLoading) {
+        <div class="loading-indicator">
+          <p>Chargement des réservations...</p>
+          <!-- Option : ajoutez un spinner CSS ou une icône -->
+        </div>
+      } @else if (error) {
+        <p class="error-message">{{ error }}</p>
+      } @else {
+        @if (reservations.length > 0) {
+          <div class="table-container"> <!-- Conteneur pour le scroll -->
+            <table>
+              <thead>
+              <tr>
+                <th>Membre</th>
+                <th>Téléphone</th>
+                <th>Catégorie</th>
+                <th>Date Réservation</th>
+                <th>Statut</th>
+              </tr>
+              </thead>
+              <tbody>
+                @for (resa of reservations; track resa.id ?? resa.reservationUuid) { <!-- Clé de suivi robuste -->
+                  <tr>
+                  <td>{{ resa.membre?.prenom ?? '?' }} {{ resa.membre?.nom ?? '' }}</td>
+                  <td>{{ resa.membre?.telephone ?? '?' }}</td>
+                    <td>{{ resa.categorie?.nom ?? '?' }}</td>
+                    <td>{{ resa.dateReservation | date:'dd/MM/yyyy' }}</td>
+                    <td>
+                       <span class="status-badge status-{{resa.status | lowercase}}">
+                         {{ resa.status }}
+                       </span>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <p>Aucune réservation trouvée pour cet événement avec le filtre actuel.</p>
+        }
+      }
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="onClose()">Fermer</button>
+    </div>
+
+  </div>
+</div>

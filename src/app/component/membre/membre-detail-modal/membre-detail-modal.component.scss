@@ -1,0 +1,286 @@
+/* Styles pour membre-detail-modal.component.scss */
+/* Utilise les variables définies dans le :root global */
+
+/* --- Overlay --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Fond semi-transparent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* --- Conteneur Principal de la Modale --- */
+.modal-content {
+  background: var(--main-white);
+  border-radius: var(--border-radius); /* Utilisation variable root */
+  width: 90%;
+  max-width: 700px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12); /* Ombre standard */
+}
+
+/* --- Entête --- */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) var(--spacing-lg); /* Utilisation variables root */
+  border-bottom: 1px solid var(--border-color); /* Utilisation variable root */
+  background-color: var(--main-blue);
+  color: var(--main-white);
+  flex-shrink: 0;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--main-white);
+  font-size: 1.5rem;
+  line-height: 1;
+  padding: var(--spacing-sm); /* Utilisation variable root */
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s ease, transform 0.2s ease; /* Transition simple */
+}
+
+.close-btn:hover {
+  opacity: 1;
+  transform: rotate(90deg);
+}
+
+/* --- Corps --- */
+.modal-body {
+  padding: var(--spacing-lg); /* Utilisation variable root */
+  overflow-y: auto;
+  flex-grow: 1;
+  background-color: var(--main-white);
+}
+
+/* --- Sections & Groupes de Formulaires --- */
+.form-section {
+  margin-bottom: var(--spacing-lg); /* Utilisation variable root */
+}
+.form-section:last-of-type {
+  margin-bottom: 0;
+}
+
+.form-section h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--main-blue);
+  margin-top: 0;
+  margin-bottom: var(--spacing-md); /* Utilisation variable root */
+  padding-bottom: var(--spacing-sm); /* Utilisation variable root */
+  border-bottom: 1px solid var(--border-color); /* Utilisation variable root */
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md); /* Utilisation variable root */
+  margin-bottom: var(--spacing-md); /* Utilisation variable root */
+}
+.form-row:last-child {
+  margin-bottom: 0;
+}
+
+.form-group {
+  flex: 1 1 calc(50% - var(--spacing-md)); /* Ajustement avec gap */
+  min-width: 200px;
+  margin-bottom: 0;
+}
+
+.form-group.full-width {
+  flex-basis: 100%;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-medium); /* Utilisation variable root */
+  margin-bottom: var(--spacing-sm); /* Utilisation variable root */
+}
+
+/* --- Valeurs en lecture seule --- */
+.read-only-value {
+  background-color: var(--bg-light-gray); /* Utilisation variable root */
+  padding: 0.75rem 1rem; /* Pas de variable directe, ajustement fin */
+  border-radius: 6px; /* Légèrement différent de --border-radius */
+  border: 1px solid var(--border-color); /* Utilisation variable root */
+  color: var(--text-dark); /* Utilisation variable root */
+  font-size: 0.95rem;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  word-break: break-word;
+}
+
+
+/* --- Section Changement de Rôle (Radio façon Boutons) --- */
+.role-change-section {
+  /* Calcul de la couleur RGBA à partir de --main-blue (#1a5f7a -> 26, 95, 122) */
+  background-color: rgba(26, 95, 122, 0.03);
+  padding: var(--spacing-md); /* Utilisation variable root */
+  border-radius: var(--border-radius); /* Utilisation variable root */
+  /* Calcul de la couleur RGBA à partir de --main-blue (#1a5f7a -> 26, 95, 122) */
+  border: 1px solid rgba(26, 95, 122, 0.1);
+  margin-top: var(--spacing-md); /* Utilisation variable root */
+}
+
+.role-change-section h3 {
+  border-bottom: none;
+  margin-bottom: 0.75rem;
+}
+
+.radio-inputs {
+  display: flex;
+  gap: var(--spacing-md); /* Utilisation variable root */
+  margin-top: var(--spacing-sm); /* Utilisation variable root */
+}
+
+/* Masquer la vraie radio */
+.radio-inputs .radio-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Style du SPAN qui suit l'input DANS le label */
+.radio-inputs label {
+  flex: 1;
+  display: block;
+  position: relative;
+  cursor: pointer;
+}
+
+.radio-inputs label span {
+  display: block;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--border-color); /* Utilisation variable root */
+  border-radius: var(--border-radius); /* Utilisation variable root */
+  background-color: var(--main-white);
+  text-align: center;
+  font-weight: 500;
+  color: var(--text-medium); /* Utilisation variable root */
+  transition: var(--transition-standard); /* Utilisation variable root */
+}
+
+/* État survol (sur le LABEL) */
+.radio-inputs label:hover span {
+  border-color: var(--main-blue);
+  background-color: var(--bg-light-gray); /* Utilisation variable root */
+  color: var(--main-blue);
+}
+
+/* État sélectionné (quand l'input associé est checked) */
+.radio-inputs .radio-input:checked + span {
+  border-color: var(--main-orange);
+  /* Calcul de la couleur RGBA à partir de --main-orange (#f26122 -> 242, 97, 34) */
+  background-color: rgba(242, 97, 34, 0.1);
+  color: var(--main-orange);
+  font-weight: 600;
+  box-shadow: 0 0 0 1px var(--main-orange);
+}
+
+/* État focus (accessibilité sur l'input caché) */
+.radio-inputs .radio-input:focus-visible + span {
+  outline: 2px solid var(--main-blue);
+  outline-offset: 2px;
+}
+.radio-inputs .radio-input:checked:focus-visible + span {
+  outline-color: var(--main-orange);
+}
+/* --- Fin Styles Radio --- */
+
+
+/* --- Pied de page --- */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--spacing-md); /* Utilisation variable root */
+  padding: var(--spacing-md) var(--spacing-lg); /* Utilisation variable root */
+  border-top: 1px solid var(--border-color); /* Utilisation variable root */
+  background-color: var(--bg-light-gray); /* Utilisation variable root */
+  flex-shrink: 0;
+}
+
+/* --- Styles des Boutons --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm); /* Utilisation variable root */
+  padding: var(--spacing-sm) var(--spacing-md); /* Utilisation variables root */
+  border-radius: 6px; /* Gardé à 6px pour les boutons */
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-align: center;
+  border: none;
+  transition: var(--transition-standard); /* Utilisation variable root */
+}
+
+/* Style spécifique pour que les icônes dans les boutons soient correctes */
+.btn lucide-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Bouton Primaire (Enregistrer - utilise main-blue comme dans l'autre modal) */
+.btn-primary {
+  background-color: var(--main-blue);
+  color: var(--main-white);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Ombre standard */
+}
+
+.btn-primary:hover:not(:disabled) {
+  /* Assombrir légèrement --main-blue */
+  background-color: hsl(199, 64%, 25%); /* Ajustement manuel de la teinte */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12); /* Ombre standard */
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Bouton Secondaire (Fermer) */
+.btn-secondary {
+  background-color: var(--main-white);
+  color: var(--text-medium); /* Utilisation variable root */
+  border: 1px solid var(--border-color); /* Utilisation variable root */
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--bg-light-gray); /* Utilisation variable root */
+  border-color: var(--text-light); /* Utilisation variable root */
+  color: var(--text-dark); /* Utilisation variable root */
+}
+
+/* État Désactivé */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}

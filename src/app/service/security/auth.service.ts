@@ -8,12 +8,16 @@ export class AuthService {
 
   // Vérifier si l'utilisateur peut modifier les rôles
   canChangeRoles(): boolean {
-    // return this.currentUser.role === 'admin';
-  return true;
+    if(this.role === 'ROLE_ADMIN' || 'ROLE_RESERVATION') {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   connecte = false;
   role: string | null = null;
+  managedClubId: number | null = null;
 
   constructor() {
     const jwt = localStorage.getItem("jwt")
@@ -63,6 +67,7 @@ if(jwt != null){
     // Assigner cette valeur à la propriété 'role' de l'instance courante (this.role).
     // Permet d'utiliser le rôle de l'utilisateur dans d'autres parties de l'application.
     this.role = body.role;
+    this.managedClubId = body.managedClubId ?? null;
 
     // 8. Mettre à jour la propriété booléenne 'connecte' de l'instance courante à 'true'.
     // Indique que le processus de connexion est terminé et que l'utilisateur est authentifié
@@ -76,5 +81,18 @@ if(jwt != null){
     localStorage.removeItem("jwt")
     this.connecte = false;
     this.role = null;
+    this.managedClubId = null;
   }
+
+  getManagedClubId() {
+    return this.managedClubId;
+  }
+
+  getRole(){
+    return this.role;
+  }
+
 }
+
+
+

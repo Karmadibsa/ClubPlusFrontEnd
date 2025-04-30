@@ -7,6 +7,7 @@
       <h1><lucide-icon name="user-cog"></lucide-icon> Mon Compte</h1>
     </div>
 
+@if (!isLoading) {
     <div class="section-cards">
       <!-- Formulaire Informations personnelles -->
       <form [formGroup]="infoForm" (ngSubmit)="updatePersonalInfo()">
@@ -81,54 +82,110 @@
         </div>
       </form>
 
-      <!-- Formulaire Changer le mot de passe -->
-      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
-        <!-- Section Changer le mot de passe -->
-        <div class='account-section card-section'>
-          <!-- En-tête de la section -->
-          <div class="section-header">
+<!--      &lt;!&ndash; Formulaire Changer le mot de passe &ndash;&gt;-->
+<!--      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">-->
+<!--        &lt;!&ndash; Section Changer le mot de passe &ndash;&gt;-->
+<!--        <div class='account-section card-section'>-->
+<!--          &lt;!&ndash; En-tête de la section &ndash;&gt;-->
+<!--          <div class="section-header">-->
 
 
-            <h2><lucide-icon name='lock'></lucide-icon> Changer le mot de passe</h2>
-          <p>Mettez à jour votre mot de passe pour sécuriser votre compte.</p>
+<!--            <h2><lucide-icon name='lock'></lucide-icon> Changer le mot de passe</h2>-->
+<!--          <p>Mettez à jour votre mot de passe pour sécuriser votre compte.</p>-->
 
-          </div>
-          <!-- Formulaire mot de passe -->
-          <!-- Mot de passe actuel -->
-          <div class="form-group">
-            <label for="current-password">Mot de passe actuel</label>
-            <input
-              type="password"
-              id="current-password"
-              formControlName="current_password"
-            />
-          </div>
+<!--          </div>-->
+<!--          &lt;!&ndash; Formulaire mot de passe &ndash;&gt;-->
+<!--          &lt;!&ndash; Mot de passe actuel &ndash;&gt;-->
+<!--          <div class="form-group">-->
+<!--            <label for="current-password">Mot de passe actuel</label>-->
+<!--            <input-->
+<!--              type="password"-->
+<!--              id="current-password"-->
+<!--              formControlName="current_password"-->
+<!--            />-->
+<!--          </div>-->
 
-          <!-- Nouveau mot de passe -->
-          <div class="form-group">
-            <label for="new-password">Nouveau mot de passe</label>
-            <input
-              type="password"
-              id="new-password"
-              formControlName="new_password"
-            />
-          </div>
+<!--          &lt;!&ndash; Nouveau mot de passe &ndash;&gt;-->
+<!--          <div class="form-group">-->
+<!--            <label for="new-password">Nouveau mot de passe</label>-->
+<!--            <input-->
+<!--              type="password"-->
+<!--              id="new-password"-->
+<!--              formControlName="new_password"-->
+<!--            />-->
+<!--          </div>-->
 
-          <!-- Confirmation du nouveau mot de passe -->
-          <div class="form-group">
-            <label for="confirm-password">Confirmer le nouveau mot de passe</label>
-            <input
-              type="password"
-              id="confirm-password"
-              formControlName="confirm_password"
-            />
-          </div>
+<!--          &lt;!&ndash; Confirmation du nouveau mot de passe &ndash;&gt;-->
+<!--          <div class="form-group">-->
+<!--            <label for="confirm-password">Confirmer le nouveau mot de passe</label>-->
+<!--            <input-->
+<!--              type="password"-->
+<!--              id="confirm-password"-->
+<!--              formControlName="confirm_password"-->
+<!--            />-->
+<!--          </div>-->
 
-          <!-- Bouton pour changer le mot de passe -->
-          <button type="submit" class='btn btn-secondary'>
-            Changer le mot de passe
-          </button>
-        </div>
-      </form>
+<!--          &lt;!&ndash; Bouton pour changer le mot de passe &ndash;&gt;-->
+<!--          <button type="submit" class='btn btn-secondary'>-->
+<!--            Changer le mot de passe-->
+<!--          </button>-->
+<!--        </div>-->
+<!--      </form>-->
     </div>
+}
+
+  <!-- ZONE DANGEREUSE - Suppression de compte -->
+  @if (!isLoading) {
+    <div class="account-section danger-zone card-section">
+      <div class="section-header">
+        <h2><lucide-icon name="triangle-alert"></lucide-icon> Zone Dangereuse</h2>
+      </div>
+      <div class="card-content">
+        <p>Supprimer votre compte est une action <strong>irréversible</strong>. Toutes vos données, réservations, amitiés et informations seront définitivement anonymisées.</p>
+
+        @if (!showDeleteConfirmation) {
+          <!-- Bouton pour initier la suppression -->
+          <button type="button" class="btn btn-danger" (click)="initiateAccountDeletion()">
+            Supprimer mon compte
+          </button>
+        } @else {
+          <!-- Section de Confirmation -->
+          <div class="confirmation-section">
+            <p class="confirmation-prompt">Pour confirmer la suppression définitive de votre compte, veuillez taper la phrase suivante exactement comme indiqué ci-dessous :</p>
+            <p class="confirmation-phrase"><strong>{{ requiredConfirmationPhrase }}</strong></p>
+
+            <div class="form-group">
+              <label for="delete-confirm-input">Tapez la phrase ici :</label>
+              <!-- Utilisation de [(ngModel)] nécessite FormsModule -->
+              <input type="text"
+                     id="delete-confirm-input"
+                     class="form-control"
+                     [(ngModel)]="deleteConfirmationInput"
+                     placeholder="Recopiez la phrase de confirmation"
+                     autocomplete="off"
+              />
+            </div>
+
+            <div class="confirmation-actions">
+              <!-- Bouton Annuler -->
+              <button type="button" class="btn btn-secondary" (click)="cancelAccountDeletion()" [disabled]="isDeletingAccount">
+                Annuler
+              </button>
+              <!-- Bouton Confirmer la suppression -->
+              <button type="button"
+                      class="btn btn-danger"
+                      (click)="confirmAccountDeletion()"
+                      [disabled]="isDeletingAccount || deleteConfirmationInput !== requiredConfirmationPhrase">
+                @if (!isDeletingAccount) {
+                  <span><lucide-icon name="trash-2"></lucide-icon> Confirmer la suppression</span>
+                } @else {
+                  <span><lucide-icon name="loader" class="animate-spin"></lucide-icon> Suppression en cours...</span>
+                }
+              </button>
+            </div>
+          </div>
+        } <!-- Fin du @else (confirmation visible) -->
+      </div> <!-- Fin card-content -->
+    </div> <!-- Fin danger-zone -->
+  } <!-- Fin du @if (!isLoading) pour la danger-zone -->
   </div>

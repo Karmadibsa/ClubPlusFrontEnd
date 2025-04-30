@@ -1,6 +1,6 @@
 <td>{{ reservation.event.start | date:'dd/MM/yyyy' }}</td>
 <td>{{ reservation.event.start | date:'HH:mm' }}</td>
-<td>{{ reservation.event.title }}</td>
+<td>{{ reservation.event.nom }}</td>
 <td>{{ reservation.categorie.nom }}</td>
 <td class="actions-cell">
   <button class="btn btn-primary show-qr-btn" (click)="onOpenQrModal()">

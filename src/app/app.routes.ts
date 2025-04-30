@@ -11,7 +11,10 @@ import {AccueilComponent} from './pages/public/accueil/accueil.component';
 import {InscriptionClubComponent} from './pages/public/inscription-club/inscription-club.component';
 import {InscriptionMembreComponent} from './pages/public/inscription-membre/inscription-membre.component';
 import {LoginComponent} from './pages/public/login/login.component';
-import {connecteGuard} from './service/connecte.guard';
+import {connecteGuard} from './service/security/connecte.guard';
+import {managerGuard} from './service/security/manager.guard';
+import {AmisComponent} from './pages/membre/amis/amis.component';
+import {NotationComponent} from './pages/membre/notation/notation.component';
 
 
 
@@ -32,6 +35,16 @@ export const routes: Routes = [
     canActivate: [connecteGuard]
   },
   {
+    path: "amis",
+    component: AmisComponent,
+    canActivate: [connecteGuard]
+  },
+  {
+    path: "notation",
+    component: NotationComponent,
+    canActivate: [connecteGuard]
+  },
+  {
     path: "dashboard",
     component: DashboardComponent,
     canActivate: [connecteGuard]
@@ -39,17 +52,17 @@ export const routes: Routes = [
   {
     path: "eventadmin",
     component: EventAdminComponent,
-    canActivate: [connecteGuard]
+    canActivate: [managerGuard]
   },
   {
     path: "membreadmin",
     component: MembreAdminComponent,
-    canActivate: [connecteGuard]
+    canActivate: [managerGuard]
   },
   {
     path: "monclub",
     component: MonclubComponent,
-    canActivate: [connecteGuard]
+    canActivate: [managerGuard]
   },
   {
     path: "accueil",

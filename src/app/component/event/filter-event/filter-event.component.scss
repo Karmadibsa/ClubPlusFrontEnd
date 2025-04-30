@@ -72,6 +72,7 @@
   flex-wrap: wrap;
   gap: 20px;
   margin-bottom: 20px;
+  align-items: center;
 }
 
 .filters label {
@@ -85,15 +86,20 @@
   height: 100%;
 }
 
-.date-picker input[type="date"],
-.time-picker input[type="time"],
+.date-picker input[type="datetime-local"],
 .search-bar {
+  height: 100%;
   border: none;
   border-bottom: solid var(--main-orange) 2px;
+  flex-grow: 1;
+  padding: 10px;
+  border-radius: 5px;
+  height: 100%;
 }
 
-.date-picker,
-.time-picker {
+.date-picker
+{
+  align-items: center;
   display: flex;
 }
 

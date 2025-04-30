@@ -1,0 +1,85 @@
+<div class="main-layout">
+  <div class="sidebar">
+    <app-sidebar></app-sidebar>
+  </div>
+
+  <div class="container-page">
+    <div class="container">
+      <header class="header">
+        <h1>
+          Évaluation de l'événement
+        </h1>
+        <p class="header-subtitle">
+          Votre avis compte pour améliorer nos prochains événements !
+        </p>
+      </header>
+
+      <!-- Utilisation de @if pour la logique conditionnelle -->
+      @if (isLoading) {
+        <!-- Indicateur de chargement -->
+        <div class="loading-indicator">
+          Chargement des événements... <lucide-icon name="loader" class="animate-spin"></lucide-icon>
+        </div>
+      } @else {
+        <!-- Afficher le sélecteur ou le message "aucun événement" -->
+        @if (unratedEvents.length > 0) {
+          <!-- Sélecteur d'événement -->
+          <div class="event-selector">
+            <label for="eventSelect">Choisissez l'événement à évaluer :</label>
+            <select id="eventSelect" class="event-select" [(ngModel)]="selectedEventId" (ngModelChange)="onEventSelected()">
+              <option [ngValue]="null" disabled>-- Sélectionnez un événement --</option>
+              <!-- Utilisation de @for pour la boucle -->
+              @for (event of unratedEvents; track event.id) {
+                <option [value]="event.id">
+                  {{ event.nom }} ({{ event.start | date:'dd/MM/yyyy HH:mm' }})
+                </option>
+              }
+            </select>
+          </div>
+        } @else {
+          <!-- Message si aucun événement à noter -->
+          <div class="no-events">
+            Vous avez noté tous les événements auxquels vous avez participé ou il n'y a pas d'événements passés.
+          </div>
+        }
+
+        <!-- Section de notation (Affichée seulement si un événement est sélectionné) -->
+        @if (selectedEvent) {
+          <section class="rating-category">
+            <h2>
+              <i data-lucide="edit"></i>Détail de l'évaluation pour "{{ selectedEvent?.nom }}"
+            </h2>
+
+            <!-- Utilisation de @for pour itérer sur les critères -->
+            @for (criterion of ratingCriteria; track criterion.key) {
+              <app-itemnotation
+                [title]="criterion.label"
+                (ratingChanged)="onRatingUpdate(criterion.key, $event)">
+              </app-itemnotation>
+            } @empty {
+              <!-- Optionnel: Afficher quelque chose si ratingCriteria est vide -->
+              <p>Aucun critère de notation défini.</p>
+            }
+
+            <!-- Bouton de soumission -->
+            <button type="button" (click)="submitRating()" class="btn btn-primary" [disabled]="isSubmitting || !isRatingComplete()">
+              <!-- Utilisation de @if/@else pour le contenu du bouton -->
+              @if (!isSubmitting) {
+                <span>
+                  Soumettre l'évaluation
+                  <lucide-icon name="send"></lucide-icon>
+                </span>
+              } @else {
+                <span>
+                  Soumission en cours...
+                  <lucide-icon name="loader" class="animate-spin"></lucide-icon>
+                </span>
+              }
+            </button>
+          </section>
+        }
+      } <!-- Fin du @else principal (après isLoading) -->
+
+    </div>
+  </div>
+</div>
