@@ -1,7 +1,6 @@
 <div class="sidebar">
   <app-sidebar></app-sidebar>
 </div>
-
 <div class="container">
   <div class="header">
     <h1>Liste des Événements</h1>
@@ -9,6 +8,11 @@
     <app-create-event-button (createClicked)="ouvrirModalCreation()"></app-create-event-button>
 
   </div>
+
+  <app-filter-event
+    [events]="allEvenements"
+    (filteredEventsChange)="handleFilteredEventsChange($event)">
+  </app-filter-event>
 
   <table class="full-width-table">
     <thead>
@@ -25,7 +29,7 @@
     </thead>
     <tbody>
     <!-- Utilisation de event-row -->
-      @for (event of evenements ; track event.id) {
+      @for (event of paginatedEvenements ; track event.id) {
         <tr app-event-row
             [evenement]="event"
             (modifier)="handleOpenEditModal($event)"
@@ -35,6 +39,13 @@
       }
     </tbody>
   </table>
+  <!-- Composant Pagination -->
+  <app-pagination
+    [currentPage]="currentPage"
+    [totalItems]="filteredEvenements.length"
+    [itemsPerPage]="itemsPerPage"
+    (pageChange)="onPageChange($event)">
+  </app-pagination>
 
   @if (isEditEventModalVisible) {
     <app-edit-event

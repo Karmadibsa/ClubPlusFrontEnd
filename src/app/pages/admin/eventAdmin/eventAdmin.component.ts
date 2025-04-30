@@ -22,7 +22,9 @@ import { Evenement } from '../../../model/evenement'; // Assure-toi que ce modè
 import { LucideAngularModule } from 'lucide-angular';
 import {
   ReservationEventModalComponent
-} from '../../../component/event/reservation-event-modal/reservation-event-modal.component'; // Si utilisé dans le template
+} from '../../../component/event/reservation-event-modal/reservation-event-modal.component';
+import {FilterEventComponent} from '../../../component/event/filter-event/filter-event.component';
+import {PaginationComponent} from '../../../component/navigation/pagination/pagination.component'; // Si utilisé dans le template
 
 
 @Component({
@@ -35,7 +37,9 @@ import {
     LucideAngularModule,
     EditEventModalComponent, // Assure-toi que le nom est correct
     CreateEventButtonComponent,
-    ReservationEventModalComponent
+    ReservationEventModalComponent,
+    FilterEventComponent,
+    PaginationComponent
   ],
   templateUrl: './eventAdmin.component.html',
   styleUrls: ['./eventAdmin.component.scss'],
@@ -48,8 +52,12 @@ export class EventAdminComponent implements OnInit, OnDestroy {
   private notification = inject(NotificationService);
   private cdr = inject(ChangeDetectorRef); // Nécessaire avec OnPush
 
+  // --- AJOUT/MODIFICATION : État pour listes d'événements ---
+  allEvenements: Evenement[] = []; // Liste complète originale non filtrée
+  filteredEvenements: Evenement[] = []; // Liste après filtrage/tri (utilisée pour la pagination)
+  paginatedEvenements: Evenement[] = []; // Liste pour affichage dans le tableau (page actuelle)
+
   // --- État du Composant ---
-  evenements: Evenement[] = []; // Utilise le type Evenement
   isLoading = false;
   isEditEventModalVisible = false;
   selectedEventForEditModal: Evenement | undefined = undefined; // Pour création ou modification
@@ -57,6 +65,9 @@ export class EventAdminComponent implements OnInit, OnDestroy {
   isReservationModalVisible = false;
   selectedEventIdForReservationModal: number | null = null;
   selectedEventTitleForReservationModal: string = '';
+  // --- AJOUT : État pour la Pagination ---
+  currentPage: number = 1;
+  itemsPerPage: number = 10; // Ou une autre valeur par défaut
 
   ngOnInit(): void {
     this.chargerEvenements();
@@ -66,45 +77,96 @@ export class EventAdminComponent implements OnInit, OnDestroy {
     this.eventsSubscription?.unsubscribe(); // Nettoyage
   }
 
+  // --- MODIFICATION : chargerEvenements ---
   chargerEvenements(): void {
     this.isLoading = true;
-    this.evenements = []; // Vide la liste pendant le chargement
-    this.cdr.detectChanges(); // Met à jour l'UI pour montrer le chargement
+    // Réinitialiser toutes les listes et la pagination
+    this.allEvenements = [];
+    this.filteredEvenements = [];
+    this.paginatedEvenements = [];
+    this.currentPage = 1;
+    this.cdr.detectChanges();
 
-    // Assure-toi que this.eventService.getAllEvents() (ou la méthode appelée)
-    // fait bien GET /api/events?status=all dans le EventService.
     this.eventsSubscription = this.eventService.getAllEvents().subscribe({
-      next: (data: Evenement[]) => { // Utilise le type Evenement[]
-        this.evenements = data;
+      next: (data: Evenement[]) => {
+        this.allEvenements = data;
+        // Initialement, la liste filtrée est la même que la liste complète
+        this.filteredEvenements = [...this.allEvenements];
+        // Mettre à jour la vue paginée initiale
+        this.updatePaginatedEvents();
         this.isLoading = false;
-        console.log('Événements chargés:', data);
-        this.cdr.detectChanges(); // Met à jour l'UI avec les données
+        console.log('Événements chargés:', this.allEvenements.length);
+        this.cdr.detectChanges();
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;
         console.error('Erreur de chargement des événements:', err);
-        // Utilise le message d'erreur retourné par le handleError du service si possible
         this.notification.show(err.message || 'Erreur de chargement des événements.', 'error');
-        this.cdr.detectChanges(); // Met à jour l'UI pour enlever l'état de chargement
+        this.cdr.detectChanges();
       }
     });
   }
 
+  // --- AJOUT : Méthode pour gérer la liste filtrée ---
   /**
-   * Gère la demande de suppression émise par EventRowComponent.
+   * Reçoit la liste filtrée/triée depuis FilterEventComponent.
+   * Met à jour la liste filtrée, réinitialise la page et met à jour la pagination.
+   * @param filteredList La liste des événements après application des filtres et du tri.
    */
-  handleDeleteEventRequest(eventToDelete: Evenement): void {
-    // Optionnel: Ajouter une confirmation plus robuste (ex: modale de confirmation)
-    // const confirmation = confirm(`Êtes-vous sûr de vouloir désactiver l'événement "${eventToDelete.nom}" ?`);
-    // if (!confirmation) return;
+  handleFilteredEventsChange(filteredList: Evenement[]): void {
+    console.log("Liste filtrée/triée reçue:", filteredList.length, "éléments");
+    this.filteredEvenements = filteredList;
+    this.currentPage = 1; // Réinitialiser à la première page lors d'un changement de filtre/tri
+    this.updatePaginatedEvents(); // Mettre à jour les éléments affichés
+  }
 
-    // Utilise EventService pour la suppression (soft delete)
+  // --- AJOUT : Méthode pour mettre à jour la vue paginée ---
+  /**
+   * Calcule et met à jour la liste `paginatedEvenements`
+   * basée sur `filteredEvenements`, `currentPage` et `itemsPerPage`.
+   */
+  updatePaginatedEvents(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    // Utiliser slice pour extraire la bonne portion de la liste filtrée
+    this.paginatedEvenements = this.filteredEvenements.slice(startIndex, endIndex);
+    console.log(`Affichage page ${this.currentPage}, index ${startIndex} à ${endIndex-1}`);
+    this.cdr.detectChanges(); // Mettre à jour l'affichage
+  }
+
+  // --- AJOUT : Méthode pour gérer le changement de page ---
+  /**
+   * Appelée lorsque l'utilisateur change de page via le composant Pagination.
+   * @param newPage Le nouveau numéro de page sélectionné.
+   */
+  onPageChange(newPage: number): void {
+    if (newPage >= 1 && newPage !== this.currentPage) {
+      console.log("Changement de page vers:", newPage);
+      this.currentPage = newPage;
+      this.updatePaginatedEvents(); // Mettre à jour les éléments affichés pour la nouvelle page
+    }
+  }
+
+
+  // --- MODIFICATION : Gestion Suppression ---
+  handleDeleteEventRequest(eventToDelete: Evenement): void {
+    // ... (confirmation optionnelle) ...
     this.eventService.softDeleteEvent(eventToDelete.id).subscribe({
       next: () => {
         this.notification.show(`L'événement "${eventToDelete.nom}" a été désactivé.`, 'valid');
-        // Met à jour la liste locale SANS recharger toute la page
-        this.evenements = this.evenements.filter(e => e.id !== eventToDelete.id);
-        this.cdr.detectChanges(); // Met à jour l'affichage
+        // **Important: Mettre à jour les DEUX listes principales**
+        this.allEvenements = this.allEvenements.filter(e => e.id !== eventToDelete.id);
+        this.filteredEvenements = this.filteredEvenements.filter(e => e.id !== eventToDelete.id);
+        // Recalculer la pagination (peut changer le nombre total de pages ou la page actuelle)
+        // Vérifier si la page actuelle devient invalide après suppression
+        const maxPage = Math.ceil(this.filteredEvenements.length / this.itemsPerPage);
+        if (this.currentPage > maxPage && maxPage > 0) {
+          this.currentPage = maxPage; // Aller à la dernière page valide
+        } else if (maxPage === 0) {
+          this.currentPage = 1; // Si la liste est vide
+        }
+        this.updatePaginatedEvents(); // Mettre à jour la vue paginée
+        // cdr.detectChanges() est appelé dans updatePaginatedEvents
       },
       error: (err: HttpErrorResponse) => {
         console.error('Erreur de désactivation:', err);
@@ -112,7 +174,6 @@ export class EventAdminComponent implements OnInit, OnDestroy {
       }
     });
   }
-
 
   // --- Gestion de la Modale ---
 
@@ -147,31 +208,16 @@ export class EventAdminComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges(); // Met à jour l'UI pour cacher la modale
   }
 
-  /**
-   * Gère la sauvegarde réussie (création ou modification) émise par la modale.
-   * Appelée par l'événement (saveSuccess) émis par app-edit-event.
-   * @param savedEvent L'événement qui a été créé ou mis à jour.
-   */
-  handleSaveSuccess(savedEvent: Evenement): void {
-    const isUpdate = this.evenements.some(e => e.id === savedEvent.id);
+  // --- MODIFICATION : Gestion Sauvegarde ---
+  handleSaveEventSuccess(savedEvent: Evenement): void {
+    console.log('Sauvegarde réussie pour l\'événement:', savedEvent);
+    this.handleCloseEditModal();
 
-    if (isUpdate) {
-      // --- Mise à jour de l'élément dans la liste ---
-      this.evenements = this.evenements.map(event =>
-        event.id === savedEvent.id ? savedEvent : event // Remplace l'ancien par le nouveau
-      );
-      console.log('Événement mis à jour dans la liste locale.');
-    } else {
-      // --- Ajout du nouvel élément à la liste ---
-      // Optionnel: Trier la liste ou simplement ajouter au début/fin
-      this.evenements = [savedEvent, ...this.evenements]; // Ajoute au début
-      console.log('Nouvel événement ajouté à la liste locale.');
-    }
+    this.chargerEvenements();
 
-    this.handleCloseModal(); // Ferme la modale après succès
-    // La notification est déjà gérée dans la modale, pas besoin ici en général.
-    this.cdr.detectChanges(); // Met à jour l'affichage de la liste
+    this.notification.show(`Événement "${savedEvent.nom}" sauvegardé avec succès.`, 'valid');
   }
+
 
   /** Ouvre la modale pour modifier un événement existant */
   handleOpenEditModal(eventToEdit: Evenement): void {
@@ -181,38 +227,6 @@ export class EventAdminComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges(); // Nécessaire avec OnPush
   }
 
-  /**
-   * Gère la sauvegarde réussie d'un événement depuis la modale.
-   * Appelée lorsque la modale émet l'événement (saveSuccess).
-   * @param savedEvent L'événement qui vient d'être créé ou mis à jour.
-   */
-  handleSaveEventSuccess(savedEvent: Evenement): void {
-    console.log('Sauvegarde réussie depuis la modale pour l\'événement:', savedEvent);
-
-    // 1. Fermer la modale
-    this.handleCloseEditModal(); // Réutilise la logique de fermeture
-
-    // 2. Mettre à jour la liste des événements affichée (nextFiveEvents)
-    // C'est l'étape la plus importante pour voir le résultat !
-    // Option A: Recharger simplement toute la liste (plus simple, mais peut causer un léger clignotement)
-    const clubId = this.authService.getManagedClubId();
-    if (clubId !== null) {
-      console.log("Rechargement des données du dashboard après sauvegarde...");
-      // Tu pourrais vouloir une méthode plus ciblée juste pour recharger les événements
-      this.chargerEvenements();
-    } else {
-      this.notification.show("Erreur: ID du club non trouvé pour recharger les données.", "error");
-    }
-
-    // Option B: Mettre à jour la liste 'nextFiveEvents' manuellement (plus complexe)
-    //    - Si c'était une création, vérifier si le nouvel événement doit apparaître dans les 5 prochains.
-    //    - Si c'était une mise à jour, trouver l'événement dans la liste et le remplacer.
-    //    - Nécessiterait probablement un appel ciblé à this.eventService.getNextEvents() ou une logique de tri/filtrage.
-    //    - N'oublie pas this.cdr.detectChanges() si tu choisis cette option et utilises OnPush.
-
-    // 3. Afficher une notification de succès
-    this.notification.show(`Événement "${savedEvent.nom}" sauvegardé avec succès.`, 'valid');
-  }
 
   /**
    * Gère la fermeture de la modale d'édition/création d'événement.

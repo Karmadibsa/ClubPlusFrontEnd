@@ -1,3 +1,7 @@
+import { Categorie } from './categorie';   // Assurez-vous que ce chemin est correct
+import { Club } from './club';   // Assurez-vous que ce chemin est correct
+
+
 /**
  * Représente un Événement tel que reçu de l'API ou affiché.
  * Contient les informations essentielles et la liste des catégories associées.
@@ -12,11 +16,13 @@ export interface Evenement {
   location?: string; // Optionnel
   actif: boolean; // État de l'événement
   // Liste des catégories associées (structure simplifiée)
-  categories: Categorie[];
   // Champs calculés potentiellement retournés par l'API
   placeTotal?: number;
   placeReserve?: number;
-  // D'autres champs simples pourraient être ajoutés si l'API les retourne (ex: organisateurId)
+  amiParticipants?: string[];
+  categories: Categorie[];
+  // Présents dans les deux versions selon vos JSON et backend
+  organisateur: Club; // Utilise l'interface Organizer
 }
 
 /**

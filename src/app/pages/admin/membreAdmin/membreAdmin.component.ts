@@ -16,6 +16,9 @@ import { SidebarComponent } from '../../../component/navigation/sidebar/sidebar.
 // Modèles
 import { Membre } from '../../../model/membre'; // Assure-toi que ce type est correct
 import { RoleType } from '../../../model/role';
+import {FilterMembreComponent} from '../../../component/membre/filter-membre/filter-membre.component';
+import {Evenement} from '../../../model/evenement';
+import {PaginationComponent} from '../../../component/navigation/pagination/pagination.component';
 
 // Autres (si besoin)
 // import { LucideAngularModule } from 'lucide-angular';
@@ -27,6 +30,8 @@ import { RoleType } from '../../../model/role';
     CommonModule, // Pour @for
     MembreRowComponent,
     SidebarComponent,
+    FilterMembreComponent,
+    PaginationComponent,
     // LucideAngularModule, // Si des icônes sont utilisées dans CE template
     // FilterMembreComponent, // Retire si non utilisé
   ],
@@ -47,8 +52,18 @@ export class MembreAdminComponent implements OnInit, OnDestroy { // Implémente 
   private cdr = inject(ChangeDetectorRef);
   private membreService = inject(MembreService);
 
+  // --- AJOUT/MODIFICATION : État pour listes d'événements ---
+  allMembres: Membre[] = []; // Liste complète originale non filtrée
+  filteredMembres: Membre[] = []; // Liste après filtrage/tri (utilisée pour la pagination)
+  paginatedMembres: Membre[] = []; // Liste pour affichage dans le tableau (page actuelle)
+
+  // --- AJOUT : État pour la Pagination ---
+  currentPage: number = 1;
+  itemsPerPage: number = 15; // Ou une autre valeur par défaut
+
   ngOnInit(): void {
     this.chargerMembresDuClub(); // Renommé pour plus de clarté
+
   }
 
   ngOnDestroy(): void {
@@ -56,37 +71,80 @@ export class MembreAdminComponent implements OnInit, OnDestroy { // Implémente 
   }
 
   /**
-   * Charge la liste des membres pour le club géré via MembreService.
+   * Charge la liste des membres, initialise les listes et la pagination.
    */
   chargerMembresDuClub(): void {
     const clubId = this.authService.getManagedClubId();
     if (clubId === null) {
       this.notification.show("Erreur: ID du club géré non trouvé.", "error");
-      this.isLoading = false; // S'assurer que le chargement s'arrête
-      this.cdr.detectChanges(); // Mettre à jour l'UI
       return;
     }
 
     this.isLoading = true;
-    this.membres = []; // Vide la liste pendant le chargement
-    this.cdr.detectChanges(); // Montre l'état de chargement
+    // Réinitialiser toutes les listes et la pagination
+    this.allMembres = [];
+    this.filteredMembres = [];
+    this.paginatedMembres = [];
+    this.currentPage = 1;
+    this.cdr.detectChanges(); // Mettre à jour l'UI (montre le chargement)
 
-    // Suppose que MembreService a une méthode pour obtenir les membres par club
-    // Ex: getMembersByClub(clubId: number): Observable<Membre[]>
     this.membersSubscription = this.membreService.getMembersByClub(clubId).subscribe({
       next: (data: Membre[]) => {
-        this.membres = data; // Met à jour la liste avec les données reçues
-        this.isLoading = false; // Arrête l'indicateur de chargement
-        console.log('Membres chargés:', this.membres);
-        this.cdr.detectChanges(); // Met à jour l'affichage avec les données
+        this.allMembres = data;
+        // Initialement, la liste filtrée est une copie de la liste complète
+        this.filteredMembres = [...this.allMembres];
+        // Mettre à jour la vue paginée initiale
+        this.updatePaginatedMembres();
+        this.isLoading = false;
+        console.log('Membres chargés:', this.allMembres.length);
+        // cdr.detectChanges() est appelé dans updatePaginatedMembres
       },
       error: (err: HttpErrorResponse) => {
-        this.isLoading = false; // Arrête l'indicateur de chargement
+        this.isLoading = false;
+        this.allMembres = []; // Assurer que les listes sont vides en cas d'erreur
+        this.filteredMembres = [];
+        this.paginatedMembres = [];
         console.error('Erreur de chargement des membres:', err);
         this.notification.show(err.message || 'Erreur de chargement des membres.', 'error');
-        this.cdr.detectChanges(); // Met à jour l'affichage pour enlever le chargement
+        this.cdr.detectChanges();
       }
     });
+  }
+
+  /**
+   * Met à jour la liste filteredMembres et réinitialise la pagination.
+   * Appelée par l'output (filteredMembresChange) de FilterMembreComponent.
+   * @param filteredList La liste des membres filtrée/triée.
+   */
+  handleFilteredMembresChange(filteredList: Membre[]): void {
+    console.log("Liste membres filtrée/triée reçue:", filteredList.length, "éléments");
+    this.filteredMembres = filteredList;
+    this.currentPage = 1; // Revenir à la première page après un filtre/tri
+    this.updatePaginatedMembres();
+  }
+
+  /**
+   * Met à jour la liste paginatedMembres pour affichage dans le tableau.
+   * Calcule la tranche de filteredMembres à afficher.
+   */
+  updatePaginatedMembres(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedMembres = this.filteredMembres.slice(startIndex, endIndex);
+    console.log(`Membres: Affichage page ${this.currentPage}, index ${startIndex} à ${endIndex - 1} sur ${this.filteredMembres.length} filtrés`);
+    this.cdr.detectChanges(); // Mettre à jour l'affichage
+  }
+
+  /**
+   * Gère le changement de page depuis le composant Pagination.
+   * @param newPage Le nouveau numéro de page.
+   */
+  onPageChange(newPage: number): void {
+    if (newPage >= 1 && newPage !== this.currentPage) {
+      console.log("Membres: Changement de page vers:", newPage);
+      this.currentPage = newPage;
+      this.updatePaginatedMembres();
+    }
   }
 
   /**

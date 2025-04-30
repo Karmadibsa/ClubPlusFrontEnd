@@ -84,6 +84,14 @@ export class EventService {
     );
   }
 
+  getAllEventsWithFriend(): Observable<Evenement[]> {
+    // Construit les paramètres de requête
+    // Fait l'appel GET avec les paramètres
+    return this.http.get<Evenement[]>(`${this.apiUrl}/withfriend`).pipe(
+      catchError(this.handleError) // Gestion d'erreur générique du service
+    );
+  }
+
   /**
    * Récupère les événements participés (statut UTILISE) non encore notés par l'utilisateur courant.
    * GET /api/events/notations/me/participated-events-unrated

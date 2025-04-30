@@ -1,0 +1,47 @@
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px; // Espace réduit pour les boutons de page
+  margin-top: 20px;
+  flex-wrap: wrap; // Pour les petits écrans
+
+  .btn {
+    padding: 6px 12px; // Boutons plus petits
+    font-size: 0.9rem;
+    min-width: 40px; // Largeur minimale
+    border: 1px solid var(--border-color); // Ajout bordure légère
+
+    &.page-number { // Style spécifique pour numéros de page
+      // background-color: transparent;
+      // color: var(--main-blue);
+    }
+
+    &.btn-primary { // Style bouton page actuelle
+      background-color: var(--main-blue);
+      color: white;
+      border-color: var(--main-blue);
+    }
+    &.btn-secondary { // Style bouton page non actuelle
+      background-color: white;
+      color: var(--main-blue);
+      &:hover:not(:disabled) {
+        background-color: var(--bg-light-gray);
+      }
+    }
+
+    &:disabled {
+      background-color: var(--bg-medium-gray);
+      color: var(--text-light);
+      border-color: var(--border-color);
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  }
+
+  .pagination-info {
+    margin-left: 15px;
+    font-size: 0.9rem;
+    color: var(--text-medium);
+  }
+}

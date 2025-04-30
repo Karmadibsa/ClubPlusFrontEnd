@@ -14,8 +14,14 @@
 
     <div class="event-section">
       <p class="section-title">Places disponibles :</p>
-      <p>{{ event.placeReserve }}/{{ event.placeTotal }} inscrits</p>
+      <p>{{ event.placeReserve }}/{{ event.placeTotal }}</p>
     </div>
+    @if (event.amiParticipants.length > 0) {
+    <div class="event-section">
+      <p class="section-title">Amis présent :</p>
+      <p>{{event.amiParticipants}}</p>
+    </div>
+    }
   </mat-card-content>
   <mat-card-actions class="bouton-reserve">
     <button (click)="openReservationModal()" mat-raised-button color="primary" class="reserve-button">

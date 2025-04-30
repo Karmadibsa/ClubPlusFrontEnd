@@ -6,7 +6,10 @@
     <h1>Liste des Membres</h1>
 
   </div>
-  <!-- Derniers membres inscrits -->
+  <app-filter-membre
+    [membres]="allMembres"
+    (filteredMembresChange)="handleFilteredMembresChange($event)">
+  </app-filter-membre>
   <div class="table-container">
     <table class="full-width-table">
       <thead>
@@ -23,11 +26,25 @@
       </tr>
       </thead>
       <tbody>
-        @for (member of membres ; track member.id) {
+        @for (member of paginatedMembres ; track member.id) {
           <tr app-membre-row [membre]="member" (roleChangeRequested)="handleSaveRole($event)"></tr>
+        }@empty {
+          <!-- Optionnel: Message si aucun membre à afficher -->
+          <tr>
+            <td colspan="8" style="text-align: center; padding: 20px;">
+              Aucun membre trouvé ou correspondant aux filtres.
+            </td>
+          </tr>
         }
       </tbody>
     </table>
   </div>
+
+  <app-pagination
+    [currentPage]="currentPage"
+    [totalItems]="filteredMembres.length"
+    [itemsPerPage]="itemsPerPage"
+    (pageChange)="onPageChange($event)">
+  </app-pagination>
 </div>
 
