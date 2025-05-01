@@ -1,131 +1,369 @@
-.container {
-  padding: 20px;
-  margin: 2% 2% 2% 17%;
-  background-color: var(--bg-light-gray);
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-  border-left: solid var(--main-orange) 2px;
+// billet.component.scss
+
+// --- Importation des variables globales si nécessaire ---
+// Assurez-vous que les variables de styles.txt sont accessibles globalement ou importez-les.
+// @import 'path/to/styles.scss'; // Ou le nom de votre fichier de variables
+
+// --- Styles spécifiques à la page Billets ---
+
+// En-tête de la page
+.page-header {
+  margin-bottom: var(--spacing-lg, 24px);
+  padding-bottom: var(--spacing-md, 16px);
+  border-bottom: 1px solid var(--border-color, #dee2e6);
+
+  h1 {
+    font-size: 1.8rem; // Taille cohérente avec autres pages
+    color: var(--main-blue);
+    margin: 0; // Reset marge h1
+    // Optionnel: ajouter flex si icône etc.
+    // display: flex;
+    // align-items: center;
+    // gap: var(--spacing-sm);
+  }
 }
 
-.header {
-  text-align: center;
-  margin-bottom: 25px;
-}
-
-.header h1 {
-  font-size: 2rem;
-  color: var(--main-blue);
+// Indicateur de chargement
+.loading-indicator {
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: var(--spacing-sm, 8px);
+  padding: var(--spacing-xl, 32px) 0;
+  font-size: 1.1rem;
+  color: var(--text-medium, #666);
+  min-height: 200px; // Pour éviter saut de page au chargement
 }
 
-.header h1 i {
-  color: var(--main-orange);
+
+// --- Styles pour le Tableau des Billets ---
+// Utilise les classes ajoutées au HTML (.card, .table-container, .table-wrapper, .data-table, .ticket-table)
+
+// Styles pour la carte contenant le tableau (si non défini globalement)
+.card {
+  background-color: var(--main-white, #fff);
+  border-radius: var(--border-radius, 8px);
+  // Adaptez l'ombre si vous avez une variable globale (--shadow-sm, etc.)
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  margin-bottom: var(--spacing-lg, 24px);
+  overflow: hidden; // Important pour les coins arrondis avec le tableau
 }
 
-table {
+// Conteneur direct du tableau dans la carte
+.table-container {
+  padding: 0; // Annule padding si .card est le parent direct et a déjà du padding
+}
+
+// Wrapper pour le défilement horizontal sur petits écrans (avant transformation)
+.table-wrapper {
+  overflow-x: auto; // Permet le scroll horizontal si le tableau est trop large
   width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  overflow: hidden;
 }
 
-th, td {
-  padding: 15px;
-  text-align: left;
-  border-bottom: 1px solid var(--border-color);
+// Ciblage spécifique du tableau des billets
+table.ticket-table.data-table { // Utilisation des deux classes pour spécificité
+  width: 100%;
+  border-collapse: collapse; // Fusionne les bordures des cellules
+  font-size: 0.95rem; // Légèrement plus petit que la police de base
+
+  // Styles d'en-tête
+  thead th {
+    // Utiliser une variable pour la couleur de fond si disponible (ex: --bg-table-header)
+    // background-color: rgba(var(--main-blue-rgb, 26, 95, 122), 0.05); // Fond très léger (alternative)
+    background-color: var(--bg-light-gray, #f8f9fa); // Fond gris clair standard
+    color: var(--main-blue); // Couleur du texte d'en-tête
+    font-weight: 600; // Texte en semi-gras
+    padding: var(--spacing-md, 16px); // Padding interne
+    text-align: left; // Alignement du texte
+    // Bordure inférieure plus marquée pour séparer l'en-tête du corps
+    border-bottom: 2px solid var(--main-blue);
+    white-space: nowrap; // Empêche le retour à la ligne des titres
+
+    // Centrer le titre de la colonne "Actions"
+    &.actions-header {
+      text-align: center;
+    }
+  }
+
+  // Styles des cellules de données dans le corps du tableau
+  tbody td {
+    padding: var(--spacing-md, 16px); // Padding cohérent avec l'en-tête
+    text-align: left; // Alignement standard
+    // Bordure inférieure légère pour séparer les lignes
+    // Utiliser une variable si disponible (ex: --border-color-light)
+    border-bottom: 1px solid #eee;
+    vertical-align: middle; // Alignement vertical au centre
+
+    // Optionnel: Styles spécifiques pour certaines colonnes (ex: date/heure plus discrètes)
+    // &[data-label="Date"], &[data-label="Heure"] {
+    //   font-size: 0.85rem;
+    //   color: var(--text-medium);
+    //   white-space: nowrap; // Empêcher retour à la ligne si souhaité
+    // }
+  }
+
+  // Style de la ligne au survol
+  tbody tr:hover {
+    background-color: var(--bg-light-gray, #f8f9fa); // Léger fond au survol
+  }
+
+  // Styles pour la cellule contenant les actions (<td> généré par app-reservation-row)
+  // Ces styles s'appliquent à la cellule elle-même
+  tbody td[data-label="Actions"] { // Ciblage possible via data-label pour mobile
+    text-align: center; // Centre le contenu (le div.btn-actions)
+    vertical-align: middle;
+    white-space: nowrap; // Empêche les boutons de passer à la ligne sur desktop
+  }
+
+  // Style pour le message quand le tableau est vide
+  .empty-table-message {
+    text-align: center;
+    font-style: italic;
+    color: var(--text-light); // Couleur discrète
+    padding: var(--spacing-xl) 0; // Espacement vertical généreux
+    border: none; // Pas de bordure pour ce message
+  }
 }
 
-th {
-  background-color: rgba(26, 95, 122, 0.05);
-  font-weight: 600;
-  color: var(--main-blue);
+// --- Styles des Boutons d'action (dans app-reservation-row) ---
+// Ces styles sont définis ici pour centraliser, mais pourraient être dans app-reservation-row.scss.
+// Utilisez ::ng-deep si ces styles sont dans billet.component.scss et doivent affecter app-reservation-row.
+// Si le SCSS de reservation-row est utilisé, ces styles .btn ne sont peut-être pas nécessaires ici.
+
+// Wrapper pour les boutons DANS la cellule Actions (généré par app-reservation-row)
+// Si .btn-actions est utilisé dans reservation-row.component.html:
+:host ::ng-deep .btn-actions { // ::ng-deep est nécessaire si ce style est dans le parent (BilletComponent)
+  display: inline-flex; // Aligne les boutons horizontalement
+  justify-content: center; // Centre les boutons dans la cellule
+  align-items: center; // Alignement vertical
+  gap: var(--spacing-sm, 8px); // Espace entre les boutons
 }
 
-.actions-cell {
-  display: flex;
-  gap: 10px;
-}
-
+// Styles généraux des boutons (peuvent être globaux ou spécifiques ici)
 .btn {
-  padding: 10px 15px;
-  border-radius: 6px;
+  padding: 8px 12px; // Padding ajusté pour les boutons de tableau
+  border-radius: var(--border-radius-sm, 4px); // Rayon plus petit si souhaité
   cursor: pointer;
-  font-size: 14px;
+  font-size: 0.85rem; // Taille de police réduite
   font-weight: 500;
-  transition: all 0.3s ease;
-  border: none;
-  display: flex;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  border: 1px solid transparent; // Bordure transparente par défaut
+  display: inline-flex; // Pour aligner icône et texte
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: var(--spacing-xs, 4px); // Espace réduit entre icône et texte (si texte présent)
+  text-decoration: none; // Pas de soulignement
+  line-height: 1.4; // Hauteur de ligne standard
+
+  lucide-icon {
+    width: 16px; // Taille d'icône pour les actions de tableau
+    height: 16px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--main-blue); // Style de focus visible
+    outline-offset: 1px;
+  }
 }
 
+// Styles spécifiques par type de bouton
 .btn-primary {
-  background-color: var(--main-orange);
-  color: white;
+  background-color: var(--main-orange); color: white; border-color: var(--main-orange);
+  &:hover:not(:disabled) {
+    // Utiliser une variable pour la couleur hover si définie (ex: --main-orange-dark)
+    background-color: #d9541e; // Version assombrie de l'orange
+    border-color: #d9541e;
+    transform: translateY(-1px); // Léger effet au survol
+  }
 }
-
 .btn-secondary {
-  background-color: var(--main-blue);
-  color: white;
+  background-color: var(--main-blue); color: white; border-color: var(--main-blue);
+  &:hover:not(:disabled) {
+    // Utiliser une variable pour la couleur hover si définie (ex: --main-blue-dark)
+    background-color: #134b63; // Version assombrie du bleu
+    border-color: #134b63;
+    transform: translateY(-1px);
+  }
+}
+.btn-danger {
+  background-color: var(--danger, #dc3545); color: white; border-color: var(--danger, #dc3545);
+  &:hover:not(:disabled) {
+    background-color: #c82333; // Version assombrie du rouge danger
+    border-color: #bd2130;
+    transform: translateY(-1px);
+  }
 }
 
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+// --- Styles pour Zones Fonctionnelles Cachées ---
+.hidden-functional {
+  display: none; // Cache ces zones par défaut
+  // Alternative pour l'accessibilité si des éléments focusables sont présents et nécessaires :
+  // position: absolute;
+  // left: -9999px;
+  // width: 1px;
+  // height: 1px;
+  // overflow: hidden;
 }
 
+// --- Styles de Base pour le Template PDF ---
+// Appliqués lorsque l'élément #pdf-content est utilisé pour la génération PDF
+.pdf-template {
+  font-family: Arial, sans-serif; // Police standard et sûre pour PDF
+  color: #333; // Couleur de texte par défaut
 
-.pdf-container {
-  display: none;
+  .pdf-page {
+    // Dimensions approximatives A4 moins marges standard (210x297mm)
+    width: 190mm;
+    min-height: 277mm; // Pour forcer la hauteur si peu de contenu
+    padding: 10mm; // Marges internes simulées
+    border: 1px solid #ccc; // Bordure pour visualiser la zone (peut être retirée)
+    background-color: white;
+    box-sizing: border-box;
+  }
+
+  .pdf-header {
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    h1 {
+      font-size: 22px; // Taille de titre pour PDF
+      color: var(--main-blue); // Utiliser la couleur principale
+      margin: 0;
+    }
+  }
+
+  .pdf-ticket-info {
+    font-size: 13px; // Taille de police standard pour PDF
+    line-height: 1.6; // Interligne confortable
+    p {
+      margin: 5px 0; // Espacement entre les paragraphes d'info
+    }
+    strong {
+      font-weight: bold;
+      color: #000; // Mettre en évidence les libellés
+      margin-right: 5px;
+    }
+  }
+
+  .pdf-qr-code {
+    text-align: center; // Centrer le QR code
+    margin-top: 25px; // Espace avant le QR code
+    // Le composant qrcode gère sa propre taille via [width]
+  }
+
+  .pdf-footer {
+    margin-top: 30px; // Espace avant le pied de page
+    padding-top: 10px;
+    border-top: 1px solid #eee; // Ligne de séparation
+    text-align: center;
+    font-size: 11px; // Texte plus petit pour le pied de page
+    color: #666; // Couleur discrète
+  }
 }
 
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  margin-bottom: 20px;
-}
+// --- Responsive pour le Tableau (Transformation en Cartes) ---
+@media screen and (max-width: 768px) { // Point de rupture standard pour tablettes/mobiles
 
-.filters label {
-  font-weight: bold;
-}
+  // Ajuster la taille du titre de page sur mobile
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
 
-.search-bar {
-  flex-grow: 1;
-  padding: 10px;
-  border-radius: 5px;
-  height: 100%;
-}
+  // Ciblage du tableau pour la transformation
+  table.data-table.ticket-table {
 
-.date-picker input[type="date"],
-.time-picker input[type="time"],
-.search-bar {
-  border: none;
-  border-bottom: solid var(--main-orange) 2px;
-}
+    // Cacher complètement l'en-tête du tableau sur mobile
+    thead {
+      border: 0;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+      white-space: nowrap; // Empêche le contenu caché d'affecter la mise en page
+    }
 
-.date-picker,
-.time-picker {
-  display: flex;
-}
+    // Transformer chaque ligne (tr) en un bloc distinct (carte)
+    tr {
+      display: block; // Empile les lignes verticalement
+      margin-bottom: var(--spacing-md, 16px); // Espace entre les cartes
+      border: 1px solid var(--border-color, #dee2e6); // Bordure de la carte
+      border-radius: var(--border-radius); // Coins arrondis
+      padding: var(--spacing-sm, 8px); // Padding interne de la carte
+      background-color: var(--main-white); // Fond blanc pour chaque carte
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05); // Légère ombre
+      &:hover {
+        background-color: var(--main-white); // Annuler l'effet de survol de la ligne
+      }
+    }
 
-.picker {
-  display: flex;
-  align-items: center;
-}
+    // Transformer chaque cellule (td) en une ligne flex (Label / Valeur)
+    td {
+      display: flex; // Utilise Flexbox pour aligner label et valeur
+      justify-content: space-between; // Pousse le label à gauche et la valeur à droite
+      align-items: center; // Centre verticalement le label et la valeur
+      padding: var(--spacing-sm, 8px) 0; // Padding vertical, annule padding horizontal
+      // Ligne de séparation pointillée entre les champs dans une carte
+      border-bottom: 1px dashed var(--border-color-light, #e0e0e0);
+      text-align: right; // Aligne le texte de la valeur (contenu du td) à droite
+      white-space: normal; // Permet au texte de la valeur de passer à la ligne
 
-input {
-  height: 100%;
-  border-radius: 5px;
-}
+      // Utiliser le pseudo-élément ::before pour afficher le label
+      &::before {
+        // Récupère le contenu de l'attribut 'data-label' du td
+        // ** NÉCESSITE que les <td> dans app-reservation-row aient l'attribut [attr.data-label]="'Label'" **
+        content: attr(data-label);
+        font-weight: 600; // Label en semi-gras
+        text-align: left; // Label aligné à gauche
+        margin-right: var(--spacing-md, 16px); // Espace entre label et valeur
+        color: var(--main-blue); // Met le label en évidence avec la couleur principale
+        white-space: nowrap; // Empêche le label de passer à la ligne
+        flex-shrink: 0; // Empêche le label de rétrécir si la valeur est longue
+      }
 
-tr {
-  display: table-row; /* Assure que les lignes restent des lignes */
-}
+      // Ajustements spécifiques pour la cellule d'actions sur mobile
+      &[data-label="Actions"] {
+        border-bottom: none; // Pas de bordure en bas pour la dernière "ligne"
+        justify-content: center; // Centre les boutons horizontalement
+        padding-top: var(--spacing-md); // Ajoute de l'espace au-dessus des boutons
+        &::before {
+          display: none; // Cache le label "Actions" lui-même
+        }
+        // Les styles du conteneur .btn-actions (display: flex, gap) s'appliqueront naturellement
+      }
 
-td {
-  display: table-cell; /* Assure que les cellules restent des cellules */
-}
+      // Supprimer la bordure inférieure de la dernière cellule visible dans la carte
+      // (souvent la cellule Actions, mais pas toujours si des cellules sont vides)
+      &:last-of-type { // Cible la dernière cellule du tr (qui est maintenant affiché en block)
+        border-bottom: none;
+      }
+
+      // Masquer les cellules vides pour ne pas afficher de lignes vides dans la carte
+      &:not(:last-child):empty { // Ne masque pas la cellule actions si elle est vide
+        display: none;
+      }
+    }
+
+    // Style spécifique pour le message "tableau vide" sur mobile
+    .empty-table-message {
+      display: block; // Assure qu'il s'affiche correctement
+      text-align: center;
+      border: none; // Pas de bordure
+      padding: var(--spacing-lg) 0; // Espacement vertical
+      background-color: transparent; // Pas de fond de carte
+      box-shadow: none; // Pas d'ombre
+      &::before {
+        display: none; // Cache le pseudo-élément s'il apparaît accidentellement
+      }
+    }
+  }
+} // Fin Media Query Mobile

@@ -1,164 +1,253 @@
-// --- Conteneur du Formulaire ---
+/*------------------------------------*\
+  #PAGE: INSCRIPTION MEMBRE
+  Styles spécifiques pour le formulaire d'inscription d'un nouveau membre.
+\*------------------------------------*/
+
+// Importation des variables globales (si nécessaire)
+// @import 'path/to/variables';
+
+/*------------------------------------*\
+  #CONTENEUR PRINCIPAL DU FORMULAIRE
+\*------------------------------------*/
 .form-container {
-  background: var(--container-background);
-  padding: 25px 30px; // Un peu plus d'espace
-  border-radius: 8px;
+  // Style de base du conteneur.
+  background: var(--main-white);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-radius: var(--border-radius);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  height: auto;
+  max-width: 900px; // Largeur maximale pour la lisibilité.
+  margin: var(--spacing-xl) auto; // Centrage horizontal avec marge verticale.
+  box-sizing: border-box;
 }
 
-// --- Lien de Retour ---
+/*------------------------------------*\
+  #LIEN DE RETOUR
+\*------------------------------------*/
 .return-link {
-  display: inline-flex; // Pour aligner icône et texte
+  // Style du lien de retour.
+  display: inline-flex;
   align-items: center;
-  gap: 5px; // Espace entre icône et texte
+  gap: var(--spacing-xs);
   color: var(--main-blue);
   text-decoration: none;
-  font-size: 14px;
+  font-size: 0.9rem;
   font-weight: 600;
-  margin-bottom: 20px;
-  transition: color 0.3s ease;
+  margin-bottom: var(--spacing-lg);
+  transition: color var(--transition-standard);
+
+  // Style de l'icône (ex: Lucide)
+  [data-lucide="arrow-left"] {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2.5px;
+  }
 
   &:hover {
     color: var(--main-orange);
   }
-
-  .arrow-left {
-    font-style: normal;
-    font-size: 1.2em; // Légèrement plus grande flèche
-  }
 }
 
-// --- Titres ---
-h1, h2 {
+/*------------------------------------*\
+  #TITRES
+\*------------------------------------*/
+h1 {
+  // Titre principal de la page.
   text-align: center;
   color: var(--main-orange);
-  margin-bottom: 15px;
+  font-size: 2rem;
+  margin-bottom: var(--spacing-xl);
 }
 
-h1 {
-  font-size: 1.8rem; // Taille fixe
-  margin-bottom: 25px;
-}
-
-h2 {
-  font-size: 1.3rem; // Taille fixe
-  color: var(--main-blue); // Différencier H2
-  margin-top: 20px; // Espace avant section
-  border-bottom: 1px solid #eee; // Séparateur léger
-  padding-bottom: 8px;
-}
-
-// --- Formulaire ---
+/*------------------------------------*\
+  #FORMULAIRE ET SES COMPOSANTS
+\*------------------------------------*/
 form {
+  // Structure générale du formulaire.
   display: flex;
   flex-direction: column;
-  gap: 15px; // Espace entre les éléments/groupes
+  gap: var(--spacing-lg); // Espace entre les sections (fieldset).
 }
 
-// --- Rangée de Formulaire (pour champs côte à côte) ---
+.form-section {
+  // Style pour les groupes de champs (fieldset).
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md); // Espace entre les éléments internes (rows, groups).
+
+  &__title {
+    // Style pour le titre de section (legend).
+    font-size: 1.3rem;
+    color: var(--main-blue);
+    font-weight: 600;
+    padding: 0 var(--spacing-sm);
+    margin-left: var(--spacing-sm);
+    width: auto;
+  }
+}
+
 .form-row {
+  // Conteneur pour afficher des groupes côte à côte.
   display: flex;
-  gap: 15px; // Espace entre les groupes dans une rangée
-  flex-wrap: wrap; // Permet le passage à la ligne si pas assez de place
+  gap: var(--spacing-lg);
+  flex-wrap: wrap;
 }
 
-// --- Groupe de Formulaire (label + input + erreur) ---
 .form-group {
-  flex: 1; // Prend l'espace disponible dans une form-row
-  min-width: 200px; // Largeur minimale avant passage à la ligne dans form-row
+  // Conteneur pour label + input + erreur.
+  flex: 1 1 calc(50% - (var(--spacing-lg) / 2)); // ~50% sur desktop dans une row.
+  min-width: 250px; // Largeur minimale avant passage à la ligne.
   display: flex;
   flex-direction: column;
+  gap: var(--spacing-xs); // Espace entre label, input, erreur.
+
+  // Groupe hors row prend toute la largeur.
+  .form-section > &:not(:within(.form-row)) {
+    flex-basis: 100%;
+  }
 }
 
-// --- Labels ---
-label {
-  margin-bottom: 5px; // Espace sous le label
-  color: var(--text-color);
-  font-size: 0.9rem; // Taille fixe
-  font-weight: 600; // Légèrement moins gras que 700
+.form-label {
+  // Style des étiquettes.
+  color: var(--text-dark);
+  font-size: 0.9rem;
+  font-weight: 600;
   font-family: var(--font-family);
 
-  strong { // Pour le gras dans les labels
-    font-weight: 700;
-  }
+  strong { font-weight: 700; }
 }
 
-// --- Inputs et Boutons (Styles communs) ---
-input[type="text"],
-input[type="date"],
-input[type="tel"],
-input[type="email"],
-input[type="password"],
-select, // Si vous en ajoutez
-button {
-  padding: 10px 12px; // Espace intérieur
-  border: 1px solid var(--input-border-color);
-  border-radius: 4px;
-  font-size: 0.9rem; // Taille fixe
-  width: 100%; // Prend toute la largeur du form-group
-  box-sizing: border-box; // Inclut padding et border dans la largeur/hauteur
-  transition: border-color 0.3s ease, box-shadow 0.3s ease; // Transitions douces
+.form-input, // Classe pour inputs, selects, textareas
+select,
+textarea {
+  // Styles communs des champs de saisie.
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 0.9rem;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: var(--main-white);
+  color: var(--text-dark);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 
-  &:focus { // Style au focus
+  &:focus {
     border-color: var(--main-blue);
-    outline: none; // Supprime l'outline par défaut
-    box-shadow: 0 0 0 2px rgba(var(--main-blue), 0.2); // Ombre légère au focus
-  }
-}
-
-// Style spécifique Angular pour inputs invalides après interaction
-input.ng-invalid.ng-touched {
-  border-color: var(--danger-red);
-}
-
-// --- Bouton de Soumission ---
-button[type="submit"] {
-  margin-top: 25px; // Espace au-dessus du bouton
-  background-color: var(--main-blue);
-  color: white;
-  border: none;
-  cursor: pointer;
-  padding: 12px 15px; // Padding fixe
-  font-size: 1.1rem; // Taille fixe
-  font-weight: 600;
-  transition: background-color 0.3s ease, opacity 0.3s ease;
-
-  &:hover {
-    background-color: var(--main-orange);
+    outline: none;
+    box-shadow: 0 0 0 3px var(--input-focus-shadow);
   }
 
-  &:disabled { // Style lorsque désactivé
-    background-color: #ccc;
+  &.ng-invalid.ng-touched { // Classe Angular pour invalidité.
+    border-color: var(--danger);
+  }
+
+  &:disabled {
+    background-color: var(--bg-light-gray);
     cursor: not-allowed;
     opacity: 0.7;
   }
+}
 
-  strong { // Texte dans le bouton
-    display: block; // Assure que le texte prend toute la place
+/*------------------------------------*\
+  #VALIDATION ET MESSAGES D'ERREUR
+\*------------------------------------*/
+.validation-error {
+  // Style des messages d'erreur sous les champs.
+  color: var(--danger);
+  font-size: 0.8rem;
+  min-height: 1em; // Réserve l'espace vertical.
+  text-align: left;
+
+  // Style pour erreur de groupe (ex: password mismatch).
+  &.form-group__error--group {
+    width: 100%;
+    margin-top: var(--spacing-sm);
   }
 }
 
-// --- Messages d'Erreur ---
+// Les erreurs générales sont gérées par un service de notification.
+// .error-message-banner { ... }
 
-// Erreur générale/API (bandeau en haut)
-.error-message {
-  color: white;
-  background-color: var(--danger-red);
-  padding: 12px;
-  margin-bottom: 20px;
-  border-radius: 4px;
-  text-align: center;
-  font-size: 0.9rem;
+/*------------------------------------*\
+  #ACTIONS DU FORMULAIRE (BOUTON)
+\*------------------------------------*/
+.form-actions {
+  // Conteneur pour le bouton de soumission.
+  display: flex;
+  justify-content: center;
+  margin-top: var(--spacing-lg);
 }
 
-// Erreur de validation spécifique à un champ
-.validation-error {
-  color: var(--danger-red);
-  font-size: 0.8rem; // Petit texte
-  margin-top: 4px; // Espace au-dessus
-  min-height: 1em; // Réserve l'espace même si vide, évite les sauts de layout
+// Utilisation des classes .btn globales (supposées définies ailleurs).
+.btn {
+  // Styles de base (si non globaux).
+  padding: 12px 25px;
+  border-radius: var(--border-radius);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: var(--transition-standard);
+  min-width: 200px;
+  text-align: center;
+
+  &--primary {
+    // Style bouton primaire.
+    background-color: var(--main-blue);
+    color: var(--main-white);
+
+    &:hover:not(:disabled) {
+      background-color: var(--main-orange);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  &:disabled {
+    // Style bouton désactivé.
+    background-color: var(--text-light);
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+}
+
+/*------------------------------------*\
+  #MEDIA QUERIES: RESPONSIVE
+\*------------------------------------*/
+@media (max-width: 768px) {
+  .form-container {
+    padding: var(--spacing-lg) var(--spacing-md);
+    margin: var(--spacing-lg) auto;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .form-section__title {
+    font-size: 1.1rem;
+  }
+
+  .form-row {
+    // Empilement des groupes sur mobile.
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .form-group {
+    // Groupe pleine largeur sur mobile.
+    flex-basis: 100%;
+  }
+
+  .btn {
+    // Optionnel: bouton pleine largeur.
+    // width: 100%;
+    font-size: 1rem;
+    padding: 10px 20px;
+  }
 }

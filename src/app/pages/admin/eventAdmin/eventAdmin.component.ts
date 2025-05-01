@@ -1,7 +1,7 @@
 // ----- IMPORTATIONS -----
 import { Component, inject, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Pour @if, @for si tu migres, ou NgIf/NgForOf
-import { Subscription } from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
 // Services
@@ -24,7 +24,8 @@ import {
   ReservationEventModalComponent
 } from '../../../component/event/reservation-event-modal/reservation-event-modal.component';
 import {FilterEventComponent} from '../../../component/event/filter-event/filter-event.component';
-import {PaginationComponent} from '../../../component/navigation/pagination/pagination.component'; // Si utilisé dans le template
+import {PaginationComponent} from '../../../component/navigation/pagination/pagination.component';
+import {SidebarStateService} from '../../../service/sidebar-state.service'; // Si utilisé dans le template
 
 
 @Component({
@@ -32,7 +33,6 @@ import {PaginationComponent} from '../../../component/navigation/pagination/pagi
   standalone: true, // Important si tu utilises cette approche
   imports: [
     CommonModule, // Contient NgIf, NgForOf OU les nouveaux @if, @for
-    SidebarComponent,
     EventRowComponent,
     LucideAngularModule,
     EditEventModalComponent, // Assure-toi que le nom est correct
@@ -46,6 +46,7 @@ import {PaginationComponent} from '../../../component/navigation/pagination/pagi
   changeDetection: ChangeDetectionStrategy.OnPush // Recommandé pour les performances
 })
 export class EventAdminComponent implements OnInit, OnDestroy {
+
   // --- Injection des Services ---
   private eventService = inject(EventService);
   private authService = inject(AuthService); // Nécessaire si la modale ne récupère pas l'ID elle-même
@@ -69,8 +70,11 @@ export class EventAdminComponent implements OnInit, OnDestroy {
   currentPage: number = 1;
   itemsPerPage: number = 10; // Ou une autre valeur par défaut
 
+
   ngOnInit(): void {
+
     this.chargerEvenements();
+
   }
 
   ngOnDestroy(): void {

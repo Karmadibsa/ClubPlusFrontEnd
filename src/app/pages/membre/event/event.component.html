@@ -1,42 +1,65 @@
-<div class="sidebar">
-  <app-sidebar></app-sidebar>
-</div>
-<div class="container">
+<!-- event.component.html - Refactorisé -->
 
-<div class="title">
-  <h1 class="page-title">Les événements de mon club</h1>
+<!-- Conteneur principal standardisé -->
+<div class="main-content-area">
 
-</div>
-  <app-filter-event
-    [events]="allEvents"
-    (filteredEventsChange)="handleFilteredEventsChange($event)">
-
-  </app-filter-event>
-
-  @if (isLoading) {
-    <div class="loading-indicator">Chargement des événements...</div>
-  }
-
-  <!-- Grille des événements - Utilise filteredEvents et ajoute @empty -->
-  <div class="event-grid">
-    @for (event of paginatedEvents; track event.id) {
-      <app-event-card [event]="event"></app-event-card>
-    } @empty {
-      <!-- Message si aucun événement n'est trouvé ou ne correspond au filtre -->
-      @if (!isLoading) { <!-- N'affiche pas ce message pendant le chargement initial -->
-        <p class="no-events-message">
-          Aucun événement à afficher pour le moment.
-        </p>
-      }
-    }
+  <!-- Titre principal de la page -->
+  <div class="page-header">
+    <h1 class="page-title">Les événements de mon club</h1>
+    <!-- Icône optionnelle ou autre élément d'en-tête -->
   </div>
-  <app-pagination
-    [currentPage]="currentPage"
-    [totalItems]="filteredEvents.length"
-    [itemsPerPage]="itemsPerPage"
-    (pageChange)="onPageChange($event)">
-  </app-pagination>
-</div>
 
+  <!-- Section principale contenant filtres, grille, pagination -->
+  <main role="main">
 
+    <!-- Section dédiée aux filtres et au tri -->
+    <section class="filters-section" aria-labelledby="filters-title">
+      <h2 id="filters-title" class="visually-hidden">Filtrer et trier les événements</h2>
+      <app-filter-event
+        [events]="allEvents"
+        (filteredEventsChange)="handleFilteredEventsChange($event)">
+        <!-- Le contenu du filtre (inputs, boutons) est dans app-filter-event -->
+      </app-filter-event>
+    </section>
 
+    <!-- Section affichant la grille ou le message d'absence de résultats -->
+    <!-- aria-live="polite" annonce les changements (chargement, résultats) -->
+    <section class="event-list-section" aria-live="polite">
+
+      @if (isLoading) {
+        <div class="loading-indicator" role="status">
+          <lucide-icon name="loader" class="animate-spin" aria-hidden="true"></lucide-icon>
+          Chargement des événements...
+        </div>
+      } @else {
+        <!-- Grille des événements -->
+        <div class="event-grid">
+          @for (event of paginatedEvents; track event.id) {
+            <!-- Affiche la nouvelle carte d'événement -->
+            <app-event-card [event]="event"></app-event-card>
+          } @empty {
+            <!-- Message si aucun événement (après chargement) -->
+            <p class="no-events-message">
+              Aucun événement ne correspond à vos critères de recherche ou n'est disponible pour le moment.
+            </p>
+          }
+        </div>
+      }
+
+    </section>
+
+    <!-- Section pour la pagination (uniquement si nécessaire) -->
+    @if (!isLoading && filteredEvents.length > itemsPerPage) {
+      <section class="pagination-section" aria-label="Pagination des événements">
+        <app-pagination
+          [currentPage]="currentPage"
+          [totalItems]="filteredEvents.length"
+          [itemsPerPage]="itemsPerPage"
+          (pageChange)="onPageChange($event)">
+        </app-pagination>
+      </section>
+    }
+
+  </main> <!-- Fin main -->
+
+</div> <!-- Fin .main-content-area -->

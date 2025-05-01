@@ -1,128 +1,256 @@
-.container {
-  padding: 20px;
-  margin: 2% 2% 2% 17%;
-  background-color: var(--bg-light-gray);
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-  border-left: solid var(--main-orange) 2px;
+// mon-club.component.scss
+
+// --- Variables (si spécifiques à ce composant, sinon utiliser les globales) ---
+// (Aucune variable locale spécifique nécessaire ici si on utilise les globales)
+
+// --- Styles spécifiques à la page Mon Club ---
+
+// Conteneur principal de contenu (la marge est gérée globalement via .main-content-area)
+// :host { display: block; } // S'assure que le composant prend de la place
+
+// En-tête spécifique de la page
+.page-header {
+  display: flex;
+  flex-wrap: wrap; // Permet au bouton de passer en dessous
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xl, 32px); // Marge en bas augmentée
+  gap: var(--spacing-md, 16px); // Espace entre titre et bouton
+
+  h1 {
+    font-size: 1.8rem; // Légèrement réduit pour cohérence
+    color: var(--main-blue);
+    margin: 0; // Reset marge
+  }
 }
 
-.main-header {
-  text-align: center;
-  margin-bottom: 30px;
+// Style du bouton "Copier Code"
+.btn-copy-code {
+  // Hérite des styles .btn et .btn-secondary (ou définir ici si différent)
+  position: relative; // Pour le pseudo-élément de feedback
+
+  .icon {
+    margin-right: var(--spacing-xs, 4px); // Espace icône/texte
+    transition: transform 0.2s ease;
+  }
+  .copy-feedback { // Pour le "Copié!"
+    display: none; // Caché par défaut
+    margin-left: var(--spacing-sm, 8px);
+    font-weight: bold;
+    color: var(--success, green); // Utiliser une variable pour la couleur succès
+  }
+
+  // Styles pour le feedback visuel (exemple)
+  &.is-copied {
+    background-color: var(--success-light, #d4edda); // Fond léger succès
+    color: var(--success, #155724);
+    cursor: default;
+    .copy-button-text { display: none; } // Cache le texte original
+    .copy-feedback { display: inline; } // Affiche le feedback
+    .icon { transform: scale(1.2); } // Petite animation icône
+    &:hover { background-color: var(--success-light, #d4edda); } // Empêche changement au survol
+  }
 }
 
-.subtitle {
-  color: #666;
-}
 
+// Zone principale du formulaire
 .club-main {
-  background-color: #f9f9f9;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: var(--main-white, #fff); // Préférer blanc ou variable?
+  padding: var(--spacing-lg, 24px);
+  border-radius: var(--border-radius, 8px);
+  box-shadow: var(--shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.05)); // Variable ombre légère
 }
 
+// Formulaire
 .info-form {
   display: flex;
   flex-direction: column;
+  gap: var(--spacing-xl, 32px); // Espace entre les fieldsets/sections
 }
 
-.form-row {
+// Sections du formulaire (Fieldset)
+.form-section {
+  border: none; // Annule la bordure par défaut du fieldset
+  padding: 0;
+  margin: 0;
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 15px;
+  flex-direction: column;
+  gap: var(--spacing-md, 16px); // Espace entre les form-group dans une section
 }
 
+// Titre de section (Legend)
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--main-blue);
+  margin-bottom: var(--spacing-sm, 8px); // Espace sous le titre de section
+  padding: 0; // Reset padding legend
+}
+
+// Groupe formulaire (label + input + erreur)
 .form-group {
   display: flex;
   flex-direction: column;
+  width: 100%; // Prend toute la largeur par défaut
 }
 
-.full-width {
-  width: 100%;
+label {
+  margin-bottom: var(--spacing-xs, 4px);
+  font-weight: 500;
+  color: var(--text-dark, #333);
 }
 
-.half-width {
-  width: calc(50% - 10px);
+// Indicateur champ requis
+.required-indicator {
+  color: var(--danger, red); // Utiliser variable pour couleur danger
+  margin-left: 2px;
 }
 
+// Contrôle de formulaire (input)
 .form-control {
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  padding: 10px 12px;
+  border-radius: var(--border-radius-sm, 4px);
+  border: 1px solid var(--border-color, #ccc);
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--main-orange); // Couleur focus
+    box-shadow: 0 0 0 2px rgba(var(--main-orange-rgb, 255, 107, 53), 0.25); // Ombre focus légère
+  }
+
+  // Style pour champ invalide
+  &.is-invalid {
+    border-color: var(--danger, red);
+    &:focus {
+      box-shadow: 0 0 0 2px rgba(var(--danger-rgb, 220, 53, 69), 0.25);
+    }
+  }
 }
 
-.readonly-field {
-  background-color: #e9ecef; /* Grisé pour indiquer que le champ est en lecture seule */
+// Texte d'aide sous le champ
+.form-text {
+  font-size: 0.85rem;
+  margin-top: var(--spacing-xs, 4px);
+}
+.text-muted { // Classe utilitaire Bootstrap-like
+  color: var(--text-medium, #6c757d);
 }
 
+
+// Message d'erreur
+.invalid-feedback {
+  display: none; // Caché par défaut
+  color: var(--danger, red);
+  font-size: 0.85rem;
+  margin-top: var(--spacing-xs, 4px);
+}
+
+// Affiche le message d'erreur quand le champ est invalide
+.form-control.is-invalid + .invalid-feedback {
+  display: block;
+}
+// Ou si la div d'erreur est juste après l'input sans être un frère direct
+// input.form-control.is-invalid ~ .invalid-feedback {
+//   display: block;
+// }
+
+
+// Conteneur des boutons d'action en bas
 .actions-container {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap; // Permet aux boutons de passer à la ligne sur petit écran
+  justify-content: flex-start; // Aligne les boutons au début par défaut
+  gap: var(--spacing-md, 16px); // Espace entre les boutons
+  margin-top: var(--spacing-lg, 24px); // Espace au-dessus des boutons
 }
 
+// --- Styles Boutons (Consolidés et utilisant variables) ---
 .btn {
   padding: 10px 20px;
-  border-radius: 5px;
+  border-radius: var(--border-radius, 5px);
+  font-size: 1rem;
+  cursor: pointer;
+  border: 1px solid transparent; // Bordure transparente par défaut
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  display: inline-flex; // Pour aligner icône et texte
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm, 8px); // Espace icône/texte standard
+  text-decoration: none; // Si utilisé comme lien <a>
+
+  .icon {
+    // Taille définie via lucide-icon ou CSS global, ou ici:
+    width: 18px; height: 18px;
+  }
+
+  &:disabled { // Style bouton désactivé
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible { // Style focus commun
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(var(--main-orange-rgb, 255, 107, 53), 0.4);
+  }
 }
 
+// Bouton Primaire (Orange) - Consolidation
 .btn-primary {
-  background-color: var(--main-blue);
+  background-color: var(--main-orange); // Utilise la variable
   color: white;
-  border: none;
+  border-color: var(--main-orange);
+
+  &:hover:not(:disabled) {
+    background-color: var(--main-orange-dark, #d9541e); // Variable pour version foncée
+    border-color: var(--main-orange-dark, #d9541e);
+  }
+  &:active:not(:disabled) {
+    background-color: var(--main-orange-darker, #c8431b); // Variable pour version très foncée
+    border-color: var(--main-orange-darker, #c8431b);
+  }
 }
 
-.btn-primary:hover {
-  background-color: var(--main-blue);
-}
-
+// Bouton Secondaire (Gris)
 .btn-secondary {
-  background-color: #6c757d;
+  background-color: var(--secondary-gray, #6c757d); // Utilise variable si définie
   color: white;
+  border-color: var(--secondary-gray, #6c757d);
+
+  &:hover:not(:disabled) {
+    background-color: #5a6268;
+    border-color: #545b62;
+  }
+  &:active:not(:disabled) {
+    background-color: #545b62;
+    border-color: #4e555b;
+  }
 }
 
-.header {
-  text-align: center;
-  margin-bottom: 25px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+// --- Responsive pour le formulaire ---
+@media screen and (max-width: 768px) {
+  .page-header {
+    margin-bottom: var(--spacing-lg); // Réduit marge
+    h1 { font-size: 1.5rem; }
+  }
+
+  .club-main {
+    padding: var(--spacing-md); // Réduit padding
+  }
+
+  .info-form {
+    gap: var(--spacing-lg); // Réduit espace sections
+  }
+
+  .form-section {
+    gap: var(--spacing-sm); // Réduit espace champs
+  }
+
+  .actions-container {
+    flex-direction: column; // Empile les boutons
+    align-items: stretch; // Boutons prennent toute la largeur
+    gap: var(--spacing-sm);
+  }
 }
 
-.header h1 {
-  font-size: 2rem;
-  color: var(--main-blue);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-
-.btn-primary {
-  background-color: #f26122; /* Couleur principale (orange) */
-  color: #fff; /* Texte en blanc */
-  border: none; /* Supprime les bordures */
-  padding: 10px 20px; /* Espacement interne */
-  font-size: 16px; /* Taille du texte */
-  border-radius: 5px; /* Coins arrondis */
-  cursor: pointer; /* Curseur en forme de main */
-  transition: background-color 0.3s ease; /* Animation au survol */
-  display: flex;
-  align-items: center;
-}
-
-.btn-primary:hover {
-  background-color: #d9541e; /* Couleur légèrement plus foncée au survol */
-}
-
-.btn-primary:active {
-  background-color: #c8431b; /* Couleur encore plus foncée lors du clic */
-}
-
-.icon{
-  display: flex;
-  align-items: center;
-  padding-right: 5px;
-
-}

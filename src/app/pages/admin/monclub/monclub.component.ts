@@ -2,7 +2,7 @@
 import { Component, inject, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Nécessaire pour les imports standalone si utilisé dans le template
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
 // Services
@@ -18,6 +18,7 @@ import { Club } from '../../../model/club'; // L'interface Club
 
 // Autres
 import { LucideAngularModule } from 'lucide-angular';
+import {SidebarStateService} from '../../../service/sidebar-state.service';
 
 @Component({
   selector: 'app-monclub',
@@ -48,9 +49,9 @@ export class MonclubComponent implements OnInit, OnDestroy { // Implémente OnIn
   private notification = inject(NotificationService);
   private cdr = inject(ChangeDetectorRef); // Pour déclencher la détection de changement avec OnPush
 
-  // Pas besoin de constructeur si on utilise inject() pour tout
-
   ngOnInit(): void {
+
+
     this.clubId = this.authService.getManagedClubId(); // Récupère l'ID du club géré au démarrage
     this.initializeForm(); // Initialise la structure du formulaire
 

@@ -1,141 +1,440 @@
-.container {
-  padding: 20px;
-  margin: 2% 2% 2% 17%;
-  background-color: var(--bg-light-gray);
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-  border-left: solid var(--main-orange) 2px;
-}
-.header-event {
+/*------------------------------------*\
+  #PAGE: DASHBOARD
+  Styles pour la page principale du tableau de bord.
+  NOTE: La mise en page globale (marge par rapport à la sidebar)
+        est gérée par la classe .container DANS CE FICHIER,
+        conformément au code fourni.
+\*------------------------------------*/
+
+// --- Variables globales supposées définies ailleurs (:root) ---
+// var(--bg-light-gray), var(--main-orange), var(--main-blue),
+// var(--spacing-md), var(--spacing-lg), var(--spacing-xl), etc.
+
+/*------------------------------------*\
+  #CONTENEUR PRINCIPAL (.container)
+  Gère la marge par rapport à la sidebar et le style de fond.
+\*------------------------------------*/
+
+
+/*------------------------------------*\
+  #EN-TÊTE (Titre H1)
+\*------------------------------------*/
+.header {
   text-align: center;
-  margin-bottom: 5px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  margin-bottom: 25px;
+
+  h1 {
+    font-size: 2rem;
+    color: var(--main-blue);
+    display: inline-flex; // Pour centrer correctement.
+    align-items: center;
+    gap: 10px; // Espace si icône présente.
+    margin: 0; // Reset marge h1.
+  }
+  // i { color: var(--main-orange); } // Si icône présente.
+
+  .loading-indicator { // Style pour le message de chargement.
+    color: var(--text-medium);
+    font-style: italic;
+  }
 }
+
+/*------------------------------------*\
+  #GRILLE STATISTIQUES
+\*------------------------------------*/
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, 1fr); // 5 colonnes par défaut.
+  gap: 20px; // Espace entre les cartes.
+  margin-bottom: 30px; // Marge sous la grille.
+}
+
+/*------------------------------------*\
+  #CARTE STATISTIQUE (app-stat-card)
+  Styles basés sur votre CSS fourni pour le composant.
+\*------------------------------------*/
+app-stat-card .stat-card { // Cibler la classe dans le composant enfant.
+  background: #fff;
+  padding: 20px; // Votre padding original.
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 100%; // Prend la hauteur de la cellule grid.
+  display: flex; // Ajouté pour mieux gérer la hauteur interne.
+  flex-direction: column; // Titre au-dessus de la valeur.
+  justify-content: center; // Centre verticalement si peu de contenu.
+  text-align: center; // Centre le texte.
+
+  h3 {
+    // height: 40%; // Suppression de la hauteur fixe en %.
+    font-size: 15px; // Votre taille.
+    text-align: center;
+    color: var(--text-medium, #666); // Ajout couleur.
+    margin: 0 0 10px 0; // Marge en bas.
+    font-weight: 500; // Ajout épaisseur.
+  }
+
+  p.stat-value { // Cibler la classe si ajoutée au <p> dans le composant.
+    // height: 60%; // Suppression de la hauteur fixe en %.
+    font-size: 30px; // Votre taille.
+    text-align: center;
+    color: var(--main-blue); // Votre couleur.
+    font-weight: bold; // Votre épaisseur.
+    margin: 0; // Pas de marge.
+    line-height: 1.1; // Ajuste la hauteur de ligne.
+  }
+}
+
+/*------------------------------------*\
+  #GRILLE GRAPHIQUES
+\*------------------------------------*/
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; // 2 colonnes.
   gap: 20px;
   margin-bottom: 30px;
 }
 
-.stat-card {
-  background: #fff;
-  padding: 30px;
+/*------------------------------------*\
+  #CONTENEUR GRAPHIQUE
+  Correction pour éviter la croissance infinie.
+\*------------------------------------*/
+.chart-container {
+  background: white;
+  padding: 20px;
   border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Ombre cohérente.
+  // Styles critiques de votre HTML (déplacés ici pour maintenance) :
+  position: relative; // Important pour le canvas et le placeholder.
+  height: 400px;      // Hauteur FIXE pour contraindre le graphique.
+  display: flex;      // Utiliser flex pour organiser titre et canvas/placeholder.
+  flex-direction: column; // Titre au-dessus.
+  box-sizing: border-box; // Padding inclus dans la hauteur.
+
+  h3 {
+    margin: 0 0 15px 0; // Marge sous le titre.
+    font-size: 1.2rem; // Taille titre graphique.
+    color: var(--main-blue);
+    text-align: center;
+    flex-shrink: 0; // Empêche le titre de rétrécir si manque de place verticale.
+  }
+
+  // Conteneur pour le canvas (prend l'espace restant).
+  // Un div autour du canvas est souvent recommandé pour Chart.js
+  // mais on adapte à votre HTML actuel.
+  canvas {
+    display: block; // Comportement standard.
+    max-width: 100%; // Empêche dépassement horizontal.
+    // La hauteur est déterminée par le conteneur et les options Chart.js.
+    // On s'assure qu'il peut prendre la place disponible :
+    flex-grow: 1;
+    // Important pour certains cas de rendu Chart.js :
+    position: relative;
+    height: auto; // Laisse Chart.js gérer le ratio dans l'espace disponible.
+  }
+
+  // Placeholder si pas de données.
+  .chart-placeholder {
+    flex-grow: 1; // Prend l'espace du canvas.
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-light, #999);
+    font-style: italic;
+    text-align: center;
+  }
+}
+
+// La classe .card est utilisée conjointement, assure la cohérence (ombre/bordure).
+.card {
+  // box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Ombre un peu plus prononcée (selon votre CSS initial).
+  // Utiliser la même ombre que .chart-container pour la cohérence:
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.charts-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-bottom: 30px;
-}
-
+/*------------------------------------*\
+  #GRILLE TABLEAUX
+\*------------------------------------*/
 .tables-grid {
-  gap: 20px;
+  display: flex; // Utiliser flex pour empiler verticalement.
+  flex-direction: column; // Empilement vertical.
+  gap: 20px; // Espace entre les conteneurs de tableaux.
 }
 
+// Conteneur pour chaque tableau.
 .table-container {
   background: white;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  // overflow: hidden; // Déplacé vers .table-wrapper pour ne pas couper l'ombre.
 }
 
-.header {
-  text-align: center;
-  margin-bottom: 25px;
-}
-
-.header h1 {
-  font-size: 2rem;
-  color: var(--main-blue);
+// En-tête DANS le conteneur tableau (titre + bouton).
+.header-event {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: row; // Votre style.
+  justify-content: space-between; // Votre style.
+  align-items: center; // Ajouté pour alignement vertical.
+  margin-bottom: 15px; // Augmenté l'espace sous l'en-tête.
+  flex-wrap: wrap; // Permet au bouton de passer en dessous si manque de place.
+  gap: 10px; // Espace si passage à la ligne.
 }
 
-.header h1 i {
-  color: var(--main-orange);
-}
-
-.card {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Conteneur principal */
-.event-container {
-  padding: 20px;
-  background-color: #f4f4f4;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-
-/* Conteneur pour le tableau avec défilement horizontal */
-.table-wrapper {
-  overflow-x: auto; /* Active le défilement horizontal */
-  width: 100%; /* S'assure que le conteneur prend toute la largeur disponible */
-}
-
-/* Table générale */
-table {
-  width: 100%; /* S'assure que le tableau utilise tout l'espace disponible */
-  border-collapse: collapse;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  background-color: #ffffff;
-}
-
-/* En-tête du tableau */
-thead {
-  background-color: var(--main-blue);
-  color: white;
-}
-
-thead th {
-  font-weight: bold;
-}
-
-/* Cellules générales */
-th,
-td {
-  padding: 15px;
-  text-align: left; /* Alignement à gauche pour plus de lisibilité */
-}
-
-/* Bordures entre les lignes */
-tr {
-  border-bottom: solid 1px #ddd;
-}
-
-tbody tr:hover {
-  background-color: #f1f1f1; /* Surbrillance au survol */
-}
-
-/* Boutons d'action */
-td:last-child {
-  display: flex;
-  justify-content: center;
-}
-
-button {
-  padding: 8px;
-  margin-left: 5px;
-}
-
-.header {
-  text-align: center;
-  margin-bottom: 25px;
-}
-
+// Titres des tableaux.
 .table-container h3 {
   font-size: 1.5rem;
   color: var(--main-blue);
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  // display: flex; // Pas nécessaire si pas d'icône à côté.
+  // align-items: center;
+  // gap: 10px;
+  margin: 0; // Reset marge H3.
 }
+
+/*------------------------------------*\
+  #TABLEAUX DE DONNÉES
+\*------------------------------------*/
+// Wrapper pour le défilement horizontal.
+.table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
+// Table générale (basé sur votre CSS .full-width-table).
+table.data-table, // Utiliser une classe commune pour les tables.
+table.full-width-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif; // Remplacer par var(--font-family) si défini.
+  font-size: 14px;
+  background-color: #ffffff;
+
+  thead {
+    background-color: var(--main-blue);
+    color: white;
+    // position: sticky; top: 0; z-index: 5; // Optionnel: En-tête fixe au scroll vertical.
+  }
+
+  th, td {
+    padding: 12px 15px; // Padding unifié (ajusté).
+    text-align: left;
+    border-bottom: solid 1px #ddd; // Bordure appliquée à toutes les cellules en bas.
+    vertical-align: middle; // Centre verticalement.
+  }
+
+  thead th {
+    font-weight: bold; // Votre style.
+    white-space: nowrap; // Empêche retour ligne titres colonnes.
+  }
+
+  tbody tr {
+    // border-bottom: none; // La bordure est maintenant sur td/th.
+    transition: background-color 0.2s ease; // Votre transition.
+    &:hover {
+      background-color: #f1f1f1; // Votre surbrillance.
+    }
+    &:last-child th,
+    &:last-child td {
+      border-bottom: none; // Pas de bordure sous la dernière ligne.
+    }
+  }
+
+  tbody td {
+    // Gérer dépassement texte pour la plupart des cellules.
+    max-width: 200px; // Limite indicative.
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    // Cellule des actions (dernière).
+    &:last-child {
+      // display: flex; // Déplacé vers .btn-actions à l'intérieur.
+      text-align: center; // Centre le conteneur .btn-actions.
+      max-width: none; // Permet aux boutons de prendre leur place.
+      width: auto; // Largeur s'adapte aux boutons.
+      overflow: visible; // Assure que les boutons sont cliquables.
+      white-space: nowrap; // Empêche les boutons de passer à la ligne entre eux.
+    }
+  }
+  .empty-table-message { // Style message si tableau vide.
+    text-align: center;
+    font-style: italic;
+    color: var(--text-light);
+    padding: var(--spacing-lg) 0;
+  }
+}
+
+/*------------------------------------*\
+  #COMPOSANTS LIGNES (membre/event-row) - Boutons Actions
+\*------------------------------------*/
+// Conteneur pour les boutons dans la cellule Actions (td).
+.btn-actions {
+  display: inline-flex; // Pour aligner les boutons horizontalement.
+  justify-content: center; // Centre les boutons dans l'espace disponible.
+  gap: 5px; // Espace entre les boutons (votre valeur).
+}
+
+// Style commun des boutons d'action (basé sur votre CSS enfant).
+.btn {
+  display: inline-flex; // Aligne icône et texte si présent.
+  align-items: center;
+  justify-content: center; // Centre contenu (utile pour icône seule).
+  padding: 8px; // Votre padding (ajusté pour icône seule).
+  margin-left: 0; // Annule la marge gauche de votre CSS global 'button'.
+  border-radius: 4px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  background: none; // Transparent par défaut.
+  transition: color 0.2s ease, background-color 0.2s ease;
+  line-height: 1; // Assure que l'icône est bien alignée.
+
+  .icon, lucide-icon { // Cible icônes.
+    width: 16px; // Votre taille.
+    height: 16px; // Votre taille.
+    stroke: currentColor; // Hérite couleur.
+    stroke-width: 2px;
+  }
+
+  // Spécifiques (basé sur votre CSS enfant).
+  &.btn-edit {
+    color: var(--main-orange);
+    &:hover { color: #e65100; } // Orange plus foncé.
+  }
+  &.btn-delete {
+    color: var(--danger, #dc3545); // Utilise variable si définie.
+    &:hover { color: #c82333; } // Rouge plus foncé.
+  }
+  // Bouton "Voir" (non défini mais utilisé pour reservations)
+  &:not(.btn-edit):not(.btn-delete) {
+    color: var(--main-blue);
+    &:hover { color: var(--secondary-blue); }
+  }
+
+  // Focus visible pour accessibilité.
+  &:focus-visible {
+    outline: 2px solid var(--main-blue);
+    outline-offset: 1px;
+    background-color: rgba(var(--main-blue-rgb, 26, 95, 122), 0.1);
+  }
+}
+
+
+/*------------------------------------*\
+  #RESPONSIVE DASHBOARD
+  Ajustements basés sur vos media queries initiales.
+\*------------------------------------*/
+@media (max-width: 1200px) {
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 2fr)); // Plus flexible.
+    // Ou garder votre 3 colonnes: grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .charts-grid {
+    grid-template-columns: 2fr; // 1 colonne sur tablette.
+  }
+}
+
+@media (max-width: 768px) {
+  // Les styles pour .container sont déjà définis plus haut dans sa propre query.
+
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(130px, 2fr)); // Encore plus flexible.
+    // Ou garder votre 2 colonnes: grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .charts-grid {
+    gap: 16px;
+  }
+  .tables-grid {
+    gap: 24px;
+  }
+
+  .header h1 {
+    font-size: 1.8rem;
+  }
+
+  .table-container {
+    padding: 16px;
+    .header-event h3 { // Cible les deux cas.
+      font-size: 1.2rem;
+    }
+  }
+
+  table.data-table, table.full-width-table { // Appliquer aux deux classes.
+    font-size: 0.85rem;
+    th, td {
+      padding: 10px 8px;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .stats-grid {
+    grid-template-columns: 1fr; // 1 colonne sur mobile.
+  }
+  // Autres ajustements spécifiques aux très petits écrans si nécessaire.
+}
+
+/*------------------------------------*\
+  #UTILS: VISUALLY HIDDEN (Accessibilité)
+\*------------------------------------*/
+.visually-hidden {
+  border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px;
+  overflow: hidden; padding: 0; position: absolute; width: 1px;
+  white-space: nowrap;
+}
+
+/*------------------------------------*\
+  #RESPONSIVE TABLEAUX - Transformation Mobile
+\*------------------------------------*/
+
+@media screen and (max-width: 768px) {
+
+  // Cible les tableaux concernés (utiliser .data-table si ajouté comme classe commune)
+  table.data-table,
+  table.full-width-table {
+
+    // --- Masquer l'en-tête du tableau ---
+    thead {
+      display: none; // Ou border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; white-space: nowrap;
+    }
+
+
+    // Ajustement pour le message "tableau vide"
+    .empty-table-message {
+      display: block;
+      text-align: center;
+      padding: var(--spacing-lg) 0;
+      border: none;
+      &::before { display: none; } // Masque le label potentiel.
+    }
+
+  } // Fin table
+
+  // Ajustement du conteneur des boutons d'action sur mobile si nécessaire.
+  .btn-actions {
+    justify-content: center; // Assure le centrage dans la cellule.
+    padding-top: 5px; // Léger espace si label "Actions" est visible.
+  }
+
+} // Fin @media
+
+
+
+// Classe utilitaire (doit être globale ou répétée ici si besoin)
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+

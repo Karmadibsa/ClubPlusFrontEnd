@@ -1,32 +1,64 @@
-<mat-card class="event-card">
-  <mat-card-header>
-    <mat-card-title>{{ event.nom }}</mat-card-title>
-    <mat-card-subtitle>
-      <span class="event-time">{{ event.start | date:'dd/MM/yyyy HH:mm' }} - {{ event.end | date:'HH:mm' }}</span>
-    </mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
-    <div class="event-section">
-      <p class="section-title">Description :</p>
-      <p>{{ event.description }}</p>
+<!-- event-card.component.html - Version sans Angular Material -->
+
+<!-- Utilisation d'une div comme conteneur principal de la carte -->
+<!-- role="article" pour la sémantique, aria-labelledby pour lier au titre -->
+<div class="event-card" role="article" [attr.aria-labelledby]="'event-title-' + event.id">
+
+    <!-- En-tête de la carte -->
+    <header class="event-card-header">
+        <!-- Utilisation d'un h2 pour le titre pour une meilleure structure de document -->
+        <h2 class="event-title" [id]="'event-title-' + event.id">{{ event.nom }}</h2>
+        <!-- Groupe pour les dates/heures -->
+        <div class="event-time">
+            <lucide-icon name="calendar-clock" size="16" aria-hidden="true"></lucide-icon>
+            <span>{{ event.start | date:'dd/MM/yyyy HH:mm' }} - {{ event.end | date:'HH:mm' }}</span>
+        </div>
+    </header>
+
+    <!-- Contenu principal de la carte -->
+    <div class="event-card-content">
+
+        <!-- Section Description -->
+        <div class="event-section event-description">
+            <!-- Utilisation dl/dt/dd pour une sémantique clé/valeur -->
+            <dl>
+                <dt class="section-title visually-hidden">Description</dt> <!-- Caché car évident -->
+                <dd class="description-text">{{ event.description }}</dd>
+            </dl>
+        </div>
+
+        <!-- Section Détails (Places et Amis) -->
+        <div class="event-section event-details">
+            <dl>
+                <div class="detail-item">
+                    <dt class="section-title">
+                        <lucide-icon name="users" size="16" aria-hidden="true"></lucide-icon>
+                        Places disponibles :
+                    </dt>
+                    <dd>{{ event.placeReserve }}/{{ event.placeTotal }}</dd>
+                </div>
+
+                <!-- Affichage conditionnel des amis -->
+                @if (event.amiParticipants && event.amiParticipants.length > 0) {
+                    <div class="detail-item amis-section">
+                        <dt class="section-title">
+                            <lucide-icon name="user-check" size="16" aria-hidden="true"></lucide-icon>
+                            Amis présents :
+                        </dt>
+                        <!-- Itérer si c'est une liste, sinon afficher directement -->
+                        <dd class="amis-list">{{ event.amiParticipants.join(', ') }}</dd>
+                    </div>
+                }
+            </dl>
+        </div>
     </div>
 
+    <!-- Pied de carte / Actions -->
+    <footer class="event-card-actions">
+        <button type="button" (click)="openReservationModal()" class="btn btn-primary reserve-button">
+            <lucide-icon name="calendar-check" size="18" aria-hidden="true"></lucide-icon>
+            Réserver
+        </button>
+    </footer>
 
-    <div class="event-section">
-      <p class="section-title">Places disponibles :</p>
-      <p>{{ event.placeReserve }}/{{ event.placeTotal }}</p>
-    </div>
-    @if (event.amiParticipants.length > 0) {
-    <div class="event-section">
-      <p class="section-title">Amis présent :</p>
-      <p>{{event.amiParticipants}}</p>
-    </div>
-    }
-  </mat-card-content>
-  <mat-card-actions class="bouton-reserve">
-    <button (click)="openReservationModal()" mat-raised-button color="primary" class="reserve-button">
-      <lucide-icon name="calendar-check" size="20"></lucide-icon>
-      Réserver
-    </button>
-  </mat-card-actions>
-</mat-card>
+</div>

@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import {CommonModule, DatePipe, formatDate} from '@angular/common'; // Pour @if etc.
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms'; // ReactiveFormsModule requis pour [formGroup]
-import { Subscription } from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
 // Services
@@ -25,8 +25,9 @@ import { Membre } from '../../../model/membre'; // L'interface Membre
 
 // Autres
 import { LucideAngularModule } from 'lucide-angular';
-import {Router} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {AuthService} from '../../../service/security/auth.service';
+import {SidebarStateService} from '../../../service/sidebar-state.service';
 
 @Component({
   selector: 'app-moncompte',
@@ -37,17 +38,20 @@ import {AuthService} from '../../../service/security/auth.service';
     SidebarComponent,
     DatePipe,
     LucideAngularModule,
-    FormsModule
+    FormsModule,
+    RouterLink
   ],
   templateUrl: './moncompte.component.html',
   styleUrls: ['./moncompte.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush // Active OnPush
 })
 export class MonCompteComponent implements OnInit, OnDestroy {
+
+  auth = inject(AuthService)
+
   private locale = inject(LOCALE_ID); // Injecter LOCALE_ID pour le formatage automatique
 
   private router = inject(Router); // Injecter Router
-  private authService = inject(AuthService); // Injecter AuthService
   // --- État du Composant ---
   infoForm!: FormGroup;
   passwordForm!: FormGroup; // On ignore pour l'instant
@@ -74,6 +78,7 @@ export class MonCompteComponent implements OnInit, OnDestroy {
   // Définir la phrase exacte requise
   isDeletingAccount = false;
   private deleteSubscription: Subscription | null = null; // Pour la suppression
+
 
   ngOnInit(): void {
     this.initializeInfoForm();
@@ -233,7 +238,7 @@ export class MonCompteComponent implements OnInit, OnDestroy {
       next: () => {
         this.isDeletingAccount = false;
         this.notification.show('Votre compte a été supprimé avec succès.', 'valid');
-        this.authService.deconnexion();
+        this.auth.deconnexion();
         this.router.navigate(['/login']); // Ou autre page d'accueil post-connexion
         this.cdr.detectChanges();
       },

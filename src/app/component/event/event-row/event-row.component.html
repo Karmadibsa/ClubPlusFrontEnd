@@ -1,32 +1,24 @@
-<td>{{ evenement.id }}</td>
-<td>{{ evenement.nom }}</td>
-  <td>{{ evenement.start | date:'dd/MM/yyyy HH:mm' }} - {{ evenement.end | date:'dd/MM HH:mm' }}</td>
-<td>{{ evenement.description }}</td>
-<td>{{ evenement.placeReserve }} / {{ evenement.placeTotal }}</td>
-<td>{{ evenement.location }}</td>
-<td>
-  @for (categorie of evenement.categories; track categorie.id;let last = $last) {
-  <span>
-    {{ categorie.nom }}
-    @if (!last) {
-      <span aria-hidden="true">, </span> <!-- Utilise un span avec aria-hidden car la virgule est purement visuelle -->
-    }
-  </span>
+<!-- event-row.component.html -->
+<td data-label="ID">{{ evenement.id }}</td>
+<td data-label="Titre">{{ evenement.nom }}</td>
+<td data-label="Début - Fin">{{ evenement.start | date:'dd/MM/yyyy HH:mm' }} - {{ evenement.end | date:'dd/MM HH:mm' }}</td>
+<td data-label="Description">{{ evenement.description }}</td>
+<td data-label="Participants">{{ evenement.placeReserve }} / {{ evenement.placeTotal }}</td>
+<td data-label="Lieu">{{ evenement.location }}</td>
+<td data-label="Catégories">
+  @for (categorie of evenement.categories; track categorie.id; let last = $last) {
+    <span>{{ categorie.nom }}{{ !last ? ', ' : '' }}</span>
   }
 </td>
-<td>
+<td data-label="Actions"> <!-- Label pour la cellule actions -->
   <div class="btn-actions">
-    <!-- Bouton Voir les reservations -->
-    <button class="btn" (click)="onRequestViewReservations()">
+    <button class="btn btn-view" title="Voir Réservations" (click)="onRequestViewReservations()">
       <lucide-icon name="eye" class="icon"></lucide-icon>
     </button>
-    <!-- Bouton Modifier -->
-    <button class="btn btn-edit" (click)="ouvrirModal()">
+    <button class="btn btn-edit" title="Modifier" (click)="ouvrirModal()">
       <lucide-icon name="pen" class="icon"></lucide-icon>
     </button>
-
-    <!-- Bouton Supprimer -->
-    <button class="btn btn-delete" (click)="requestDelete()">
+    <button class="btn btn-delete" title="Supprimer" (click)="requestDelete()">
       <lucide-icon name="trash" class="icon"></lucide-icon>
     </button>
   </div>

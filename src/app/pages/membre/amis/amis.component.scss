@@ -1,18 +1,3 @@
-// --- Styles Généraux du Composant ---
-:host {
-  display: block;
-}
-
-// --- Container Principal ---
-.container {
-  padding: var(--spacing-lg, 24px);
-  margin: 2% 2% 2% 17%;
-  background-color: var(--bg-light-gray, #f8f9fa);
-  border-radius: var(--border-radius, 8px);
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-  border-left: solid var(--main-orange, #f26122) 2px;
-}
-
 // --- Header (Flexbox appliqué ici) ---
 .header {
   display: flex;
@@ -333,3 +318,11 @@ table.full-width-table {
     }
   }
 }
+
+
+// --- Responsive ---
+@media screen and (max-width: 768px) {
+  .header {
+    margin-bottom: var(--spacing-lg);
+    .page-title { font-size: 1.5rem; }
+  }}

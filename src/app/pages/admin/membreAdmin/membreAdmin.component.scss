@@ -1,12 +1,4 @@
 /* Conteneur principal */
-.container {
-  padding: 20px;
-  margin: 2% 2% 2% 17%;
-  background-color: var(--bg-light-gray);
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-  border-left: solid var(--main-orange) 2px;
-}
 
 /* Conteneur pour le tableau avec défilement horizontal */
 .table-wrapper {
@@ -43,7 +35,6 @@ td {
 /* Bordures entre les lignes */
 tr {
   border-bottom: solid 1px #ddd;
-  height: 40px;
 }
 
 tbody tr:hover {
@@ -73,3 +64,38 @@ button {
   align-items: center;
   gap: 10px;
 }
+
+/*------------------------------------*\
+  #RESPONSIVE TABLEAUX - Transformation Mobile
+\*------------------------------------*/
+
+@media screen and (max-width: 768px) {
+
+  // Cible les tableaux concernés (utiliser .data-table si ajouté comme classe commune)
+  table.data-table,
+  table.full-width-table {
+
+    // --- Masquer l'en-tête du tableau ---
+    thead {
+      display: none; // Ou border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; white-space: nowrap;
+    }
+
+
+    // Ajustement pour le message "tableau vide"
+    .empty-table-message {
+      display: block;
+      text-align: center;
+      padding: var(--spacing-lg) 0;
+      border: none;
+      &::before { display: none; } // Masque le label potentiel.
+    }
+
+  } // Fin table
+
+  // Ajustement du conteneur des boutons d'action sur mobile si nécessaire.
+  .btn-actions {
+    justify-content: center; // Assure le centrage dans la cellule.
+    padding-top: 5px; // Léger espace si label "Actions" est visible.
+  }
+
+} // Fin @media

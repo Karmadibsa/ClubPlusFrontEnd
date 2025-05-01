@@ -151,3 +151,33 @@ mat-snack-bar-container{
     border-left: 5px solid #1976d2;
   }
 }
+
+/*------------------------------------*\
+  #UTILS: VISUALLY HIDDEN (Accessibilité)
+  A ajouter globalement si non déjà fait.
+\*------------------------------------*/
+.visually-hidden {
+  border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px;
+  overflow: hidden; padding: 0; position: absolute; width: 1px;
+  white-space: nowrap;
+}
+
+// Définition des keyframes pour l'animation de rotation
+@keyframes spin {
+  to {
+    transform: rotate(360deg); // Fait tourner l'élément de 360 degrés
+  }
+}
+
+// Classe utilitaire pour appliquer l'animation
+.animate-spin {
+  animation: spin 1s linear infinite; // Applique l'animation 'spin' sur 1 seconde, de manière linéaire et en boucle infinie
+}
+
+// Optionnel mais recommandé pour l'accessibilité :
+// Désactiver l'animation si l'utilisateur préfère moins de mouvement
+@media (prefers-reduced-motion: reduce) {
+  .animate-spin {
+    animation: none; // Supprime l'animation
+  }
+}

@@ -15,55 +15,11 @@ import {connecteGuard} from './service/security/connecte.guard';
 import {managerGuard} from './service/security/manager.guard';
 import {AmisComponent} from './pages/membre/amis/amis.component';
 import {NotationComponent} from './pages/membre/notation/notation.component';
+import {UserLayoutComponent} from './component/navigation/user-layout/user-layout.component';
 
 
 
 export const routes: Routes = [
-  {
-    path: "event",
-    component: EventComponent,
-    canActivate: [connecteGuard]
-  },
-  {
-    path: "profil",
-    component: MonCompteComponent,
-    canActivate: [connecteGuard]
-  },
-  {
-    path: "billet",
-    component: BilletComponent,
-    canActivate: [connecteGuard]
-  },
-  {
-    path: "amis",
-    component: AmisComponent,
-    canActivate: [connecteGuard]
-  },
-  {
-    path: "notation",
-    component: NotationComponent,
-    canActivate: [connecteGuard]
-  },
-  {
-    path: "dashboard",
-    component: DashboardComponent,
-    canActivate: [connecteGuard]
-  },
-  {
-    path: "eventadmin",
-    component: EventAdminComponent,
-    canActivate: [managerGuard]
-  },
-  {
-    path: "membreadmin",
-    component: MembreAdminComponent,
-    canActivate: [managerGuard]
-  },
-  {
-    path: "monclub",
-    component: MonclubComponent,
-    canActivate: [managerGuard]
-  },
   {
     path: "accueil",
     component: AccueilComponent,
@@ -79,6 +35,41 @@ export const routes: Routes = [
   {
     path: "connexion",
     component: LoginComponent,
+  },
+  {
+    path: 'app', // Ou un autre préfixe comme 'membre', ou même '' si c'est le défaut après login
+    component: UserLayoutComponent, // Le composant parent qui contient la sidebar
+    canActivate: [connecteGuard], // Protège TOUTES les routes enfants ci-dessous
+    children: [
+      // Routes Membre/Admin qui s'afficheront dans le <router-outlet> de UserLayoutComponent
+      { path: "event", component: EventComponent }, // Note: plus besoin de canActivate ici si déjà sur le parent
+      { path: "profil", component: MonCompteComponent },
+      { path: "billet", component: BilletComponent },
+      { path: "amis", component: AmisComponent },
+      { path: "notation", component: NotationComponent },
+      {
+        path: "dashboard",
+        component: DashboardComponent,
+        canActivate: [managerGuard] // Garde spécifique si nécessaire en plus de connecteGuard
+      },
+      {
+        path: "eventadmin",
+        component: EventAdminComponent,
+        canActivate: [managerGuard] // Garde spécifique
+      },
+      {
+        path: "membreadmin",
+        component: MembreAdminComponent,
+        canActivate: [managerGuard]
+      },
+      {
+        path: "monclub",
+        component: MonclubComponent,
+        canActivate: [managerGuard]
+      },
+      // Redirection par défaut DANS le layout utilisateur (ex: vers dashboard ou event)
+      { path: "", redirectTo: "event", pathMatch: "full" } // Ou 'dashboard' si c'est la page par défaut
+    ]
   },
 
   {path: "", redirectTo: "accueil", pathMatch: "full"},

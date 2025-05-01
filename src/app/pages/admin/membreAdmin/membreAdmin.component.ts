@@ -1,7 +1,7 @@
 // ----- IMPORTATIONS -----
 import { Component, inject, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core'; // Ajout OnInit, OnDestroy, ChangeDetectionStrategy
 import { CommonModule } from '@angular/common'; // Nécessaire pour @for
-import { Subscription } from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
 // Services
@@ -19,6 +19,7 @@ import { RoleType } from '../../../model/role';
 import {FilterMembreComponent} from '../../../component/membre/filter-membre/filter-membre.component';
 import {Evenement} from '../../../model/evenement';
 import {PaginationComponent} from '../../../component/navigation/pagination/pagination.component';
+import {SidebarStateService} from '../../../service/sidebar-state.service';
 
 // Autres (si besoin)
 // import { LucideAngularModule } from 'lucide-angular';
@@ -29,7 +30,6 @@ import {PaginationComponent} from '../../../component/navigation/pagination/pagi
   imports: [
     CommonModule, // Pour @for
     MembreRowComponent,
-    SidebarComponent,
     FilterMembreComponent,
     PaginationComponent,
     // LucideAngularModule, // Si des icônes sont utilisées dans CE template
@@ -59,11 +59,12 @@ export class MembreAdminComponent implements OnInit, OnDestroy { // Implémente 
 
   // --- AJOUT : État pour la Pagination ---
   currentPage: number = 1;
-  itemsPerPage: number = 15; // Ou une autre valeur par défaut
+  itemsPerPage: number = 10; // Ou une autre valeur par défaut
+
+
 
   ngOnInit(): void {
     this.chargerMembresDuClub(); // Renommé pour plus de clarté
-
   }
 
   ngOnDestroy(): void {

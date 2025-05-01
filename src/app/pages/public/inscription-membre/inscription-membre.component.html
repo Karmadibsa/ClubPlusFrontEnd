@@ -1,148 +1,172 @@
 <!-- Conteneur principal du formulaire -->
 <div class="form-container">
 
-  <!-- Optionnel: Lien de retour -->
-  <a class="return-link" routerLink="/accueil"> <!-- Adaptez routerLink -->
-    <i class="arrow-left">←</i> Retour
+  <!-- Lien de retour -->
+  <a class="return-link" routerLink="/accueil"> <!-- Adaptez routerLink si besoin -->
+    <i data-lucide="arrow-left"></i> <!-- Utilisation de Lucide Icons ou équivalent -->
+    Retour
   </a>
 
   <h1>Inscription d'un Nouveau Membre</h1>
 
-  <!-- Affichage des messages d'erreur généraux ou API -->
-  <div *ngIf="errorMessage" class="error-message">
-    {{ errorMessage }}
-  </div>
+  <!-- Les erreurs générales/API sont préférablement gérées via un service de notification (toast/snackbar) -->
+  <!-- @if (errorMessage) {
+    <div class="error-message-banner"> {{ errorMessage }} </div>
+  } -->
 
   <!-- Début du formulaire Angular -->
-  <form [formGroup]="memberRegistrationForm" (ngSubmit)="registerMember()">
+  <form [formGroup]="memberRegistrationForm" (ngSubmit)="registerMember()" novalidate>
 
     <!-- Section Informations Personnelles -->
-    <h2>Informations Personnelles</h2>
-    <div class="form-row">
-      <div class="form-group">
-        <label for="membre-nom"><strong>Nom :</strong></label>
-        <input type="text" id="membre-nom" formControlName="nom" placeholder="Nom de famille" required />
-        <div *ngIf="memberRegistrationForm.get('nom')?.invalid && memberRegistrationForm.get('nom')?.touched" class="validation-error">
-          Le nom est requis.
+    <fieldset class="form-section">
+      <legend class="form-section__title">Informations Personnelles</legend>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="membre-nom" class="form-label"><strong>Nom :</strong></label>
+          <input type="text" id="membre-nom" class="form-input" formControlName="nom" placeholder="Nom de famille" required />
+          @if (memberRegistrationForm.get('nom')?.invalid && memberRegistrationForm.get('nom')?.touched) {
+            <div class="validation-error">Le nom est requis.</div>
+          }
+        </div>
+        <div class="form-group">
+          <label for="membre-prenom" class="form-label"><strong>Prénom :</strong></label>
+          <input type="text" id="membre-prenom" class="form-input" formControlName="prenom" placeholder="Prénom" required />
+          @if (memberRegistrationForm.get('prenom')?.invalid && memberRegistrationForm.get('prenom')?.touched) {
+            <div class="validation-error">Le prénom est requis.</div>
+          }
         </div>
       </div>
       <div class="form-group">
-        <label for="membre-prenom"><strong>Prénom :</strong></label>
-        <input type="text" id="membre-prenom" formControlName="prenom" placeholder="Prénom" required />
-        <div *ngIf="memberRegistrationForm.get('prenom')?.invalid && memberRegistrationForm.get('prenom')?.touched" class="validation-error">
-          Le prénom est requis.
-        </div>
+        <label for="membre-date-naissance" class="form-label"><strong>Date de naissance :</strong></label>
+        <input type="date" id="membre-date-naissance" class="form-input" formControlName="date_naissance" required />
+        @if (memberRegistrationForm.get('date_naissance')?.invalid && memberRegistrationForm.get('date_naissance')?.touched) {
+          <div class="validation-error">La date de naissance est requise.</div>
+        }
       </div>
-    </div>
-    <div class="form-group">
-      <label for="membre-date-naissance"><strong>Date de naissance :</strong></label>
-      <input type="date" id="membre-date-naissance" formControlName="date_naissance" required />
-      <div *ngIf="memberRegistrationForm.get('date_naissance')?.invalid && memberRegistrationForm.get('date_naissance')?.touched" class="validation-error">
-        La date de naissance est requise.
-      </div>
-    </div>
+    </fieldset>
 
     <!-- Section Adresse -->
-    <h2>Adresse</h2>
-    <div class="form-row">
-      <div class="form-group">
-        <label for="membre-numero-voie">Numéro de voie :</label>
-        <input type="text" id="membre-numero-voie" formControlName="numero_voie" placeholder="Numéro" required />
-        <div *ngIf="memberRegistrationForm.get('numero_voie')?.invalid && memberRegistrationForm.get('numero_voie')?.touched" class="validation-error">
-          Requis.
+    <fieldset class="form-section">
+      <legend class="form-section__title">Adresse Postale</legend>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="membre-numero-voie" class="form-label">Numéro de voie :</label>
+          <input type="text" id="membre-numero-voie" class="form-input" formControlName="numero_voie" placeholder="Numéro" required />
+          @if (memberRegistrationForm.get('numero_voie')?.invalid && memberRegistrationForm.get('numero_voie')?.touched) {
+            <div class="validation-error">Requis.</div>
+          }
+        </div>
+        <div class="form-group">
+          <label for="membre-rue" class="form-label">Rue :</label>
+          <input type="text" id="membre-rue" class="form-input" formControlName="rue" placeholder="Nom de la rue" required />
+          @if (memberRegistrationForm.get('rue')?.invalid && memberRegistrationForm.get('rue')?.touched) {
+            <div class="validation-error">Requis.</div>
+          }
         </div>
       </div>
-      <div class="form-group">
-        <label for="membre-rue">Rue :</label>
-        <input type="text" id="membre-rue" formControlName="rue" placeholder="Nom de la rue" required />
-        <div *ngIf="memberRegistrationForm.get('rue')?.invalid && memberRegistrationForm.get('rue')?.touched" class="validation-error">
-          Requis.
+      <div class="form-row">
+        <div class="form-group">
+          <label for="membre-codepostal" class="form-label">Code postal :</label>
+          <input type="text" id="membre-codepostal" class="form-input" formControlName="codepostal" placeholder="Code postal" required />
+          @if (memberRegistrationForm.get('codepostal')?.invalid && memberRegistrationForm.get('codepostal')?.touched) {
+            <div class="validation-error">Requis.</div>
+          }
+        </div>
+        <div class="form-group">
+          <label for="membre-ville" class="form-label">Ville :</label>
+          <input type="text" id="membre-ville" class="form-input" formControlName="ville" placeholder="Ville" required />
+          @if (memberRegistrationForm.get('ville')?.invalid && memberRegistrationForm.get('ville')?.touched) {
+            <div class="validation-error">Requis.</div>
+          }
         </div>
       </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label for="membre-codepostal">Code postal :</label>
-        <input type="text" id="membre-codepostal" formControlName="codepostal" placeholder="Code postal" required />
-        <div *ngIf="memberRegistrationForm.get('codepostal')?.invalid && memberRegistrationForm.get('codepostal')?.touched" class="validation-error">
-          Requis.
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="membre-ville">Ville :</label>
-        <input type="text" id="membre-ville" formControlName="ville" placeholder="Ville" required />
-        <div *ngIf="memberRegistrationForm.get('ville')?.invalid && memberRegistrationForm.get('ville')?.touched" class="validation-error">
-          Requis.
-        </div>
-      </div>
-    </div>
+    </fieldset>
 
     <!-- Section Contact -->
-    <h2>Contact</h2>
-    <div class="form-row">
-      <div class="form-group">
-        <label for="membre-telephone">Numéro de téléphone :</label>
-        <input type="tel" id="membre-telephone" formControlName="telephone" placeholder="Téléphone" required />
-        <div *ngIf="memberRegistrationForm.get('telephone')?.invalid && memberRegistrationForm.get('telephone')?.touched" class="validation-error">
-          Requis.
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="membre-email">Adresse e-mail :</label>
-        <input type="email" id="membre-email" formControlName="email" placeholder="exemple@domaine.com" required />
-        <div *ngIf="memberRegistrationForm.get('email')?.invalid && memberRegistrationForm.get('email')?.touched" class="validation-error">
-          <span *ngIf="memberRegistrationForm.get('email')?.errors?.['required']">L'email est requis.</span>
-          <span *ngIf="memberRegistrationForm.get('email')?.errors?.['email']">Format d'email invalide.</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Section Identifiants -->
-    <h2>Identifiants</h2>
-    <div class="form-group">
-      <label for="codeClub"><strong>Code du Club :</strong></label>
-      <input type="text" id="codeClub" formControlName="codeClub" placeholder="Code d'accès du club" required />
-      @if (memberRegistrationForm.get('codeClub')?.invalid && memberRegistrationForm.get('codeClub')?.touched) {
-        <div class="validation-error">Le code du club est requis pour l'inscription.</div>
-      }
-    </div>
-    <div class="form-group">
-      <label for="membre-password">Mot de passe :</label>
-      <input type="password" id="membre-password" formControlName="password" placeholder="Créez un mot de passe" required />
-      @if (memberRegistrationForm.get('password')?.invalid && memberRegistrationForm.get('password')?.touched) {
-        <div class="validation-error">
-          @if (memberRegistrationForm.get('password')?.errors?.['required']) {
-            <span>Mot de passe requis.</span>
+    <fieldset class="form-section">
+      <legend class="form-section__title">Contact</legend>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="membre-telephone" class="form-label">Numéro de téléphone :</label>
+          <input type="tel" id="membre-telephone" class="form-input" formControlName="telephone" placeholder="Téléphone" required />
+          @if (memberRegistrationForm.get('telephone')?.invalid && memberRegistrationForm.get('telephone')?.touched) {
+            <div class="validation-error">Requis.</div>
           }
-          <!-- Ajoutez d'autres @if pour minlength, pattern etc. si nécessaire -->
+        </div>
+        <div class="form-group">
+          <label for="membre-email" class="form-label">Adresse e-mail :</label>
+          <input type="email" id="membre-email" class="form-input" formControlName="email" placeholder="exemple@domaine.com" required />
+          @if (memberRegistrationForm.get('email')?.invalid && memberRegistrationForm.get('email')?.touched) {
+            <div class="validation-error">
+              @if (memberRegistrationForm.get('email')?.errors?.['required']) {
+                <span>L'email est requis.</span>
+              } @else if (memberRegistrationForm.get('email')?.errors?.['email']) {
+                <span>Format d'email invalide.</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Section Identifiants et Club -->
+    <fieldset class="form-section">
+      <legend class="form-section__title">Informations de Connexion</legend>
+      <div class="form-group">
+        <label for="codeClub" class="form-label"><strong>Code du Club :</strong></label>
+        <input type="text" id="codeClub" class="form-input" formControlName="codeClub" placeholder="Code d'invitation fourni par le club" required />
+        @if (memberRegistrationForm.get('codeClub')?.invalid && memberRegistrationForm.get('codeClub')?.touched) {
+          <div class="validation-error">Le code du club est requis pour rejoindre.</div>
+        }
+      </div>
+
+      <!-- Groupe pour le mot de passe et sa confirmation -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="membre-password" class="form-label">Mot de passe :</label>
+          <input type="password" id="membre-password" class="form-input" formControlName="password" placeholder="Créez un mot de passe" required />
+          @if (memberRegistrationForm.get('password')?.invalid && memberRegistrationForm.get('password')?.touched) {
+            <div class="validation-error">
+              @if (memberRegistrationForm.get('password')?.errors?.['required']) {
+                <span>Mot de passe requis.</span>
+              } @else if (memberRegistrationForm.get('password')?.errors?.['minlength']) {
+                <span>Au moins 6 caractères.</span> <!-- Adaptez si longueur différente -->
+              }
+              <!-- Autres validations de mot de passe ici -->
+            </div>
+          }
+        </div>
+        <div class="form-group">
+          <label for="membre-confirm-password" class="form-label">Confirmer le mot de passe :</label>
+          <input type="password" id="membre-confirm-password" class="form-input" formControlName="confirmPassword" placeholder="Retapez le mot de passe" required />
+          <!-- Erreur de champ requis uniquement -->
+          @if (memberRegistrationForm.get('confirmPassword')?.invalid && memberRegistrationForm.get('confirmPassword')?.touched && memberRegistrationForm.get('confirmPassword')?.errors?.['required']) {
+            <div class="validation-error">Confirmation requise.</div>
+          }
+        </div>
+      </div>
+      <!-- Erreur de non-correspondance pour l'ensemble du formulaire ou un groupe parent si défini -->
+      @if (memberRegistrationForm.errors?.['passwordMismatch'] && (memberRegistrationForm.get('confirmPassword')?.touched || memberRegistrationForm.get('confirmPassword')?.dirty)) {
+        <div class="validation-error form-group__error--group">
+          Les mots de passe ne correspondent pas.
         </div>
       }
-    </div>
-<div class="form-group">
-  <label for="membre-confirm-password">Confirmer le mot de passe :</label>
-  <input type="password" id="membre-confirm-password" formControlName="confirmPassword" placeholder="Retapez le mot de passe" required />
-  <!-- Utilisation de @if pour l'erreur de correspondance et le requis -->
-  @if (memberRegistrationForm.get('confirmPassword')?.touched) {
-    <div class="validation-error">
-      @if (memberRegistrationForm.errors?.['passwordMismatch']) {
-        <span>Les mots de passe ne correspondent pas.</span>
-      }
-      @if (memberRegistrationForm.get('confirmPassword')?.errors?.['required']) {
-        <span>La confirmation du mot de passe est requise.</span>
-      }
-    </div>
-  }
-</div>
+    </fieldset>
+
 
     <!-- Bouton de Soumission -->
-    <button type="submit" [disabled]="memberRegistrationForm.invalid || isLoading">
-      <strong *ngIf="!isLoading">Inscrire le Membre</strong>
-      <strong *ngIf="isLoading">Inscription en cours...</strong>
-    </button>
+    <div class="form-actions">
+      <button type="submit" class="btn btn--primary" [disabled]="memberRegistrationForm.invalid || isLoading">
+        @if (!isLoading) {
+          <span>S'inscrire</span>
+        } @else {
+          <span>Inscription en cours...</span> <!-- Un spinner serait idéal ici -->
+        }
+      </button>
+    </div>
 
   </form>
   <!-- Fin du formulaire Angular -->
 
 </div>
 <!-- Fin du conteneur principal -->
-
