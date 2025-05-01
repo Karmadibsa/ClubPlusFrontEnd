@@ -21,8 +21,8 @@ import { Evenement } from '../../../model/evenement'; // Assure-toi que ce modè
 // Autres
 import { LucideAngularModule } from 'lucide-angular';
 import {
-  ReservationEventModalComponent
-} from '../../../component/event/reservation-event-modal/reservation-event-modal.component';
+  ParticipationEventModalComponent
+} from '../../../component/event/participation-event-modal/participation-event-modal.component';
 import {FilterEventComponent} from '../../../component/event/filter-event/filter-event.component';
 import {PaginationComponent} from '../../../component/navigation/pagination/pagination.component';
 import {SidebarStateService} from '../../../service/sidebar-state.service'; // Si utilisé dans le template
@@ -37,7 +37,7 @@ import {SidebarStateService} from '../../../service/sidebar-state.service'; // S
     LucideAngularModule,
     EditEventModalComponent, // Assure-toi que le nom est correct
     CreateEventButtonComponent,
-    ReservationEventModalComponent,
+    ParticipationEventModalComponent,
     FilterEventComponent,
     PaginationComponent
   ],

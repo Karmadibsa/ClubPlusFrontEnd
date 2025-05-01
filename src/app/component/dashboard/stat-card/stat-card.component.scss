@@ -1,21 +1,46 @@
+/* stat-card.component.scss */
+
+// --- Utilisation des variables globales de styles.txt ---
+// @import 'path/to/variables'; // Si nécessaire
+
+:host {
+  // Permet à la carte de remplir l'espace dans la grille parente (.stats-grid)
+  display: block;
+  height: 100%; // Important pour que toutes les cartes aient la même hauteur
+}
+
+// La classe .card est appliquée dans le template parent (dashboard.component.html)
+// via <app-stat-card class="card">... ou gérée à l'intérieur si composant autonome.
+// Ici on style le contenu spécifique DANS la carte.
 .stat-card {
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  height: 100%;
-}
 
-h3 {
-  height: 40%;
-  font-size: 15px;
-  text-align: center;
-}
+  // --- Layout interne de la carte stat ---
+  display: flex;
+  flex-direction: column; // Empile titre et valeur
+  height: 100%; // Prend toute la hauteur de l'hôte
+  padding: var(--spacing-md, 16px); // Padding interne standard
+  text-align: center; // Centre le texte par défaut
 
-p {
-  height: 60%;
-  font-size: 30px;
-  text-align: center;
-  color: var(--main-blue);
-  font-weight: bold;
+  h3 {
+    color: var(--text-medium, #666); // Couleur du titre
+    font-size: 0.95rem; // Taille du titre
+    font-weight: 500; // Poids du titre
+    margin: 0 0 var(--spacing-sm, 8px) 0; // Marge sous le titre
+    flex-shrink: 0; // Empêche le titre de rétrécir excessivement
+
+    // Optionnel: Gestion du titre sur plusieurs lignes si trop long
+    line-height: 1.3;
+    max-height: 2.6em; // Limite à 2 lignes environ (ajuster si besoin)
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .stat-value { // Classe appliquée à la <p> contenant la valeur
+    color: var(--main-blue); // Couleur de la valeur
+    font-size: 2rem; // Taille de la valeur (plus grande)
+    font-weight: 600; // Poids de la valeur (semi-gras)
+    line-height: 1.1; // Hauteur de ligne pour la valeur
+    margin-top: auto; // Pousse la valeur vers le bas si le titre est court
+    padding-top: var(--spacing-xs, 4px); // Petit espace au-dessus de la valeur
+  }
 }

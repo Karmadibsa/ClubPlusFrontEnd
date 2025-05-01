@@ -1,67 +1,68 @@
+<!-- Structure basée sur template.txt -->
+<div class="page-header">
+  <!-- Icône appropriée pour la gestion des événements -->
+  <h1 class="page-title">Liste des Événements</h1>
+  <app-create-event-button
+    (createClicked)="ouvrirModalCreation()">
+  </app-create-event-button>
+</div>
 
-
-  <div class="header">
-    <h1>Liste des Événements</h1>
-    <!-- Bouton pour ouvrir la modal de création -->
-    <app-create-event-button (createClicked)="ouvrirModalCreation()"></app-create-event-button>
-
-  </div>
-
+<!-- Section Filtres -->
+<section class="filters-section" aria-labelledby="filters-title">
+  <h2 id="filters-title" class="visually-hidden">Options de filtrage des événements</h2>
   <app-filter-event
     [events]="allEvenements"
     (filteredEventsChange)="handleFilteredEventsChange($event)">
   </app-filter-event>
+</section>
 
-  <table class="full-width-table">
-    <thead>
-    <tr>
-      <th>ID</th>
-      <th>Titre</th>
-      <th>Début - Fin</th>
-      <th>Description</th>
-      <th>Participants</th>
-      <th>Lieu</th>
-      <th>Catégories</th>
-      <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Utilisation de event-row -->
-      @for (event of paginatedEvenements ; track event.id) {
-        <tr app-event-row
-            [evenement]="event"
-            (modifier)="handleOpenEditModal($event)"
-            (deleteRequest)="handleDeleteEventRequest($event)"
-            (viewReservationsRequest)="handleViewReservationsRequest($event)"
-        ></tr>
-      }
-    </tbody>
-  </table>
-  <!-- Composant Pagination -->
+<!-- Section Principale contenant le tableau -->
+<section class="main-section">
+  <h2 id="main-title" class="visually-hidden">Tableau des événements</h2>
+
+  <!-- Wrapper pour le scroll horizontal du tableau -->
+  <div class="table-wrapper">
+    <!-- Utilisation de la classe globale .data-table -->
+    <table class="data-table" aria-label="Liste des événements">
+      <thead>
+      <tr>
+        <th>Titre</th>
+        <th>Début - Fin</th>
+        <th>Description</th>
+        <th>Participants</th>
+        <th>Lieu</th>
+        <th>Catégories</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- Itération avec le composant enfant app-event-row -->
+      <!-- IMPORTANT: app-event-row DOIT générer des <td> avec [attr.data-label] pour le responsive -->
+        @for (event of paginatedEvenements ; track event.id) {
+          <tr app-event-row
+              [evenement]="event"
+              (modifier)="handleOpenEditModal($event)"
+              (deleteRequest)="handleDeleteEventRequest($event)"
+          ></tr>
+        } @empty {
+          <!-- Message si tableau vide -->
+          <tr class="empty-table-message">
+            <td colspan="8">Aucun événement ne correspond aux filtres actuels.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section> <!-- Fin .main-section -->
+
+<!-- Section Pagination -->
+<nav class="pagination-section" aria-label="Pagination des événements">
   <app-pagination
     [currentPage]="currentPage"
     [totalItems]="filteredEvenements.length"
     [itemsPerPage]="itemsPerPage"
     (pageChange)="onPageChange($event)">
   </app-pagination>
-
-  @if (isEditEventModalVisible) {
-    <app-edit-event
-      [isVisible]="isEditEventModalVisible"
-      [event]="selectedEventForEditModal"
-      (saveSuccess)="handleSaveEventSuccess($event)"
-      (close)="handleCloseEditModal()">
-    </app-edit-event>
-  }
-
-    <!-- **** NOUVELLE MODALE DE RÉSERVATION **** -->
-    @if (isReservationModalVisible) {
-      <app-reservation-event-modal
-        [eventId]="selectedEventIdForReservationModal"
-        [eventTitle]="selectedEventTitleForReservationModal"
-        (closeModal)="handleCloseReservationModal()">
-        <!-- ^^^ Écoute l'événement pour fermer ^^^ -->
-      </app-reservation-event-modal>
-    }
+</nav>
 
 

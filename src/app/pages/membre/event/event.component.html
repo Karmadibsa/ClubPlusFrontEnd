@@ -1,65 +1,56 @@
-<!-- event.component.html - Refactorisé -->
+<!-- En-tête standard de la page (utilise les classes globales) -->
+<div class="page-header">
+  <h1 class="page-title" id="main-events-title">Les événements de mon club</h1>
+  <!-- Icône optionnelle: <lucide-icon name="calendar-days" aria-hidden="true"></lucide-icon> -->
+</div>
 
-<!-- Conteneur principal standardisé -->
-<div class="main-content-area">
+<!-- Section dédiée aux filtres (utilise les classes globales) -->
+<section class="filters-section" aria-labelledby="filters-title">
+  <h2 id="filters-title" class="visually-hidden">Filtrer et trier les événements</h2>
+  <!-- Le composant filtre est responsable de son propre style interne en utilisant les classes globales -->
+  <app-filter-event
+    [events]="allEvents"
+    (filteredEventsChange)="handleFilteredEventsChange($event)">
+  </app-filter-event>
+</section>
 
-  <!-- Titre principal de la page -->
-  <div class="page-header">
-    <h1 class="page-title">Les événements de mon club</h1>
-    <!-- Icône optionnelle ou autre élément d'en-tête -->
-  </div>
+<!-- Section principale standardisée (utilise les classes globales) -->
+<section class="main-section" aria-labelledby="main-events-title">
+  <!-- Le titre est déjà dans le .page-header, on peut utiliser aria-labelledby ou un h2 caché si nécessaire -->
+  <!-- <h2 id="main-events-title" class="visually-hidden">Liste des événements</h2> -->
 
-  <!-- Section principale contenant filtres, grille, pagination -->
-  <main role="main">
-
-    <!-- Section dédiée aux filtres et au tri -->
-    <section class="filters-section" aria-labelledby="filters-title">
-      <h2 id="filters-title" class="visually-hidden">Filtrer et trier les événements</h2>
-      <app-filter-event
-        [events]="allEvents"
-        (filteredEventsChange)="handleFilteredEventsChange($event)">
-        <!-- Le contenu du filtre (inputs, boutons) est dans app-filter-event -->
-      </app-filter-event>
-    </section>
-
-    <!-- Section affichant la grille ou le message d'absence de résultats -->
-    <!-- aria-live="polite" annonce les changements (chargement, résultats) -->
-    <section class="event-list-section" aria-live="polite">
-
-      @if (isLoading) {
-        <div class="loading-indicator" role="status">
-          <lucide-icon name="loader" class="animate-spin" aria-hidden="true"></lucide-icon>
-          Chargement des événements...
-        </div>
-      } @else {
-        <!-- Grille des événements -->
-        <div class="event-grid">
-          @for (event of paginatedEvents; track event.id) {
-            <!-- Affiche la nouvelle carte d'événement -->
-            <app-event-card [event]="event"></app-event-card>
-          } @empty {
-            <!-- Message si aucun événement (après chargement) -->
-            <p class="no-events-message">
-              Aucun événement ne correspond à vos critères de recherche ou n'est disponible pour le moment.
-            </p>
-          }
-        </div>
+  <!-- Contenu principal : Chargement ou Grille/Message Vide -->
+  @if (isLoading) {
+    <!-- Indicateur de chargement standardisé (utilise classe globale) -->
+    <div class="loading-indicator" role="status">
+      <lucide-icon name="loader" class="animate-spin" aria-hidden="true"></lucide-icon>
+      Chargement des événements...
+    </div>
+  } @else {
+    <!-- Grille des événements (style spécifique à cette page dans event.component.scss) -->
+    <div class="event-grid">
+      @for (event of paginatedEvents; track event.id) {
+        <!-- Affiche la carte d'événement (app-event-card doit utiliser les styles globaux .card si applicable) -->
+        <app-event-card [event]="event"></app-event-card>
+      } @empty {
+        <!-- Message si aucun événement (utilise la classe globale .no-data-message) -->
+        <p class="no-data-message">
+          Aucun événement ne correspond à vos critères de recherche ou n'est disponible pour le moment.
+        </p>
       }
+    </div>
+  }
+</section> <!-- Fin .main-section -->
 
-    </section>
-
-    <!-- Section pour la pagination (uniquement si nécessaire) -->
-    @if (!isLoading && filteredEvents.length > itemsPerPage) {
-      <section class="pagination-section" aria-label="Pagination des événements">
-        <app-pagination
-          [currentPage]="currentPage"
-          [totalItems]="filteredEvents.length"
-          [itemsPerPage]="itemsPerPage"
-          (pageChange)="onPageChange($event)">
-        </app-pagination>
-      </section>
-    }
-
-  </main> <!-- Fin main -->
-
-</div> <!-- Fin .main-content-area -->
+<!-- Section pagination standardisée (utilise les classes globales) -->
+@if (!isLoading && filteredEvents.length > itemsPerPage) {
+  <nav class="pagination-section" aria-label="Pagination des événements">
+    <!-- Le composant pagination est responsable de son propre style interne -->
+    <app-pagination
+      [currentPage]="currentPage"
+      [totalItems]="filteredEvents.length"
+      [itemsPerPage]="itemsPerPage"
+      (pageChange)="onPageChange($event)">
+    </app-pagination>
+  </nav>
+}

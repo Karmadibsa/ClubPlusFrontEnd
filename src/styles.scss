@@ -25,6 +25,10 @@ html {
   --secondary-blue: #3498db;
   --secondary-green: #47b3a3;
   --main-orange-rgb: 255, 107, 53; /* Valeur RGB de votre orange */
+  --main-orange-dark: #d9541e;  /* Orange un peu plus foncé */
+  --main-blue-dark: #134b63;    /* Bleu un peu plus foncé */
+  --danger-dark: #c82333;       /* Rouge un peu plus foncé */
+  --success-dark: #218838;      /* Vert un peu plus foncé */
 
   /* Couleurs de fond */
   --bg-light-gray: #f8f9fa; /* Légèrement plus foncé pour meilleur contraste */
@@ -55,8 +59,6 @@ html {
   --border-color: #dee2e6;
   --input-focus-shadow: rgba(26, 95, 122, 0.25);
 
-  --transition-standard: all 0.3s ease;
-
     --sidebar-padding: 1.5%;
     --icon-size: 24px;
     --border-radius: 8px;
@@ -72,6 +74,7 @@ body {
   line-height: 1.5;
   color: var(--text-dark);
   background-color: #f5f5f5;
+
 }
 
 * {
@@ -152,32 +155,615 @@ mat-snack-bar-container{
   }
 }
 
-/*------------------------------------*\
-  #UTILS: VISUALLY HIDDEN (Accessibilité)
-  A ajouter globalement si non déjà fait.
-\*------------------------------------*/
-.visually-hidden {
-  border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px;
-  overflow: hidden; padding: 0; position: absolute; width: 1px;
-  white-space: nowrap;
-}
 
-// Définition des keyframes pour l'animation de rotation
-@keyframes spin {
-  to {
-    transform: rotate(360deg); // Fait tourner l'élément de 360 degrés
+
+/* styles.scss */
+
+/* ==========================================================================
+   Documentation des Styles Globaux pour UserLayoutComponent
+   ==========================================================================
+
+   Ce bloc SCSS définit les styles communs pour toutes les pages rendues
+   à l'intérieur du composant UserLayoutComponent. Il utilise le sélecteur
+   `.user-layout-container .main-content` pour s'assurer que ces styles
+   ne s'appliquent qu'à cette partie de l'application et n'affectent pas
+   d'autres sections comme la Landing Page.
+
+   **Structure de Page Principale (Basé sur le template HTML standardisé):**
+   - `.page-header`: Conteneur pour le titre principal de la page (H1).
+     - `.page-title`: Le H1 lui-même.
+   - `.filters-section`: Section optionnelle pour les contrôles de filtre/tri.
+   - `.main-section`: Conteneur principal pour le contenu spécifique de la page (grille, tableau, formulaire...).
+   - `nav.pagination-section`: Conteneur pour le composant de pagination.
+
+   **Éléments d'Interface Communs:**
+   - `.card`: Conteneur générique avec fond blanc, bordures arrondies et ombre légère.
+   - `.loading-indicator`: Style pour afficher un message/spinner de chargement.
+   - `.no-data-message`: Style pour les messages type "Aucun résultat", "Vide".
+   - `.tabs`: Conteneur pour une barre d'onglets de navigation.
+     - `button`: Style des boutons d'onglets individuels (actifs ou non).
+
+   **Boutons:**
+   - `.btn`: Classe de base pour tous les boutons. Définit padding, taille, transition, etc.
+   - `.btn-primary`: Style principal (orange par défaut). Utiliser pour l'action principale.
+   - `.btn-secondary`: Style secondaire (bleu par défaut).
+   - `.btn-danger`: Style pour actions destructrices (rouge par défaut).
+   - `.btn-accept`, `.btn-reject`, `.btn-edit`, etc.: Styles spécifiques pour actions communes (souvent utilisés dans les tableaux).
+   - **États:** Les styles :hover, :active, :disabled, :focus-visible sont gérés.
+
+   **Formulaires:**
+   - `fieldset.card-section`: Structure une section de formulaire comme une carte.
+     - `legend.section-header`: En-tête de la section formulaire (titre H2 + description).
+   - `.card-content`: Conteneur pour les champs à l'intérieur d'une `card-section`.
+   - `.form-row`: Pour aligner des groupes de formulaires côte à côte (utilise Flexbox).
+   - `.form-group`: Conteneur pour un label + input + messages d'erreur/aide.
+     - `.half`, `.third`: Classes pour créer des colonnes dans un `.form-row`.
+   - `label`: Style des étiquettes de champ.
+     - `.required-indicator`: Astérisque rouge pour champs obligatoires.
+   - `.form-control`: Classe commune pour les inputs (text, email, password, date, etc.), textarea, select. Gère les états :focus, .is-invalid, :disabled.
+   - `.form-text` / `.text-muted`: Texte d'aide sous un champ.
+   - `.invalid-feedback`: Message d'erreur pour un champ invalide (caché par défaut).
+   - `.form-actions`: Conteneur pour les boutons principaux du formulaire (Submit, Cancel...).
+
+   **Tableaux:**
+   - `.table-wrapper`: Conteneur nécessaire pour activer le défilement horizontal sur petits écrans.
+   - `table.data-table`: Classe principale pour styliser les tableaux de données.
+     - `thead`: En-tête du tableau (fond bleu, texte blanc).
+     - `tbody tr:hover`: Effet de survol sur les lignes.
+     - `td.actions-cell` / `td:last-child`: Cellule contenant les boutons d'action.
+     - `.btn-actions`: Conteneur DANS la cellule d'action pour aligner les boutons.
+     - `.empty-table-message`: Style pour la ligne affichée quand le tableau est vide.
+   - **Responsive:** Sur mobile (< 768px), les tableaux `.data-table` se transforment en liste de cartes. **Nécessite `[attr.data-label]` sur chaque `<td>` pour afficher les en-têtes.**
+
+   **Utilitaires:**
+   - `.visually-hidden`: (Doit être défini globalement) Masque visuellement mais reste accessible aux lecteurs d'écran.
+   - `.animate-spin`: Applique une animation de rotation continue (pour les spinners).
+
+   **NOTE:** Assurez-vous que les variables CSS (ex: `--main-orange`, `--main-orange-dark`, `--spacing-md`) sont définies globalement (souvent dans `:root {}`).
+
+   ========================================================================== */
+
+
+/* --- Début du scope spécifique au UserLayout --- */
+.user-layout-container .main-content {
+
+  /* --- Core Page Layout --- */
+
+  .page-header {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+    margin-bottom: var(--spacing-lg, 24px); padding-bottom: var(--spacing-md, 16px);
+    border-bottom: 1px solid var(--border-color, #dee2e6); gap: var(--spacing-md, 16px);
+
+    .page-title {
+      font-size: 1.8rem; color: var(--main-blue); margin: 0;
+      display: inline-flex; align-items: center; gap: var(--spacing-sm, 8px);
+      flex-shrink: 0;
+    }
+    lucide-icon { /* Styles si besoin */ }
+  }
+
+  .filters-section {
+    margin-bottom: var(--spacing-lg, 24px);
+    /* Styles optionnels : background, padding, border-radius */
+  }
+
+  .main-section {
+    margin-bottom: var(--spacing-lg, 24px);
+  }
+
+  nav.pagination-section {
+    margin-top: var(--spacing-lg, 24px); padding-top: var(--spacing-md, 16px);
+    border-top: 1px solid var(--border-color, #dee2e6);
+    display: flex; justify-content: center;
+  }
+
+  /* --- Éléments Communs --- */
+
+  .card {
+    background-color: var(--main-white, #fff);
+    border-radius: var(--border-radius, 8px);
+    box-shadow: var(--shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.05));
+    margin-bottom: var(--spacing-lg, 24px);
+    overflow: hidden;
+  }
+
+  .loading-indicator,
+  .no-data-message {
+    display: flex; justify-content: center; align-items: center;
+    gap: var(--spacing-sm, 8px); padding: var(--spacing-xl, 32px) var(--spacing-md, 16px);
+    font-size: 1.1rem; color: var(--text-medium, #666); min-height: 150px;
+    text-align: center; font-style: italic;
+    border: 1px dashed var(--border-color, #dee2e6);
+    border-radius: var(--border-radius, 8px);
+    background-color: var(--bg-light-gray, #f8f9fa);
+  }
+
+  .tabs {
+    display: flex; gap: var(--spacing-sm, 8px);
+    margin-bottom: var(--spacing-lg, 24px);
+    border-bottom: 1px solid var(--border-color, #dee2e6);
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+     &::-webkit-scrollbar { display: none; }
+
+  button {
+    padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+    background-color: transparent; color: var(--text-medium, #666);
+    border: none; border-bottom: 3px solid transparent; cursor: pointer;
+    font-size: 1rem; font-weight: 500;
+    transition: var(--transition-standard, all 0.3s ease);
+    margin-bottom: -1px; display: inline-flex; align-items: center;
+    gap: var(--spacing-sm, 8px);
+
+    &:hover:not(:disabled):not(.active) { color: var(--text-dark, #333); }
+    &.active { color: var(--main-orange, #f26122); border-bottom-color: var(--main-orange, #f26122); font-weight: 600; }
+    &:disabled { color: var(--text-light, #999999); cursor: not-allowed; opacity: 0.7; }
+    .icon, lucide-icon { display: block; }
   }
 }
 
-// Classe utilitaire pour appliquer l'animation
-.animate-spin {
-  animation: spin 1s linear infinite; // Applique l'animation 'spin' sur 1 seconde, de manière linéaire et en boucle infinie
-}
 
-// Optionnel mais recommandé pour l'accessibilité :
-// Désactiver l'animation si l'utilisateur préfère moins de mouvement
-@media (prefers-reduced-motion: reduce) {
-  .animate-spin {
-    animation: none; // Supprime l'animation
+  /* --- Styles Boutons Communs (Votre Règle Générale) --- */
+  .btn {
+    padding: 10px 20px; /* Padding par défaut */
+    border-radius: var(--border-radius, 8px);
+    font-size: 0.95rem;
+    cursor: pointer;
+    font-weight: 600;
+    border: 1px solid transparent;
+    transition: var(--transition-standard, all 0.3s ease);
+    /* Utilisation de Flexbox pour le cas général (texte + icône) */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm, 8px);
+    text-decoration: none;
+    line-height: 1.5; // Hauteur de ligne standard
+    white-space: nowrap;
+
+    lucide-icon, .icon {
+      width: 18px; height: 18px; /* Taille par défaut icône */
+      flex-shrink: 0;
+      vertical-align: middle;
+
+      svg {
+        display: block;       /* Évite les espaces blancs potentiels sous le SVG */
+        width: 100%;          /* Le SVG prend 100% de la largeur du conteneur (20px) */
+        height: 100%;         /* Le SVG prend 100% de la hauteur du conteneur (20px) */
+      }
+    }
+
+    &:disabled { opacity: 0.65; cursor: not-allowed; box-shadow: none; transform: none; }
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(var(--main-orange-rgb, 255, 107, 53), 0.4);
+    }
+    &:hover:not(:disabled) { transform: translateY(-1px); }
+    &:active:not(:disabled) { transform: translateY(0); }
+  }
+
+  // -- Types de Boutons --
+  .btn-primary {
+    background-color: var(--main-orange); color: white; border-color: var(--main-orange);
+    box-shadow: 0 2px 4px rgba(var(--main-orange-rgb, 255, 107, 53), 0.2);
+    &:hover:not(:disabled) {
+      // Utilise une variable pour la couleur foncée, à définir dans :root
+      background-color: var(--main-orange-dark);
+      border-color: var(--main-orange-dark);
+      box-shadow: 0 4px 8px rgba(var(--main-orange-rgb, 255, 107, 53), 0.25);
+    }
+  }
+  .btn-secondary {
+    background-color: var(--main-blue); color: white; border-color: var(--main-blue);
+    box-shadow: 0 2px 4px rgba(var(--main-blue-rgb, 26, 95, 122), 0.15);
+    &:hover:not(:disabled) {
+      // Utilise une variable pour la couleur foncée, à définir dans :root
+      background-color: var(--main-blue-dark);
+      border-color: var(--main-blue-dark);
+      box-shadow: 0 4px 8px rgba(var(--main-blue-rgb, 26, 95, 122), 0.2);
+    }
+  }
+  .btn-danger {
+    background-color: var(--danger); color: white; border-color: var(--danger);
+    box-shadow: 0 2px 4px rgba(var(--danger-rgb, 220, 53, 69), 0.15);
+    &:hover:not(:disabled) {
+      // Utilise une variable pour la couleur foncée, à définir dans :root
+      background-color: var(--danger-dark);
+      border-color: var(--danger-dark);
+      box-shadow: 0 4px 8px rgba(var(--danger-rgb, 220, 53, 69), 0.2);
+    }
+  }
+  // Boutons d'action spécifiques
+  .btn-accept { background-color: var(--success); color: white; border-color: var(--success); /* Ajouter var(--success-dark) pour hover */ }
+  .btn-reject, .btn-cancel, .btn-remove { /* Hérite de btn-danger ou utilise var(--danger-dark) */ }
+  .btn-edit { background: var(--main-orange); border: none; color: white; padding: 8px; &:hover { color: var(--main-orange-dark); } }
+
+  /* --- Styles Formulaires Communs --- */
+
+  fieldset.card-section {
+    border: none; padding: 0; margin: 0; background-color: var(--main-white, #fff);
+    border-radius: var(--border-radius, 8px); box-shadow: var(--shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.05));
+    overflow: hidden; border-top: 3px solid var(--main-blue); margin-bottom: var(--spacing-lg, 24px);
+    &.danger-zone { border-top-color: var(--danger); legend.section-header { background-color: rgba(var(--danger-rgb, 220, 53, 69), 0.05); h2 { color: var(--danger); } } }
+  }
+
+  legend.section-header {
+    width: 100%; padding: var(--spacing-md, 16px); background-color: rgba(var(--main-blue-rgb, 26, 95, 122), 0.05);
+    border-bottom: 1px solid var(--border-color-light, #eee); float: none; margin-bottom: 0;
+    h2 { color: var(--main-blue); font-size: 1.2rem; margin: 0 0 4px 0; display: inline-flex; align-items: center; gap: var(--spacing-sm, 8px); }
+    .section-description { color: var(--text-dark, #333); font-size: 0.9rem; margin: 0; }
+  }
+
+  .card-content { padding: var(--spacing-lg, 24px); display: flex; flex-direction: column; gap: var(--spacing-md, 16px); }
+  .form-row { display: flex; flex-wrap: wrap; gap: var(--spacing-md, 16px); }
+  .form-group { display: flex; flex-direction: column; flex-grow: 1; flex-shrink: 1; min-width: 0;
+    &.half { flex-basis: calc(50% - (#{var(--spacing-md, 16px)} / 2)); }
+    &.third { flex-basis: calc(33.333% - (#{var(--spacing-md, 16px)} * 2 / 3)); } }
+  label { margin-bottom: var(--spacing-xs, 4px); font-weight: 500; color: var(--text-dark, #333); }
+  .required-indicator { color: var(--danger, red); margin-left: 2px; }
+
+  .form-control,
+  input[type="text"], input[type="email"], input[type="tel"], input[type="password"],
+  input[type="date"], input[type="time"], textarea, select {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--border-color, #ccc);
+    border-radius: var(--border-radius-sm, 4px); font-size: 1rem; line-height: 1.5;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease; background-color: var(--main-white, #fff);
+    &:focus { outline: none; border-color: var(--main-orange); box-shadow: 0 0 0 3px rgba(var(--main-orange-rgb, 255, 107, 53), 0.3); }
+    &.is-invalid { border-color: var(--danger); &:focus { box-shadow: 0 0 0 3px rgba(var(--danger-rgb, 220, 53, 69), 0.25); } }
+    &:disabled { background-color: var(--bg-medium-gray, #e9ecef); cursor: not-allowed; }
+  }
+  textarea { resize: vertical; } select { appearance: none; }
+
+  .form-text, .text-muted { font-size: 0.85rem; margin-top: var(--spacing-xs, 4px); color: var(--text-medium, #6c757d); }
+  .invalid-feedback { display: none; color: var(--danger); font-size: 0.85rem; margin-top: var(--spacing-xs, 4px); }
+  input.is-invalid ~ .invalid-feedback, select.is-invalid ~ .invalid-feedback, textarea.is-invalid ~ .invalid-feedback { display: block; }
+
+  .form-actions { margin-top: var(--spacing-md); padding-top: var(--spacing-lg); border-top: 1px solid var(--border-color-light, #eee);
+    display: flex; justify-content: flex-end; gap: var(--spacing-md, 16px); }
+
+
+  /* --- Styles Tableaux Communs --- */
+
+  .table-wrapper {
+    overflow-x: auto; /* Permet le défilement horizontal sur petits écrans */
+    width: 100%;
+  }
+
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem; /* Taille de police de base pour le contenu du tableau */
+    background-color: var(--main-white, #ffffff); /* Fond blanc par défaut */
+
+    thead {
+      background-color: var(--main-blue); /* Fond bleu distinctif pour l'en-tête */
+      color: white; /* Texte blanc sur fond bleu */
+
+      th {
+        font-weight: 600; /* Texte en gras pour les en-têtes */
+        white-space: nowrap; /* Empêche le texte des en-têtes de passer à la ligne */
+      }
+    }
+
+    th, td {
+      padding: var(--spacing-md, 16px); /* Padding standard pour les cellules */
+      text-align: left; /* Alignement par défaut du texte */
+      border-bottom: 1px solid var(--border-color, #dee2e6); /* Ligne de séparation entre les lignes */
+      vertical-align: middle; /* Alignement vertical au centre pour les cellules */
+    }
+
+    tbody tr {
+      transition: background-color 0.2s ease; /* Transition douce au survol */
+
+      /* Effet de survol sur les lignes, sauf message vide */
+      &:hover:not(.empty-table-message) {
+        background-color: var(--bg-light-gray, #f8f9fa);
+      }
+
+      /* Supprime la bordure inférieure de la dernière ligne */
+      &:last-child th,
+      &:last-child td {
+        border-bottom: none;
+      }
+    }
+
+    /* Style spécifique pour la cellule contenant les actions (souvent la dernière) */
+    td:last-child,
+    td.actions-cell {
+      text-align: center;  /* Centre le conteneur .btn-actions */
+      white-space: nowrap; /* Empêche les boutons de passer à la ligne */
+      width: 1%;           /* Réduit la largeur pour ne pas trop pousser les autres colonnes */
+    }
+
+    /* Conteneur pour les boutons d'action à l'intérieur de la cellule */
+    .btn-actions {
+      display: inline-flex;      /* Aligne les boutons horizontalement */
+      justify-content: center;   /* Centre les boutons (utile si td > contenu) */
+      gap: var(--spacing-xs, 4px); /* Espace entre les boutons */
+
+      /* Style spécifique pour les boutons DANS le conteneur .btn-actions */
+      .btn {
+        font-size: 0.85rem;       /* Taille de police réduite pour les boutons d'action */
+        padding: 5px;             /* Padding réduit pour des boutons plus compacts (ajusté à 5px) */
+
+        /* Style spécifique pour les icônes DANS ces boutons d'action */
+        lucide-icon, .icon {
+          width: 20px;            /* Largeur explicite de l'icône (ajusté à 20px) */
+          height: 20px;           /* Hauteur explicite de l'icône (ajusté à 20px) */
+          flex-shrink: 0;         /* Empêche l'icône de rétrécir */
+          display: inline-block;  /* Assure le respect de width/height */
+          vertical-align: middle; /* Aide à l'alignement vertical */
+
+
+          /* Assure que le SVG interne remplit correctement son conteneur */
+          svg {
+            display: block;       /* Évite les espaces blancs potentiels sous le SVG */
+            width: 100%;          /* Le SVG prend 100% de la largeur du conteneur (20px) */
+            height: 100%;         /* Le SVG prend 100% de la hauteur du conteneur (20px) */
+          }
+        }
+      }
+    }
+
+    /* Style pour la ligne indiquant que le tableau est vide */
+    .empty-table-message td {
+      text-align: center;
+      font-style: italic;
+      color: var(--text-light, #999);
+      padding: var(--spacing-lg) 0; /* Padding vertical plus important */
+      border: none; /* Supprime les bordures de cellule */
+      background-color: transparent !important; /* Assure un fond transparent, écrase le :hover */
+    }
+  } /* Fin de table.data-table */
+
+  /* --- Utilitaires --- */
+
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important; // Pour éviter tout espace résiduel
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important; // Empêche le retour à la ligne
+    border: 0 !important;
+  }
+
+  .non-selectable {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+
+  .animate-spin { animation: spin 1s linear infinite; }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  // @media (prefers-reduced-motion: reduce) { .animate-spin { animation: none; } } // Important pour l'accessibilité
+
+  /* --- Responsive --- */
+
+  @media screen and (max-width: 992px) { /* Tablettes */ }
+
+  @media screen and (max-width: 768px) { // Mobiles
+    .page-header .page-title { font-size: 1.5rem; }
+    .form-row { flex-direction: column; }
+    .form-group.half, .form-group.third { flex-basis: auto; }
+    .form-actions, .confirmation-actions { flex-direction: column; align-items: stretch; gap: var(--spacing-sm); }
+
+    table.data-table {
+      thead { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; white-space: nowrap; }
+      tr:not(.empty-table-message) { display: block; margin-bottom: var(--spacing-md, 16px); border: 1px solid var(--border-color, #dee2e6); border-radius: var(--border-radius); padding: var(--spacing-sm, 8px); background-color: var(--main-white); box-shadow: 0 1px 2px rgba(0,0,0,0.05); &:hover { background-color: var(--main-white); } }
+      td { display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-sm, 8px) 0; border-bottom: 1px dashed var(--border-color-light, #e0e0e0); text-align: right; white-space: normal;
+        &::before { content: attr(data-label); font-weight: 600; text-align: left; margin-right: var(--spacing-md, 16px); color: var(--main-blue); white-space: nowrap; flex-shrink: 0; }
+        &:last-child, &.actions-cell {
+          display: block;                // *** Retour à display: block pour le TD ***
+          width: 100%;                 // *** S'assurer qu'il prend toute la largeur ***
+          border-bottom: none;
+          padding: var(--spacing-md) 0 var(--spacing-sm) 0; // Padding haut/bas uniquement
+          margin-top: var(--spacing-sm);
+          &::before { display: none; }
+
+          // --- CIBLER L'ENFANT .btn-actions ---
+          > .btn-actions { // Cible le div .btn-actions DIRECTEMENT enfant du td
+            display: flex;            // Utilise Flexbox sur le conteneur des boutons
+            justify-content: center;  // Centre les boutons horizontalement DANS ce div
+            width: 100%;            // S'assurer que le conteneur prend la largeur
+            gap: var(--spacing-sm);   // Espacement entre les boutons géré globalement mais peut être ajusté ici si besoin
+          }
+        }        &:not(:last-child):empty { display: none; }
+      }
+      .empty-table-message { display: block; padding: var(--spacing-lg) 0; border: none; background: none !important; box-shadow: none; td { display: block; border: none; padding: 0; &::before { display: none; } } }
+    }
+  }
+
+  @media screen and (max-width: 576px) { /* Petits Mobiles */ }
+
+
+} /* Fin du scope .user-layout-container .main-content */
+
+/* ==========================================================================
+   Styles Globaux pour les Modales
+   ==========================================================================
+
+   Styles de base pour la structure des fenêtres modales.
+   Utiliser ces classes dans les templates HTML des composants modaux.
+   Les styles internes (formulaires, boutons) doivent utiliser les classes
+   globales existantes (.form-group, .form-control, .btn, .btn-primary, etc.).
+*/
+
+/* --- Overlay de fond --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0; // Raccourci pour top/right/bottom/left = 0
+  background-color: rgba(var(--neutral-blue-rgb, 44, 62, 80), 0.6); // Fond semi-transparent bleu neutre
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050; // Assure d'être au-dessus des autres éléments
+  padding: var(--spacing-md); // Petit padding pour ne pas coller aux bords écran
+  // Pour l'animation d'apparition/disparition (optionnel)
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+
+  // État visible (ajouter/retirer cette classe via Angular [class.is-visible])
+  &.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 0s linear 0s;
   }
 }
+
+// Variante pour overlay avec effet blur (utiliser <div class="modal-overlay modal-overlay-blur">)
+.modal-overlay-blur {
+  background-color: rgba(var(--main-white-rgb, 255, 255, 255), 0.35); // Fond blanc semi-transparent
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+
+
+/* --- Conteneur Principal de la Modale --- */
+.modal-content {
+  background-color: var(--main-white);
+  border-radius: var(--border-radius);
+  width: 100%; // Prend la largeur disponible jusqu'au max-width
+  max-width: 700px; // Largeur max par défaut (ajustable avec modificateurs)
+  max-height: 90vh; // Hauteur max
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; // Laisse le .modal-body gérer le scroll interne
+  box-shadow: 0 6px 20px rgba(var(--main-black-rgb, 0, 0, 0), 0.15);
+  // Pour l'animation d'apparition/disparition (optionnel)
+  transform: scale(0.95);
+  transition: transform 0.3s ease;
+
+  // Quand l'overlay est visible, la modale scale normalement
+  .modal-overlay.is-visible & {
+    transform: scale(1);
+  }
+}
+
+// Modificateurs de taille pour .modal-content
+.modal-content-lg { max-width: 1000px; }
+.modal-content-sm { max-width: 500px; }
+
+
+/* --- Entête de la Modale --- */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0; // Empêche de rétrécir
+
+  h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--main-blue); // Titre bleu par défaut
+    display: inline-flex; // Pour aligner avec icône si ajoutée
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+}
+
+// Variante pour header avec fond bleu
+.modal-header-primary {
+  background-color: var(--main-blue);
+  color: var(--main-white);
+  h2 { color: var(--main-white); }
+}
+
+
+/* --- Bouton de Fermeture Standard (dans .modal-header) --- */
+// Utiliser <button class="modal-close-button">...</button>
+.modal-close-button {
+  background: none;
+  border: none;
+  color: inherit; // Hérite couleur du header (blanc ou gris)
+  font-size: 1.5rem; // Ajuste taille si besoin
+  line-height: 1;
+  padding: var(--spacing-xs); // Petite zone cliquable
+  margin: calc(-1 * var(--spacing-xs)); // Compense padding pour alignement visuel
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  display: inline-flex; // Pour centrer l'icône
+
+  lucide-icon { // Assumer une icône lucide, adapter si autre
+    width: 20px; height: 20px;
+  }
+
+  &:hover {
+    opacity: 1;
+    // transform: rotate(90deg); // Optionnel
+  }
+  &:focus-visible { // Style focus
+    opacity: 1;
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  // Couleur spécifique si le header est bleu
+  .modal-header-primary & {
+    color: var(--main-white);
+    &:focus-visible { outline-color: var(--main-white); }
+  }
+  // Couleur spécifique si header standard (blanc/gris)
+  .modal-header:not(.modal-header-primary) & {
+    color: var(--text-medium);
+    &:hover { color: var(--text-dark); }
+    &:focus-visible { outline-color: var(--main-blue); }
+  }
+}
+
+
+/* --- Corps de la Modale --- */
+.modal-body {
+  padding: var(--spacing-lg);
+  overflow-y: auto; // *** Active le scroll UNIQUEMENT sur le corps ***
+  flex-grow: 1; // Prend l'espace vertical restant
+  background-color: var(--main-white); // Fond par défaut
+
+}
+
+
+/* --- Pied de page de la Modale --- */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end; // Boutons alignés à droite par défaut
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-top: 1px solid var(--border-color);
+  background-color: var(--bg-light-gray); // Fond légèrement gris
+  flex-shrink: 0; // Empêche de rétrécir
+
+}
+
+
+/* --- Responsive pour les Modales --- */
+@media screen and (max-width: 768px) {
+  .modal-content {
+    max-width: calc(100% - (var(--spacing-md) * 2)); // Prend presque toute la largeur
+    max-height: calc(100% - (var(--spacing-md) * 2)); // Prend presque toute la hauteur
+    margin: var(--spacing-md); // Centre avec marge
+    border-radius: var(--border-radius-sm, 4px); // Moins arrondi sur mobile
+  }
+  .modal-content-lg,
+  .modal-content-sm {
+    max-width: calc(100% - (var(--spacing-md) * 2)); // Annule les tailles spécifiques
+  }
+
+  .modal-header { padding: var(--spacing-sm) var(--spacing-md); }
+  .modal-body { padding: var(--spacing-md); }
+  .modal-footer { padding: var(--spacing-sm) var(--spacing-md); }
+
+  // Optionnel: Empiler les boutons du footer sur mobile
+   .modal-footer { flex-direction: column-reverse; align-items: stretch; gap: var(--spacing-sm); }
+}
+
+/* --- FIN Styles Globaux Modales --- */

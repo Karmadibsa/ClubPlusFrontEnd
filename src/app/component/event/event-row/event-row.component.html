@@ -1,5 +1,4 @@
 <!-- event-row.component.html -->
-<td data-label="ID">{{ evenement.id }}</td>
 <td data-label="Titre">{{ evenement.nom }}</td>
 <td data-label="Début - Fin">{{ evenement.start | date:'dd/MM/yyyy HH:mm' }} - {{ evenement.end | date:'dd/MM HH:mm' }}</td>
 <td data-label="Description">{{ evenement.description }}</td>
@@ -12,24 +11,36 @@
 </td>
 <td data-label="Actions"> <!-- Label pour la cellule actions -->
   <div class="btn-actions">
-    <button class="btn btn-view" title="Voir Réservations" (click)="onRequestViewReservations()">
+    <button class="btn btn-secondary" title="Voir Réservations" (click)="ouvrirModalParticipation()">
       <lucide-icon name="eye" class="icon"></lucide-icon>
     </button>
-    <button class="btn btn-edit" title="Modifier" (click)="ouvrirModal()">
+    <button class="btn btn-edit" title="Modifier" (click)="ouvrirModalEdit()">
       <lucide-icon name="pen" class="icon"></lucide-icon>
     </button>
-    <button class="btn btn-delete" title="Supprimer" (click)="requestDelete()">
+    <button class="btn btn-danger" title="Supprimer" (click)="requestDelete()">
       <lucide-icon name="trash" class="icon"></lucide-icon>
     </button>
   </div>
 </td>
 
 <!-- Modal d'édition -->
-@if (isModalVisible){
+@if (isModalEditVisible){
 <app-edit-event
-  [isVisible]="isModalVisible"
+  [isVisible]="isModalEditVisible"
   [event]="evenement"
   (saveSuccess)="sauvegarderEvenement($event)"
-  (close)="fermerModal()">
+  (close)="fermerModalEdit()">
 </app-edit-event>
 }
+
+
+<!-- Modale de participation -->
+@if (isParticipationModalVisible) {
+  <app-participation-event-modal
+    [isVisible]="isParticipationModalVisible"
+    [eventId]="evenement?.id!"
+    [eventTitle]="evenement?.nom!"
+    (closeModal)="handleCloseParticipationModal()">
+  </app-participation-event-modal>
+}
+

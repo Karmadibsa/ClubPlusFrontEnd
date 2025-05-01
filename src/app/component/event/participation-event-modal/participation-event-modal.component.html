@@ -1,0 +1,114 @@
+
+  <!-- Utilise les classes globales .modal-overlay et [class.is-visible] -->
+  <div class="modal-overlay"
+       [class.is-visible]="isVisible"
+       (click)="onClose()">
+
+    <!-- Utilise les classes globales .modal-content et .modal-content-lg -->
+    <div class="modal-content modal-content-lg" (click)="stopPropagation($event)">
+
+      <!-- Utilise la classe globale .modal-header (style standard, pas bleu) -->
+      <header class="modal-header">
+        <h2>
+          <!-- Icône appropriée -->
+          <lucide-icon name="users" aria-hidden="true"></lucide-icon>
+          Réservations pour : {{ eventTitle }}
+        </h2>
+        <!-- Utilise la classe globale .modal-close-button -->
+        <button class="modal-close-button" type="button" (click)="onClose()" title="Fermer">
+          <lucide-icon name="x"></lucide-icon>
+        </button>
+      </header>
+
+      <!-- Utilise la classe globale .modal-body -->
+      <main class="modal-body">
+
+        <!-- Section Filtres - Styles spécifiques dans le SCSS local -->
+        <div class="filter-section">
+          <span>Filtrer par statut :</span>
+          <!-- Utilise .btn global + .btn-filter spécifique + .active spécifique -->
+          <button type="button" class="btn btn-filter" [class.active]="isFilterActive(null)" (click)="applyFilter(null)">
+            Tous
+          </button>
+          <button type="button" class="btn btn-filter" [class.active]="isFilterActive(reservationStatus.CONFIRME)" (click)="applyFilter(reservationStatus.CONFIRME)">
+            Confirmés
+          </button>
+          <button type="button" class="btn btn-filter" [class.active]="isFilterActive(reservationStatus.UTILISE)" (click)="applyFilter(reservationStatus.UTILISE)">
+            Utilisés
+          </button>
+          <button type="button" class="btn btn-filter" [class.active]="isFilterActive(reservationStatus.ANNULE)" (click)="applyFilter(reservationStatus.ANNULE)">
+            Annulés
+          </button>
+        </div>
+        <!-- Champ de Recherche (utilise .form-group, .form-control globaux) -->
+        <div class="form-group search-filter-group">
+          <label for="participationSearch" class="visually-hidden">Rechercher par nom/prénom</label>
+          <div class="input-with-icon"> <!-- Wrapper pour l'icône -->
+            <lucide-icon name="search"></lucide-icon>
+            <input type="search" id="participationSearch" class="form-control"
+                   placeholder="Rechercher par nom/prénom..."
+                   [(ngModel)]="searchTerm"
+                   (ngModelChange)="onSearchTermChange()"> <!-- Appel sur changement -->
+          </div>
+        </div>
+        <!-- Affichage Chargement / Erreur / Liste -->
+        @if (isLoading) {
+          <!-- Utilise la classe globale .loading-indicator -->
+          <div class="loading-indicator">
+            <lucide-icon name="loader" class="animate-spin"></lucide-icon>
+            <span>Chargement des réservations...</span>
+          </div>
+        } @else if (error) {
+          <!-- Classe spécifique pour l'erreur -->
+          <p class="error-message">{{ error }}</p>
+        } @else {
+          <!-- *** CHANGE ICI: itère sur filteredReservations *** -->
+          @if (filteredReservations.length > 0) {
+            <div class="table-wrapper participation-table-wrapper">
+              <table class="data-table participation-table">
+                <thead>
+                <tr>
+                  <th>Membre</th>
+                  <th>Téléphone</th>
+                  <th>Catégorie</th>
+                  <th>Date Réservation</th>
+                  <th>Statut</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- *** CHANGE ICI: itère sur filteredReservations *** -->
+                  @for (resa of filteredReservations; track resa.id ?? resa.reservationUuid) {
+                    <tr>
+                      <td [attr.data-label]="'Membre'">{{ resa.membre?.prenom ?? '?' }} {{ resa.membre?.nom ?? '' }}</td>
+                      <td [attr.data-label]="'Téléphone'">{{ resa.membre?.telephone ?? '?' }}</td>
+                      <td [attr.data-label]="'Catégorie'">{{ resa.categorie?.nom ?? '?' }}</td>
+                      <td [attr.data-label]="'Date Réservation'">{{ resa.dateReservation | date:'dd/MM/yyyy' }}</td>
+                      <td [attr.data-label]="'Statut'">
+                         <span class="status-badge status-{{resa.status | lowercase}}">
+                           {{ resa.status }}
+                         </span>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          } @else {
+            <!-- Utilise la classe globale .no-data-message -->
+            <div class="no-data-message">
+              <lucide-icon name="ticket-x"></lucide-icon>
+              <span>Aucune réservation trouvée pour cet événement avec le filtre actuel.</span>
+            </div>
+          }
+        }
+      </main>
+
+      <!-- Utilise la classe globale .modal-footer -->
+      <footer class="modal-footer">
+        <!-- Utilise les classes globales .btn .btn-secondary -->
+        <button type="button" class="btn btn-secondary" (click)="onClose()">Fermer</button>
+      </footer>
+
+    </div>
+  </div>
+

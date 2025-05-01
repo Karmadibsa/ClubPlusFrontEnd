@@ -1,31 +1,53 @@
-<div class="event-modal" [class.show]="isOpen">
-  <div class="modal-content">
-    <div class="modal-title">
-      <lucide-icon name="ticket"></lucide-icon>
-      <span>QR Code de votre billet</span>
-    </div>
-    <button class="close-modal" (click)="onClose()">
-      <lucide-icon name="x"></lucide-icon>
-    </button>
+<!-- qr-code-modal.component.html -->
+@if (isOpen) {
+  <!-- Utilise les classes globales .modal-overlay et [class.is-visible] -->
+  <div class="modal-overlay"
+       [class.is-visible]="isOpen"
+       (click)="onClose()">
 
-    <div class="zoomed-qr-container">
-      <qrcode
-        [qrdata]="qrData"
-        [width]="280"
-        [errorCorrectionLevel]="'M'">
-      </qrcode>
-    </div>
+    <!-- Utilise les classes globales .modal-content et .modal-content-sm -->
+    <div class="modal-content modal-content-sm" (click)="stopPropagation($event)">
 
-    <div class="modal-info" *ngIf="ticketInfo">
-      <p><strong>{{ ticketInfo.membre.prenom }} {{ ticketInfo.membre.nom }}</strong></p>
-      <p>{{ ticketInfo.event.title }}</p>
-      <p>{{ ticketInfo.event.start | date:'dd/MM/yyyy HH:mm' }}</p>
-      <p>{{ ticketInfo.event.location }}</p>
-      <p>{{ ticketInfo.categorie.nom }}</p>
-    </div>
+      <!-- Utilise .modal-header global -->
+      <header class="modal-header">
+        <h2>
+          <lucide-icon name="ticket" aria-hidden="true"></lucide-icon>
+          <span>QR Code de votre billet</span>
+        </h2>
+        <!-- Utilise .modal-close-button global -->
+        <button class="modal-close-button" type="button" (click)="onClose()" title="Fermer">
+          <lucide-icon name="x"></lucide-icon>
+        </button>
+      </header>
 
-    <div class="modal-footer">
-      <p>Présentez ce QR code à l'entrée de l'événement</p>
+      <!-- Utilise .modal-body global -->
+      <main class="modal-body">
+        <!-- Conteneur spécifique -->
+        <div class="zoomed-qr-container">
+          <qrcode
+            [qrdata]="qrData"
+            [width]="256"
+            [errorCorrectionLevel]="'M'">
+          </qrcode>
+        </div>
+
+        <!-- Informations (utilise @if et ?) -->
+        @if (ticketInfo) {
+          <div class="ticket-info">
+            <p><strong>{{ ticketInfo.membre?.prenom }} {{ ticketInfo.membre?.nom }}</strong></p>
+            <p>{{ ticketInfo.event?.nom }}</p> <!-- Changé de title à nom pour correspondre à Reservation -->
+            <p>{{ ticketInfo.event?.start | date:'dd/MM/yyyy HH:mm' }}</p>
+            <p>{{ ticketInfo.event?.location }}</p>
+            <p>{{ ticketInfo.categorie?.nom }}</p>
+          </div>
+        }
+      </main>
+
+      <!-- Utilise .modal-footer global -->
+      <footer class="modal-footer footer-notice">
+        <p>Présentez ce QR code à l'entrée de l'événement.</p>
+      </footer>
+
     </div>
   </div>
-</div>
+}

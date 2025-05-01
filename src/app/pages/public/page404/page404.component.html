@@ -1,1 +1,28 @@
-<p>page404 works!</p>
+<div class="not-found-container">
+  <div class="not-found-content">
+
+    <!-- Icône d'alerte (ou une autre plus thématique si vous préférez) -->
+    <div class="icon-container">
+      <lucide-icon name="siren" class="not-found-icon"></lucide-icon>
+    </div>
+
+    <!-- Code d'erreur -->
+    <h1 class="error-code">404</h1>
+
+    <!-- Message principal avec métaphore sportive -->
+    <p class="error-message">Page Hors-Jeu !</p>
+
+    <!-- Description plus détaillée -->
+    <p class="error-description">
+      On dirait que le lien suivi est invalide ou que la page a été déplacée sur un autre terrain.
+    </p>
+
+    <!-- Bouton pour revenir à l'accueil (ou dashboard si plus pertinent) -->
+    <!-- Utilise les classes globales .btn .btn-primary -->
+    <a routerLink="/accueil" class="btn btn-primary back-home-link">
+      <lucide-icon name="house" aria-hidden="true"></lucide-icon>
+      Retour à l'accueil
+    </a>
+
+  </div>
+</div>

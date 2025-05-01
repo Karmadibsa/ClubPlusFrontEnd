@@ -13,11 +13,15 @@ import {QRCodeComponent} from 'angularx-qrcode';
 })
 export class QrCodeModalComponent {
   @Input() isOpen: boolean = false;
+  @Input() ticketInfo: any | null = null; // Doit correspondre à l'objet reservation
   @Input() qrData: string = '';
-  @Input() ticketInfo: any;
-  @Output() closeModal = new EventEmitter<void>();
+  @Output() close = new EventEmitter<void>(); // Renommé de closeModal à close
 
-  onClose() {
-    this.closeModal.emit();
+  onClose(): void {
+    this.close.emit();
+  }
+
+  stopPropagation(event: Event): void {
+    event.stopPropagation();
   }
 }

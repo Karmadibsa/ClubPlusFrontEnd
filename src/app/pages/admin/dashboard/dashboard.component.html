@@ -1,127 +1,163 @@
-  <!-- En-tête -->
-  <div class="header">
-    <h1>Dashboard</h1>
-    @if (isLoading){
-      <div class="loading-indicator" role="status" aria-live="polite">Chargement des données...</div>
-    }
-  </div>
+<!-- Structure basée sur template.txt -->
+<div class="page-header">
+  <!-- Icône appropriée pour le Dashboard -->
+  <h1 class="page-title">Dashboard</h1>
+</div>
 
-  <!-- Section Statistiques -->
-  <section class="stats-grid" aria-labelledby="stats-title">
-    <h2 id="stats-title" class="visually-hidden">Statistiques Clés</h2>
-    <!-- Boucle sur un array de stats serait mieux, mais on garde la structure demandée -->
-    <app-stat-card title="Événements organisés" [value]="totalEvents"></app-stat-card>
-    <app-stat-card title="Événements à venir" [value]="upcomingEventsCount"></app-stat-card>
-    <app-stat-card title="Taux de participation" [value]="averageEventOccupancy | percent:'1.0-1'"></app-stat-card>
-    <app-stat-card title="Membres Actifs" [value]="totalActiveMembers"></app-stat-card>
-    <app-stat-card title="Réservations validées" [value]="totalParticipations"></app-stat-card>
-  </section>
+<!-- Section filtres non utilisée ici -->
+<!-- <section class="filters-section" aria-labelledby="filters-title"> ... </section> -->
 
-  <!-- Section Graphiques -->
-  <section class="charts-grid" aria-labelledby="charts-title">
-    <h2 id="charts-title" class="visually-hidden">Graphiques</h2>
+<section class="main-section">
+  <h2 id="main-title" class="visually-hidden">Contenu principal du tableau de bord</h2>
 
-    <!-- Graphique Inscriptions -->
-    <!-- On garde les styles inline pour l'instant car ils semblent critiques -->
-    <div class="card chart-container stat-card" style="position: relative; height:400px; display: block;">
-      <h3>Évolution des Inscriptions</h3>
-      @if (membersChartData.datasets.length > 0 && !isLoading) {
-        <canvas baseChart
-                [data]="membersChartData"
-                [options]="membersChartOptions"
-                type="line"
-                role="img"
-                aria-label="Graphique linéaire: Évolution des inscriptions">
-        </canvas>
-      } @else if (!isLoading) {
-        <div class="chart-placeholder">Aucune donnée d'inscription.</div>
-      }
+  <!-- Indicateur de chargement global pour la section principale -->
+  @if (isLoading) {
+    <div class="loading-indicator" role="status" aria-live="polite">
+      <lucide-icon name="loader" class="animate-spin"></lucide-icon>
+      <span>Chargement des données du tableau de bord...</span>
     </div>
+  } @else {
+    <!-- Contenu affiché après chargement -->
 
-    <!-- Graphique Notes -->
-    <!-- On garde les styles inline pour l'instant -->
-    <div class="card chart-container stat-card" style="position: relative; height:400px; display: block;">
-      <h3>Notes Moyennes</h3>
-      @if (ratingsChartData.datasets.length > 0 && !isLoading) {
-        <canvas baseChart
-                [data]="ratingsChartData"
-                [options]="ratingsChartOptions"
-                type="bar"
-                role="img"
-                aria-label="Graphique en barres: Notes moyennes">
-        </canvas>
-      } @else if (!isLoading) {
-        <div class="chart-placeholder">Aucune donnée de notes.</div>
-      }
-    </div>
-  </section>
+      <!-- Section Statistiques -->
+    <section class="stats-grid" aria-labelledby="stats-title">
+      <h2 id="stats-title" class="visually-hidden">Statistiques Clés</h2>
+      <!-- Les app-stat-card doivent utiliser .card à l'intérieur -->
+      <app-stat-card title="Événements organisés" [value]="totalEvents"></app-stat-card>
+      <app-stat-card title="Événements à venir" [value]="upcomingEventsCount"></app-stat-card>
+      <app-stat-card title="Taux de participation" [value]="averageEventOccupancy | percent:'1.0-1'"></app-stat-card>
+      <app-stat-card title="Membres Actifs" [value]="totalActiveMembers"></app-stat-card>
+      <app-stat-card title="Réservations validées" [value]="totalParticipations"></app-stat-card>
+    </section>
 
-  <!-- Section Tableaux -->
-  <section class="tables-grid" aria-labelledby="tables-title">
-    <h2 id="tables-title" class="visually-hidden">Données détaillées</h2>
+    <!-- Section Graphiques -->
+    <section class="charts-grid" aria-labelledby="charts-title">
+      <h2 id="charts-title" class="visually-hidden">Graphiques</h2>
 
-    <!-- Tableau Membres -->
-    <div class="table-container card"> <!-- Ajout classe card pour cohérence ombre/bordure -->
-      <h3>Derniers membres inscrits</h3>
-      <div class="table-wrapper"> <!-- Ajout du wrapper pour scroll -->
-        <table class="full-width-table data-table" aria-describedby="members-table-title">
-          <caption id="members-table-title" class="visually-hidden">5 derniers membres inscrits</caption>
-          <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nom Prénom</th>
-            <th>Naissance</th>
-            <th>Ville</th>
-            <th>Téléphone</th>
-            <th>Email</th>
-            <th>Rôle</th>
-            <th>Actions</th>
-          </tr>
-          </thead>
-          <tbody>
-            @for (member of lastFiveMembers; track member.id) {
-              <tr app-membre-row [membre]="member" (roleChangeRequested)="handleSaveRole($event)"></tr>
-            } @empty {
-              <tr><td colspan="8" class="empty-table-message">Aucun membre récent.</td></tr>
-            }
-          </tbody>
-        </table>
+      <!-- Graphique Inscriptions -->
+      <div class="card chart-container"> <!-- Utilise .card et .chart-container (défini en SCSS) -->
+        <h3>Évolution des Inscriptions</h3>
+        @if (membersChartData.datasets.length > 0 && !isLoading) {
+          <div class="chart-wrapper"> <!-- Wrapper optionnel pour le canvas -->
+            <canvas baseChart
+                    [data]="membersChartData"
+                    [options]="membersChartOptions"
+                    type="line"
+                    role="img"
+                    aria-label="Graphique linéaire: Évolution des inscriptions">
+            </canvas>
+          </div>
+        } @else if (!isLoading) {
+          <!-- Utilisation de la classe globale .no-data-message -->
+          <div class="no-data-message chart-placeholder">
+            <lucide-icon name="bar-chart-3"></lucide-icon>
+            <span>Aucune donnée d'inscription disponible.</span>
+          </div>
+        }
       </div>
-    </div>
 
-    <!-- Tableau Événements -->
-    <div class="table-container card"> <!-- Ajout classe card -->
-      <div class="header-event"> <!-- Renommé pour clarté, contient titre + bouton -->
-        <h3>Prochains événements</h3>
-        <app-create-event-button (createClicked)="openCreateEventModal()"></app-create-event-button>
+      <!-- Graphique Notes -->
+      <div class="card chart-container"> <!-- Utilise .card et .chart-container -->
+        <h3>Notes Moyennes</h3>
+        @if (ratingsChartData.datasets.length > 0 && !isLoading) {
+          <div class="chart-wrapper"> <!-- Wrapper optionnel pour le canvas -->
+            <canvas baseChart
+                    [data]="ratingsChartData"
+                    [options]="ratingsChartOptions"
+                    type="bar"
+                    role="img"
+                    aria-label="Graphique en barres: Notes moyennes">
+            </canvas>
+          </div>
+        } @else if (!isLoading) {
+          <!-- Utilisation de la classe globale .no-data-message -->
+          <div class="no-data-message chart-placeholder">
+            <lucide-icon name="star-half"></lucide-icon>
+            <span>Aucune donnée de notes disponible.</span>
+          </div>
+        }
       </div>
-      <div class="table-wrapper"> <!-- Ajout du wrapper pour scroll -->
-        <table class="full-width-table data-table" aria-describedby="events-table-title">
-          <caption id="events-table-title" class="visually-hidden">5 prochains événements</caption>
-          <thead>
-          <tr>
-            <th>ID</th>
-            <th>Titre</th>
-            <th>Début - Fin</th>
-            <th>Description</th>
-            <th>Participants</th>
-            <th>Lieu</th>
-            <th>Catégories</th>
-            <th>Actions</th>
-          </tr>
-          </thead>
-          <tbody>
-            @for (event of nextFiveEvents; track event.id) {
-              <tr app-event-row [evenement]="event" (modifier)="handleOpenEditModal($event)" (deleteRequest)="handleDeleteEventRequest($event)"></tr>
-            } @empty {
-              <tr><td colspan="8" class="empty-table-message">Aucun événement à venir.</td></tr>
-            }
-          </tbody>
-        </table>
+    </section>
+
+    <!-- Section Tableaux -->
+    <section class="tables-grid" aria-labelledby="tables-title">
+      <h2 id="tables-title" class="visually-hidden">Données détaillées</h2>
+
+      <!-- Tableau Membres -->
+      <div class="card table-container"> <!-- Classe .card appliquée -->
+        <div class="header-table"> <!-- Classe spécifique pour titre + bouton -->
+          <h3>Derniers membres inscrits</h3>
+        </div>
+        <div class="table-wrapper"> <!-- Wrapper pour scroll horizontal -->
+          <table class="data-table" aria-describedby="members-table-title"> <!-- Classe .data-table appliquée -->
+            <caption id="members-table-title" class="visually-hidden">5 derniers membres inscrits</caption>
+            <thead>
+            <tr>
+              <th>Nom Prénom</th>
+              <th>Naissance</th>
+              <th>Ville</th>
+              <th>Téléphone</th>
+              <th>Email</th>
+              <th>Rôle</th>
+              <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+              @for (member of lastFiveMembers; track member.id) {
+                <!-- app-membre-row doit générer des <td> avec [attr.data-label] pour le responsive -->
+                <tr app-membre-row [membre]="member" (roleChangeRequested)="handleSaveRole($event)"></tr>
+              } @empty {
+                <tr>
+                  <td colspan="8" class="empty-table-message">Aucun membre récent.</td> <!-- Classe .empty-table-message -->
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
-  </section>
-<!-- Modale d'édition (hors du flux principal) -->
+
+      <!-- Tableau Événements -->
+      <div class="card table-container"> <!-- Classe .card appliquée -->
+        <div class="header-table"> <!-- Classe spécifique pour titre + bouton -->
+          <h3>Prochains événements</h3>
+          <app-create-event-button (createClicked)="openCreateEventModal()"></app-create-event-button>
+        </div>
+        <div class="table-wrapper"> <!-- Wrapper pour scroll horizontal -->
+          <table class="data-table" aria-describedby="events-table-title"> <!-- Classe .data-table appliquée -->
+            <caption id="events-table-title" class="visually-hidden">5 prochains événements</caption>
+            <thead>
+            <tr>
+              <th>Titre</th>
+              <th>Début - Fin</th>
+              <th>Description</th>
+              <th>Participants</th>
+              <th>Lieu</th>
+              <th>Catégories</th>
+              <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+              @for (event of nextFiveEvents; track event.id) {
+                <!-- app-event-row doit générer des <td> avec [attr.data-label] pour le responsive -->
+                <tr app-event-row [evenement]="event" (modifier)="handleOpenEditModal($event)" (deleteRequest)="handleDeleteEventRequest($event)"></tr>
+              } @empty {
+                <tr>
+                  <td colspan="8" class="empty-table-message">Aucun événement à venir.</td> <!-- Classe .empty-table-message -->
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  } <!-- Fin du @else principal -->
+
+</section> <!-- Fin .main-section -->
+
+<!-- Section pagination non utilisée ici -->
+<!-- <nav class="pagination-section" aria-label="Pagination..."> ... </nav> -->
+
+<!-- Modale d'édition (reste en dehors du flux principal) -->
 @if (isEditEventModalVisible) {
   <app-edit-event
     [isVisible]="isEditEventModalVisible"
@@ -130,3 +166,4 @@
     (close)="handleCloseEditModal()">
   </app-edit-event>
 }
+

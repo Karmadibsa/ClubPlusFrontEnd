@@ -1,254 +1,216 @@
-<!-- mon-compte.component.html - Refactorisé en respectant paste.txt -->
+<!-- mon-compte.component.html - Refactorisé strictement selon le template -->
 
-<!-- Classe standardisée pour le conteneur principal -->
-<div class="main-content-area">
+<!-- En-tête standard de la page -->
+<!-- Utilise les classes .page-header et .page-title (implicite pour h1) des styles globaux [5] -->
+<div class="page-header">
+  <h1 class="page-title" id="main-account-title"><lucide-icon name="user-cog" aria-hidden="true"></lucide-icon> Mon Compte</h1>
+  <!-- Bouton déconnexion utilisant les classes globales .btn .btn-secondary [5] -->
+  <a (click)="auth.deconnexion()" routerLink="/accueil" class="logout-btn btn btn-danger" title="Déconnexion">
+    <lucide-icon name="log-out" aria-hidden="true"></lucide-icon>
+    <span class="visually-hidden">Déconnexion</span> <!-- Utilise classe globale utilitaire [5] -->
+  </a>
+</div>
 
-  <div class="page-header account-header"> <!-- Ajout classe page-header pour spécificité -->
-    <h1><lucide-icon name="user-cog" aria-hidden="true"></lucide-icon> Mon Compte</h1>
-    <!-- Ajout type="button" et classe btn btn-secondary pour style cohérent -->
-    <a (click)="auth.deconnexion()" routerLink="/accueil" class="logout-btn btn btn-secondary" title="Déconnexion">
-      <lucide-icon name="log-out" aria-hidden="true"></lucide-icon>
-      <span class="visually-hidden">Déconnexion</span>
-    </a>
-  </div>
+<!-- Section dédiée aux filtres et au tri (Non applicable pour "Mon Compte") -->
+<!-- <section class="filters-section" aria-labelledby="filters-title">...</section> -->
+
+<!-- Section principale standardisée -->
+<!-- Contient le contenu principal (formulaires, etc.) [5] -->
+<section class="main-section" aria-labelledby="main-account-title">
+  <!-- Titre caché pour la structure sémantique, comme dans le template -->
+  <h2 id="main-section-account-heading" class="visually-hidden">Gestion de mon compte</h2>
 
   @if (!isLoading) {
-    <!-- Utilisation de <main> pour le contenu principal -->
-    <main role="main">
-      <!-- Conservation du conteneur .section-cards si utilisé pour espacement/mise en page -->
-      <div class="section-cards">
+    <!-- FORMULAIRE #1 : Informations Personnelles et Adresse -->
+      <!-- Le formulaire est le contenu principal DANS .main-section -->
+      <!-- Utilise la structure globale pour les formulaires en carte [5] -->
+    <form [formGroup]="infoForm" (ngSubmit)="updatePersonalInfo()" novalidate>
+      <!-- Section Infos Personnelles -->
+      <fieldset class="card-section"> <!-- Utilise classe globale [5] -->
+        <legend class="section-header"> <!-- Utilise classe globale [5] -->
+          <h2><lucide-icon name="user" aria-hidden="true"></lucide-icon> Informations personnelles</h2>
+          <p class="section-description">Vos informations personnelles principales</p> <!-- Utilise classe globale [5] -->
+        </legend>
 
-        <!-- FORMULAIRE #1 : Informations Personnelles et Adresse -->
-        <form [formGroup]="infoForm" (ngSubmit)="updatePersonalInfo()" class="account-form" novalidate>
-          <!-- Utilisation de fieldset pour regrouper la section -->
-          <fieldset class="account-section card-section">
-            <!-- Le header devient la legend -->
-            <legend class="section-header">
-              <h2><lucide-icon name="user" aria-hidden="true"></lucide-icon> Informations personnelles</h2>
-              <p class="section-description">Vos informations personnelles principales</p>
-            </legend>
+        <div class="card-content"> <!-- Utilise classe globale [5] -->
+          <!-- Ligne Prénom, Nom, Date Naissance -->
+          <div class="form-row"> <!-- Utilise classe globale [5] -->
+            <div class="form-group third"> <!-- Utilise classes globales [5] -->
+              <label for="firstname">Prénom<span class="required-indicator">*</span></label> <!-- Utilise classe globale [5] -->
+              <input type="text" id="firstname" formControlName="prenom" class="form-control" aria-required="true" aria-describedby="prenom-error"/> <!-- Utilise classe globale [5] -->
+              <div id="prenom-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici</div> <!-- Utilise classe globale [5] -->
+            </div>
+            <div class="form-group third"> <!-- Utilise classes globales [5] -->
+              <label for="lastname">Nom<span class="required-indicator">*</span></label> <!-- Utilise classe globale [5] -->
+              <input type="text" id="lastname" formControlName="nom" class="form-control" aria-required="true" aria-describedby="nom-error"/> <!-- Utilise classe globale [5] -->
+              <div id="nom-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici</div> <!-- Utilise classe globale [5] -->
+            </div>
+            <div class="form-group third"> <!-- Utilise classes globales [5] -->
+              <label for="birthdate">Date de naissance<span class="required-indicator">*</span></label> <!-- Utilise classe globale [5] -->
+              <input type="date" id="birthdate" formControlName="date_naissance" class="form-control" aria-required="true" aria-describedby="date_naissance-error"/> <!-- Utilise classe globale [5] -->
+              <div id="date_naissance-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici</div> <!-- Utilise classe globale [5] -->
+            </div>
+          </div>
 
-            <div class="card-content">
-              <!-- Ligne Prénom, Nom, Date Naissance -->
-              <div class="form-row">
-                <div class="form-group third">
-                  <label for="firstname">Prénom</label>
-                  <!-- Ajout aria-required, aria-describedby -->
-                  <input type="text" id="firstname" formControlName="prenom" aria-required="true" aria-describedby="prenom-error"/>
-                  <!-- Structure pour erreur (vide pour l'instant) -->
-                  <div id="prenom-error" class="invalid-feedback" role="alert" aria-live="assertive"></div>
-                </div>
-                <div class="form-group third">
-                  <label for="lastname">Nom</label>
-                  <!-- Ajout aria-required, aria-describedby -->
-                  <input type="text" id="lastname" formControlName="nom" aria-required="true" aria-describedby="nom-error"/>
-                  <!-- Structure pour erreur -->
-                  <div id="nom-error" class="invalid-feedback" role="alert" aria-live="assertive"></div>
-                </div>
-                <div class="form-group third">
-                  <label for="birthdate">Date de naissance</label>
-                  <!-- Ajout aria-required, aria-describedby -->
-                  <input type="date" id="birthdate" formControlName="date_naissance" aria-required="true" aria-describedby="date_naissance-error"/>
-                  <!-- Structure pour erreur -->
-                  <div id="date_naissance-error" class="invalid-feedback" role="alert" aria-live="assertive"></div>
-                </div>
+          <!-- Ligne Email, Téléphone -->
+          <div class="form-row"> <!-- Utilise classe globale [5] -->
+            <div class="form-group half"> <!-- Utilise classes globales [5] -->
+              <label for="email">Email<span class="required-indicator">*</span></label> <!-- Utilise classe globale [5] -->
+              <input type="email" id="email" formControlName="email" class="form-control" aria-required="true" aria-describedby="email-error"/> <!-- Utilise classe globale [5] -->
+              <div id="email-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici</div> <!-- Utilise classe globale [5] -->
+            </div>
+            <div class="form-group half"> <!-- Utilise classes globales [5] -->
+              <label for="phone">Téléphone</label>
+              <input type="tel" id="phone" formControlName="telephone" class="form-control" aria-describedby="telephone-error"/> <!-- Utilise classe globale [5] -->
+              <div id="telephone-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici</div> <!-- Utilise classe globale [5] -->
+            </div>
+          </div>
+        </div> <!-- Fin card-content infos perso -->
+      </fieldset> <!-- Fin fieldset infos perso -->
+
+      <!-- Section Adresse (toujours DANS le même formulaire infoForm) -->
+      <fieldset class="card-section"> <!-- Utilise classe globale [5] -->
+        <legend class="section-header"> <!-- Utilise classe globale [5] -->
+          <h2><lucide-icon name='map-pin' aria-hidden="true"></lucide-icon> Adresse</h2>
+          <p class='section-description'>Votre adresse postale complète</p> <!-- Utilise classe globale [5] -->
+        </legend>
+        <div class="card-content"> <!-- Utilise classe globale [5] -->
+          <!-- Ligne numéro et rue -->
+          <div class='form-row'> <!-- Utilise classe globale [5] -->
+            <div class='form-group quarter'> <!-- Utilise classes globales [5] -->
+              <label for='street-number'>N°</label>
+              <input type='text' id='street-number' formControlName='numero_voie' class="form-control" aria-describedby="numero_voie-error"/> <!-- Utilise classe globale [5] -->
+              <div id="numero_voie-error" class="invalid-feedback" role="alert" aria-live="assertive"></div> <!-- Utilise classe globale [5] -->
+            </div>
+            <div class='form-group three-quarters'> <!-- Utilise classes globales [5] -->
+              <label for='street'>Rue<span class="required-indicator">*</span></label> <!-- Utilise classe globale [5] -->
+              <input type='text' id='street' formControlName='rue' class="form-control" aria-required="true" aria-describedby="rue-error"/> <!-- Utilise classe globale [5] -->
+              <div id="rue-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici</div> <!-- Utilise classe globale [5] -->
+            </div>
+          </div>
+
+          <!-- Ligne code postal et ville -->
+          <div class='form-row'> <!-- Utilise classe globale [5] -->
+            <div class='form-group half'> <!-- Utilise classes globales [5] -->
+              <label for='postal-code'>Code postal<span class="required-indicator">*</span></label> <!-- Utilise classe globale [5] -->
+              <input type='text' id='postal-code' formControlName='codepostal' class="form-control" aria-required="true" aria-describedby="codepostal-error postal-format-hint"/> <!-- Utilise classe globale [5] -->
+              <small id="postal-format-hint" class="form-text text-muted">Format: 5 chiffres</small> <!-- Utilise classes globales [5] -->
+              <div id="codepostal-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici</div> <!-- Utilise classe globale [5] -->
+            </div>
+            <div class='form-group half'> <!-- Utilise classes globales [5] -->
+              <label for='city'>Ville<span class="required-indicator">*</span></label> <!-- Utilise classe globale [5] -->
+              <input type='text' id='city' formControlName='ville' class="form-control" aria-required="true" aria-describedby="ville-error"/> <!-- Utilise classe globale [5] -->
+              <div id="ville-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici</div> <!-- Utilise classe globale [5] -->
+            </div>
+          </div>
+
+          <!-- Bouton Mettre à jour pour infoForm (infos perso + adresse) -->
+          <div class="form-actions"> <!-- Utilise classe globale [5] -->
+            <button type="submit" class='btn btn-primary' [disabled]="infoForm.invalid || infoForm.pending || !infoForm.dirty"> <!-- Utilise classes globales [5] -->
+              <lucide-icon name="save" aria-hidden="true"></lucide-icon>
+              Mettre à jour mes informations
+            </button>
+          </div>
+        </div><!-- Fin card-content adresse -->
+      </fieldset> <!-- Fin fieldset adresse -->
+    </form> <!-- Fin form infoForm -->
+
+      <!-- Formulaire Changer le mot de passe (COMMENTÉ, mais suit la structure si décommenté) -->
+      <!--
+      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" novalidate>
+        <fieldset class="card-section"> <!-/- Utilise classe globale [5] ->
+          <legend class="section-header"> <!-/- Utilise classe globale [5] ->
+            <h2><lucide-icon name='lock' aria-hidden="true"></lucide-icon> Changer le mot de passe</h2>
+            <p class="section-description">Mettez à jour votre mot de passe pour sécuriser votre compte.</p> <!-/- Utilise classe globale [5] ->
+          </legend>
+          <div class="card-content"> <!-/- Utilise classe globale [5] ->
+            <div class="form-group"> <!-/- Utilise classe globale [5] ->
+              <label for="current-password">Mot de passe actuel<span class="required-indicator">*</span></label> <!-/- Utilise classe globale [5] ->
+              <input type="password" id="current-password" formControlName="current_password" class="form-control" aria-required="true" aria-describedby="current_password-error"/> <!-/- Utilise classe globale [5] ->
+              <div id="current_password-error" class="invalid-feedback" role="alert" aria-live="assertive"></div> <!-/- Utilise classe globale [5] ->
+            </div>
+            <div class="form-row"> <!-/- Utilise classe globale [5] ->
+              <div class="form-group half"> <!-/- Utilise classes globales [5] ->
+                <label for="new-password">Nouveau mot de passe<span class="required-indicator">*</span></label> <!-/- Utilise classe globale [5] ->
+                <input type="password" id="new-password" formControlName="new_password" class="form-control" aria-required="true" aria-describedby="new_password-error"/> <!-/- Utilise classe globale [5] ->
+                <div id="new_password-error" class="invalid-feedback" role="alert" aria-live="assertive"></div> <!-/- Utilise classe globale [5] ->
               </div>
-
-              <!-- Ligne Email, Téléphone -->
-              <div class="form-row">
-                <div class="form-group half">
-                  <label for="email">Email</label>
-                  <!-- Ajout aria-required, aria-describedby -->
-                  <input type="email" id="email" formControlName="email" aria-required="true" aria-describedby="email-error"/>
-                  <!-- Structure pour erreur -->
-                  <div id="email-error" class="invalid-feedback" role="alert" aria-live="assertive"></div>
-                </div>
-                <div class="form-group half">
-                  <label for="phone">Téléphone</label>
-                  <!-- Ajout aria-describedby -->
-                  <input type="tel" id="phone" formControlName="telephone" aria-describedby="telephone-error"/>
-                  <!-- Structure pour erreur -->
-                  <div id="telephone-error" class="invalid-feedback" role="alert" aria-live="assertive"></div>
-                </div>
-              </div>
-
-              <!-- Correction: La section Adresse devient un fieldset séparé mais DANS le même formulaire -->
-              <!-- Ce header est maintenant une legend dans le fieldset ci-dessous -->
-              <!--
-              <div class='section-header'>
-                <h2><lucide-icon name='map-pin' aria-hidden="true"></lucide-icon> Adresse</h2>
-                <p class='section-description'>Votre adresse postale complète</p>
-              </div>
-              -->
-
-            </div> <!-- Fin card-content pour infos perso -->
-          </fieldset> <!-- Fin fieldset infos perso -->
-
-          <!-- Fieldset pour Adresse (toujours dans infoForm) -->
-          <fieldset class="account-section card-section">
-            <legend class="section-header">
-              <h2><lucide-icon name='map-pin' aria-hidden="true"></lucide-icon> Adresse</h2>
-              <p class='section-description'>Votre adresse postale complète</p>
-            </legend>
-            <div class="card-content">
-              <!-- Ligne pour numéro et rue -->
-              <div class='form-row'>
-                <div class='form-group quarter'>
-                  <label for='street-number'>N°</label>
-                  <!-- Ajout aria-describedby -->
-                  <input type='text' id='street-number' formControlName='numero_voie' aria-describedby="numero_voie-error"/>
-                  <!-- Structure pour erreur -->
-                  <div id="numero_voie-error" class="invalid-feedback" role="alert" aria-live="assertive"></div>
-                </div>
-                <div class='form-group three-quarters'>
-                  <label for='street'>Rue</label>
-                  <!-- Ajout aria-required, aria-describedby -->
-                  <input type='text' id='street' formControlName='rue' aria-required="true" aria-describedby="rue-error"/>
-                  <!-- Structure pour erreur -->
-                  <div id="rue-error" class="invalid-feedback" role="alert" aria-live="assertive"></div>
-                </div>
-              </div>
-
-              <!-- Ligne pour code postal et ville -->
-              <div class='form-row'>
-                <div class='form-group half'>
-                  <label for='postal-code'>Code postal</label>
-                  <!-- Ajout aria-required, aria-describedby -->
-                  <input type='text' id='postal-code' formControlName='codepostal' aria-required="true" aria-describedby="codepostal-error postal-format-hint"/>
-                  <!-- Structure pour aide et erreur -->
-                  <small id="postal-format-hint" class="form-text text-muted">Format: 5 chiffres</small>
-                  <div id="codepostal-error" class="invalid-feedback" role="alert" aria-live="assertive"></div>
-                </div>
-                <div class='form-group half'>
-                  <label for='city'>Ville</label>
-                  <!-- Ajout aria-required, aria-describedby -->
-                  <input type='text' id='city' formControlName='ville' aria-required="true" aria-describedby="ville-error"/>
-                  <!-- Structure pour erreur -->
-                  <div id="ville-error" class="invalid-feedback" role="alert" aria-live="assertive"></div>
-                </div>
-              </div>
-
-              <!-- Bouton Mettre à jour pour TOUT infoForm (incluant adresse) -->
-              <!-- Le bouton était mal placé dans votre HTML initial (dans la section info perso),
-                   on le met à la fin du formulaire -->
-              <div class="form-actions"> <!-- Conteneur pour les boutons du formulaire -->
-                <button type="submit" class='btn btn-primary' [disabled]="infoForm.invalid || infoForm.pending || !infoForm.dirty">
-                  <lucide-icon name="save" aria-hidden="true"></lucide-icon> <!-- Ajout icône pour cohérence -->
-                  Mettre à jour mes informations
-                </button>
-              </div>
-            </div><!-- Fin card-content pour adresse -->
-          </fieldset> <!-- Fin fieldset adresse -->
-
-        </form> <!-- Fin du formulaire infoForm -->
-
-
-        <!-- Formulaire Changer le mot de passe (conservé commenté comme dans votre source) -->
-        <!--
-        <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="account-form" novalidate>
-          <fieldset class="account-section card-section">
-            <legend class="section-header">
-              <h2><lucide-icon name='lock' aria-hidden="true"></lucide-icon> Changer le mot de passe</h2>
-              <p class="section-description">Mettez à jour votre mot de passe pour sécuriser votre compte.</p>
-            </legend>
-            <div class="card-content">
-              <div class="form-group">
-                <label for="current-password">Mot de passe actuel</label>
-                <input type="password" id="current-password" formControlName="current_password" aria-required="true" aria-describedby="current_password-error"/>
-                <div id="current_password-error" class="invalid-feedback" role="alert" aria-live="assertive"></div>
-              </div>
-
-              <div class="form-row"> --> <!-- Conservé pour layout -->
-        <!-- <div class="form-grid columns-2"> --> <!-- Alternative avec Grid -->
-        <!--        <div class="form-group half"> --> <!-- Conservé pour layout -->
-        <!--          <label for="new-password">Nouveau mot de passe</label>
-                  <input type="password" id="new-password" formControlName="new_password" aria-required="true" aria-describedby="new_password-error"/>
-                  <div id="new_password-error" class="invalid-feedback" role="alert" aria-live="assertive"></div>
-                </div>
-                <div class="form-group half"> --> <!-- Conservé pour layout -->
-        <!--          <label for="confirm-password">Confirmer le nouveau mot de passe</label>
-                  <input type="password" id="confirm-password" formControlName="confirm_password" aria-required="true" aria-describedby="confirm_password-error"/>
-                  <div id="confirm_password-error" class="invalid-feedback" role="alert" aria-live="assertive"></div>
-                </div>
-              </div>
-
-              <div class="form-actions">
-                <button type="submit" class='btn btn-secondary' [disabled]="passwordForm.invalid || passwordForm.pending || !passwordForm.dirty">
-                   <lucide-icon name="key-round" aria-hidden="true"></lucide-icon> <!-/- Ajout icône ->
-                  Changer le mot de passe
-                </button>
+              <div class="form-group half"> <!-/- Utilise classes globales [5] ->
+                <label for="confirm-password">Confirmer le nouveau mot de passe<span class="required-indicator">*</span></label> <!-/- Utilise classe globale [5] ->
+                <input type="password" id="confirm-password" formControlName="confirm_password" class="form-control" aria-required="true" aria-describedby="confirm_password-error"/> <!-/- Utilise classe globale [5] ->
+                <div id="confirm_password-error" class="invalid-feedback" role="alert" aria-live="assertive"></div> <!-/- Utilise classe globale [5] ->
               </div>
             </div>
-          </fieldset>
-        </form>
-        -->
+            <div class="form-actions"> <!-/- Utilise classe globale [5] ->
+              <button type="submit" class='btn btn-secondary' [disabled]="passwordForm.invalid || passwordForm.pending || !passwordForm.dirty"> <!-/- Utilise classes globales [5] ->
+                <lucide-icon name="key-round" aria-hidden="true"></lucide-icon>
+                Changer le mot de passe
+              </button>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+      -->
 
-      </div> <!-- Fin .section-cards -->
-    </main> <!-- Fin main -->
-  } <!-- Fin @if (!isLoading) pour les formulaires -->
-
-  <!-- ZONE DANGEREUSE - Suppression de compte (hors des formulaires principaux) -->
-  @if (!isLoading) {
-    <!-- Utilisation de <section> pour la sémantique -->
-    <section class="account-section danger-zone card-section" aria-labelledby="danger-zone-title">
-      <div class="section-header">
+      <!-- ZONE DANGEREUSE - Suppression de compte -->
+      <!-- Placé DANS .main-section car c'est du contenu principal, mais après les formulaires -->
+      <!-- Utilisation de <section> + classes globales .card-section .danger-zone [5] -->
+    <section class="card-section danger-zone" aria-labelledby="danger-zone-title">
+      <!-- Le header de la danger zone est un DIV ici car parent = section -->
+      <div class="section-header"> <!-- Style global pour header dans .danger-zone [5] -->
         <h2 id="danger-zone-title"><lucide-icon name="triangle-alert" aria-hidden="true"></lucide-icon> Zone Dangereuse</h2>
       </div>
-      <div class="card-content">
+      <div class="card-content"> <!-- Utilise classe globale [5] -->
         <p>Supprimer votre compte est une action <strong>irréversible</strong>. Toutes vos données, réservations, amitiés et informations seront définitivement anonymisées.</p>
 
         @if (!showDeleteConfirmation) {
-          <!-- Ajout type="button" -->
-          <button type="button" class="btn btn-danger" (click)="initiateAccountDeletion()">
+          <button type="button" class="btn btn-danger" (click)="initiateAccountDeletion()"> <!-- Utilise classes globales [5] -->
             Supprimer mon compte
           </button>
         } @else {
-          <!-- Ajout rôles ARIA pour accessibilité -->
+          <!-- La section de confirmation utilise des classes spécifiques CONSERVÉES dans le SCSS local -->
           <div class="confirmation-section" role="alertdialog" aria-labelledby="confirm-delete-title" aria-describedby="confirm-delete-desc">
-            <h3 id="confirm-delete-title" class="visually-hidden">Confirmation de suppression de compte</h3>
+            <h3 id="confirm-delete-title" class="visually-hidden">Confirmation de suppression de compte</h3> <!-- Utilise classe globale [5] -->
             <p id="confirm-delete-desc" class="confirmation-prompt">Pour confirmer la suppression définitive de votre compte, veuillez taper la phrase suivante exactement comme indiqué ci-dessous :</p>
-            <!-- Ajout classe non-selectable pour la phrase -->
-            <p class="confirmation-phrase non-selectable" aria-hidden="true"><strong>{{ requiredConfirmationPhrase }}</strong></p>
+            <p class="confirmation-phrase non-selectable" aria-hidden="true"><strong>{{ requiredConfirmationPhrase }}</strong></p> <!-- Classe locale -->
 
-            <div class="form-group">
+            <div class="form-group"> <!-- Utilise classe globale [5] -->
               <label for="delete-confirm-input">Tapez la phrase ici :</label>
-              <!-- Conservation de [(ngModel)] mais ajout aria-required et aria-describedby -->
               <input type="text"
                      id="delete-confirm-input"
                      class="form-control"
-                     [(ngModel)]="deleteConfirmationInput"
-                     placeholder="Recopiez la phrase de confirmation"
-                     autocomplete="off"
-                     aria-required="true"
-                     aria-describedby="delete-confirm-error"
+              [(ngModel)]="deleteConfirmationInput"
+              placeholder="Recopiez la phrase de confirmation"
+              autocomplete="off"
+              aria-required="true"
+              aria-describedby="delete-confirm-error"
               />
-              <!-- Structure pour erreur (vide, la logique de désactivation du bouton suffit peut-être) -->
-              <div id="delete-confirm-error" class="invalid-feedback" role="alert" aria-live="assertive"></div>
+              <div id="delete-confirm-error" class="invalid-feedback" role="alert" aria-live="assertive"></div> <!-- Utilise classe globale [5] -->
             </div>
-
+            <!-- Classe .confirmation-actions conservée localement -->
             <div class="confirmation-actions">
-              <!-- Ajout type="button" -->
-              <button type="button" class="btn btn-secondary" (click)="cancelAccountDeletion()" [disabled]="isDeletingAccount">
+              <button type="button" class="btn btn-secondary" (click)="cancelAccountDeletion()" [disabled]="isDeletingAccount"> <!-- Utilise classes globales [5] -->
                 Annuler
               </button>
-              <!-- Ajout type="button" -->
               <button type="button"
                       class="btn btn-danger"
-                      (click)="confirmAccountDeletion()"
-                      [disabled]="isDeletingAccount || deleteConfirmationInput !== requiredConfirmationPhrase">
-                @if (!isDeletingAccount) {
-                  <!-- Ajout icône pour cohérence -->
-                  <span><lucide-icon name="trash-2" aria-hidden="true"></lucide-icon> Confirmer la suppression</span>
-                } @else {
-                  <!-- Ajout icône pour cohérence -->
-                  <span><lucide-icon name="loader" class="animate-spin" aria-hidden="true"></lucide-icon> Suppression en cours...</span>
-                }
+              (click)="confirmAccountDeletion()"
+              [disabled]="isDeletingAccount || deleteConfirmationInput !== requiredConfirmationPhrase">
+              @if (!isDeletingAccount) {
+                <lucide-icon name="trash-2" aria-hidden="true"></lucide-icon> Confirmer la suppression
+              } @else {
+                <!-- Utilise classe globale utilitaire .animate-spin [5] -->
+                <lucide-icon name="loader" class="animate-spin" aria-hidden="true"></lucide-icon> Suppression en cours...
+              }
               </button>
             </div>
           </div>
         } <!-- Fin du @else (confirmation visible) -->
-      </div> <!-- Fin card-content -->
+      </div> <!-- Fin card-content danger-zone -->
     </section> <!-- Fin danger-zone -->
-  } <!-- Fin du @if (!isLoading) pour la danger-zone -->
+  } <!-- Fin @if (!isLoading) -->
 
-</div> <!-- Fin .main-content-area -->
+</section> <!-- Fin .main-section -->
+
+<!-- Section pour la pagination (Non applicable pour "Mon Compte") -->
+<!-- <nav class="pagination-section" aria-label="Pagination...">...</nav> -->

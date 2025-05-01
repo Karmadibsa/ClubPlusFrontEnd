@@ -1,288 +1,127 @@
-/* Styles pour edit-event.component.scss */
-/* Utilise les variables définies dans le :root global */
+/* edit-event.component.scss */
 
-/* --- Overlay & Conteneur Principal (Identique à MembreDetailModal) --- */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+// --- Utilisation des variables globales de styles.txt ---
+// @import 'path/to/variables'; // Généralement importé globalement dans angular.json
+
+:host {
+  display: block; // Assure que le composant prend sa place
 }
 
-.modal-content {
-  background: var(--main-white);
-  border-radius: var(--border-radius);
-  width: 90%;
-  max-width: 1000px; /* Légèrement plus large pour les formulaires complexes */
-  max-height: 90vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-}
+// --------------------------------------------------
+// Styles SPÉCIFIQUES au contenu de EditEventComponent
+// --------------------------------------------------
 
-/* --- Entête (Identique) --- */
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing-md) var(--spacing-lg);
-  border-bottom: 1px solid var(--border-color);
-  background-color: var(--main-blue);
-  color: var(--main-white);
-  flex-shrink: 0;
-}
+// --- Section Catégories ---
 
-.modal-header h2 {
-  margin: 0;
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  color: var(--main-white);
-  font-size: 1.5rem;
-  line-height: 1;
-  padding: var(--spacing-sm);
-  cursor: pointer;
-  opacity: 0.8;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.close-btn:hover {
-  opacity: 1;
-  transform: rotate(90deg);
-}
-
-/* --- Corps --- */
-.modal-body {
-  padding: var(--spacing-lg);
-  overflow-y: auto;
-  flex-grow: 1;
-  background-color: var(--main-white);
-}
-
-/* --- Styles Communs Formulaires (adaptés de MembreDetailModal) --- */
-/* Pas de .form-section ici, directement .form-group */
-
-.form-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-lg); /* Espace entre les lignes de champs */
-}
-
-.form-group {
-  flex: 1 1 calc(50% - var(--spacing-md)); /* Base 50% pour les champs en ligne */
-  min-width: 200px;
-  margin-bottom: var(--spacing-lg); /* Espace sous chaque groupe */
-}
-/* Pour les champs pleine largeur comme textarea */
-.form-group:has(textarea) {
-  flex-basis: 100%;
-}
-/* Pour la section catégorie qui est un form-group */
-.form-group:has(.scroll) {
-  flex-basis: 100%;
-}
-
-.form-group label {
-  display: block;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text-medium);
-  margin-bottom: var(--spacing-sm);
-}
-
-/* --- Styles Inputs & Textarea --- */
-.form-group input[type="text"],
-.form-group input[type="datetime-local"],
-.form-group input[type="number"],
-.form-group textarea {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  border: 1px solid var(--border-color);
-  background-color: var(--main-white);
-  color: var(--text-dark);
-  font-size: 0.95rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  box-sizing: border-box; /* Important */
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: var(--main-blue);
-  box-shadow: 0 0 0 3px var(--input-focus-shadow); /* Utilisation variable root */
-}
-
-.form-group textarea {
-  min-height: 100px; /* Hauteur minimale pour textarea */
-  resize: vertical; /* Permet redimensionnement vertical */
-}
-
-/* --- Section Catégories --- */
-.form-group > label:has(+ .scroll) { /* Style spécifique pour le label "Catégories" */
+// Label principal de la section catégorie
+.categories-label {
   font-weight: 600;
   color: var(--main-blue);
-  /* Optionnel: Ajouter une bordure ou un espacement avant la liste */
-  /* margin-bottom: var(--spacing-md); */
+  font-size: 1rem; // Un peu plus grand que les labels normaux
+  margin-bottom: var(--spacing-sm);
+  display: block; // Assure l'espacement correct
 }
 
-.scroll {
-  max-height: 250px; /* Hauteur max pour la liste scrollable */
+// Conteneur scrollable pour la liste des catégories
+.scrollable-categories {
+  max-height: 250px; // Hauteur max pour la liste scrollable
   overflow-y: auto;
   border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  padding: var(--spacing-md);
+  border-radius: var(--border-radius-sm); // Utilise le rayon des inputs
+  padding: var(--spacing-sm); // Padding interne plus léger
   background-color: var(--bg-light-gray);
-  margin-bottom: var(--spacing-md); /* Espace avant les actions catégorie */
+  margin-bottom: var(--spacing-md); // Espace avant les actions catégorie
+
+  // Style scrollbar optionnel (hérite potentiellement du global)
+  scrollbar-width: thin;
+  scrollbar-color: var(--text-light) transparent;
+  &::-webkit-scrollbar { width: 6px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background-color: var(--text-light); border-radius: 3px; }
 }
 
+// Un item (ligne) dans la liste des catégories
 .category-item {
   display: flex;
-  flex-wrap: wrap; /* Pour petits écrans */
-  align-items: center;
-  gap: var(--spacing-md);
+  flex-wrap: wrap; // Pour responsivité interne
+  align-items: flex-start; // Align au début pour que les labels/inputs s'alignent bien
+  gap: var(--spacing-sm); // Espace réduit entre les éléments de la ligne
   background-color: var(--main-white);
   padding: var(--spacing-md);
-  border-radius: 6px;
-  border: 1px solid var(--border-color);
-  margin-bottom: var(--spacing-md);
+  border-radius: var(--border-radius-sm); // Cohérent avec inputs
+  border: 1px solid var(--border-color-light, #eee); // Bordure légère
+  margin-bottom: var(--spacing-sm); // Espace entre items
 }
 .category-item:last-child {
   margin-bottom: 0;
 }
 
-/* Inputs dans category-item */
-.category-item input[type="text"] {
-  flex: 1 1 200px; /* Prend de l'espace mais peut réduire */
+// Conteneur pour les inputs Nom et Capacité
+.category-inputs {
+  display: flex;
+  flex-wrap: wrap; // Permet aux inputs de s'empiler si manque de place
+  flex-grow: 1; // Prend l'espace disponible
+  gap: var(--spacing-sm); // Espace entre Nom et Capacité
 }
-.category-item input[type="number"] {
-  flex: 0 1 120px; /* Largeur plus limitée */
+
+// Groupes formulaire spécifiques dans la catégorie
+.category-item .form-group {
+  margin-bottom: 0; // Pas de marge sous les inputs dans la ligne
+  flex-grow: 1; // Permet de grandir
+
+  &.category-name {
+    min-width: 150px; // Largeur minimale pour le nom
+    flex-basis: 200px; // Base de largeur
+  }
+  &.category-capacity {
+    min-width: 80px; // Largeur minimale capacité
+    flex-basis: 100px; // Base de largeur plus petite
+    flex-grow: 0; // Ne grandit pas autant que le nom
+  }
+
+  // Style spécifique pour l'erreur dans la catégorie (peut-être plus petit)
+  .invalid-feedback {
+    font-size: 0.8rem;
+  }
 }
-.category-item .btn-outline {
-  flex-shrink: 0; /* Empêche le bouton de réduire */
-  margin-left: auto; /* Pousse le bouton vers la droite si espace */
+
+// Bouton supprimer catégorie (utilise .btn .btn-danger .btn-sm)
+.btn-delete-category {
+  // Utilise .btn-sm qui doit être défini globalement ou ici
+  // On s'assure qu'il est petit et aligné
+  padding: 4px; // Très petit padding pour icône seule
+  flex-shrink: 0; // Empêche de rétrécir
+  margin-left: auto; // Pousse à droite si flex-wrap n'agit pas
+  align-self: center; // Centre verticalement par rapport aux inputs
+}
+
+// Message si aucune catégorie
+.no-categories-message {
+  text-align: center;
+  font-style: italic;
+  color: var(--text-medium);
+  padding: var(--spacing-md) 0;
+}
+
+// Erreur sur le FormArray lui-même
+.form-array-error.invalid-feedback {
+  display: block; // Assure qu'elle est visible
+  text-align: center;
+  margin-top: var(--spacing-sm);
 }
 
 
-/* --- Bouton Outline (pour Supprimer catégorie) --- */
-.btn-outline {
-  background: none;
-  border: 2px solid var(--main-orange);
-  color: var(--main-orange);
-  padding: var(--spacing-sm) var(--spacing-md); /* Padding standard bouton */
-}
-
-.btn-outline:hover:not(:disabled) {
-  background-color: var(--main-orange);
-  color: var(--main-white);
-}
-
-/* --- Actions Catégories & Formulaire --- */
+// Actions spécifiques aux catégories (bouton "Ajouter")
 .category-actions {
   display: flex;
-  flex-wrap: wrap; /* Permet le retour à la ligne */
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--spacing-md);
-  margin-top: var(--spacing-md); /* Espace après la liste scrollable */
-}
+  justify-content: flex-start; // Aligne à gauche
+  margin-top: var(--spacing-sm); // Espace après la liste scrollable
 
-/* Style pour le conteneur des boutons Annuler/Enregistrer */
-/* NOTE: Idéalement, ces boutons seraient dans un <footer class="modal-footer"> */
-/* Mais on style .form-actions ici car c'est dans l'HTML fourni */
-.form-actions {
-  display: flex;
-  gap: var(--spacing-md);
+  // Style bouton ajouter (utilise .btn .btn-secondary .btn-sm)
+  .btn {
+    // S'assurer qu'il est de petite taille (.btn-sm)
+  }
 }
 
 
-/* --- Pied de page (Si vous déplacez les boutons) --- */
-.modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: var(--spacing-md);
-  padding: var(--spacing-md) var(--spacing-lg);
-  border-top: 1px solid var(--border-color);
-  background-color: var(--bg-light-gray);
-  flex-shrink: 0;
-}
 
-
-/* --- Styles des Boutons (Identique à MembreDetailModal) --- */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: 6px;
-  font-weight: 500;
-  font-size: 0.9rem;
-  cursor: pointer;
-  text-align: center;
-  border: none;
-  transition: var(--transition-standard);
-}
-
-.btn lucide-icon {
-  width: 16px;
-  height: 16px;
-}
-
-/* Bouton Primaire (Ajouter Catégorie, Enregistrer) */
-.btn-primary {
-  background-color: var(--main-blue);
-  color: var(--main-white);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  margin-top: 0; /* Reset margin-top si appliqué ailleurs */
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: hsl(199, 64%, 25%);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-}
-
-.btn-primary:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: none;
-}
-
-/* Bouton Secondaire (Annuler) */
-/* Créons une classe .btn-secondary si besoin ou stylons directement le bouton Annuler */
-/* Ici, on style le bouton 'Annuler' dans .form-actions */
-.form-actions button[type="button"]:not(.btn-primary), /* Cible Annuler */
-.modal-footer button:not(.btn-primary) { /* Cible Annuler si dans le footer */
-  background-color: var(--main-white);
-  color: var(--text-medium);
-  border: 1px solid var(--border-color);
-}
-
-.form-actions button[type="button"]:not(.btn-primary):hover:not(:disabled),
-.modal-footer button:not(.btn-primary):hover:not(:disabled) {
-  background-color: var(--bg-light-gray);
-  border-color: var(--text-light);
-  color: var(--text-dark);
-}
-
-
-/* État Désactivé (Général) */
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}

@@ -3,6 +3,7 @@ import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import {LucideAngularModule} from 'lucide-angular';
 import {EditEventModalComponent} from '../edit-event/edit-event.component';
 import {Evenement} from '../../../model/evenement';
+import {ParticipationEventModalComponent} from '../participation-event-modal/participation-event-modal.component';
 
 @Component({
   selector: '[app-event-row]',
@@ -13,29 +14,45 @@ import {Evenement} from '../../../model/evenement';
 
     NgForOf,
     NgIf,
-    EditEventModalComponent
+    EditEventModalComponent,
+    ParticipationEventModalComponent
   ],
   styleUrls: ['./event-row.component.scss']
 })
 export class EventRowComponent {
-  @Input() evenement: any;
+  @Input() evenement!: Evenement;
   @Output() deleteRequest = new EventEmitter<Evenement>(); // RENOMMÉ de 'supprimer'. Utilisez Evenement.
   @Output() modifier = new EventEmitter<any>();
-  @Output() viewReservationsRequest = new EventEmitter<{ id: number, title: string }>();
 
-  isModalVisible = false;
+  isModalEditVisible = false;
+  isParticipationModalVisible = false;
 
-  ouvrirModal(): void {
-    this.isModalVisible = true;
+  ouvrirModalEdit(): void {
+    this.isModalEditVisible = true;
   }
 
-  fermerModal(): void {
-    this.isModalVisible = false;
+  fermerModalEdit(): void {
+    this.isModalEditVisible = false;
   }
 
   sauvegarderEvenement(evenementModifie: any): void {
     this.modifier.emit(evenementModifie);
-    this.fermerModal();
+    this.fermerModalEdit();
+  }
+
+  // --- Gestion Modale Participation ---
+  // Appelée par le clic sur le bouton "Voir Réservations"
+  ouvrirModalParticipation(): void {
+    console.log('EventRow: ouverture Modale Participation pour event ID:', this.evenement?.id); // Log de débogage
+    if (this.evenement) { // Vérification ajoutée pour robustesse
+      this.isParticipationModalVisible = true;
+    } else {
+      console.error("EventRow: Données 'evenement' non disponibles pour ouvrir la modale.");
+    }
+  }
+  // Appelée par l'événement (closeModal) de app-participation-event-modal
+  handleCloseParticipationModal(): void {
+    this.isParticipationModalVisible = false;
   }
   /**
    * Appelée lorsque l'utilisateur clique sur le bouton "Supprimer" de CETTE ligne.
@@ -50,17 +67,6 @@ export class EventRowComponent {
     // Émet l'événement vers le parent (DashboardComponent) qui contiendra la logique
     // d'appel API et de confirmation.
     // this.deleteRequest.emit(this.evenement);
-  }
-
-// Dans event-row.component.ts
-  onRequestViewReservations(): void {
-    console.log('EventRow: Bouton Voir Réservations cliqué pour event ID:', this.evenement.id); // Log 1
-    const eventData = {
-      id: this.evenement.id,
-      title: this.evenement.nom
-    };
-    console.log('EventRow: Émission de viewReservationsRequest avec:', eventData); // Log 2
-    this.viewReservationsRequest.emit(eventData);
   }
 
 }

@@ -1,22 +1,10 @@
-/*------------------------------------*\
-  #COMPOSANT: SIDEBAR / BOTTOM NAV
-  Styles pour la navigation principale.
-  Desktop: Sidebar latérale fixe, réductible via .is-collapsed.
-  Mobile: Barre de navigation inférieure fixe.
-\*------------------------------------*/
+/* sidebar.component.scss */
 
-// --- Utilisation des variables globales de styles.txt ---
-// Ex: var(--main-blue), var(--main-orange), var(--spacing-md), etc.
-
-// --- Variable locale pour la largeur réduite ---
+// --- Variables Locales Spécifiques ---
 :host {
-  --sidebar-width-collapsed: 6%; // Largeur en mode icônes seules (ajustable)
-  // Variable RGB pour transparence (si main-orange-rgb n'est pas global ou pour override local)
-  --main-orange-rgb: 255, 107, 53; // Assurez-vous que cela correspond à votre --main-orange
-  // Variable pour taille icône mobile (si différente de --icon-size)
-  --icon-size-mobile: 22px; // Exemple de taille pour mobile
-  // Variable pour hauteur barre mobile
-  --bottom-nav-height-mobile: 60px; // Hauteur standard pour la barre inférieure mobile
+  --sidebar-width-collapsed: 70px; // Largeur en mode réduit (ajustable)
+  --bottom-nav-height-mobile: 60px; // Hauteur barre mobile
+  --icon-size-mobile: 24px; // Taille icône mobile (peut être = --icon-size)
 }
 
 /* =================================== */
@@ -24,62 +12,39 @@
 /* =================================== */
 .sidebar {
   // --- Structure et Positionnement ---
-  width: 14%; // Votre largeur initiale (ajustez si besoin)
-  min-width: 200px; // Votre min-width initiale (ajustez si besoin)
+  width: 14%; // Ajuster si besoin (ex: 250px)
+  min-width: 220px; // Ajuster si besoin
   background-color: var(--main-blue);
   color: white;
-  padding: var(--spacing-md) var(--spacing-sm); // Utilisation des variables globales
-  display: flex; // Caché par défaut sur mobile (sera changé dans media query)
+  padding: var(--spacing-md) var(--spacing-sm);
+  display: flex; // Caché par défaut sur mobile (changé dans @media)
   flex-direction: column;
-  height: 100vh; // Prend toute la hauteur
-  position: fixed; // Fixe à l'écran
+  height: 100vh;
+  position: fixed;
   left: 0;
   top: 0;
-  z-index: 100; // Au-dessus du contenu
-  justify-content: space-between; // Espace entre logo/menu et footer
-  box-sizing: border-box; // Padding inclus dans la taille
-  // --- Transition pour largeur (animée) ---
+  z-index: 1000; // S'assurer qu'elle est au-dessus du contenu principal
+  box-sizing: border-box;
   transition: width 0.3s ease, min-width 0.3s ease;
-
   // --- Logo ---
   .logo-container {
     padding: var(--spacing-md) 0;
     text-align: center;
     margin-bottom: var(--spacing-lg);
-    position: relative; // Pour positionner l'icône réduite si ajoutée
-    // *** CORRECTION SAUT VERTICAL: Hauteur minimale fixe et Flexbox ***
-    min-height: 100px; // Ajustez cette valeur pour correspondre à la hauteur de votre logo + padding vertical
+    min-height: 80px; // Hauteur minimale pour éviter saut vertical
     display: flex;
-    align-items: center; // Centre verticalement le contenu
-    justify-content: center; // Centre horizontalement le contenu
-    overflow: hidden; // Empêche le logo de déborder pendant la transition
-    transition: min-height 0.3s ease, padding 0.3s ease; // Anime aussi le padding si besoin
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; // Cache le débordement pendant la transition
 
-    .logo { // Logo normal
-      width: 70%; // Ajustez selon la taille souhaitée
+    .logo {
+      width: 75%; // Ajuster
       height: auto;
-      max-width: 120px; // Limite la taille max
+      max-width: 130px; // Limite max
       display: block;
-      // Transition disparition (sans délai initial pour réduire flash)
       transition: opacity 0.2s ease, transform 0.3s ease;
       opacity: 1;
       transform: scale(1);
-      position: relative; // Pour être au-dessus de l'icône collapsée si elle existe
-      z-index: 2;
-    }
-
-    // Optionnel: Si vous ajoutez une icône pour le mode réduit dans le HTML
-    .logo-collapsed-icon {
-      display: block; // Présent dans le DOM mais caché initialement
-      color: white;
-      width: 32px; height: 32px; // Taille de l'icône
-      position: absolute; // Superposé au centre
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%) scale(0.5); // Commence petit
-      opacity: 0; // Commence caché
-      pointer-events: none; // Non cliquable quand caché
-      transition: opacity 0.2s ease-in 0.1s, transform 0.3s ease; // Transition d'apparition
-      z-index: 1;
     }
   }
 
@@ -88,116 +53,115 @@
     list-style-type: none;
     padding: 0;
     margin: 0;
-    flex-grow: 1; // Prend l'espace vertical restant
-    overflow-y: auto; // Ajoute un scroll si le contenu dépasse
-    overflow-x: hidden; // Empêche le scroll horizontal global
+    flex-grow: 1; // Prend l'espace vertical
+    overflow-y: auto; // Scroll si nécessaire
+    overflow-x: hidden; // Pas de scroll horizontal
+    // Style de la scrollbar (optionnel, pour Firefox)
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+
+    // Style de la scrollbar (optionnel, pour Chrome/Edge/Safari)
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 255, 255, 0.3);
+      border-radius: 3px;
+    }
   }
 
   ul.menu-items li {
     margin-bottom: var(--spacing-sm);
-    position: relative; // Pour contexte de positionnement si besoin
-    overflow: hidden; // *** CORRECTION POTENTIELLE SCROLLBAR SUR HOVER TEXTE LONG ***
   }
 
   ul.menu-items li a {
     display: flex;
-    align-items: center; // *** CORRECTION ALIGNEMENT VERTICAL ICÔNE/TEXTE ***
-    gap: 12px; // Espace entre icône et texte
-    padding: 10px 15px; // Padding interne du lien
+    align-items: center;
+    gap: 12px;
+    padding: 10px 15px;
     color: white;
     text-decoration: none;
     border-radius: var(--border-radius);
-    // Transition séparée pour éviter conflit avec width/opacity/transform
-    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
-    white-space: nowrap; // Empêche le texte de passer à la ligne
-    overflow: hidden; // Empêche texte de déborder PENDANT la transition de collapse
+    transition: background-color 0.2s ease, color 0.2s ease; // Transition simplifiée
+    white-space: nowrap;
+    overflow: hidden; // Empêche débordement texte
 
     lucide-icon {
-      width: var(--icon-size); // Utilise la variable globale
+      width: var(--icon-size); // Variable globale
       height: var(--icon-size);
-      min-width: var(--icon-size); // Empêche l'icône de rétrécir
-      stroke: currentColor; // Hérite la couleur du lien
+      flex-shrink: 0; // Empêche l'icône de rétrécir
+      stroke: currentColor;
       stroke-width: 2px;
-      flex-shrink: 0; // Empêche l'icône de rétrécir si le texte est long
     }
 
     .menu-item-text {
       flex-grow: 1;
       overflow: hidden;
       text-overflow: ellipsis;
-      transition: opacity 0.2s ease, max-width 0.3s ease 0.05s, margin-left 0.3s ease 0.05s;
+      // Transition pour l'apparition/disparition
+      transition: opacity 0.2s ease, max-width 0.3s ease;
       opacity: 1;
-      max-width: 200px;
-      margin-left: 0;
-      will-change: opacity, max-width, margin-left; /* Ajouté */
-      transform: translateZ(0); /* ou backface-visibility: hidden; */ /* Ajouté */
+      max-width: 200px; // Valeur arbitraire suffisante
     }
 
-    // Effet survol (uniquement si NON réduit)
-    // On cible le lien <a> directement SANS vérifier .is-collapsed ici,
-    // car on annulera cet effet spécifique dans la section .is-collapsed
-    &:hover {
-      background: rgba(255, 255, 255, 0.1); // Fond léger au survol
-      // transform: translateX(2px); // Votre ancien décalage, peut être retiré si non désiré
+    // Effet survol
+    &:hover:not(.page_actuelle) { // Ne pas appliquer sur l'élément actif
+      background: rgba(255, 255, 255, 0.1);
     }
 
-    // Style item actif (classe ajoutée par routerLinkActive)
+    // Style item actif
     &.page_actuelle {
       background-color: var(--main-orange);
       color: white;
       font-weight: 600;
-      // Annule la transformation de survol pour l'élément actif
-      &:hover {
-        background-color: var(--main-orange); // Garde la couleur orange
-        transform: none; // Pas de décalage
-      }
     }
 
-    // Style pour l'accessibilité au focus clavier
+    // Style focus visible (Accessibilité)
     &:focus-visible {
       outline: 2px solid white;
-      outline-offset: -2px; // Met l'outline à l'intérieur
-      background: rgba(255, 255, 255, 0.1); // Similaire au hover
-      transform: none; // Pas de décalage au focus
+      outline-offset: -2px; // Outline intérieur
+      background: rgba(255, 255, 255, 0.1); // Similaire hover
     }
   }
 
-  // --- Footer (avec bouton Toggle UNIQUEMENT) ---
+  // --- Footer (Bouton Toggle) ---
   .sidebar-footer {
-    padding: var(--spacing-sm) 0; // Padding vertical réduit
-    margin-top: var(--spacing-md); // Espace au-dessus du footer
+    padding: var(--spacing-sm) 0;
+    margin-top: var(--spacing-md);
     display: flex;
-    justify-content: center; // Centre le bouton toggle par défaut
+    justify-content: center; // Centre le bouton
     align-items: center;
-    transition: justify-content 0.3s ease; // Anime si la justification change (utile si on ajoute d'autres boutons plus tard)
 
-    .toggle-btn { // Style du bouton Toggle
+    .toggle-btn {
       background: none;
       border: none;
       color: white;
       padding: var(--spacing-sm);
-      border-radius: 50%; // Bouton rond
+      border-radius: 50%;
       cursor: pointer;
-      display: flex; // Pour centrer l'icône dans le bouton
+      display: inline-flex; // Important pour centrer icône dans bouton rond
       align-items: center;
       justify-content: center;
-      transition: background-color var(--transition-standard), color var(--transition-standard);
+      transition: background-color var(--transition-standard);
 
       lucide-icon {
-        width: calc(var(--icon-size) * 0.9); // Légèrement plus petit que les icônes de menu
+        width: calc(var(--icon-size) * 0.9); // Icône un peu plus petite
         height: calc(var(--icon-size) * 0.9);
         stroke: currentColor;
       }
       &:hover {
-        background-color: rgba(255, 255, 255, 0.15); // Effet de survol
+        background-color: rgba(255, 255, 255, 0.15);
       }
       &:focus-visible {
-        outline: 2px solid white; // Style focus visible
+        // Style focus cohérent avec les boutons globaux (simulé avec outline ici)
+        outline: 2px solid rgba(var(--main-orange-rgb, 255, 107, 53), 0.5);
         outline-offset: 2px;
         background-color: rgba(255, 255, 255, 0.15);
       }
     }
-    // Pas de .logout-btn ici, comme demandé
   }
 
 
@@ -205,197 +169,131 @@
   /* == STYLES QUAND RÉDUIT (.is-collapsed) == */
   /* ======================================== */
   &.is-collapsed {
-    // --- Réduction Largeur ---
     width: var(--sidebar-width-collapsed);
     min-width: var(--sidebar-width-collapsed);
 
-    // --- Logo Réduit ---
     .logo-container {
-      min-height: 80px; // Maintient la hauteur pour éviter saut vertical
-      padding: var(--spacing-md); // Ajuste padding si icône alternative est utilisée
-
-      .logo { // Masque logo normal
+      min-height: 80px; // Maintient hauteur
+      .logo {
         opacity: 0;
-        transform: scale(0.5); // Effet de rétrécissement
-        pointer-events: none; // Non interactif
+        transform: scale(0.5);
+        pointer-events: none;
       }
-      // Si .logo-collapsed-icon existe dans le HTML :
-      .logo-collapsed-icon { // Affiche icône réduite
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1); // Retourne à taille normale
-        pointer-events: auto; // Interactif
-      }
+      // Si vous ajoutez une icône alternative pour le mode réduit, décommentez et stylez-la ici
+      // .logo-collapsed-icon { opacity: 1; transform: ...; }
     }
 
-    // --- Menu Items Réduits ---
     ul.menu-items li a {
-      justify-content: center; // Centre l'icône horizontalement
-      padding: 12px 0; // Padding vertical, horizontal reset car centré
-      gap: 0; // Pas d'espace car texte caché
+      justify-content: center; // Centre l'icône
+      padding: 12px 0; // Padding vertical uniquement
+      gap: 0;
 
       .menu-item-text {
         opacity: 0;
-        max-width: 0;
-        margin-left: -10px;
+        max-width: 0; // Cache le texte
         pointer-events: none;
-        visibility: hidden; /* Ajouté */
-        transition: opacity 0.2s ease, visibility 0s ease 0.2s, max-width 0.3s ease 0.05s, margin-left 0.3s ease 0.05s; /* Transition visibility avec délai */
+        // Visually hidden est mieux que display:none pour accessibilité si besoin
+        position: absolute; // Sort du flux pour ne pas prendre de place
+        left: -9999px; // Déplace hors écran
       }
 
-      // Annule effet hover de translation
-      &:hover {
-        transform: none; // Pas de décalage au survol
-        // Garde le fond léger pour indiquer le survol
-        background: rgba(255, 255, 255, 0.1);
-      }
-
-      // Style item actif réduit
+      // Ajustement pour l'état actif réduit (ex: juste une légère nuance)
       &.page_actuelle {
-        // Utilise une version semi-transparente de l'orange pour différencier de l'état étendu
-        background-color: rgba(var(--main-orange-rgb), 0.7);
+        background-color: rgba(var(--main-orange-rgb, 255, 107, 53), 0.7); // Orange semi-transparent
         &:hover {
-          background-color: rgba(var(--main-orange-rgb), 0.7); // Garde la même couleur au survol
+          background-color: rgba(var(--main-orange-rgb, 255, 107, 53), 0.75); // Légèrement plus opaque au survol
         }
       }
-      // Ajustement focus si besoin
-      &:focus-visible {
-        outline-offset: -2px; // Reste à l'intérieur
-        background: rgba(255, 255, 255, 0.1); // Cohérent avec hover
-      }
     }
 
-    // --- Footer Réduit ---
-    .sidebar-footer {
-      // Le bouton toggle reste centré, pas de changement nécessaire ici par défaut
-    }
-
+    // Footer reste centré
   } // Fin &.is-collapsed
 
 } // Fin .sidebar desktop
+
 
 /* ====================================== */
 /* == STYLES MOBILE (<= 768px) - Barre EN BAS == */
 /* ====================================== */
 @media screen and (max-width: 768px) {
 
-  // Cache la sidebar latérale
+  // La sidebar latérale n'est plus utilisée, la barre du bas prend le relai
+  // On pourrait utiliser `display: none` sur .sidebar ici, mais transformer
+  // est aussi une approche valide si la structure HTML reste la même.
   .sidebar {
-    width: 100%; // Pleine largeur.
-    min-width: unset; // Annule min-width desktop.
-    height: var(--bottom-nav-height-mobile); // Utilise variable pour hauteur fixe.
-    bottom: 0; // Collée en bas.
-    top: auto; // Annule positionnement haut.
-    left: 0; // Collée à gauche.
-    flex-direction: row; // Items horizontaux.
-    justify-content: center; // Centre ul.menu-items horizontalement.
-    padding: 0; // Pas de padding global sur la barre.
-    background-color: var(--main-white); // Fond blanc pour mobile.
-    border-top: 1px solid var(--border-color); // Bordure haute légère.
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05); // Ombre légère vers le haut.
-    // Annule la transition de largeur qui n'est pas pertinente ici
-    transition: none;
+    width: 100%;
+    min-width: unset;
+    height: var(--bottom-nav-height-mobile);
+    bottom: 0;
+    top: auto; // Annule top: 0
+    left: 0;
+    flex-direction: row; // Items horizontaux
+    justify-content: center;
+    padding: 0;
+    background-color: var(--main-white); // Fond blanc
+    color: var(--text-medium); // Texte/icônes gris par défaut
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
+    transition: none; // Pas de transition de taille
 
-    // Cacher logo et footer (contient le toggle) sur mobile.
+    // Cacher logo et footer (toggle)
     .logo-container,
     .sidebar-footer {
       display: none;
     }
 
-    // Adapter la liste des items.
     .menu-items {
-      display: flex; // Met les <li> en ligne.
-      justify-content: space-around; // Répartit les <li> équitablement.
-      align-items: stretch; // Étire les <li> pour remplir la hauteur de la barre.
-      flex-grow: 1; // Prend toute la largeur disponible.
-      height: 100%; // Prend toute la hauteur de la barre.
-      overflow: hidden; // Empêche le débordement.
-      // Annule scroll-y desktop
-      overflow-y: hidden;
+      display: flex;
+      justify-content: space-around; // Répartit les items
+      align-items: stretch; // Étire les <li> sur toute la hauteur
+      flex-grow: 1; // Prend toute la largeur
+      height: 100%;
+      overflow: hidden;
+      scrollbar-width: none; // Cache scrollbar
+      &::-webkit-scrollbar { display: none; }
     }
 
-    // Adapter chaque item <li>.
     ul.menu-items li {
-      margin-bottom: 0; // Annule marge verticale du desktop.
-      flex: 1; // Chaque <li> prend une part égale de la largeur.
-      display: flex; // Pour pouvoir centrer le contenu de <a>.
-      overflow: visible; // Annule overflow: hidden du desktop qui pourrait couper des indicateurs.
+      margin-bottom: 0;
+      flex: 1; // Chaque item prend une part égale
+      display: flex; // Pour centrer <a>
     }
 
-    // Adapter les liens <a>.
     ul.menu-items li a {
-      flex-direction: column; // Icône au-dessus du texte (si texte visible).
-      justify-content: center; // Centre verticalement le contenu (icône/texte).
-      align-items: center; // Centre horizontalement le contenu.
-      padding: var(--spacing-xs) 0; // Padding vertical réduit, horizontal reset.
-      gap: 4px; // Espace réduit entre icône et texte (si texte visible).
-      color: var(--text-medium); // Couleur par défaut discrète pour les items inactifs.
-      border-radius: 0; // Annule coins arrondis du desktop.
-      width: 100%; height: 100%; // Prend tout l'espace du <li> parent.
-      font-size: 0.75rem; // Texte plus petit sur mobile.
-      white-space: nowrap; // Empêche le texte de passer à la ligne.
-      // Annule transitions du desktop.
-      transition: none;
+      flex-direction: column; // Icône au-dessus (le texte sera caché)
+      justify-content: center; // Centre verticalement
+      align-items: center; // Centre horizontalement
+      padding: var(--spacing-xs) 0; // Padding vertical minime
+      gap: 0; // Pas d'espace car texte caché
+      color: var(--text-medium); // Couleur inactive
+      border-radius: 0; // Pas de coins arrondis
+      width: 100%; height: 100%;
+      transition: none; // Pas de transition
 
-      // Icônes sur mobile.
       lucide-icon {
-        width: var(--icon-size-mobile); // Utilise la variable de taille mobile.
+        width: var(--icon-size-mobile); // Taille icône mobile
         height: var(--icon-size-mobile);
-        margin-bottom: 0; // Pas de marge sous l'icône si texte caché.
-        stroke-width: 2px;
-        stroke: currentColor; // Hérite couleur du <a>
+        // Pas besoin de marge car texte caché
       }
 
-      // Texte des liens mobile.
+      // --- CACHER LE TEXTE SUR MOBILE ---
       .menu-item-text {
-        display: block; // Rendre le texte visible sur mobile (ajuster si besoin)
-        // Reset des styles de transition/masquage du desktop
-        opacity: 1; max-width: none; margin-left: 0; pointer-events: auto; transition: none;
-        // Assurer que le texte ne cause pas de problèmes de layout
-        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-        line-height: 1.2; // Ajuster l'espacement vertical si nécessaire
+        display: none; // Cache complètement le texte
       }
+      // --------------------------------
 
-      // Annuler effets hover/focus spécifiques du desktop.
-      &:hover { background: none; transform: none; }
-      &:focus-visible { outline: none; background: none; } // Pas d'outline spécifique ici (le focus sera indiqué par la couleur active)
+      // Annuler hover/focus desktop
+      &:hover { background: none; }
+      &:focus-visible { outline: none; background: none; }
 
-      // État actif mobile.
+      // État actif mobile (juste la couleur change)
       &.page_actuelle {
-        background-color: transparent; // Pas de fond de couleur.
-        color: var(--main-orange); // Couleur active (orange).
-        font-weight: 600; // Texte en gras pour l'actif.
-
-        // Optionnel: Ajouter un indicateur visuel différent si souhaité
-        // Par exemple, une bordure supérieure :
-        // border-top: 3px solid var(--main-orange);
-        // padding-top: calc(var(--spacing-xs) - 3px); // Ajuster le padding pour compenser la bordure
+        background-color: transparent; // Pas de fond
+        color: var(--main-orange); // Couleur active
+        font-weight: normal; // Pas besoin de gras si texte caché
       }
     }
   } // Fin .sidebar @media mobile
 
 } // Fin @media screen and (max-width: 768px)
 
-
-/*------------------------------------*\
-  #UTILS: VISUALLY HIDDEN (Accessibilité)
-  Optionnel: Si vous avez besoin de cacher du texte
-  tout en le laissant lisible par les lecteurs d'écran.
-\*------------------------------------*/
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap; /* Ajouté */
-  border: 0;
-}
-
-// --- RAPPEL IMPORTANT ---
-// N'oubliez pas d'ajuster la marge gauche (margin-left) de votre conteneur de contenu principal
-// (par exemple `.main-content-area` ou similaire) en fonction de l'état de la sidebar
-// (étendue ou réduite) via JavaScript ou une classe sur le body/layout container.
-// Et sur mobile, ajustez la marge inférieure (padding-bottom ou margin-bottom) pour
-// éviter que la barre de navigation inférieure ne recouvre le contenu.

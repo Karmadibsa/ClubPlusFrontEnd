@@ -1,187 +1,205 @@
-<!-- Applique la classe standardisée pour la zone de contenu principale -->
-<div class="main-content-area">
+<!-- Structure basée sur template.txt -->
+<div class="page-header">
+  <!-- Icône appropriée pour Mon Club -->
+  <h1 class="page-title">Modifier les Informations du Club</h1>
+  <!-- Bouton Copier Code, utilisant les classes globales .btn .btn-secondary + classe spécifique -->
+  <button type="button" class="btn btn-secondary btn-copy-code" (click)="copyCodeClub()" aria-live="polite">
+    <lucide-icon class="icon" name="copy" aria-hidden="true"></lucide-icon>
+    <span class="copy-button-text">Copier le Code Club</span>
+    <span class="copy-feedback" aria-hidden="true">Copié!</span> <!-- Texte du feedback -->
+  </button>
+</div>
 
-  <div class="header page-header"> <!-- Classe plus spécifique pour le header de cette page -->
-    <h1>Modifier les Informations du Club</h1>
-    <button type="button" class="btn btn-secondary btn-copy-code" (click)="copyCodeClub()" aria-live="polite"> <!-- Type button, classe spécifique, aria-live pour feedback -->
-      <lucide-icon class="icon" name="copy" aria-hidden="true"></lucide-icon>
-      <span class="copy-button-text">Copier le Code Club</span>
-      <span class="copy-feedback" aria-hidden="true"></span> <!-- Pour feedback visuel "Copié!" -->
-    </button>
-  </div>
+<!-- Section Filtres non utilisée ici -->
+<!-- <section class="filters-section" aria-labelledby="filters-title"> ... </section> -->
 
-  <!-- Utilisation de main avec role -->
-  <main class="club-main" role="main">
-    <!-- Utilisation de form avec novalidate car on gère les erreurs via Angular -->
-    <form [formGroup]="clubForm" (ngSubmit)="onSubmit()" class="info-form" novalidate>
+<!-- Section Principale contenant le formulaire -->
+<section class="main-section">
+  <h2 id="main-title" class="visually-hidden">Formulaire de modification des informations du club</h2>
 
-      <!-- Fieldset pour regrouper les informations générales -->
-      <fieldset class="form-section">
-        <legend class="section-title">Informations Générales</legend>
+  <!-- Utilisation de form avec novalidate car on gère les erreurs via Angular -->
+  <form [formGroup]="clubForm" (ngSubmit)="onSubmit()" novalidate>
 
+    <!-- Section Informations Générales structurée comme une carte -->
+    <!-- Utilise les classes standard .card-section et .section-header -->
+    <fieldset class="card-section">
+      <legend class="section-header">
+        <h2>
+          <lucide-icon name="info" aria-hidden="true"></lucide-icon>
+          Informations Générales
+        </h2>
+      </legend>
+      <!-- Utilise la classe standard .card-content -->
+      <div class="card-content">
+        <!-- Champ Nom du Club -->
+        <!-- Utilise la classe standard .form-group -->
         <div class="form-group">
           <label for="nom">Nom du Club <span class="required-indicator" aria-hidden="true">*</span></label>
           <input
             type="text"
             id="nom"
-            formControlName="nom"
-            placeholder="Nom du club"
-            class="form-control"
-            [class.is-invalid]="clubForm.get('nom')?.invalid && (clubForm.get('nom')?.touched || clubForm.get('nom')?.dirty)"
-            aria-required="true"
-            aria-describedby="nom-error"
+          formControlName="nom"
+          placeholder="Nom du club"
+          class="form-control"
+          [class.is-invalid]="clubForm.get('nom')?.invalid && (clubForm.get('nom')?.touched || clubForm.get('nom')?.dirty)"
+          aria-required="true"
+          aria-describedby="nom-error"
           />
-          <!-- Conteneur pour message d'erreur -->
-          <div id="nom-error" class="invalid-feedback" role="alert" aria-live="assertive">
+          <div id="nom-error" class="invalid-feedback" role="alert" aria-live="assertive"> <!-- ID conservé, classe standard -->
             @if (clubForm.get('nom')?.hasError('required')) {
               Le nom du club est requis.
             }
-            <!-- Autres erreurs possibles pour 'nom' -->
+            <!-- Autres erreurs possibles -->
           </div>
         </div>
-      </fieldset>
+        <!-- Autres champs généraux si nécessaire -->
+      </div>
+    </fieldset>
 
-      <!-- Fieldset pour regrouper l'adresse -->
-      <fieldset class="form-section">
-        <legend class="section-title">Adresse</legend>
-
-        <div class="form-group">
-          <label for="numero_voie">Numéro de Voie</label>
-          <input
-            type="text"
-            id="numero_voie"
+    <!-- Section Adresse structurée comme une carte -->
+    <fieldset class="card-section">
+      <legend class="section-header">
+        <h2>
+          <lucide-icon name="map-pin" aria-hidden="true"></lucide-icon>
+          Adresse
+        </h2>
+      </legend>
+      <div class="card-content">
+        <!-- Utilisation optionnelle de form-row pour aligner les champs -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="numero_voie">Numéro de Voie</label>
+            <input
+              type="text"
+              id="numero_voie"
             formControlName="numero_voie"
-            placeholder="Numéro de voie"
+            placeholder="Numéro"
             class="form-control"
             [class.is-invalid]="clubForm.get('numero_voie')?.invalid && (clubForm.get('numero_voie')?.touched || clubForm.get('numero_voie')?.dirty)"
             aria-describedby="numero_voie-error"
-          />
-          <div id="numero_voie-error" class="invalid-feedback" role="alert" aria-live="assertive">
-            <!-- Messages d'erreur pour numero_voie -->
+            />
+            <div id="numero_voie-error" class="invalid-feedback" role="alert" aria-live="assertive">
+              <!-- Erreurs -->
+            </div>
           </div>
-        </div>
-
-        <div class="form-group">
-          <label for="rue">Rue <span class="required-indicator" aria-hidden="true">*</span></label>
-          <input
-            type="text"
-            id="rue"
+          <div class="form-group">
+            <label for="rue">Rue <span class="required-indicator" aria-hidden="true">*</span></label>
+            <input
+              type="text"
+              id="rue"
             formControlName="rue"
-            placeholder="Rue"
+            placeholder="Nom de la rue"
             class="form-control"
             [class.is-invalid]="clubForm.get('rue')?.invalid && (clubForm.get('rue')?.touched || clubForm.get('rue')?.dirty)"
             aria-required="true"
             aria-describedby="rue-error"
-          />
-          <div id="rue-error" class="invalid-feedback" role="alert" aria-live="assertive">
-            @if (clubForm.get('rue')?.hasError('required')) {
-              La rue est requise.
-            }
+            />
+            <div id="rue-error" class="invalid-feedback" role="alert" aria-live="assertive">
+              @if (clubForm.get('rue')?.hasError('required')) { La rue est requise. }
+            </div>
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="codepostal">Code Postal <span class="required-indicator" aria-hidden="true">*</span></label>
-          <input
-            type="text"
-            id="codepostal"
+        <div class="form-row">
+          <div class="form-group">
+            <label for="codepostal">Code Postal <span class="required-indicator" aria-hidden="true">*</span></label>
+            <input
+              type="text"
+              id="codepostal"
             formControlName="codepostal"
             placeholder="Code postal"
             class="form-control"
             [class.is-invalid]="clubForm.get('codepostal')?.invalid && (clubForm.get('codepostal')?.touched || clubForm.get('codepostal')?.dirty)"
             aria-required="true"
             aria-describedby="codepostal-error postal-format-hint"
-          />
-          <!-- Optionnel: Aide sur le format -->
-          <small id="postal-format-hint" class="form-text text-muted">Format: 5 chiffres (ex: 75001)</small>
-          <div id="codepostal-error" class="invalid-feedback" role="alert" aria-live="assertive">
-            @if (clubForm.get('codepostal')?.hasError('required')) {
-              Le code postal est requis.
-            }
-            @if (clubForm.get('codepostal')?.hasError('pattern')) {
-              Le format du code postal est invalide (5 chiffres attendus).
-            }
+            />
+            <small id="postal-format-hint" class="form-text text-muted">Format: 5 chiffres (ex: 75001)</small>
+            <div id="codepostal-error" class="invalid-feedback" role="alert" aria-live="assertive">
+              @if (clubForm.get('codepostal')?.hasError('required')) { Le code postal est requis. }
+              @if (clubForm.get('codepostal')?.hasError('pattern')) { Format invalide (5 chiffres attendus). }
+            </div>
           </div>
-        </div>
-
-        <div class="form-group">
-          <label for="ville">Ville <span class="required-indicator" aria-hidden="true">*</span></label>
-          <input
-            type="text"
-            id="ville"
+          <div class="form-group">
+            <label for="ville">Ville <span class="required-indicator" aria-hidden="true">*</span></label>
+            <input
+              type="text"
+              id="ville"
             formControlName="ville"
             placeholder="Ville"
             class="form-control"
             [class.is-invalid]="clubForm.get('ville')?.invalid && (clubForm.get('ville')?.touched || clubForm.get('ville')?.dirty)"
             aria-required="true"
             aria-describedby="ville-error"
-          />
-          <div id="ville-error" class="invalid-feedback" role="alert" aria-live="assertive">
-            @if (clubForm.get('ville')?.hasError('required')) {
-              La ville est requise.
-            }
+            />
+            <div id="ville-error" class="invalid-feedback" role="alert" aria-live="assertive">
+              @if (clubForm.get('ville')?.hasError('required')) { La ville est requise. }
+            </div>
           </div>
         </div>
-      </fieldset>
+      </div>
+    </fieldset>
 
-      <!-- Fieldset pour regrouper le contact -->
-      <fieldset class="form-section">
-        <legend class="section-title">Contact</legend>
-
-        <div class="form-group">
-          <label for="telephone">Téléphone</label>
-          <input
-            type="tel"
-          id="telephone"
-          formControlName="telephone"
-          placeholder="Téléphone"
-          class="form-control"
-          [class.is-invalid]="clubForm.get('telephone')?.invalid && (clubForm.get('telephone')?.touched || clubForm.get('telephone')?.dirty)"
-          aria-describedby="telephone-error"
-          />
-          <div id="telephone-error" class="invalid-feedback" role="alert" aria-live="assertive">
-            @if (clubForm.get('telephone')?.hasError('pattern')) {
-              Le format du numéro de téléphone est invalide.
-            }
+    <!-- Section Contact structurée comme une carte -->
+    <fieldset class="card-section">
+      <legend class="section-header">
+        <h2>
+          <lucide-icon name="contact" aria-hidden="true"></lucide-icon>
+          Contact
+        </h2>
+      </legend>
+      <div class="card-content">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="telephone">Téléphone</label>
+            <input
+              type="tel"
+              id="telephone"
+            formControlName="telephone"
+            placeholder="Numéro de téléphone"
+            class="form-control"
+            [class.is-invalid]="clubForm.get('telephone')?.invalid && (clubForm.get('telephone')?.touched || clubForm.get('telephone')?.dirty)"
+            aria-describedby="telephone-error"
+            />
+            <div id="telephone-error" class="invalid-feedback" role="alert" aria-live="assertive">
+              @if (clubForm.get('telephone')?.hasError('pattern')) { Format invalide. }
+            </div>
           </div>
-        </div>
-
-        <div class="form-group">
-          <label for="email">Email <span class="required-indicator" aria-hidden="true">*</span></label>
-          <input
-            type="email"
-            id="email"
+          <div class="form-group">
+            <label for="email">Email <span class="required-indicator" aria-hidden="true">*</span></label>
+            <input
+              type="email"
+              id="email"
             formControlName="email"
-            placeholder="Email du club"
+            placeholder="Adresse email du club"
             class="form-control"
             [class.is-invalid]="clubForm.get('email')?.invalid && (clubForm.get('email')?.touched || clubForm.get('email')?.dirty)"
             aria-required="true"
             aria-describedby="email-error"
-          />
-          <div id="email-error" class="invalid-feedback" role="alert" aria-live="assertive">
-            @if (clubForm.get('email')?.hasError('required')) {
-              L'email est requis.
-            }
-            @if (clubForm.get('email')?.hasError('email')) {
-              Le format de l'email est invalide.
-            }
+            />
+            <div id="email-error" class="invalid-feedback" role="alert" aria-live="assertive">
+              @if (clubForm.get('email')?.hasError('required')) { L'email est requis. }
+              @if (clubForm.get('email')?.hasError('email')) { Format invalide. }
+            </div>
           </div>
         </div>
-      </fieldset>
-
-      <!-- Boutons d'action -->
-      <div class="actions-container form-section"> <!-- Ajout form-section pour cohérence marge -->
-        <button type="submit" class="btn btn-primary" [disabled]="clubForm.invalid || clubForm.pending">
-          <lucide-icon name="save" class="icon" aria-hidden="true"></lucide-icon>
-          Enregistrer les modifications
-        </button>
-        <button type="button" (click)="onReset()" class="btn btn-secondary">
-          <lucide-icon name="rotate-ccw" class="icon" aria-hidden="true"></lucide-icon>
-          Réinitialiser
-        </button>
       </div>
-    </form>
-  </main>
+    </fieldset>
 
-</div> <!-- Fin .main-content-area -->
+    <!-- Actions du formulaire - Utilise la classe standard .form-actions -->
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="clubForm.invalid || clubForm.pending || !clubForm.dirty">
+        <lucide-icon name="save" class="icon" aria-hidden="true"></lucide-icon>
+        Enregistrer les modifications
+      </button>
+      <button type="button" (click)="onReset()" class="btn btn-secondary">
+        <lucide-icon name="rotate-ccw" class="icon" aria-hidden="true"></lucide-icon>
+        Réinitialiser
+      </button>
+    </div>
 
+  </form>
+
+</section> <!-- Fin .main-section -->
+
+<!-- Section Pagination non utilisée ici -->
+<!-- <nav class="pagination-section" aria-label="Pagination..."> ... </nav> -->

@@ -1,205 +1,10 @@
-// mon-compte.component.scss
+/* --- Styles spécifiques à la page Mon Compte --- */
 
-// --- Importation des variables globales si nécessaire ---
-// @import 'path/to/variables'; // Assurez-vous que les variables comme --main-blue, --main-orange, etc. sont disponibles
+/* Seuls les styles uniques à cette page, non couverts globalement,
+   sont conservés ici. */
 
-// --- Styles spécifiques à la page Mon Compte ---
-
-// Conteneur principal de contenu (la marge est gérée globalement via .main-content-area)
-// :host { display: block; } // S'assure que le composant prend de la place
-
-// En-tête spécifique de la page
-.page-header.account-header { // Combinaison pour spécificité
-  display: flex;
-  flex-wrap: wrap; // Permet au bouton de passer en dessous
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-xl, 32px);
-  padding-bottom: var(--spacing-md, 16px);
-  border-bottom: 1px solid var(--border-color, #dee2e6);
-  gap: var(--spacing-md, 16px);
-
-  h1 {
-    font-size: 1.8rem;
-    color: var(--main-blue);
-    margin: 0;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-sm, 8px);
-  }
-
-  .logout-btn {
-    // Utilise les styles .btn et .btn-secondary définis plus bas
-  }
-}
-
-// Formulaires du compte
-.account-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg, 24px); // Espace entre les fieldsets (cartes)
-  margin-bottom: var(--spacing-lg, 24px); // Espace après le dernier formulaire
-}
-
-// Sections Cartes (Fieldset)
-fieldset.card-section { // Style appliqué aux fieldset qui ont la classe card-section
-  border: none;
-  padding: 0;
-  margin: 0;
-  background-color: var(--main-white, #fff);
-  border-radius: var(--border-radius, 8px);
-  box-shadow: var(--shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.05));
-  overflow: hidden;
-  border-top: 3px solid var(--main-blue);
-}
-
-// En-tête de section (Legend)
-legend.section-header { // Style appliqué aux legend qui ont la classe section-header
-  width: 100%; // Prend toute la largeur
-  padding: var(--spacing-md, 16px);
-  background-color: rgba(var(--main-blue-rgb, 26, 95, 122), 0.05);
-  border-bottom: 1px solid var(--border-color-light, #eee);
-  // Réinitialise les styles de legend par défaut si nécessaire
-  float: none;
-  margin-bottom: 0; // Géré par le padding et le contenu
-
-  h2 {
-    color: var(--main-blue);
-    font-size: 1.2rem;
-    margin: 0 0 4px 0;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-sm, 8px);
-  }
-
-  .section-description {
-    color: var(--text-dark, #333);
-    font-size: 0.9rem;
-    margin: 0;
-  }
-}
-
-// Contenu de la carte
-.card-content {
-  padding: var(--spacing-lg, 24px);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md, 16px); // Espace entre les form-row/groupes dans la carte
-}
-
-// --- Styles pour les .form-row et colonnes (.third, .half, etc.) ---
-// Conservés pour correspondre à votre HTML paste.txt
-.form-row {
-  display: flex;
-  flex-wrap: wrap; // Permet le passage à la ligne sur petit écran avant le @media
-  gap: var(--spacing-md, 16px); // Espace entre les colonnes
-  // margin-bottom: var(--spacing-md, 16px); // Géré par le gap du parent .card-content
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1; // Permet aux groupes de grandir si nécessaire
-  flex-shrink: 1; // Permet aux groupes de rétrécir
-  min-width: 0; // Empêche le débordement dans flexbox
-
-  // Application des largeurs basées sur les classes (ajustement des calculs si gap est utilisé)
-  // Note: Ces calculs supposent un gap de 16px (var(--spacing-md))
-  &.third { flex-basis: calc(33.333% - (#{var(--spacing-md, 16px)} * 2 / 3)); }
-  &.half { flex-basis: calc(50% - (#{var(--spacing-md, 16px)} / 2)); }
-  &.quarter { flex-basis: calc(25% - (#{var(--spacing-md, 16px)} * 3 / 4)); }
-  &.three-quarters { flex-basis: calc(75% - (#{var(--spacing-md, 16px)} / 4)); }
-
-  // Sur petits écrans, toutes les colonnes prennent 100% (voir @media plus bas)
-}
-
-// Groupe Formulaire (commun)
-label {
-  margin-bottom: var(--spacing-xs, 4px);
-  font-weight: 500; // Moins gras que 'bold'
-  color: var(--text-dark, #333);
-}
-
-// Indicateur requis (commun)
-.required-indicator {
-  color: var(--danger, red);
-  margin-left: 2px;
-}
-
-// Input (commun)
-// Simplification des sélecteurs
-input[type="text"],
-input[type="email"],
-input[type="tel"],
-input[type="password"],
-input[type="date"] {
-  width: 100%; // Prend la largeur du .form-group parent
-  padding: 10px 12px;
-  border: 1px solid var(--border-color, #ccc);
-  border-radius: var(--border-radius-sm, 4px);
-  font-size: 1rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-
-  &:focus {
-    outline: none;
-    border-color: var(--main-orange); // Focus orange standard
-    box-shadow: 0 0 0 3px rgba(var(--main-orange-rgb, 255, 107, 53), 0.3); // Ombre focus orange
-  }
-
-  // Style invalide (commun) - nécessite [class.is-invalid] dans le HTML
-  // Si vous n'ajoutez pas la classe dynamiquement, ces styles ne s'appliqueront pas
-  &.is-invalid {
-    border-color: var(--danger, red);
-    &:focus {
-      box-shadow: 0 0 0 3px rgba(var(--danger-rgb, 220, 53, 69), 0.25);
-    }
-  }
-}
-
-// Feedback invalide (commun) - affichage à gérer via JS ou classes conditionnelles si contenu
-.invalid-feedback {
-  display: none; // Caché par défaut
-  color: var(--danger, red);
-  font-size: 0.85rem;
-  margin-top: var(--spacing-xs, 4px);
-}
-// Affiche le message si l'input précédent a la classe .is-invalid
-input.is-invalid + .invalid-feedback {
-  display: block;
-}
-
-// Texte d'aide
-.form-text {
-  font-size: 0.85rem;
-  margin-top: var(--spacing-xs, 4px);
-}
-.text-muted {
-  color: var(--text-medium, #6c757d);
-}
-
-// Actions du Formulaire (boutons submit)
-.form-actions {
-  margin-top: var(--spacing-md); // Réduit l'espace
-  display: flex;
-  justify-content: flex-end; // Bouton(s) à droite
-  padding-top: var(--spacing-lg);
-  border-top: 1px solid var(--border-color-light, #eee);
-}
-
-// --- Zone Dangereuse ---
-// Appliqué au fieldset/section
-.danger-zone {
-  border-top-color: var(--danger, #dc3545);
-
-  .section-header { // Cible la legend dans danger-zone
-    background-color: rgba(var(--danger-rgb, 220, 53, 69), 0.05);
-    h2 { color: var(--danger, #dc3545); }
-  }
-
-  .card-content p { margin-bottom: var(--spacing-md, 16px); }
-}
-
-// Confirmation Suppression
+/* --- Styles Spécifiques à la Section de Confirmation (Zone Dangereuse) --- */
+/* Ces styles sont conservés car ils sont uniques à l'interface de confirmation. */
 .confirmation-section {
   margin-top: var(--spacing-lg);
   padding-top: var(--spacing-lg);
@@ -207,159 +12,30 @@ input.is-invalid + .invalid-feedback {
 
   .confirmation-prompt {
     font-style: italic;
-    color: var(--text-medium);
-    margin-bottom: var(--spacing-sm);
+    color: var(--text-medium); // Utilise variable globale [5]
+    margin-bottom: var(--spacing-sm); // Utilise variable globale [5]
   }
+
   .confirmation-phrase {
-    user-select: none;
-    background-color: var(--bg-medium-gray);
+    user-select: none; // Style utilitaire, peut être globalisé
+    background-color: var(--bg-medium-gray); // Utilise variable globale [5]
     padding: 10px;
-    border-radius: var(--border-radius-sm, 4px);
+    border-radius: var(--border-radius-sm, 4px); // Utilise variable globale [5]
     font-family: monospace;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-md); // Utilise variable globale [5]
     word-break: break-all;
     text-align: center;
-    strong { color: var(--text-dark); }
-  }
-  // Style spécifique pour l'input de confirmation si différent
-  #delete-confirm-input {
-    margin-bottom: var(--spacing-lg); // Espace avant les boutons
+
+    strong {
+      color: var(--text-dark); // Utilise variable globale [5]
+    }
   }
 
   .confirmation-actions {
     display: flex;
     justify-content: flex-end;
-    gap: var(--spacing-md, 16px);
+    gap: var(--spacing-md, 16px); // Utilise variable globale [5]
+    /* Le responsive (.form-actions, .confirmation-actions) est géré globalement [5] */
   }
-}
-
-
-// --- Styles Boutons (Consolidés et Corrigés) ---
-.btn {
-  padding: 10px 20px; // Ajusté pour être cohérent
-  border-radius: var(--border-radius, 8px); // Cohérent avec inputs
-  font-size: 0.95rem; // Légèrement plus petit
-  cursor: pointer;
-  font-weight: 600;
-  border: 1px solid transparent;
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-sm, 8px);
-  text-decoration: none;
-  line-height: 1.5; // Assure hauteur cohérente
-
-  lucide-icon { // Style générique pour icônes dans les boutons
-    width: 18px; height: 18px;
-  }
-
-  &:disabled {
-    opacity: 0.65;
-    cursor: not-allowed;
-    box-shadow: none; // Annule ombre si désactivé
-    transform: none; // Annule effet hover/active
-  }
-
-  &:focus-visible { // Style focus commun
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(var(--main-orange-rgb, 255, 107, 53), 0.4);
-  }
-}
-
-// Primaire (Orange)
-.btn-primary {
-  background-color: var(--main-orange);
-  color: white;
-  border-color: var(--main-orange);
-  box-shadow: 0 2px 4px rgba(var(--main-orange-rgb, 255, 107, 53), 0.2);
-
-  &:hover:not(:disabled) {
-    background-color: var(--main-orange-dark, #d9541e);
-    border-color: var(--main-orange-dark, #d9541e);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(var(--main-orange-rgb, 255, 107, 53), 0.25);
-  }
-}
-
-// Secondaire (Bleu)
-.btn-secondary {
-  background-color: var(--main-blue);
-  color: white;
-  border-color: var(--main-blue);
-  box-shadow: 0 2px 4px rgba(var(--main-blue-rgb, 26, 95, 122), 0.15);
-
-  &:hover:not(:disabled) {
-    background-color: var(--main-blue-dark, #134b63);
-    border-color: var(--main-blue-dark, #134b63);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(var(--main-blue-rgb, 26, 95, 122), 0.2);
-  }
-}
-
-// Danger (Rouge)
-.btn-danger {
-  background-color: var(--danger, #dc3545);
-  color: white;
-  border-color: var(--danger, #dc3545);
-  box-shadow: 0 2px 4px rgba(var(--danger-rgb, 220, 53, 69), 0.15);
-
-  &:hover:not(:disabled) {
-    background-color: darken(#dc3545, 10%);
-    border-color: darken(#dc3545, 12%);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(var(--danger-rgb, 220, 53, 69), 0.2);
-  }
-}
-
-// --- Responsive ---
-@media screen and (max-width: 768px) {
-  .page-header.account-header {
-    margin-bottom: var(--spacing-lg);
-    h1 { font-size: 1.5rem; }
-  }
-
-  .card-content { padding: var(--spacing-md); }
-
-  .form-row {
-    flex-direction: column; // Empile les colonnes
-    gap: var(--spacing-md); // Espace vertical entre les champs empilés
-  }
-
-  // Annule les flex-basis spécifiques sur mobile
-  .form-group.third,
-  .form-group.half,
-  .form-group.quarter,
-  .form-group.three-quarters {
-    flex-basis: auto; // Revient à la largeur normale (100% à cause de flex-direction column du parent)
-  }
-
-  .form-actions, .confirmation-actions {
-    flex-direction: column; // Empile les boutons
-    align-items: stretch; // Boutons pleine largeur
-    gap: var(--spacing-sm); // Espace réduit entre boutons empilés
-  }
-}
-
-// --- Utilitaires (si pas globaux) ---
-.visually-hidden {
-  position: absolute;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0, 0, 0, 0);
-  white-space: nowrap; border: 0;
-}
-.non-selectable {
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-}
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
 }
 

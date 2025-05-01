@@ -1,4 +1,3 @@
-<td data-label="ID">{{ membre.id }}</td>
 <td data-label="Nom">{{ membre.nom }} {{ membre.prenom }}</td>
 <td data-label="Naissance">{{ membre.date_naissance | date:'dd/MM/yyyy' }}</td>
 <td data-label="Ville">{{ membre.ville }}</td>
@@ -10,9 +9,7 @@
     <button class="btn btn-edit" title="Détails/Gérer rôle" (click)="openDetailsModal()">
       <lucide-icon name="user-cog" class="icon"></lucide-icon>
     </button>
-    <!-- Autres boutons -->
   </div>
-</td>
 <!-- ================================ -->
 
 <!-- === MODALE INTÉGRÉE DANS LA LIGNE === -->
@@ -26,3 +23,4 @@
   </app-membre-detail-modal>
 }
 <!-- ==================================== -->
+</td>

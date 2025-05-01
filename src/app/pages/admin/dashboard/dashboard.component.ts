@@ -30,7 +30,8 @@ import { ChartData, ChartOptions } from 'chart.js'; // Types pour configurer les
 import { BaseChartDirective } from 'ng2-charts';
 import {CreateEventButtonComponent} from '../../../component/event/create-event-button/create-event-button.component';
 import {EditEventModalComponent} from '../../../component/event/edit-event/edit-event.component';
-import {SidebarStateService} from '../../../service/sidebar-state.service';   // La directive pour afficher un graphique dans le HTML
+import {SidebarStateService} from '../../../service/sidebar-state.service';
+import {LucideAngularModule} from 'lucide-angular';   // La directive pour afficher un graphique dans le HTML
 
 // -------------------------
 
@@ -48,6 +49,7 @@ import {SidebarStateService} from '../../../service/sidebar-state.service';   //
     MembreRowComponent,
     CreateEventButtonComponent,
     EditEventModalComponent,
+    LucideAngularModule,
   ],
   templateUrl: './dashboard.component.html', // Fichier HTML de ce composant
   styleUrls: ['./dashboard.component.scss'],   // Fichier CSS/SCSS de ce composant

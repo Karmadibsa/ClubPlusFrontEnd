@@ -1,131 +1,135 @@
-@if (isVisible){
-<div class="modal-overlay" [class.active]="isVisible" (click)="closeModal()">
-  <!-- Utiliser ngIf="membre" pour s'assurer que les données sont là avant d'afficher -->
-  @if (membre) {
-  <div class="modal-content detail-modal" [class.active]="isVisible" (click)="$event.stopPropagation()">
-    <header class="modal-header">
-      <!-- Titre mis à jour -->
-      <h2>Détails du Membre</h2>
-      <button class="close-btn" title="Fermer" (click)="closeModal()">
-        <lucide-icon name="x" size="20"></lucide-icon>
-      </button>
-    </header>
-    <main class="modal-body">
-      <!-- Pas besoin de <form> pour l'affichage -->
-      <!-- Informations personnelles -->
-      <div class="form-section">
-        <h3>Informations personnelles</h3>
+<!-- Utilisation de @if pour la visibilité globale -->
+@if (isVisible) {
+  <!-- Utilisation des classes globales .modal-overlay et [class.is-visible] -->
+  <div class="modal-overlay"
+       [class.is-visible]="isVisible"
+       (click)="closeModal()">
 
-        <div class="form-row">
-          <!-- Groupe Nom -->
-          <div class="form-group">
-            <label>Nom</label>
-            <div class="read-only-value">{{ membre.nom }}</div>
-          </div>
-          <!-- Groupe Prénom -->
-          <div class="form-group">
-            <label>Prénom</label>
-            <div class="read-only-value">{{ membre.prenom }}</div>
-          </div>
-        </div>
+    <!-- Vérification @if (membre) pour s'assurer que les données sont chargées -->
+    @if (membre) {
+      <!-- Utilisation des classes globales .modal-content -->
+        <!-- Ajout d'une classe locale .detail-modal pour styles spécifiques si besoin -->
+      <div class="modal-content detail-modal" (click)="$event.stopPropagation()">
 
-        <div class="form-row">
-          <!-- Groupe Date de naissance -->
-          <div class="form-group">
-            <label>Date de naissance</label>
-            <!-- Utiliser le DatePipe -->
-            <div class="read-only-value">{{ membre.date_naissance | date:'dd/MM/yyyy' }}</div>
-          </div>
-          <!-- Groupe Email -->
-          <div class="form-group">
-            <label>Email</label>
-            <div class="read-only-value">{{ membre.email }}</div>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <!-- Groupe Téléphone -->
-          <div class="form-group">
-            <label>Téléphone</label>
-            <div class="read-only-value">{{ membre.telephone || 'N/A' }}</div>
-          </div>
-          <!-- Groupe Rôle -->
-          <div class="form-group">
-            <label>Rôle</label>
-            <div class="read-only-value">{{ membre.role }}</div>
-            <!-- Plus besoin de select ou de note sur la modification -->
-          </div>
-        </div>
-        <!-- Groupe Date d'inscription (ajouté car potentiellement utile) -->
-        <div class="form-row">
-          <div class="form-group">
-            <label>Inscrit le</label>
-            <div class="read-only-value">{{ membre.date_inscription | date:'dd/MM/yyyy' }}</div>
-          </div>
-          <!-- Vous pouvez ajouter un autre champ ici si la mise en page le permet -->
-          <div class="form-group"> <!-- Placeholder pour garder la grille alignée si besoin -->
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Adresse -->
-      <div class="form-section">
-        <h3>Adresse</h3>
-
-        <!-- Regrouper l'adresse pour une meilleure lisibilité -->
-        <div class="form-row">
-          <div class="form-group full-width"> <!-- Utiliser une classe pour prendre toute la largeur -->
-            <label>Adresse complète</label>
-            <div class="read-only-value">
-              {{ membre.numero_voie }} {{ membre.rue }}, {{ membre.codepostal }} {{ membre.ville }}
-            </div>
-          </div>
-        </div>
-        @if (authService.role === 'ROLE_ADMIN') {
-          <ng-container>
-
-          <div class="form-section role-change-section">
-            <h3>Gérer le Rôle</h3>
-            <div class="radio-inputs">
-              <label>
-                <input class="radio-input" type="radio" name="roleOption"
-                       [(ngModel)]="selectedRole" value="MEMBRE"> <!-- Valeur String -->
-                <span>Membre</span>
-              </label>
-              <label>
-                <input class="radio-input" type="radio" name="roleOption"
-                       [(ngModel)]="selectedRole" value="RESERVATION"> <!-- Valeur String -->
-                <span>Réservation</span>
-              </label>
-            </div>
-          </div>
-          </ng-container>
-        }
-
-        <!-- Les anciens form-row séparés pour l'adresse sont supprimés -->
-
-      </div>
-
-      <!-- Plus besoin de div.form-actions ici, géré dans modal-footer -->
-    </main>
-    <footer class="modal-footer">
-      @if (authService.role === "ROLE_ADMIN"){
-        <ng-container>
-          <button type="button" class="btn btn-primary"
-                  (click)="triggerSaveRole()"
-                  [disabled]="isSaveDisabled"> <!-- Utilise le getter -->
-            Enregistrer Rôle
+        <!-- Utilisation des classes globales .modal-header (pas -primary) -->
+        <header class="modal-header">
+          <h2>
+            <lucide-icon name="user" aria-hidden="true"></lucide-icon>
+            Détails du Membre
+          </h2>
+          <!-- Utilisation de .modal-close-button global -->
+          <button class="modal-close-button" type="button" (click)="closeModal()" title="Fermer">
+            <lucide-icon name="x"></lucide-icon>
           </button>
-        </ng-container>
-      }
+        </header>
 
-      <!-- Uniquement le bouton Fermer -->
-      <button type="button" class="btn btn-secondary" (click)="closeModal()">
-        <lucide-icon name="circle-x" size="16"></lucide-icon> Fermer
-      </button>
-    </footer>
-  </div>
-  }
-</div>
+        <!-- Utilisation de .modal-body global -->
+        <main class="modal-body">
+
+          <!-- Section Informations personnelles -->
+          <!-- Utilisation de classes locales .info-section, .info-row, .info-group pour clarté -->
+          <section class="info-section">
+            <h3 class="info-section-title">
+              <lucide-icon name="contact" aria-hidden="true"></lucide-icon>
+              Informations personnelles
+            </h3>
+            <div class="info-grid"> <!-- Utilisation d'une grille pour l'alignement -->
+              <div class="info-item">
+                <span class="info-label">Nom :</span>
+                <span class="read-only-value">{{ membre.nom }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Prénom :</span>
+                <span class="read-only-value">{{ membre.prenom }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Naissance :</span>
+                <span class="read-only-value">{{ membre.date_naissance | date:'dd/MM/yyyy' }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Email :</span>
+                <span class="read-only-value">{{ membre.email }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Téléphone :</span>
+                <span class="read-only-value">{{ membre.telephone || 'N/A' }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Inscrit le :</span>
+                <span class="read-only-value">{{ membre.date_inscription | date:'dd/MM/yyyy' }}</span>
+              </div>
+              <div class="info-item"> <!-- Rôle affiché ici -->
+                <span class="info-label">Rôle Actuel :</span>
+                <span class="read-only-value role-badge">{{ membre.role }}</span> <!-- Ajout classe pour style -->
+              </div>
+            </div>
+          </section>
+
+          <!-- Section Adresse -->
+          <section class="info-section">
+            <h3 class="info-section-title">
+              <lucide-icon name="map-pin" aria-hidden="true"></lucide-icon>
+              Adresse
+            </h3>
+            <div class="info-item full-width">
+              <span class="info-label">Adresse :</span>
+              <span class="read-only-value">
+                {{ membre.numero_voie }} {{ membre.rue }}, {{ membre.codepostal }} {{ membre.ville }}
+              </span>
+            </div>
+          </section>
+
+          <!-- Section Gestion Rôle (visible uniquement pour Admin) -->
+          @if (authService.role === 'ROLE_ADMIN') {
+            <section class="info-section role-change-section">
+              <h3 class="info-section-title">
+                <lucide-icon name="user-cog" aria-hidden="true"></lucide-icon>
+                Gérer le Rôle
+              </h3>
+              <!-- Utilisation des styles spécifiques pour les radios -->
+              <div class="radio-inputs">
+                <label>
+                  <input class="radio-input" type="radio" name="roleOption"
+                         [(ngModel)]="selectedRole" value="MEMBRE">
+                  <span>Membre</span>
+                </label>
+                <label>
+                  <input class="radio-input" type="radio" name="roleOption"
+                         [(ngModel)]="selectedRole" value="RESERVATION">
+                  <span>Réservation</span>
+                </label>
+              </div>
+            </section>
+          }
+
+        </main> <!-- Fin .modal-body -->
+
+        <!-- Utilisation de .modal-footer global -->
+        <footer class="modal-footer">
+          <!-- Bouton Enregistrer Rôle (conditionnel) -->
+          @if (authService.role === "ROLE_ADMIN") {
+            <!-- Utilise .btn .btn-primary globaux -->
+            <button type="button" class="btn btn-primary"
+                    (click)="triggerSaveRole()"
+                    [disabled]="isSaveDisabled"> <!-- Attention: si isSaveDisabled est une méthode -->
+              <lucide-icon name="save" aria-hidden="true"></lucide-icon>
+              Enregistrer Rôle
+            </button>
+          }
+
+          <!-- Bouton Fermer (toujours visible) -->
+          <!-- Utilise .btn .btn-secondary globaux -->
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">
+            <lucide-icon name="x"></lucide-icon> Fermer
+          </button>
+        </footer>
+
+      </div> <!-- Fin .modal-content -->
+    } @else {
+      <!-- Optionnel : Afficher un message si membre est null -->
+      <div class="modal-content loading-content" (click)="$event.stopPropagation()">
+        <p class="loading-indicator">Chargement des détails...</p>
+      </div>
+    }
+  </div> <!-- Fin .modal-overlay -->
 }
