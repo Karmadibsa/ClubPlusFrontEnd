@@ -1,46 +1,26 @@
-// --- Styles Généraux du Composant ---
-:host {
-  display: block;
-}
+/* ami.component.scss */
 
-// --- Container Principal ---
-.container {
-  padding: var(--spacing-lg, 24px);
-  margin: 2% 2% 2% 17%;
-  background-color: var(--bg-light-gray, #f8f9fa);
-  border-radius: var(--border-radius, 8px);
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-  border-left: solid var(--main-orange, #f26122) 2px;
-}
+// --- Styles spécifiques à la page Gestion des Amis ---
 
-// --- Header (Flexbox appliqué ici) ---
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-xl, 32px);
-  gap: var(--spacing-lg, 24px);
+// L'en-tête global (.page-header) est stylé dans styles.scss,
+// mais on garde le style spécifique du bouton "Code Ami" intégré.
+.page-header {
+  // Le display:flex, justify-content, align-items, gap est DANS .page-header global
+  // On ajoute juste le style pour .current-user-friend-code
 
-  h1 {
-    font-size: 2rem;
-    color: var(--main-blue, #1a5f7a);
-    margin: 0;
-    flex-shrink: 0;
-  }
-
-  // Style du "Bouton" Code Ami Utilisateur (dans le header)
   .current-user-friend-code {
+    // Style du "Bouton" Code Ami Utilisateur (dans le header)
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-sm, 8px);
     padding: var(--spacing-xs, 4px) var(--spacing-md, 16px);
-    background-color: var(--main-blue, #1a5f7a);
-    color: var(--main-white, #ffffff);
-    border-radius: var(--border-radius, 8px);
+    background-color: var(--main-blue); // Utilise la variable globale
+    color: var(--main-white);         // Utilise la variable globale
+    border-radius: var(--border-radius); // Utilise la variable globale
     cursor: pointer;
-    transition: var(--transition-standard, all 0.3s ease);
+    transition: var(--transition-standard); // Utilise la variable globale
     white-space: nowrap;
-    border: 1px solid transparent;
+    border: 1px solid transparent; // Pour l'état focus
 
     .label {
       font-size: 0.85rem;
@@ -48,288 +28,162 @@
     }
 
     .code-display {
-      font-family: monospace;
+      font-family: monospace; // Style spécifique
+      // Utilisation de variables globales si possible pour les couleurs/radius
       background-color: rgba(var(--main-white-rgb, 255, 255, 255), 0.15);
       padding: 2px var(--spacing-xs, 4px);
-      border-radius: calc(var(--border-radius, 8px) / 2.5);
+      border-radius: calc(var(--border-radius, 8px) / 2.5); // Ou une variable --border-radius-sm
       font-weight: bold;
-      color: var(--main-white, #ffffff);
+      color: var(--main-white);
     }
 
     .copy-icon {
-      color: var(--main-white, #ffffff);
+      color: var(--main-white);
       opacity: 0.7;
       transition: opacity 0.3s ease;
-      display: block;
+      display: block; // Assure affichage
     }
 
     &:hover {
-      background-color: var(--main-blue-dark, #124a5f);
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      background-color: var(--main-blue-dark); // Variable globale pour hover
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); // Ombre spécifique si non gérée globalement
       .copy-icon { opacity: 1; }
     }
 
+    // L'état focus-visible est géré globalement via .btn ou input,
+    // mais on peut le garder s'il doit être différent ici.
     &:focus-visible {
       outline: none;
-      border-color: var(--main-orange, #f26122);
+      border-color: var(--main-orange); // Variable globale
+      // Utilise la variable globale pour l'ombre focus
       box-shadow: 0 0 0 3px var(--input-focus-shadow, rgba(242, 97, 34, 0.25));
     }
 
     &:active {
-      transform: scale(0.98);
+      transform: scale(0.98); // Effet spécifique au clic
+      // Utilise une variable globale pour l'état 'active' si elle existe
       background-color: var(--main-blue-darker, #0e3c4d);
     }
   }
 }
 
 
-// --- Zone d'Ajout par Code ---
+// Zone d'Ajout par Code (dans .main-section)
 .add-by-code-container {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md, 16px);
-  margin-bottom: var(--spacing-xl, 32px);
+  gap: var(--spacing-md, 16px); // Géré globalement ? Espace entre éléments
+  margin-bottom: var(--spacing-lg, 24px); // Espace standard sous cette section
 
-  h2 {
+  h3 { // Ou h2 selon la sémantique choisie
     margin: 0;
-    font-size: 1.25rem;
-    color: var(--text-dark, #333);
-    white-space: nowrap;
+    font-size: 1.25rem; // Taille spécifique ?
+    color: var(--text-dark); // Variable globale
+    white-space: nowrap; // Empêche le titre de passer à la ligne
   }
 
-  input[type="text"] {
-    flex-grow: 1;
-    padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
-    border: 1px solid var(--border-color, #dee2e6);
-    border-radius: var(--border-radius, 8px);
-    font-size: 1rem;
-    transition: var(--transition-standard, all 0.3s ease);
-
-    &:focus {
-      outline: none;
-      border-color: var(--main-orange, #f26122);
-      box-shadow: 0 0 0 3px var(--input-focus-shadow, rgba(242, 97, 34, 0.25));
-    }
-
-    &:disabled {
-      background-color: var(--bg-medium-gray, #e9ecef);
-      cursor: not-allowed;
-    }
+  // L'input utilise .form-control global, donc pas de style ici sauf override
+  input.form-control {
+    flex-grow: 1; // Permet à l'input de prendre l'espace disponible
   }
 
-  button { // Bouton "Ajouter"
-    padding: var(--spacing-sm, 8px) var(--spacing-lg, 24px);
-    background-color: var(--main-orange, #f26122);
-    color: var(--main-white, #ffffff);
-    border: none;
-    border-radius: var(--border-radius, 8px);
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: var(--transition-standard, all 0.3s ease);
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm, 8px);
-
-    &:hover:not(:disabled) {
-      opacity: 0.9;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    &:disabled {
-      background-color: var(--text-light, #999999);
-      cursor: not-allowed;
-      opacity: 0.7;
-    }
-    .icon, lucide-icon { display: block; }
-  }
-
-  p { // Indicateur de chargement
-    margin: 0 0 0 var(--spacing-md, 16px);
-    color: var(--text-medium, #666);
-    font-style: italic;
+  // Le bouton utilise .btn .btn-primary global, pas de style ici sauf override
+  button.btn.btn-primary {
+    // Styles spécifiques si le bouton 'Ajouter' doit être différent des autres .btn-primary
   }
 }
 
-// --- Onglets de Navigation ---
-.tabs {
-  display: flex;
-  gap: var(--spacing-sm, 8px);
-  margin-bottom: var(--spacing-xl, 32px);
-  border-bottom: 1px solid var(--border-color, #dee2e6);
 
-  button { // Boutons d'onglets
-    padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
-    background-color: transparent;
-    color: var(--text-medium, #666);
-    border: none;
-    border-bottom: 3px solid transparent;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: var(--transition-standard, all 0.3s ease);
-    margin-bottom: -1px;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-sm, 8px);
+// Les onglets (.tabs) sont stylés globalement.
+// Les indicateurs de chargement (.loading-indicator) sont stylés globalement.
+// Les tableaux (.data-table) sont stylés globalement (y compris responsive et .empty-table-message).
+// Les boutons dans les tableaux (.btn-actions .btn) sont stylés globalement.
 
-    &:hover:not(:disabled):not(.active) {
-      color: var(--text-dark, #333);
-    }
 
-    &.active {
-      color: var(--main-orange, #f26122);
-      border-bottom-color: var(--main-orange, #f26122);
-      font-weight: 600;
-    }
-
-    &:disabled {
-      color: var(--text-light, #999999);
-      cursor: not-allowed;
-      opacity: 0.7;
-    }
-    .icon, lucide-icon { display: block; }
-  }
-}
-
-// --- Conteneurs de Tableaux ---
-.table-container {
-  margin-bottom: var(--spacing-xl, 32px);
-
-  h2 {
-    font-size: 1.5rem;
-    color: var(--main-blue, #1a5f7a);
-    margin-bottom: var(--spacing-md, 16px);
-    padding-bottom: var(--spacing-sm, 8px);
-    border-bottom: 1px solid var(--border-color, #dee2e6);
-  }
-
-  // Message "Chargement..."
-  p {
-    color: var(--text-medium, #666);
-    padding: var(--spacing-lg, 24px);
-    text-align: center;
-    font-style: italic;
-  }
-
-  // Ligne @empty
-  .empty-message-row td {
-    text-align: center;
-    color: var(--text-medium, #666);
-    padding: var(--spacing-lg, 24px);
-    font-style: italic;
-    background-color: transparent;
-  }
-}
-
-// --- Barre de Recherche Amis (Déplacée ici, au bon niveau) ---
+// Barre de Recherche Amis (spécifique à cet onglet)
 .friend-search-container {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm, 8px);
-  margin-bottom: var(--spacing-md, 16px); // Espace avant la table
-  padding: var(--spacing-xs, 4px) var(--spacing-sm, 8px);
-  background-color: var(--main-white, #ffffff);
-  border: 1px solid var(--border-color, #dee2e6);
-  border-radius: var(--border-radius, 8px);
+  gap: var(--spacing-sm, 8px); // Variable globale
+  margin-bottom: var(--spacing-md, 16px); // Variable globale
+  padding: var(--spacing-xs, 4px) var(--spacing-sm, 8px); // Variables globales
+  background-color: var(--main-white); // Variable globale
+  border: 1px solid var(--border-color); // Variable globale
+  border-radius: var(--border-radius); // Variable globale
+  transition: var(--transition-standard); // Variable globale pour focus
 
   .search-icon {
-    color: var(--text-light, #999999);
+    color: var(--text-light); // Variable globale
     flex-shrink: 0;
     display: block;
+    transition: color 0.3s ease; // Transition pour focus
   }
 
   .friend-search-input {
+    // Hérite potentiellement de .form-control global si la classe est ajoutée
+    // Styles spécifiques si différents de .form-control
     flex-grow: 1;
-    border: none;
-    outline: none;
-    padding: var(--spacing-xs, 4px) 0;
+    border: none; // Pas de bordure interne
+    outline: none; // Pas d'outline interne
+    padding: var(--spacing-xs, 4px) 0; // Padding interne ajusté
     font-size: 0.95rem;
-    color: var(--text-dark, #333);
+    color: var(--text-dark); // Variable globale
+    background-color: transparent; // Pas de fond interne
 
     &::placeholder {
-      color: var(--text-light, #999999);
+      color: var(--text-light); // Variable globale
       font-style: italic;
     }
   }
 
+  // Effet de focus sur le conteneur entier
   &:focus-within {
-    border-color: var(--main-orange, #f26122);
-    box-shadow: 0 0 0 3px var(--input-focus-shadow, rgba(242, 97, 34, 0.25));
+    border-color: var(--main-orange); // Variable globale
+    box-shadow: 0 0 0 3px var(--input-focus-shadow); // Variable globale
     .search-icon {
-      color: var(--main-orange, #f26122);
+      color: var(--main-orange); // Variable globale
     }
   }
 }
 
-
-// --- Styles Communs pour les Tableaux ---
-table.full-width-table {
-  width: 100%;
-  border-collapse: collapse;
-
-  th, td {
-    padding: var(--spacing-md, 16px);
-    text-align: left;
-    border-bottom: 1px solid var(--border-color, #dee2e6);
-    vertical-align: middle;
-  }
-
+// Styles spécifiques pour les en-têtes de tableau DANS CETTE PAGE si différents du global
+// Exemple: si on veut garder le fond bleu clair spécifique pour les `th` ici:
+.main-section table.data-table {
   th {
-    background-color: rgba(26, 95, 122, 0.05);
+    background-color: rgba(var(--main-blue-rgb, 26, 95, 122), 0.05); // Fond bleu très clair
     font-weight: 600;
-    color: var(--main-blue, #1a5f7a);
-  }
-
-  tbody tr {
-    transition: background-color 0.2s ease;
-
-    &:hover:not(.empty-message-row) {
-      background-color: var(--bg-medium-gray, #e9ecef);
-    }
-  }
-
-  // Styles pour les boutons d'action dans les tableaux
-  td button {
-    padding: var(--spacing-xs, 4px) var(--spacing-md, 16px);
-    border: none;
-    border-radius: var(--border-radius, 8px);
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: var(--transition-standard, all 0.3s ease);
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-xs, 4px);
-
-    &.accept-btn {
-      background-color: var(--secondary-green, #47b3a3);
-      color: var(--main-white, #ffffff);
-    }
-
-    &.reject-btn, &.cancel-btn, &.remove-btn {
-      background-color: var(--danger, #dc3545);
-      color: var(--main-white, #ffffff);
-    }
-
-    &:not(.accept-btn):not(.reject-btn):not(.cancel-btn):not(.remove-btn) {
-      background-color: var(--main-blue, #1a5f7a);
-      color: var(--main-white, #ffffff);
-    }
-
-    &:hover:not(:disabled) {
-      opacity: 0.85;
-    }
-
-    &:disabled {
-      background-color: var(--text-light, #999999);
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-
-    .icon, lucide-icon {
-      display: block;
-    }
+    color: var(--main-blue);
   }
 }
+
+// Styles spécifiques aux sections de chaque onglet si nécessaire
+.friends-list-section,
+.received-requests-section,
+.sent-requests-section {
+  margin-bottom: var(--spacing-lg); // Espace sous chaque section d'onglet
+  h3 { // Titre de chaque onglet
+    font-size: 1.5rem; // Cohérent avec les anciens H2
+    color: var(--main-blue); // Variable globale
+    margin-bottom: var(--spacing-md); // Variable globale
+    padding-bottom: var(--spacing-sm); // Variable globale
+    border-bottom: 1px solid var(--border-color); // Variable globale
+  }
+}
+
+// Les règles @media spécifiques à des éléments uniques de cette page peuvent rester ici.
+// Les règles @media générales pour tableaux, formulaires etc. sont dans styles.scss.
+@media screen and (max-width: 768px) {
+  .add-by-code-container {
+    flex-direction: column; // Empiler sur mobile
+    align-items: stretch; // Éléments prennent toute la largeur
+    input.form-control { flex-grow: 0; } // Reset flex-grow
+    button.btn.btn-primary { width: 100%; } // Bouton pleine largeur
+  }
+
+  .current-user-friend-code {
+    // Optionnel: ajuster la taille/padding sur mobile si nécessaire
+    font-size: 0.9rem; // Exemple
+    padding: var(--spacing-xs) var(--spacing-sm); // Exemple
+  }
+}
+

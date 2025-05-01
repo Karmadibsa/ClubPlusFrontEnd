@@ -1,9 +1,12 @@
-import {Component, inject, Inject} from '@angular/core';
+import {Component, EventEmitter, inject, Inject, Input, Output} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {DatePipe, NgForOf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {ReservationService} from '../../../service/reservation.service';
 import {NotificationService} from '../../../service/notification.service';
+import {LucideAngularModule} from 'lucide-angular';
+import {Evenement} from '../../../model/evenement';
+import {Categorie} from '../../../model/categorie';
 
 @Component({
   selector: 'app-reservation-modal',
@@ -12,54 +15,63 @@ import {NotificationService} from '../../../service/notification.service';
   imports: [
     DatePipe,
     FormsModule,
-    NgForOf
+    NgForOf,
+    LucideAngularModule
   ]
 })
 export class ReservationModalComponent {
-  private notification = inject(NotificationService)
-  // Variable pour stocker l'événement
-  events: any;
-  // Variable pour la catégorie sélectionnée (si vous avez un formulaire avec sélection)
-  selectedCategory: any;
+  // --- Inputs & Outputs ---
+  @Input() isVisible: boolean = false;
+  @Input() event: Evenement | null = null; // Renommé en 'event' (singulier) et typé
+  @Output() closeModal = new EventEmitter<void>();
+  @Output() reserveSuccess = new EventEmitter<any>(); // Pour notifier le parent (la carte)
+  // ------------------------
 
-  private reservationService= inject(ReservationService) // Injecter ReservationService
+  private notification = inject(NotificationService);
+  private reservationService= inject(ReservationService);
 
-  constructor(
-    // Référence au dialog pour pouvoir le fermer
-    public dialogRef: MatDialogRef<ReservationModalComponent>,
-    // Injection des données passées à la modal
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
-    // Stockez les données d'événement reçues
-    this.events = data;
-    console.log('Événement reçu dans la modal:', this.events);
-  }
+  selectedCategory: Categorie | null = null; // Typage
+  isSubmitting = false;
 
-  // Méthode pour fermer la modal
-  closeModal(): void {
-    this.dialogRef.close();
+  // Pas de constructor nécessaire pour MatDialog
+
+  onClose(): void {
+    this.closeModal.emit();
   }
 
   onSubmit(): void {
-    // 1. Récupère les IDs comme un bon haltérophile soulève la barre
-    const eventId = this.events.id; // ID de l'événement
-    const categorieId = this.selectedCategory.id; // ID de la catégorie
+    if (this.isSubmitting || !this.event || !this.selectedCategory) {
+      if (!this.selectedCategory) {
+        this.notification.show("Veuillez sélectionner une catégorie.", 'warning');
+      }
+      return; // Sortir si invalide
+    }
 
-    // 2. Appel au service (le coach qui t'accompagne)
+    this.isSubmitting = true;
+    const eventId = this.event.id;
+    const categorieId = this.selectedCategory.id;
+
     this.reservationService.createReservation(eventId, categorieId).subscribe({
       next: (response) => {
-        // 3a. Succès : la pompe est gagnée 💪
         console.log('Réservation réussie !', response);
-        this.dialogRef.close({
-          success: true,
-          newReservation: response // Renvoie les données au parent si besoin
-        });
+        this.notification.show('Réservation effectuée avec succès !', 'valid');
+        this.reserveSuccess.emit(response);
+        this.onClose(); // Fermer après succès
       },
       error: (error) => {
-        // 3b. Échec : on analyse la posture pour corriger
         console.error('Échec de la réservation', error);
-        this.notification.show("Erreur lors de la reservation", 'error')
-        // Ici, tu peux ajouter un toast d'erreur ou un message utilisateur
+        const message = error?.error?.message || "Erreur lors de la réservation. Vérifiez si vous avez déjà une réservation ou s'il reste des places.";
+        this.notification.show(message, 'error');
+        // Ne pas fermer la modale en cas d'erreur pour permettre nouvelle tentative
+      },
+      complete: () => {
+        this.isSubmitting = false; // Réactiver le bouton dans tous les cas
       }
     });
-}}
+  }
+
+  // Empêche la fermeture par clic dans la modale
+  stopPropagation(event: Event): void {
+    event.stopPropagation();
+  }
+}

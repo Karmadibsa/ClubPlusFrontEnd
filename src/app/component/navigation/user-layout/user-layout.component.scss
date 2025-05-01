@@ -1,0 +1,83 @@
+// user-layout.component.scss
+
+// --- Variables locales ---
+// ATTENTION: Utiliser des % pour la marge basés sur une sidebar en % peut être instable.
+// Il est SOUVENT préférable d'utiliser des unités fixes (px, rem) pour la largeur de la sidebar
+// ET pour la marge du contenu. Exemple:
+// $sidebar-width-expanded: 200px;
+// $sidebar-width-collapsed: 80px;
+// Si vous tenez aux %, assurez-vous qu'ils sont cohérents avec sidebar.component.scss
+$sidebar-width-expanded: 15%;
+$sidebar-width-collapsed: 7%;
+$bottom-nav-height-mobile: 60px;
+
+// --- Styles pour le conteneur principal du layout ---
+.user-layout-container {
+  display: flex; // Met sidebar et main-content côte à côte
+
+  // --- Styles pour la zone où le contenu des routes enfants s'affiche ---
+  .main-content {
+    flex-grow: 1; // Prend la largeur restante
+    min-width: 0;
+    box-sizing: border-box;
+
+    // Styles généraux repris du 2ème bloc (padding, fond, etc.)
+    padding: 20px; // Ou var(--spacing-lg, 24px); selon votre préférence
+    background-color: var(--bg-light-gray, #f8f9fa);
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+    border-left: solid var(--main-orange) 2px;
+    min-height: calc(100vh - 4%); // Calcul basé sur les marges du 2ème bloc (à vérifier)
+    // La marge verticale de 2% du 2ème bloc est appliquée ici via margin-top/bottom si besoin
+    margin-top: 2%;
+    margin-bottom: 2%;
+    // La marge droite de 2% du 2ème bloc est appliquée ici via margin-right si besoin
+    margin-right: 2%;
+
+    // Marge gauche PAR DÉFAUT (sidebar étendue) - C'est la valeur conditionnelle qui compte
+    margin-left: $sidebar-width-expanded;
+
+    // Animation fluide du changement de marge gauche
+    transition: margin-left 0.3s ease;
+
+    // --- Adaptation Mobile (reprise du 2ème bloc ET de la media query du 1er) ---
+    @media (max-width: 768px) {
+      // Annule les marges spécifiques desktop et applique les styles mobiles
+      margin: 0; // Annule TOUTES les marges (top, right, bottom, left)
+      width: 100%;
+      border-left: none;
+      border-radius: 0;
+      min-height: auto; // Annule la hauteur minimale desktop
+      padding: var(--spacing-lg, 24px) var(--spacing-md, 16px); // Paddings mobiles standards
+
+      // Espace en bas pour la barre de navigation mobile (reprise du 1er bloc)
+      padding-bottom: calc(#{$bottom-nav-height-mobile} + var(--spacing-md, 16px));
+      transition: none; // Pas de transition sur mobile
+    }
+  }
+
+  // --- Styles quand la sidebar est RÉDUITE ---
+  // S'applique lorsque .user-layout-container a la classe .sidebar-state-collapsed
+  &.sidebar-state-collapsed {
+    .main-content {
+      // Marge gauche RÉDUITE - CETTE REGLE PEUT MAINTENANT S'APPLIQUER
+      margin-left: $sidebar-width-collapsed;
+
+      // Assurez-vous que la media query mobile écrase aussi cette marge si besoin
+      @media (max-width: 768px) {
+        margin-left: 0; // Confirmation que la marge reste 0 sur mobile même si réduit
+      }
+    }
+  }
+
+  // --- Adaptation Mobile Globale pour le conteneur (reprise du 1er bloc) ---
+  // S'applique à .user-layout-container lui-même sur mobile
+  @media screen and (max-width: 768px) {
+    display: block; // Annule display: flex
+  }
+}
+ app-sidebar {
+   flex-shrink: 0;
+ }
+
+

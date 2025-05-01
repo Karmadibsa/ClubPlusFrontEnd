@@ -1,392 +1,41 @@
-.main-layout {
-  display: flex;
-  min-height: 100vh;
-}
+/* --- Styles spécifiques à la page Mon Compte --- */
 
-.container {
-  padding: 20px;
-  margin: 2% 2% 2% 17%;
-  background-color: var(--bg-light-gray);
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-  border-left: solid var(--main-orange) 2px;
-}
+/* Seuls les styles uniques à cette page, non couverts globalement,
+   sont conservés ici. */
 
-.account-container {
-  width: 95%;
-  max-width: 1000px;
-  margin: 10px auto;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
-  padding: 20px;
-}
-
-.account-header {
-  padding-bottom: 15px;
-  margin-bottom: 20px;
-}
-
-.account-header h1 {
-  margin: 0;
-  color: var(--main-blue);
-  font-size: 28px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.account-header h1 i {
-  color: var(--main-orange);
-}
-
-.account-section {
-  margin-bottom: 30px;
-}
-
-.account-section h2 {
-  color: var(--text-dark);
-  font-size: 18px;
-  margin-bottom: 15px;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: bold;
-  color: var(--text-dark);
-}
-
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group input[type="tel"],
-.form-group input[type="password"],
-input[type="date"] {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid var(--bg-medium-gray);
-  border-radius: 8px;
-  font-size: 15px;
-  transition: all 0.2s ease;
-}
-
-.form-group input:focus,
-input[type="date"]:focus {
-  outline: none;
-  border-color: var(--main-blue);
-  box-shadow: 0 0 0 3px var(--neutral-blue);
-}
-
-.checkbox-group {
-  display: flex;
-  align-items: center;
-}
-
-.checkbox-group input[type="checkbox"] {
-  margin-right: 10px;
-}
-
-.checkbox-group label {
-  display: inline;
-  margin-bottom: 0;
-}
-
-.btn {
-  padding: 12px 28px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  border: none;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.btn i {
-  font-size: 18px;
-}
-
-.btn-primary {
-  background-color: var(--main-orange);
-  color: white;
-  box-shadow: 0 4px 6px rgba(242, 97, 34, 0.2);
-}
-
-.btn-primary:hover {
-  background-color: var(--main-blue);
-  transform: translateY(-2px);
-}
-
-.btn-secondary {
-  background-color: var(--main-blue);
-  color: white;
-  box-shadow: 0 4px 6px var(--neutral-blue);
-}
-
-.btn-secondary:hover {
-  background-color: var(--text-dark);
-  transform: translateY(-2px);
-}
-
-/* Section de sélection de photo de profil */
-.profile-selection {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-bottom: 20px;
-}
-
-.current-profile {
-  text-align: center;
-  padding: 15px;
-  background-color: var(--bg-light-gray);
-  border-radius: 8px;
-}
-
-.current-profile img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid var(--main-blue);
-  padding: 3px;
-  background-color: white;
-}
-
-.current-profile p {
-  margin-top: 10px;
-  font-size: 14px;
-  color: var(--text-dark);
-}
-
-.profile-options h3 {
-  font-size: 16px;
-  margin-bottom: 15px;
-  color: var(--text-dark);
-}
-
-.profile-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  gap: 15px;
-}
-
-.profile-option {
-  cursor: pointer;
-  border-radius: 50%;
-}
-
-.profile-option img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
-}
-
-.profile-option:hover img {
-  border-color: var(--main-orange);
-}
-
-.profile-option.selected img {
-  border: 3px solid var(--main-orange);
-  box-shadow: 0 0 0 3px rgba(242, 97, 34, 0.3);
-}
-
-/* Mise en page à plusieurs colonnes */
-.form-row {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 15px;
-}
-
-.half {
-  flex: 0 0 calc(50% - 8px);
-}
-
-.third {
-  flex: 0 0 calc(33.333% - 10px);
-}
-
-.quarter {
-  flex: 0 0 calc(25% - 12px);
-}
-
-.three-quarters {
-  flex: 0 0 calc(75% - 4px);
-}
-
-/* Style des cartes pour chaque section */
-.section-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.card-section {
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-  border-top: 2px solid var(--main-blue);
-}
-
-.section-header {
-  padding: 15px;
-  background-color: rgba(26, 95, 122, 0.05);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.section-header h2 {
-  color: var(--main-blue);
-  font-size: 20px;
-  margin-bottom: 5px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.section-header h2 i {
-  color: var(--main-orange);
-}
-
-.section-description {
-  color: var(--text-dark);
-  font-size: 14px;
-  margin: 0;
-}
-
-.card-content {
-  padding: 20px;
-}
-
-/* Style pour les actions de formulaire */
-.form-actions {
-  margin-top: 25px;
-  display: flex;
-  justify-content: flex-end;
-  padding-bottom: 5px;
-}
-
-.danger-zone {
-  border-left: 4px solid var(--danger, #dc3545); // Utiliser variable --danger si définie
-  margin-top: 30px; // Espacer des sections précédentes
-
-  .section-header h2 {
-    color: var(--danger, #dc3545); // Couleur du titre en rouge
-    lucide-icon { // Cibler l'icône dans le titre H2
-      color: var(--danger, #dc3545);
-    }
-  }
-
-  .card-content p {
-    margin-bottom: 15px;
-  }
-}
-
-// Style spécifique pour le bouton de suppression
-.btn-danger {
-  background-color: var(--danger, #dc3545);
-  color: white; // ou var(--main-white)
-
-  &:hover:not(:disabled) { // Ne pas appliquer l'effet hover si désactivé
-    background-color: darken(#dc3545, 10%); // Assombrir légèrement au survol
-    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
-  }
-
-  &:disabled { // Style du bouton danger désactivé
-    background-color: lighten(#dc3545, 25%);
-    border-color: lighten(#dc3545, 25%);
-    color: rgba(255, 255, 255, 0.7);
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-  }
-}
-
-// Styles pour la section de confirmation
+/* --- Styles Spécifiques à la Section de Confirmation (Zone Dangereuse) --- */
+/* Ces styles sont conservés car ils sont uniques à l'interface de confirmation. */
 .confirmation-section {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border-color);
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--border-color, #dee2e6);
 
   .confirmation-prompt {
     font-style: italic;
-    color: var(--text-medium);
+    color: var(--text-medium); // Utilise variable globale [5]
+    margin-bottom: var(--spacing-sm); // Utilise variable globale [5]
   }
 
   .confirmation-phrase {
-    user-select: none;
-    background-color: var(--bg-medium-gray); // Fond léger pour la phrase
+    user-select: none; // Style utilitaire, peut être globalisé
+    background-color: var(--bg-medium-gray); // Utilise variable globale [5]
     padding: 10px;
-    border-radius: var(--border-radius, 4px);
-    font-family: monospace; // Police pour bien voir les caractères
-    margin-bottom: 15px;
-    word-break: break-all; // Assurer que ça ne déborde pas trop
+    border-radius: var(--border-radius-sm, 4px); // Utilise variable globale [5]
+    font-family: monospace;
+    margin-bottom: var(--spacing-md); // Utilise variable globale [5]
+    word-break: break-all;
     text-align: center;
 
     strong {
-      color: var(--text-dark);
-    }
-  }
-
-  .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
-  }
-
-  .form-control { // Style de base pour l'input de confirmation
-    width: 100%;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius, 4px);
-    font-size: 1rem;
-    margin-bottom: 20px;
-
-    &:focus {
-      outline: none;
-      box-shadow: 0 0 0 2px var(--input-focus-shadow);
+      color: var(--text-dark); // Utilise variable globale [5]
     }
   }
 
   .confirmation-actions {
     display: flex;
-    justify-content: flex-end; // Aligner les boutons à droite
-    gap: 10px; // Espace entre les boutons
+    justify-content: flex-end;
+    gap: var(--spacing-md, 16px); // Utilise variable globale [5]
+    /* Le responsive (.form-actions, .confirmation-actions) est géré globalement [5] */
   }
 }
 
-// Animation de rotation (si pas déjà définie globalement)
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.confirmation-phrase {
-  // ... (styles existants : background, padding, font-family, etc.) ...
-  user-select: none; /* Empêche la sélection du texte */
-  -webkit-user-select: none; /* Pour Safari */
-  -moz-user-select: none; /* Pour Firefox */
-  -ms-user-select: none; /* Pour IE/Edge */
-}
-
-// Classe CSS pour rendre un élément non sélectionnable (alternative plus générique)
-.non-selectable {
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-}

@@ -1,242 +1,252 @@
 <!-- Conteneur principal du formulaire -->
 <div class="form-container">
 
-  <!-- Optionnel: Lien de retour -->
-  <a class="return-link" routerLink="/accueil"> <!-- Adaptez routerLink si nécessaire -->
-    <i class="arrow-left">←</i> Retour
+  <!-- Lien de retour -->
+  <a class="return-link" routerLink="/accueil"> <!-- Assurez-vous que le routerLink est correct -->
+    <i data-lucide="arrow-left"></i> <!-- Utilisation de Lucide Icons si disponible -->
+    Retour
   </a>
 
   <h1>Inscription d'un Nouveau Club</h1>
 
-  <!-- L'affichage des erreurs générales est supprimé (géré par NotificationService) -->
-  <!-- @if (errorMessage) {
-    <div class="error-message"> {{ errorMessage }} </div>
-  } -->
-
   <!-- Début du formulaire Angular -->
-  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" novalidate>
 
     <!-- Section Informations sur le Club -->
-    <h2>Informations sur le Club</h2>
-    <div class="form-group">
-      <label for="club-nom"><strong>Nom du club :</strong></label>
-      <input type="text" id="club-nom" formControlName="nom" placeholder="Nom officiel du club" required />
-      @if (registrationForm.get('nom')?.invalid && registrationForm.get('nom')?.touched) {
-        <div class="validation-error">Le nom du club est requis.</div>
-      }
-    </div>
-    <div class="form-group">
-      <label for="club-date-creation"><strong>Date de création :</strong></label>
-      <input type="date" id="club-date-creation" formControlName="date_creation" required />
-      @if (registrationForm.get('date_creation')?.invalid && registrationForm.get('date_creation')?.touched) {
-        <div class="validation-error">La date de création est requise.</div>
-      }
-    </div>
+    <fieldset class="form-section">
+      <legend class="form-section__title">Informations sur le Club</legend>
+      <div class="form-group">
+        <label for="club-nom" class="form-label"><strong>Nom du club :</strong></label>
+        <input type="text" id="club-nom" class="form-input" formControlName="nom" placeholder="Nom officiel du club" required />
+        @if (registrationForm.get('nom')?.invalid && registrationForm.get('nom')?.touched) {
+          <div class="validation-error">Le nom du club est requis.</div>
+        }
+      </div>
+      <div class="form-group">
+        <label for="club-date-creation" class="form-label"><strong>Date de création :</strong></label>
+        <input type="date" id="club-date-creation" class="form-input" formControlName="date_creation" required />
+        @if (registrationForm.get('date_creation')?.invalid && registrationForm.get('date_creation')?.touched) {
+          <div class="validation-error">La date de création est requise.</div>
+        }
+      </div>
+    </fieldset>
 
-    <!-- Adresse du Club -->
-    <h2>Adresse du Siège Social</h2>
-    <div class="form-row">
-      <div class="form-group">
-        <label for="club-numero-voie">Numéro de voie :</label>
-        <input type="text" id="club-numero-voie" formControlName="numero_voie" placeholder="Numéro" required />
-        @if (registrationForm.get('numero_voie')?.invalid && registrationForm.get('numero_voie')?.touched) {
-          <div class="validation-error">Requis.</div>
-        }
-      </div>
-      <div class="form-group">
-        <label for="club-rue">Rue :</label>
-        <input type="text" id="club-rue" formControlName="rue" placeholder="Nom de la rue" required />
-        @if (registrationForm.get('rue')?.invalid && registrationForm.get('rue')?.touched) {
-          <div class="validation-error">Requis.</div>
-        }
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label for="club-codepostal">Code postal :</label>
-        <input type="text" id="club-codepostal" formControlName="codepostal" placeholder="Code postal" required />
-        @if (registrationForm.get('codepostal')?.invalid && registrationForm.get('codepostal')?.touched) {
-          <div class="validation-error">Requis.</div>
-        }
-      </div>
-      <div class="form-group">
-        <label for="club-ville">Ville :</label>
-        <input type="text" id="club-ville" formControlName="ville" placeholder="Ville" required />
-        @if (registrationForm.get('ville')?.invalid && registrationForm.get('ville')?.touched) {
-          <div class="validation-error">Requis.</div>
-        }
-      </div>
-    </div>
-
-    <!-- Contact du Club -->
-    <h2>Contact du Club</h2>
-    <div class="form-row">
-      <div class="form-group">
-        <label for="club-telephone">Numéro de téléphone :</label>
-        <input type="tel" id="club-telephone" formControlName="telephone" placeholder="Téléphone principal du club" required />
-        @if (registrationForm.get('telephone')?.invalid && registrationForm.get('telephone')?.touched) {
-          <div class="validation-error">Requis.</div>
-        }
-      </div>
-      <div class="form-group">
-        <label for="club-email">Adresse e-mail :</label>
-        <input type="email" id="club-email" formControlName="email" placeholder="Email de contact du club" required />
-        @if (registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched) {
-          <div class="validation-error">
-            @if (registrationForm.get('email')?.errors?.['required']) {
-              <span>L'email est requis.</span>
-            }
-            @if (registrationForm.get('email')?.errors?.['email']) {
-              <span>Format d'email invalide.</span>
-            }
-          </div>
-        }
-      </div>
-    </div>
-
-    <!-- Section Administrateur (Représentant) -->
-    <div formGroupName="admin">
-      <h2>Informations sur l'Administrateur (Représentant)</h2>
-
-      <!-- Nom et Prénom de l'Admin -->
+    <!-- Section Adresse du Siège Social -->
+    <fieldset class="form-section">
+      <legend class="form-section__title">Adresse du Siège Social</legend>
       <div class="form-row">
         <div class="form-group">
-          <label for="admin-nom"><strong>Nom du représentant :</strong></label>
-          <input type="text" id="admin-nom" formControlName="nom" placeholder="Nom de famille" required />
-          @if (registrationForm.get('admin.nom')?.invalid && registrationForm.get('admin.nom')?.touched) {
-            <div class="validation-error">Le nom du représentant est requis.</div>
-          }
-        </div>
-        <div class="form-group">
-          <label for="admin-prenom"><strong>Prénom du représentant :</strong></label>
-          <input type="text" id="admin-prenom" formControlName="prenom" placeholder="Prénom" required />
-          @if (registrationForm.get('admin.prenom')?.invalid && registrationForm.get('admin.prenom')?.touched) {
-            <div class="validation-error">Le prénom du représentant est requis.</div>
-          }
-        </div>
-      </div>
-
-      <!-- Date de Naissance de l'Admin -->
-      <div class="form-group">
-        <label for="admin-date-naissance"><strong>Date de naissance :</strong></label>
-        <input type="date" id="admin-date-naissance" formControlName="date_naissance" required />
-        @if (registrationForm.get('admin.date_naissance')?.invalid && registrationForm.get('admin.date_naissance')?.touched) {
-          <div class="validation-error">La date de naissance est requise.</div>
-        }
-      </div>
-
-      <!-- Adresse de l'Admin -->
-      <h2>Adresse de l'Administrateur</h2>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="admin-numero-voie">Numéro de voie :</label>
-          <input type="text" id="admin-numero-voie" formControlName="numero_voie" placeholder="Numéro" required />
-          @if (registrationForm.get('admin.numero_voie')?.invalid && registrationForm.get('admin.numero_voie')?.touched) {
+          <label for="club-numero-voie" class="form-label">Numéro de voie :</label>
+          <input type="text" id="club-numero-voie" class="form-input" formControlName="numero_voie" placeholder="Numéro" required />
+          @if (registrationForm.get('numero_voie')?.invalid && registrationForm.get('numero_voie')?.touched) {
             <div class="validation-error">Requis.</div>
           }
         </div>
         <div class="form-group">
-          <label for="admin-rue">Rue :</label>
-          <input type="text" id="admin-rue" formControlName="rue" placeholder="Nom de la rue" required />
-          @if (registrationForm.get('admin.rue')?.invalid && registrationForm.get('admin.rue')?.touched) {
+          <label for="club-rue" class="form-label">Rue :</label>
+          <input type="text" id="club-rue" class="form-input" formControlName="rue" placeholder="Nom de la rue" required />
+          @if (registrationForm.get('rue')?.invalid && registrationForm.get('rue')?.touched) {
             <div class="validation-error">Requis.</div>
           }
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label for="admin-codepostal">Code postal :</label>
-          <input type="text" id="admin-codepostal" formControlName="codepostal" placeholder="Code postal" required />
-          @if (registrationForm.get('admin.codepostal')?.invalid && registrationForm.get('admin.codepostal')?.touched) {
+          <label for="club-codepostal" class="form-label">Code postal :</label>
+          <input type="text" id="club-codepostal" class="form-input" formControlName="codepostal" placeholder="Code postal" required />
+          @if (registrationForm.get('codepostal')?.invalid && registrationForm.get('codepostal')?.touched) {
             <div class="validation-error">Requis.</div>
           }
         </div>
         <div class="form-group">
-          <label for="admin-ville">Ville :</label>
-          <input type="text" id="admin-ville" formControlName="ville" placeholder="Ville" required />
-          @if (registrationForm.get('admin.ville')?.invalid && registrationForm.get('admin.ville')?.touched) {
+          <label for="club-ville" class="form-label">Ville :</label>
+          <input type="text" id="club-ville" class="form-input" formControlName="ville" placeholder="Ville" required />
+          @if (registrationForm.get('ville')?.invalid && registrationForm.get('ville')?.touched) {
             <div class="validation-error">Requis.</div>
           }
         </div>
       </div>
+    </fieldset>
 
-      <!-- Contact de l'Admin -->
-      <h2>Contact de l'Administrateur</h2>
+    <!-- Section Contact du Club -->
+    <fieldset class="form-section">
+      <legend class="form-section__title">Contact du Club</legend>
       <div class="form-row">
         <div class="form-group">
-          <label for="admin-telephone">Numéro de téléphone :</label>
-          <input type="tel" id="admin-telephone" formControlName="telephone" placeholder="Téléphone personnel" required />
-          @if (registrationForm.get('admin.telephone')?.invalid && registrationForm.get('admin.telephone')?.touched) {
+          <label for="club-telephone" class="form-label">Numéro de téléphone :</label>
+          <input type="tel" id="club-telephone" class="form-input" formControlName="telephone" placeholder="Téléphone principal" required />
+          @if (registrationForm.get('telephone')?.invalid && registrationForm.get('telephone')?.touched) {
             <div class="validation-error">Requis.</div>
           }
         </div>
         <div class="form-group">
-          <label for="admin-email">Adresse e-mail :</label>
-          <input type="email" id="admin-email" formControlName="email" placeholder="Email personnel" required />
-          @if (registrationForm.get('admin.email')?.invalid && registrationForm.get('admin.email')?.touched) {
+          <label for="club-email" class="form-label">Adresse e-mail :</label>
+          <input type="email" id="club-email" class="form-input" formControlName="email" placeholder="Email de contact" required />
+          @if (registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched) {
             <div class="validation-error">
-              @if (registrationForm.get('admin.email')?.errors?.['required']) {
+              @if (registrationForm.get('email')?.errors?.['required']) {
                 <span>L'email est requis.</span>
-              }
-              @if (registrationForm.get('admin.email')?.errors?.['email']) {
+              } @else if (registrationForm.get('email')?.errors?.['email']) {
                 <span>Format d'email invalide.</span>
               }
             </div>
           }
         </div>
       </div>
+    </fieldset>
 
-      <!-- Section Mot de Passe Admin -->
-      <div formGroupName="passwordGroup">
-        <h2>Création du Mot de Passe Administrateur</h2>
+    <!-- Section Administrateur (Représentant) - imbriquée via formGroupName -->
+    <div formGroupName="admin">
+      <fieldset class="form-section">
+        <legend class="form-section__title">Informations sur l'Administrateur (Représentant)</legend>
+
+        <!-- Nom et Prénom -->
         <div class="form-row">
           <div class="form-group">
-            <label for="admin-password">Mot de passe :</label>
-            <input type="password" id="admin-password" formControlName="password" placeholder="Créez un mot de passe" required />
-            @if (registrationForm.get('admin.passwordGroup.password')?.invalid && registrationForm.get('admin.passwordGroup.password')?.touched) {
-              <div class="validation-error">
-                @if (registrationForm.get('admin.passwordGroup.password')?.errors?.['required']) {
-                  <span>Mot de passe requis.</span>
-                }
-                @if (registrationForm.get('admin.passwordGroup.password')?.errors?.['minlength']) {
-                  <span>Au moins 6 caractères requis.</span> <!-- Ajustez si la longueur minimale change -->
-                }
-                <!-- Ajoutez d'autres @if pour d'autres erreurs de mot de passe si nécessaire -->
-              </div>
+            <label for="admin-nom" class="form-label"><strong>Nom :</strong></label>
+            <input type="text" id="admin-nom" class="form-input" formControlName="nom" placeholder="Nom de famille" required />
+            @if (registrationForm.get('admin.nom')?.invalid && registrationForm.get('admin.nom')?.touched) {
+              <div class="validation-error">Le nom est requis.</div>
             }
           </div>
           <div class="form-group">
-            <label for="admin-confirm-password">Confirmer le mot de passe :</label>
-            <input type="password" id="admin-confirm-password" formControlName="confirmPassword" placeholder="Confirmez le mot de passe" required />
-            @if (registrationForm.get('admin.passwordGroup.confirmPassword')?.invalid && registrationForm.get('admin.passwordGroup.confirmPassword')?.touched) {
+            <label for="admin-prenom" class="form-label"><strong>Prénom :</strong></label>
+            <input type="text" id="admin-prenom" class="form-input" formControlName="prenom" placeholder="Prénom" required />
+            @if (registrationForm.get('admin.prenom')?.invalid && registrationForm.get('admin.prenom')?.touched) {
+              <div class="validation-error">Le prénom est requis.</div>
+            }
+          </div>
+        </div>
+
+        <!-- Date de Naissance -->
+        <div class="form-group">
+          <label for="admin-date-naissance" class="form-label"><strong>Date de naissance :</strong></label>
+          <input type="date" id="admin-date-naissance" class="form-input" formControlName="date_naissance" required />
+          @if (registrationForm.get('admin.date_naissance')?.invalid && registrationForm.get('admin.date_naissance')?.touched) {
+            <div class="validation-error">La date de naissance est requise.</div>
+          }
+        </div>
+      </fieldset>
+
+      <!-- Adresse de l'Admin -->
+      <fieldset class="form-section">
+        <legend class="form-section__title">Adresse de l'Administrateur</legend>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="admin-numero-voie" class="form-label">Numéro de voie :</label>
+            <input type="text" id="admin-numero-voie" class="form-input" formControlName="numero_voie" placeholder="Numéro" required />
+            @if (registrationForm.get('admin.numero_voie')?.invalid && registrationForm.get('admin.numero_voie')?.touched) {
+              <div class="validation-error">Requis.</div>
+            }
+          </div>
+          <div class="form-group">
+            <label for="admin-rue" class="form-label">Rue :</label>
+            <input type="text" id="admin-rue" class="form-input" formControlName="rue" placeholder="Nom de la rue" required />
+            @if (registrationForm.get('admin.rue')?.invalid && registrationForm.get('admin.rue')?.touched) {
+              <div class="validation-error">Requis.</div>
+            }
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="admin-codepostal" class="form-label">Code postal :</label>
+            <input type="text" id="admin-codepostal" class="form-input" formControlName="codepostal" placeholder="Code postal" required />
+            @if (registrationForm.get('admin.codepostal')?.invalid && registrationForm.get('admin.codepostal')?.touched) {
+              <div class="validation-error">Requis.</div>
+            }
+          </div>
+          <div class="form-group">
+            <label for="admin-ville" class="form-label">Ville :</label>
+            <input type="text" id="admin-ville" class="form-input" formControlName="ville" placeholder="Ville" required />
+            @if (registrationForm.get('admin.ville')?.invalid && registrationForm.get('admin.ville')?.touched) {
+              <div class="validation-error">Requis.</div>
+            }
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Contact de l'Admin -->
+      <fieldset class="form-section">
+        <legend class="form-section__title">Contact de l'Administrateur</legend>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="admin-telephone" class="form-label">Numéro de téléphone :</label>
+            <input type="tel" id="admin-telephone" class="form-input" formControlName="telephone" placeholder="Téléphone personnel" required />
+            @if (registrationForm.get('admin.telephone')?.invalid && registrationForm.get('admin.telephone')?.touched) {
+              <div class="validation-error">Requis.</div>
+            }
+          </div>
+          <div class="form-group">
+            <label for="admin-email" class="form-label">Adresse e-mail :</label>
+            <input type="email" id="admin-email" class="form-input" formControlName="email" placeholder="Email personnel" required />
+            @if (registrationForm.get('admin.email')?.invalid && registrationForm.get('admin.email')?.touched) {
               <div class="validation-error">
-                @if (registrationForm.get('admin.passwordGroup.confirmPassword')?.errors?.['required']) {
-                  <span>Confirmation requise.</span>
+                @if (registrationForm.get('admin.email')?.errors?.['required']) {
+                  <span>L'email est requis.</span>
+                } @else if (registrationForm.get('admin.email')?.errors?.['email']) {
+                  <span>Format d'email invalide.</span>
                 }
               </div>
             }
           </div>
         </div>
-        <!-- Erreur de validation pour le groupe passwordGroup (correspondance) -->
-        @if (registrationForm.get('admin.passwordGroup')?.errors?.['passwordMismatch'] && (registrationForm.get('admin.passwordGroup.confirmPassword')?.touched || registrationForm.get('admin.passwordGroup.confirmPassword')?.dirty)) {
-          <div class="validation-error" style="margin-top: 5px;">
-            Les mots de passe ne correspondent pas.
-          </div>
-        }
-      </div> <!-- Fin de formGroupName="passwordGroup" -->
+      </fieldset>
 
-    </div> <!-- Fin de formGroupName="admin" -->
+      <!-- Section Mot de Passe Admin -->
+      <div formGroupName="passwordGroup">
+        <fieldset class="form-section">
+          <legend class="form-section__title">Création du Mot de Passe Administrateur</legend>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="admin-password" class="form-label">Mot de passe :</label>
+              <input type="password" id="admin-password" class="form-input" formControlName="password" placeholder="Créez un mot de passe" required />
+              @if (registrationForm.get('admin.passwordGroup.password')?.invalid && registrationForm.get('admin.passwordGroup.password')?.touched) {
+                <div class="validation-error">
+                  @if (registrationForm.get('admin.passwordGroup.password')?.errors?.['required']) {
+                    <span>Mot de passe requis.</span>
+                  } @else if (registrationForm.get('admin.passwordGroup.password')?.errors?.['minlength']) {
+                    <span>Au moins 6 caractères requis.</span> <!-- Spécifiez la vraie longueur minimale attendue -->
+                  }
+                  <!-- Autres validations potentielles (complexité, etc.) -->
+                </div>
+              }
+            </div>
+            <div class="form-group">
+              <label for="admin-confirm-password" class="form-label">Confirmer le mot de passe :</label>
+              <input type="password" id="admin-confirm-password" class="form-input" formControlName="confirmPassword" placeholder="Confirmez le mot de passe" required />
+              @if (registrationForm.get('admin.passwordGroup.confirmPassword')?.invalid && registrationForm.get('admin.passwordGroup.confirmPassword')?.touched) {
+                @if (registrationForm.get('admin.passwordGroup.confirmPassword')?.errors?.['required']) {
+                  <div class="validation-error">Confirmation requise.</div>
+                }
+              }
+            </div>
+          </div>
+          <!-- Erreur globale de correspondance pour le groupe -->
+          @if (registrationForm.get('admin.passwordGroup')?.errors?.['passwordMismatch'] && (registrationForm.get('admin.passwordGroup.confirmPassword')?.touched || registrationForm.get('admin.passwordGroup.confirmPassword')?.dirty)) {
+            <div class="validation-error form-group__error--group"> <!-- Classe spécifique pour l'erreur de groupe -->
+              Les mots de passe ne correspondent pas.
+            </div>
+          }
+        </fieldset>
+      </div> <!-- Fin formGroupName="passwordGroup" -->
+
+    </div> <!-- Fin formGroupName="admin" -->
 
     <!-- Bouton de Soumission -->
-    <button type="submit" [disabled]="registrationForm.invalid || isLoading">
-      <!-- *ngIf est acceptable ici pour une simple bascule de texte -->
-      <strong *ngIf="!isLoading">Inscrire le Club</strong>
-      <strong *ngIf="isLoading">Inscription en cours...</strong>
-    </button>
+    <div class="form-actions">
+      <button type="submit" class="btn btn--primary" [disabled]="registrationForm.invalid || isLoading">
+        <!-- Utilisation d'une classe CSS pour gérer l'état loading visuellement si besoin -->
+        @if (!isLoading) {
+        <span>Inscrire le Club</span>
+
+        } @else {
+        <span >Inscription en cours...</span> <!-- Ajouter un spinner visuel serait mieux -->
+        }
+      </button>
+    </div>
 
   </form>
   <!-- Fin du formulaire Angular -->
 
 </div>
 <!-- Fin du conteneur principal -->
-

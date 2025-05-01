@@ -87,7 +87,7 @@ export class EventService {
   getAllEventsWithFriend(): Observable<Evenement[]> {
     // Construit les paramètres de requête
     // Fait l'appel GET avec les paramètres
-    return this.http.get<Evenement[]>(`${this.apiUrl}/withfriend`).pipe(
+    return this.http.get<Evenement[]>(`${this.apiUrl}/withfriend?status=active`).pipe(
       catchError(this.handleError) // Gestion d'erreur générique du service
     );
   }

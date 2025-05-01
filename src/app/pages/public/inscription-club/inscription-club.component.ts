@@ -19,7 +19,6 @@ import {NotificationService} from '../../../service/notification.service'; // <-
   selector: 'app-inscription-club',
   imports: [
     FormsModule,
-    NgIf,
     ReactiveFormsModule,
     RouterLink
   ],

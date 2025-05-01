@@ -1,0 +1,109 @@
+/* not-found.component.scss */
+
+// --- Utilisation des variables globales de styles.scss ---
+// Pas besoin d'@import si les variables sont dans :root et que ce fichier est inclus globalement.
+// Sinon, importez votre fichier de variables : @import 'path/to/variables';
+
+// Styles pour le composant hôte (prend toute la page)
+:host {
+  display: block;
+  min-height: 100vh; // Au moins la hauteur de la fenêtre
+  background-color: var(--bg-light-gray); // Fond gris clair global
+  color: var(--text-dark); // Couleur de texte sombre globale
+  font-family: var(--font-family); // Police globale
+}
+
+// Conteneur principal pour centrer le contenu
+.not-found-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; // Centre verticalement
+  align-items: center; // Centre horizontalement
+  min-height: 100vh; // Assure le remplissage vertical
+  padding: var(--spacing-xl); // Espace autour
+  text-align: center; // Centre le texte à l'intérieur
+  box-sizing: border-box; // Inclut padding dans la hauteur/largeur
+}
+
+// Boîte de contenu pour limiter la largeur
+.not-found-content {
+  max-width: 600px;
+  width: 100%;
+}
+
+// Style de l'icône
+.icon-container {
+  margin-bottom: var(--spacing-lg);
+}
+
+.not-found-icon {
+  width: 80px; // Grande icône
+  height: 80px;
+  color: var(--main-orange); // Couleur d'accentuation orange
+  // Animation subtile de pulsation pour attirer l'attention
+  animation: pulse-404 2.5s infinite ease-in-out;
+}
+
+// Style du code d'erreur "404"
+.error-code {
+  font-size: 7rem; // Très grand
+  font-weight: 700; // Gras
+  color: var(--main-blue); // Couleur principale bleue
+  line-height: 1; // Rapproche de la ligne suivante
+  margin-bottom: var(--spacing-sm);
+  text-shadow: 2px 2px 4px rgba(var(--main-black-rgb, 0, 0, 0), 0.1); // Légère ombre portée
+}
+
+// Style du message "Page Hors-Jeu !"
+.error-message {
+  font-size: 1.75rem; // Assez grand
+  font-weight: 500; // Semi-gras
+  color: var(--text-medium); // Couleur medium globale
+  margin-bottom: var(--spacing-md);
+}
+
+// Style de la description
+.error-description {
+  font-size: 1rem; // Taille standard
+  color: var(--text-medium);
+  margin-bottom: var(--spacing-xl); // Espace avant le bouton
+  line-height: 1.6; // Bonne lisibilité
+}
+
+// Style du bouton de retour (utilise les classes globales .btn .btn-primary)
+.back-home-link {
+  // Les styles de base (couleur, fond, padding, etc.) viennent des classes globales
+  margin-top: var(--spacing-lg); // Espace au-dessus
+  // On peut surcharger légèrement si besoin :
+  padding: 12px 28px; // Padding un peu plus grand
+  font-size: 1rem; // Taille standard
+}
+
+// Animation pour l'icône
+@keyframes pulse-404 {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+// --- Responsive (Optionnel) ---
+@media screen and (max-width: 576px) {
+  .error-code {
+    font-size: 5rem; // Réduire sur petits écrans
+  }
+  .error-message {
+    font-size: 1.4rem;
+  }
+  .not-found-icon {
+    width: 60px;
+    height: 60px;
+  }
+  .back-home-link {
+    width: 100%; // Bouton pleine largeur sur très petits écrans
+  }
+}

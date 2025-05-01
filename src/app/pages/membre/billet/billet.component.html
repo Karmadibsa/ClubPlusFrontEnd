@@ -1,89 +1,92 @@
-<div class="sidebar">
-  <app-sidebar></app-sidebar>
+<!-- billet.component.html - Refactorisé -->
+
+<!-- En-tête standard de la page -->
+<div class="page-header">
+  <h1 class="page-title">Vos billets</h1> <!-- Classe standard -->
+  <!-- Icône optionnelle: <lucide-icon name="ticket" aria-hidden="true"></lucide-icon> -->
 </div>
 
-  <div class="container">
-    <div class="header">
-      <h1>Vos billets</h1>
+<!-- Section principale standardisée -->
+<section class="main-section" aria-labelledby="main-billets-title">
+  <h2 id="main-billets-title" class="visually-hidden">Liste de vos réservations et billets</h2>
+
+  @if (isLoading) {
+    <!-- Indicateur de chargement standardisé -->
+    <div class="loading-indicator">
+      <lucide-icon name="loader-2" class="animate-spin"></lucide-icon>
+      <span>Chargement de vos billets...</span>
     </div>
-    <!-- Tableau des réservations -->
-    <table>
-      <thead>
-      <tr>
-        <th>Date</th>
-        <th>Heure</th>
-        <th>Nom de l'événement</th>
-        <th>Categorie</th>
-        <th>Actions</th>
-      </tr>
-      </thead>
-      <tbody>
-      <!-- Utilisation du composant reservation-row -->
-        @for (reservation of reservations ; track reservation.id) {
-      <tr app-reservation-row
-          [reservation]="reservation"
-          (openQrModal)="openQrModal($event)"
-          (generatePDF)="generatePDF($event)"
-          (deleteReservation)="onCancelReservation($event)">
-      </tr>
-        }
-      </tbody>
-    </table>
-
-    <!-- Zone cachée pour générer les QR codes -->
-    <div style="display: none;">
-      @for ( reservation of reservations; track reservation.id) {
-      <div>
-
-
-        @if (reservation?.qrcodeData) {
-          <qrcode
-            [qrdata]="reservation.qrcodeData ?? ''"
-            [width]="256"
-            [errorCorrectionLevel]="'M'"
-            (qrCodeURL)="onChangeURL($event, reservation)"
-            id="qr-code-{{reservation.id}}">
-          </qrcode>
-        }
-      </div>
-      }
-    </div>
-  </div>
-
-
-<!-- Composant modal pour afficher le QR code -->
-<app-qr-code-modal
-  [isOpen]="isModalOpen"
-  [qrData]="selectedTicket?.qrcodeData || ''"
-  [ticketInfo]="selectedTicket"
-  (closeModal)="closeQrModal()">
-</app-qr-code-modal>
-
-<!-- Template pour le PDF - initialement caché mais correctement structuré -->
-<div id="pdf-content" style="display: none; width: 210mm; padding: 10mm;">
-  @if (selectedTicket){
-  <div class="pdf-container">
-    <div class="header" style="text-align: center; margin-bottom: 20px;">
-      <h1 style="font-size: 24px; color: #333;">Votre billet</h1>
-    </div>
-    <div class="ticket-info" style="font-size: 14px; line-height: 1.5;">
-      <p><strong>Événement:</strong> {{ selectedTicket.event?.nom }}</p>
-      <p><strong>Date:</strong> {{ selectedTicket.event?.start | date:'dd/MM/yyyy' }}</p>
-      <p><strong>Lieu:</strong> {{ selectedTicket.event?.location }}</p>
-      <p><strong>Catégorie:</strong> {{ selectedTicket.categorie?.nom }}</p>
-      <p><strong>Nom:</strong> {{ selectedTicket.membre?.prenom }} {{ selectedTicket.membre?.nom }}</p>
-      <!-- QR code pour le PDF -->
-      <div class="qr-code" style="text-align: center; margin-top: 20px;">
-        @if (selectedTicket?.qrcodeData) {
-          <qrcode
-            [qrdata]="selectedTicket?.qrcodeData ?? ''"
-            [width]="200"
-            [errorCorrectionLevel]="'M'">
-          </qrcode>
-        }
-      </div>
-    </div>
-  </div>
+  } @else {
+    <!-- Utilisation d'une carte pour contenir le tableau -->
+    <div class="card">
+      <!-- Wrapper pour le défilement horizontal -->
+      <div class="table-wrapper">
+        <!-- Tableau avec classes globales et accessibilité -->
+        <table class="data-table ticket-table" aria-labelledby="main-billets-title" aria-describedby="reservations-caption">
+          <caption id="reservations-caption" class="visually-hidden">Tableau listant vos réservations avec options pour afficher, télécharger ou annuler.</caption>
+          <thead>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Heure</th>
+            <th scope="col">Nom de l'événement</th>
+            <th scope="col">Catégorie</th>
+            <th scope="col" class="actions-header">Actions</th> <!-- Classe optionnelle si centrage spécifique nécessaire au-delà du global -->
+          </tr>
+          </thead>
+          <tbody>
+            @for (reservation of reservations ; track reservation.id) {
+              <tr app-reservation-row
+                  [reservation]="reservation"
+                  (generatePDF)="generatePDF($event)"
+                  (deleteReservation)="onCancelReservation($event)">
+              </tr>
+            } @empty {
+              <!-- Message tableau vide standardisé -->
+              <tr class="empty-table-message">
+                <td colspan="5">Vous n'avez aucune réservation pour le moment.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div> <!-- Fin .table-wrapper -->
+    </div> <!-- Fin .card -->
   }
+
+</section> <!-- Fin .main-section -->
+
+
+<!-- Zone fonctionnelle cachée (reste en dehors du flux principal) -->
+<div class="hidden-functional">
+  <!-- Zone QR codes (inchangée) -->
+  <div class="qr-code-generation-area">
+    @for ( reservation of reservations; track reservation.id) {
+      @if (reservation?.qrcodeData) {
+        <qrcode [qrdata]="reservation.qrcodeData ?? ''" [width]="256" [errorCorrectionLevel]="'M'" (qrCodeURL)="onChangeURL($event, reservation)" id="qr-code-{{reservation.id}}"></qrcode>
+      }
+    }
+  </div>
+
+  <!-- Template PDF (inchangé mais utilise classes pour styles) -->
+  <div id="pdf-content" class="pdf-template">
+    @if (selectedTicket){
+      <div class="pdf-page">
+        <div class="pdf-header"><h1>Votre billet</h1></div>
+        <div class="pdf-ticket-info">
+          <p><strong>Événement:</strong> {{ selectedTicket.event?.nom }}</p>
+          <p><strong>Date:</strong> {{ selectedTicket.event?.start | date:'dd/MM/yyyy' }}</p>
+          <p><strong>Lieu:</strong> {{ selectedTicket.event?.location }}</p>
+          <p><strong>Catégorie:</strong> {{ selectedTicket.categorie?.nom }}</p>
+          <p><strong>Nom:</strong> {{ selectedTicket.membre?.prenom }} {{ selectedTicket.membre?.nom }}</p>
+          <div class="pdf-qr-code">
+            @if (selectedTicket?.qrcodeData) { <qrcode [qrdata]="selectedTicket?.qrcodeData ?? ''" [width]="150" [errorCorrectionLevel]="'M'"></qrcode> }
+          </div>
+        </div>
+        <div class="pdf-footer"><p>Merci et profitez de l'événement !</p></div>
+      </div>
+    }
+  </div>
 </div>
+
+
+
 

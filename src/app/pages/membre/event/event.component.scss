@@ -1,146 +1,20 @@
-.container {
-  padding: 20px;
-  margin: 2% 2% 2% 17%;
-  background-color: var(--bg-light-gray);
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-  border-left: solid var(--main-orange) 2px;
-}
-
-.page-title {
-  display: flex;
-  text-align: center;
-  font-size: 2rem;
-  color: var(--main-blue);
-
-}
-
-.title {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  margin-bottom: 20px;
-}
-
-.filters label {
-  font-weight: bold;
-}
-
-.search-bar {
-  flex-grow: 1;
-  padding: 10px;
-  border-radius: 5px;
-  height: 100%;
-}
-
-.date-picker input[type="date"],
-.time-picker input[type="time"],
-.search-bar {
-  border: none;
-  border-bottom: solid var(--main-orange) 2px;
-}
-
-.date-picker,
-.time-picker {
-  display: flex;
-}
-
+/* --- Styles pour la Grille des Événements --- */
+/* Ceci est spécifique à la façon dont les événements sont affichés sur cette page
+   et n'est donc PAS dans les styles globaux. */
 .event-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, auto));
-  gap: 10px;
+  // Utilisation de minmax avec une taille minimale et 1fr pour la flexibilité
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); // Ajusté pour 1fr max
+  gap: var(--spacing-lg, 24px); // Espace généreux entre les cartes
+  /* margin-bottom est géré par la marge de .main-section */
 }
 
-.picker {
-  display: flex;
-  align-items: center;
-}
-
-input {
-  height: 100%;
-  border-radius: 5px;
-}
-
-.title {
-  padding: 1%;
-  font-size: 2.5rem;
-}
-
-.icon {
-  font-size: 10rem;
-}
-
-.checkbox-filter {
-  display: flex;
-  align-items: center;
-}
-
-.checkbox-filter label {
-  font-weight: bold;
-}
-
-.checkbox-filter input[type='checkbox'] {
-  margin-right: 10px;
-}
-
-.checkbox-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.checkbox-container input[type="checkbox"] {
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--main-blue);
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-}
-
-.checkbox-container input[type="checkbox"]:checked {
-  background-color: var(--main-orange);
-}
-
-.checkbox-container input[type="checkbox"]:hover {
-  border-color: var(--main-orange);
-}
-
-.checkbox-container label {
-  font-size: 16px;
-  font-weight: bold;
-}
-
-
-.sort-controls {
-  margin-bottom: 1rem;
-  display: flex;
-  gap: 1rem;
-
-  button {
-    display: flex;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    background-color: #1a5f7a;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-
-    &:hover {
-      background-color: #144c5c;
-    }
-
-    &:active {
-      transform: scale(0.98);
-    }
+/* --- Responsive Spécifique à la Grille --- */
+@media screen and (max-width: 768px) {
+  .event-grid {
+    /* Une seule colonne sur mobile */
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md, 16px); // Espace réduit entre les cartes sur mobile
   }
 }
+

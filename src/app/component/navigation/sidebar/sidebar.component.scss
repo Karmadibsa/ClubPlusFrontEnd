@@ -1,213 +1,299 @@
-:root {
-  --sidebar-padding: 1.5%;
-  --icon-size: 24px;
-  --border-radius: 8px;
-  --transition-standard: all 0.3s ease;
+/* sidebar.component.scss */
+
+// --- Variables Locales Spécifiques ---
+:host {
+  --sidebar-width-collapsed: 70px; // Largeur en mode réduit (ajustable)
+  --bottom-nav-height-mobile: 60px; // Hauteur barre mobile
+  --icon-size-mobile: 24px; // Taille icône mobile (peut être = --icon-size)
 }
 
-/* =================== SIDEBAR =================== */
+/* =================================== */
+/* == STYLES SIDEBAR DESKTOP (> 768px) == */
+/* =================================== */
 .sidebar {
-  width: 15%;
-  min-width: 200px;
+  // --- Structure et Positionnement ---
+  width: 14%; // Ajuster si besoin (ex: 250px)
+  min-width: 220px; // Ajuster si besoin
   background-color: var(--main-blue);
   color: white;
-  padding: var(--sidebar-padding);
-  display: flex;
+  padding: var(--spacing-md) var(--spacing-sm);
+  display: flex; // Caché par défaut sur mobile (changé dans @media)
   flex-direction: column;
   height: 100vh;
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 100;
-  justify-content: space-between;
-}
-
-/* Logo */
-.logo-container {
-  padding: 5%;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.logo {
-  width: 70%;
-  height: auto;
-  max-width: 120px;
-}
-
-/* Navigation */
-.menu-items {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  flex-grow: 1;
-}
-
-.sidebar ul li {
-  margin-bottom: 15px;
-  position: relative;
-  width: 100%;
-}
-
-.sidebar ul li a {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 15px;
-  color: white;
-  text-decoration: none;
-  transition: var(--transition-standard);
-}
-
-/* Effet de survol */
-.sidebar ul li a:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: var(--border-radius);
-  transform: translateX(5px);
-}
-
-/* Page active */
-.sidebar ul li a.page_actuelle {
-  background-color: var(--main-orange);
-  border-radius: var(--border-radius);
-  color: white;
-  font-weight: 500;
-}
-
-/* Icônes */
-.sidebar ul li a i {
-  width: var(--icon-size);
-  height: var(--icon-size);
-  min-width: var(--icon-size);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-}
-
-/* Texte des liens */
-.sidebar ul li a span {
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* =================== MOBILE =================== */
-@media screen and (max-width: 768px) {
-  .sidebar {
-    display: none;
-  }
-
-  .mobile-header {
-    display: flex;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: white;
-    padding: 10px 15px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 1001;
-    height: 60px;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .mobile-header .logo {
-    height: 40px;
-    width: auto;
-  }
-
-  .mobile-nav {
-    display: flex;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(255, 255, 255, 0.95);
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    padding: 10px 0;
-    z-index: 1000;
-    justify-content: space-around;
-  }
-
-  .nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-decoration: none;
-    color: #666;
-    font-size: 0.8em;
-    gap: 4px;
-    transition: var(--transition-standard);
-    width: 20%;
-  }
-
-  .nav-item.active {
-    color: var(--main-orange);
-  }
-}
-
-/* =================== COMPATIBILITÉ ICÔNES =================== */
-[data-lucide] {
-  width: var(--icon-size);
-  height: var(--icon-size);
-  stroke: currentColor;
-  stroke-width: 2px;
-  fill: none;
-}
-
-.contenu {
-  margin: 2% 2% 2% 17%;
-  background-color: var(--bg-light-gray);
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-  border-left: solid var(--main-orange) 2px;
-}
-
-.sidebar-footer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* From Uiverse.io by Yaya12085 */
-.radio-inputs {
-  display: flex;
-  flex-wrap: wrap;
-  border-radius: 0.5rem;
-  background-color: #EEE;
+  z-index: 1000; // S'assurer qu'elle est au-dessus du contenu principal
   box-sizing: border-box;
-  box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
-  padding: 0.25rem;
-  font-size: 14px;
-  margin: 5%;
-  align-items: center;
-}
+  transition: width 0.3s ease, min-width 0.3s ease;
+  // --- Logo ---
+  .logo-container {
+    padding: var(--spacing-md) 0;
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    min-height: 80px; // Hauteur minimale pour éviter saut vertical
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; // Cache le débordement pendant la transition
 
-.radio-inputs .radio {
-  flex: 1 1 auto;
-  text-align: center;
-}
+    .logo {
+      width: 75%; // Ajuster
+      height: auto;
+      max-width: 130px; // Limite max
+      display: block;
+      transition: opacity 0.2s ease, transform 0.3s ease;
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 
-.radio-inputs .radio input {
-  display: none;
-}
+  // --- Menu Items ---
+  .menu-items {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1; // Prend l'espace vertical
+    overflow-y: auto; // Scroll si nécessaire
+    overflow-x: hidden; // Pas de scroll horizontal
+    // Style de la scrollbar (optionnel, pour Firefox)
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 
-.radio-inputs .radio .name {
-  display: flex;
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.5rem;
-  border: none;
-  padding: .5rem 0;
-  color: rgba(51, 65, 85, 1);
-  transition: all .15s ease-in-out;
-}
+    // Style de la scrollbar (optionnel, pour Chrome/Edge/Safari)
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 255, 255, 0.3);
+      border-radius: 3px;
+    }
+  }
 
-.radio-inputs .radio input:checked + .name {
-  background-color: #fff;
-  font-weight: 600;
-}
+  ul.menu-items li {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  ul.menu-items li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 15px;
+    color: white;
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    transition: background-color 0.2s ease, color 0.2s ease; // Transition simplifiée
+    white-space: nowrap;
+    overflow: hidden; // Empêche débordement texte
+
+    lucide-icon {
+      width: var(--icon-size); // Variable globale
+      height: var(--icon-size);
+      flex-shrink: 0; // Empêche l'icône de rétrécir
+      stroke: currentColor;
+      stroke-width: 2px;
+    }
+
+    .menu-item-text {
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      // Transition pour l'apparition/disparition
+      transition: opacity 0.2s ease, max-width 0.3s ease;
+      opacity: 1;
+      max-width: 200px; // Valeur arbitraire suffisante
+    }
+
+    // Effet survol
+    &:hover:not(.page_actuelle) { // Ne pas appliquer sur l'élément actif
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    // Style item actif
+    &.page_actuelle {
+      background-color: var(--main-orange);
+      color: white;
+      font-weight: 600;
+    }
+
+    // Style focus visible (Accessibilité)
+    &:focus-visible {
+      outline: 2px solid white;
+      outline-offset: -2px; // Outline intérieur
+      background: rgba(255, 255, 255, 0.1); // Similaire hover
+    }
+  }
+
+  // --- Footer (Bouton Toggle) ---
+  .sidebar-footer {
+    padding: var(--spacing-sm) 0;
+    margin-top: var(--spacing-md);
+    display: flex;
+    justify-content: center; // Centre le bouton
+    align-items: center;
+
+    .toggle-btn {
+      background: none;
+      border: none;
+      color: white;
+      padding: var(--spacing-sm);
+      border-radius: 50%;
+      cursor: pointer;
+      display: inline-flex; // Important pour centrer icône dans bouton rond
+      align-items: center;
+      justify-content: center;
+      transition: background-color var(--transition-standard);
+
+      lucide-icon {
+        width: calc(var(--icon-size) * 0.9); // Icône un peu plus petite
+        height: calc(var(--icon-size) * 0.9);
+        stroke: currentColor;
+      }
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+      }
+      &:focus-visible {
+        // Style focus cohérent avec les boutons globaux (simulé avec outline ici)
+        outline: 2px solid rgba(var(--main-orange-rgb, 255, 107, 53), 0.5);
+        outline-offset: 2px;
+        background-color: rgba(255, 255, 255, 0.15);
+      }
+    }
+  }
+
+
+  /* ======================================== */
+  /* == STYLES QUAND RÉDUIT (.is-collapsed) == */
+  /* ======================================== */
+  &.is-collapsed {
+    width: var(--sidebar-width-collapsed);
+    min-width: var(--sidebar-width-collapsed);
+
+    .logo-container {
+      min-height: 80px; // Maintient hauteur
+      .logo {
+        opacity: 0;
+        transform: scale(0.5);
+        pointer-events: none;
+      }
+      // Si vous ajoutez une icône alternative pour le mode réduit, décommentez et stylez-la ici
+      // .logo-collapsed-icon { opacity: 1; transform: ...; }
+    }
+
+    ul.menu-items li a {
+      justify-content: center; // Centre l'icône
+      padding: 12px 0; // Padding vertical uniquement
+      gap: 0;
+
+      .menu-item-text {
+        opacity: 0;
+        max-width: 0; // Cache le texte
+        pointer-events: none;
+        // Visually hidden est mieux que display:none pour accessibilité si besoin
+        position: absolute; // Sort du flux pour ne pas prendre de place
+        left: -9999px; // Déplace hors écran
+      }
+
+      // Ajustement pour l'état actif réduit (ex: juste une légère nuance)
+      &.page_actuelle {
+        background-color: rgba(var(--main-orange-rgb, 255, 107, 53), 0.7); // Orange semi-transparent
+        &:hover {
+          background-color: rgba(var(--main-orange-rgb, 255, 107, 53), 0.75); // Légèrement plus opaque au survol
+        }
+      }
+    }
+
+    // Footer reste centré
+  } // Fin &.is-collapsed
+
+} // Fin .sidebar desktop
+
+
+/* ====================================== */
+/* == STYLES MOBILE (<= 768px) - Barre EN BAS == */
+/* ====================================== */
+@media screen and (max-width: 768px) {
+
+  // La sidebar latérale n'est plus utilisée, la barre du bas prend le relai
+  // On pourrait utiliser `display: none` sur .sidebar ici, mais transformer
+  // est aussi une approche valide si la structure HTML reste la même.
+  .sidebar {
+    width: 100%;
+    min-width: unset;
+    height: var(--bottom-nav-height-mobile);
+    bottom: 0;
+    top: auto; // Annule top: 0
+    left: 0;
+    flex-direction: row; // Items horizontaux
+    justify-content: center;
+    padding: 0;
+    background-color: var(--main-white); // Fond blanc
+    color: var(--text-medium); // Texte/icônes gris par défaut
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
+    transition: none; // Pas de transition de taille
+
+    // Cacher logo et footer (toggle)
+    .logo-container,
+    .sidebar-footer {
+      display: none;
+    }
+
+    .menu-items {
+      display: flex;
+      justify-content: space-around; // Répartit les items
+      align-items: stretch; // Étire les <li> sur toute la hauteur
+      flex-grow: 1; // Prend toute la largeur
+      height: 100%;
+      overflow: hidden;
+      scrollbar-width: none; // Cache scrollbar
+      &::-webkit-scrollbar { display: none; }
+    }
+
+    ul.menu-items li {
+      margin-bottom: 0;
+      flex: 1; // Chaque item prend une part égale
+      display: flex; // Pour centrer <a>
+    }
+
+    ul.menu-items li a {
+      flex-direction: column; // Icône au-dessus (le texte sera caché)
+      justify-content: center; // Centre verticalement
+      align-items: center; // Centre horizontalement
+      padding: var(--spacing-xs) 0; // Padding vertical minime
+      gap: 0; // Pas d'espace car texte caché
+      color: var(--text-medium); // Couleur inactive
+      border-radius: 0; // Pas de coins arrondis
+      width: 100%; height: 100%;
+      transition: none; // Pas de transition
+
+      lucide-icon {
+        width: var(--icon-size-mobile); // Taille icône mobile
+        height: var(--icon-size-mobile);
+        // Pas besoin de marge car texte caché
+      }
+
+      // --- CACHER LE TEXTE SUR MOBILE ---
+      .menu-item-text {
+        display: none; // Cache complètement le texte
+      }
+      // --------------------------------
+
+      // Annuler hover/focus desktop
+      &:hover { background: none; }
+      &:focus-visible { outline: none; background: none; }
+
+      // État actif mobile (juste la couleur change)
+      &.page_actuelle {
+        background-color: transparent; // Pas de fond
+        color: var(--main-orange); // Couleur active
+        font-weight: normal; // Pas besoin de gras si texte caché
+      }
+    }
+  } // Fin .sidebar @media mobile
+
+} // Fin @media screen and (max-width: 768px)
+

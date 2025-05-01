@@ -1,79 +1,131 @@
+/*------------------------------------*\
+  #COMPOSANT: NAVBAR
+  Styles pour la barre de navigation principale du site.
+\*------------------------------------*/
+
 .navbar {
+  // Style de base pour le conteneur de la barre de navigation.
   background-color: var(--bg-medium-gray);
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); // Ombre subtile pour la profondeur.
   font-family: var(--font-family);
-  padding: var(--spacing-md) var(--spacing-lg);
+  padding: var(--spacing-md) var(--spacing-lg); // Marges internes verticales et horizontales.
+  position: relative; // Établit un contexte de positionnement pour les enfants absolus (menu mobile).
 
+  /*------------------------------------*\
+    #CONTENEUR NAVBAR
+    Enveloppe interne pour contraindre la largeur du contenu et gérer la mise en page.
+  \*------------------------------------*/
   .navbar-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 95%;
-    margin: auto;
+    display: flex; // Active la mise en page flexbox.
+    justify-content: space-between; // Pousse le logo à gauche, les autres éléments à droite.
+    align-items: center; // Aligne verticalement les éléments dans le conteneur.
+    max-width: 95%; // Largeur maximale relative à la fenêtre/au parent.
+    margin: 0 auto; // Centre le conteneur horizontalement.
   }
 
-  .navbar-logo img {
-    max-height: calc(var(--icon-size) * 1.8); /* Agrandissement du logo */
-    transition: var(--transition-standard);
+  /*------------------------------------*\
+    #LOGO NAVBAR
+    Style pour le logo du site dans la barre de navigation.
+  \*------------------------------------*/
+  .navbar-logo {
+    flex-shrink: 0; // Empêche le logo de rétrécir lorsque l'espace est limité.
 
-    &:hover {
-      transform: scale(1.1);
-      opacity: 0.9; /* Effet visuel supplémentaire */
-    }
-  }
-
-  .navbar-menu {
-    list-style: none;
-    display: flex;
-    gap: var(--spacing-lg);
-
-    li a {
-      text-decoration: none; /* Suppression du soulignement */
-      color: var(--main-blue);
-      font-weight: bold;
-      font-size: 1.2rem; /* Texte légèrement agrandi */
-      transition: var(--transition-standard);
+    img {
+      display: block; // Supprime l'espace potentiel sous l'image.
+      max-height: calc(var(--icon-size) * 1.8); // Définit la hauteur maximale basée sur la variable de taille d'icône.
+      transition: var(--transition-standard); // Applique l'effet de transition standard.
 
       &:hover {
-        color: var(--main-orange); /* Accentuation au survol */
+        transform: scale(1.1); // Agrandit légèrement le logo au survol.
+        opacity: 0.9; // Réduit légèrement l'opacité au survol.
       }
     }
   }
 
+  /*------------------------------------*\
+    #CONTENU DU MENU NAVBAR
+    Conteneur pour les liens de navigation et les boutons d'action.
+    S'adapte pour l'affichage en menu déroulant sur mobile.
+  \*------------------------------------*/
+  .navbar-menu-content {
+    display: flex; // Dispose les éléments de menu et les boutons horizontalement sur desktop.
+    align-items: center; // Aligne verticalement les éléments dans ce conteneur.
+    gap: var(--spacing-lg); // Définit l'espace entre la liste du menu et le groupe de boutons.
+    // Les styles de transition spécifiques au mobile sont définis dans la media query.
+  }
+
+  /*------------------------------------*\
+    #MENU NAVBAR (LIENS)
+    Style pour la liste des liens de navigation principaux.
+  \*------------------------------------*/
+  .navbar-menu {
+    list-style: none; // Supprime les puces de liste par défaut.
+    display: flex; // Dispose les éléments de liste horizontalement.
+    padding: 0; // Réinitialise la marge interne par défaut.
+    margin: 0; // Réinitialise la marge externe par défaut.
+    gap: var(--spacing-lg); // Définit l'espace entre les liens de navigation individuels.
+
+    li {
+      // L'élément de liste individuel ne nécessite pas de styles spécifiques ici.
+
+      a {
+        text-decoration: none; // Supprime le soulignement des liens.
+        color: var(--main-blue); // Définit la couleur du texte du lien.
+        font-weight: bold; // Met le texte du lien en gras.
+        font-size: 1.2rem; // Définit la taille de police du lien.
+        transition: var(--transition-standard); // Applique l'effet de transition standard.
+        white-space: nowrap; // Empêche le retour à la ligne du texte du lien.
+
+        &:hover {
+          color: var(--main-orange); // Change la couleur du texte au survol.
+        }
+      }
+    }
+  }
+
+  /*------------------------------------*\
+    #BOUTONS NAVBAR
+    Style pour le groupe de boutons d'action.
+  \*------------------------------------*/
   .navbar-buttons {
-    display: flex;
-    gap: var(--spacing-md);
+    display: flex; // Dispose les boutons horizontalement.
+    gap: var(--spacing-md); // Définit l'espace entre les boutons.
 
+    // Style commun des boutons dans le contexte de la barre de navigation.
     .btn {
-      padding: var(--spacing-sm) var(--spacing-md);
-      border-radius: var(--border-radius);
-      font-size: 1rem;
-      font-weight: bold;
-      text-decoration: none;
-      transition: var(--transition-standard);
+      padding: var(--spacing-sm) var(--spacing-md); // Marge interne du bouton.
+      border-radius: var(--border-radius); // Applique le rayon de bordure standard.
+      font-size: 1rem; // Taille du texte du bouton.
+      font-weight: bold; // Poids du texte du bouton.
+      text-decoration: none; // Supprime le soulignement si appliqué aux balises `a` utilisées comme boutons.
+      transition: var(--transition-standard); // Applique l'effet de transition standard.
+      white-space: nowrap; // Empêche le retour à la ligne du texte du bouton.
 
+      // Modificateur : Style du bouton primaire.
       &.btn-primary {
-        background-color: var(--main-blue); /* Utilisation de main-blue */
+        background-color: var(--main-blue);
         color: var(--main-white);
 
         &:hover {
           background-color: var(--main-white);
           color: var(--main-blue);
-          box-shadow: 0px 4px 8px rgba(26, 95, 122, 0.3); /* Ajout d'un effet visuel */
+          box-shadow: 0px 4px 8px rgba(26, 95, 122, 0.3); // Ajoute un effet d'ombre au survol.
         }
       }
 
+      // Modificateur : Style du bouton secondaire.
       &.btn-secondary {
-        background-color: var(--main-orange); /* Utilisation de main-orange */
+        background-color: var(--main-orange);
         color: var(--main-white);
 
         &:hover {
           background-color: rgba(var(--main-white));
           color: var(--main-orange);
-          box-shadow: 0px 4px 8px rgba(255, 107, 53, 0.3); /* Accentuation au survol */
+          box-shadow: 0px 4px 8px rgba(255, 107, 53, 0.3); // Ajoute un effet d'ombre au survol.
         }
       }
 
+      // Modificateur : Style du bouton contour (outline).
       &.btn-outline {
         border: 2px solid var(--main-blue);
         background-color: transparent;
@@ -82,9 +134,122 @@
         &:hover {
           background-color: var(--main-blue);
           color: var(--main-white);
-          box-shadow: 0px 4px 8px rgba(26, 95, 122, 0.3); /* Ajout d'un effet visuel */
+          box-shadow: 0px 4px 8px rgba(26, 95, 122, 0.3); // Ajoute un effet d'ombre au survol.
         }
       }
     }
   }
-}
+
+  /*------------------------------------*\
+    #BURGER NAVBAR
+    Bouton icône pour basculer le menu sur les appareils mobiles.
+  \*------------------------------------*/
+  .navbar-burger {
+    display: none; // Caché sur les écrans plus grands par défaut.
+    cursor: pointer; // Indique l'interactivité.
+    background: none; // Pas de couleur de fond.
+    border: none; // Pas de bordure.
+    padding: var(--spacing-sm); // Marge interne pour la zone cliquable.
+    margin-left: var(--spacing-md); // Espace par rapport à l'élément à sa gauche sur mobile.
+    z-index: 1050; // Assure que le burger est au-dessus du contenu du menu.
+
+    // Style pour les lignes individuelles de l'icône burger.
+    span {
+      display: block; // Fait que chaque span se comporte comme un élément de bloc.
+      width: 25px; // Largeur des lignes.
+      height: 3px; // Hauteur (épaisseur) des lignes.
+      background-color: var(--main-blue); // Couleur des lignes.
+      margin: 5px 0; // Espacement vertical entre les lignes.
+      transition: transform 0.3s ease, opacity 0.3s ease; // Animation fluide pour les changements de transformation et d'opacité.
+    }
+
+    // Styles d'animation lorsque le menu est actif (le burger se transforme en croix).
+    &.is-active {
+      span:nth-child(1) { // Ligne du haut.
+        transform: translateY(8px) rotate(45deg); // Se déplace vers le bas et pivote à droite.
+      }
+      span:nth-child(2) { // Ligne du milieu.
+        opacity: 0; // Disparaît en fondu.
+      }
+      span:nth-child(3) { // Ligne du bas.
+        transform: translateY(-8px) rotate(-45deg); // Se déplace vers le haut et pivote à gauche.
+      }
+    }
+  }
+
+  /*------------------------------------*\
+    #MEDIA QUERY : MISE EN PAGE MOBILE (max-width: 768px)
+    Ajuste la mise en page de la barre de navigation pour les écrans plus petits.
+  \*------------------------------------*/
+  @media (max-width: 768px) {
+    // Ajuste la marge interne globale de la navbar sur mobile.
+    padding: var(--spacing-sm);
+
+    // Assure que le logo et le burger restent sur la même ligne.
+    .navbar-container {
+      flex-wrap: nowrap; // Empêche les éléments de passer à la ligne suivante.
+    }
+
+    // Affiche l'icône burger sur mobile.
+    .navbar-burger {
+      display: block;
+    }
+
+    // Styles pour le conteneur du menu déroulant mobile.
+    .navbar-menu-content {
+      // Positionnement et Apparence :
+      position: absolute; // Se positionne par rapport à la navbar.
+      top: 100%; // Le place juste en dessous de la navbar.
+      left: 0; // S'aligne sur le bord gauche de la navbar.
+      width: 100%; // Prend toute la largeur de la navbar.
+      background-color: var(--bg-medium-gray); // Correspond au fond de la navbar.
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); // Ombre pour la séparation.
+      z-index: 1000; // Positionné sous le burger mais au-dessus du contenu de la page.
+
+      // Mise en page à l'intérieur du menu déroulant :
+      display: flex; // Utilise flex pour l'alignement même lorsque caché/en transition.
+      flex-direction: column; // Empile les éléments verticalement.
+      align-items: center; // Centre les éléments horizontalement.
+      padding: var(--spacing-md); // Marge interne.
+      gap: var(--spacing-md); // Espace entre la liste de liens et le groupe de boutons.
+
+      // État de transition (Caché) :
+      max-height: 0; // Hauteur réduite à zéro.
+      opacity: 0; // Totalement transparent.
+      visibility: hidden; // Inaccessible et non interactif.
+      overflow: hidden; // Masque le contenu qui dépasse max-height pendant la transition.
+      // Définition de la transition : Définit les propriétés d'animation et le timing.
+      transition: max-height 0.35s ease-out, // Transition douce pour la hauteur.
+      opacity 0.3s ease-in,   // Apparition/disparition en fondu.
+      visibility 0.35s ease;   // La visibilité change avec la transition.
+
+      // État de transition (Visible) : Activé par la classe '.is-active'.
+      &.is-active {
+        max-height: 60vh; // Hauteur suffisante pour révéler le contenu (ajuster si nécessaire).
+        opacity: 1; // Totalement opaque.
+        visibility: visible; // Accessible et interactif.
+      }
+    }
+
+    // Adapte la liste des liens du menu pour une disposition verticale dans le menu déroulant mobile.
+    .navbar-menu {
+      flex-direction: column; // Empile les liens verticalement.
+      width: 100%; // Prend toute la largeur du conteneur déroulant.
+      text-align: center; // Centre le texte des liens.
+      gap: var(--spacing-md); // Espace entre les liens.
+    }
+
+    // Adapte le groupe de boutons pour une disposition verticale dans le menu déroulant mobile.
+    .navbar-buttons {
+      flex-direction: column; // Empile les boutons verticalement.
+      width: 100%; // Prend toute la largeur du conteneur déroulant.
+      gap: var(--spacing-sm); // Espace entre les boutons.
+
+      // Fait que les boutons individuels prennent toute la largeur.
+      .btn {
+        width: 100%;
+        text-align: center; // Centre le texte des boutons.
+      }
+    }
+  } // Fin Media Query Mobile
+} // Fin .navbar

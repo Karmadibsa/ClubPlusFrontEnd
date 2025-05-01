@@ -1,32 +1,66 @@
-<mat-card class="event-card">
-  <mat-card-header>
-    <mat-card-title>{{ event.nom }}</mat-card-title>
-    <mat-card-subtitle>
-      <span class="event-time">{{ event.start | date:'dd/MM/yyyy HH:mm' }} - {{ event.end | date:'HH:mm' }}</span>
-    </mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
-    <div class="event-section">
-      <p class="section-title">Description :</p>
-      <p>{{ event.description }}</p>
-    </div>
+<!-- event-card.component.html -->
 
+<!-- Utilisation d'une div comme conteneur principal de la carte -->
+<!-- Les styles SCSS doivent définir .event-card pour ressembler à une carte -->
+<div class="event-card card" role="article" [attr.aria-labelledby]="'event-title-' + event?.id"> <!-- Ajout classe .card globale -->
 
-    <div class="event-section">
-      <p class="section-title">Places disponibles :</p>
-      <p>{{ event.placeReserve }}/{{ event.placeTotal }}</p>
+  <!-- En-tête de la carte -->
+  <header class="event-card-header">
+    <h3 class="event-title" [id]="'event-title-' + event?.id">{{ event?.nom }}</h3> <!-- Utiliser H3 si H2 est titre de section parent -->
+    <div class="event-time">
+      <lucide-icon name="calendar-clock" size="16" aria-hidden="true"></lucide-icon>
+      <span>{{ event?.start | date:'dd/MM/yyyy HH:mm' }} - {{ event?.end | date:'HH:mm' }}</span>
     </div>
-    @if (event.amiParticipants.length > 0) {
-    <div class="event-section">
-      <p class="section-title">Amis présent :</p>
-      <p>{{event.amiParticipants}}</p>
+  </header>
+
+  <!-- Contenu principal de la carte -->
+  <div class="event-card-content">
+    <div class="event-section event-description">
+      <dl>
+        <dt class="section-title visually-hidden">Description</dt>
+        <dd class="description-text">{{ event?.description }}</dd>
+      </dl>
     </div>
-    }
-  </mat-card-content>
-  <mat-card-actions class="bouton-reserve">
-    <button (click)="openReservationModal()" mat-raised-button color="primary" class="reserve-button">
-      <lucide-icon name="calendar-check" size="20"></lucide-icon>
+    <div class="event-section event-details">
+      <dl>
+        <div class="detail-item">
+          <dt class="section-title">
+            <lucide-icon name="users" size="16" aria-hidden="true"></lucide-icon>
+            Places :
+          </dt>
+          <dd>{{ event?.placeReserve ?? 0 }}/{{ event?.placeTotal ?? 0 }}</dd>
+        </div>
+        @if ((event?.amiParticipants?.length ?? 0) > 0) {
+          <div class="detail-item amis-section">
+            <dt class="section-title">
+              <lucide-icon name="user-check" size="16" aria-hidden="true"></lucide-icon>
+              Amis présents :
+            </dt>
+            <dd class="amis-list">{{ event.amiParticipants?.join(', ') }}</dd>
+          </div>
+        }
+      </dl>
+    </div>
+  </div>
+
+  <!-- Pied de carte / Actions -->
+  <footer class="event-card-actions">
+    <!-- Utilise les classes .btn .btn-primary globales -->
+    <button type="button" (click)="openReservationModal()" class="btn btn-primary reserve-button">
+      <lucide-icon name="calendar-check" size="18" aria-hidden="true"></lucide-icon>
       Réserver
     </button>
-  </mat-card-actions>
-</mat-card>
+  </footer>
+
+</div> <!-- Fin .event-card -->
+
+<!-- Modale gérée par EventCardComponent -->
+@if (isReservationModalVisible) {
+  <app-reservation-modal
+    [isVisible]="isReservationModalVisible"
+    [event]="event"
+    (closeModal)="handleCloseReservationModal()"
+    (reserveSuccess)="handleReserveSuccess($event)">
+  </app-reservation-modal>
+}
+

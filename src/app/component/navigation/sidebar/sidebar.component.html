@@ -1,79 +1,45 @@
-<div class="sidebar">
-  <div class="logo-container">
-    <img
-      src="LogoClubPlussansfond.png"
-      alt="Logo Club Plus"
-      class="logo"
-    />
+<!-- Ajout de la classe conditionnelle [class.is-collapsed] -->
+<div class="sidebar" [class.is-collapsed]="isCollapsed$ | async" role="navigation" aria-label="Menu principal">
+
+  <!-- Logo Container (avec icône alternative pour mode réduit) -->
+  <div class="logo-container" aria-hidden="true">
+    <!-- Logo normal (sera masqué par CSS si réduit) -->
+    <img src="LogoClubPlussansfond.webp" alt="Logo Club Plus" class="logo" />
+
   </div>
 
+  <!-- Menu Items (structure inchangée, pas de @if sur les span) -->
   <ul class="menu-items">
     @if (auth.role == "ROLE_ADMIN" || auth.role == "ROLE_RESERVATION"){
-    <!-- Espace admin -->
-    <li>
-      <a routerLinkActive="page_actuelle" routerLink="/dashboard">
-        <lucide-icon name="layout-dashboard"></lucide-icon>
-        Dashboard
-      </a>
-    </li>
-    <li>
-      <a routerLinkActive="page_actuelle" routerLink="/eventadmin">
-        <lucide-icon name="calendar"></lucide-icon>
-        Événements
-      </a>
-    </li>
-    <li>
-      <a routerLinkActive="page_actuelle" routerLink="/membreadmin">
-        <lucide-icon name="users"></lucide-icon>
-        Membres
-      </a>
-    </li>
-    <li>
-      <a routerLinkActive="page_actuelle" routerLink="/monclub">
-        <lucide-icon name="house"></lucide-icon>
-        Mon Club
-      </a>
-    </li>
+      <li><a routerLinkActive="page_actuelle" routerLink="/app/dashboard" title="Dashboard"><lucide-icon name="layout-dashboard"></lucide-icon><span class="menu-item-text">Dashboard</span></a></li>
+      <li><a routerLinkActive="page_actuelle" routerLink="/app/eventadmin" title="Événements"><lucide-icon name="calendar"></lucide-icon><span class="menu-item-text">Événements</span></a></li>
+      <li><a routerLinkActive="page_actuelle" routerLink="/app/membreadmin" title="Membres"><lucide-icon name="users"></lucide-icon><span class="menu-item-text">Membres</span></a></li>
+      <li><a routerLinkActive="page_actuelle" routerLink="/app/monclub" title="Mon Club"><lucide-icon name="house"></lucide-icon><span class="menu-item-text">Mon Club</span></a></li>
     } @else {
-      <!-- Espace membre -->
-      <li>
-        <a routerLinkActive="page_actuelle" routerLink="/event" class="active">
-          <lucide-icon name="calendar"></lucide-icon>
-          Calendrier
-        </a>
-      </li>
-      <li>
-        <a routerLinkActive="page_actuelle" routerLink="/billet">
-          <lucide-icon name="ticket"></lucide-icon>
-          Mes billets
-        </a>
-      </li>
-          <li>
-              <a routerLinkActive="page_actuelle" routerLink="/amis">
-                <lucide-icon name="users"></lucide-icon>
-                Mes amis
-              </a>
-            </li>
-            <li>
-              <a routerLinkActive="page_actuelle" routerLink="/notation">
-                <lucide-icon name="star"></lucide-icon>
-                Notation
-              </a>
-            </li>
+      <li><a routerLinkActive="page_actuelle" routerLink="/app/event" title="Calendrier"><lucide-icon name="calendar"></lucide-icon><span class="menu-item-text">Calendrier</span></a></li>
+      <li><a routerLinkActive="page_actuelle" routerLink="/app/billet" title="Mes billets"><lucide-icon name="ticket"></lucide-icon><span class="menu-item-text">Mes billets</span></a></li>
+      <li><a routerLinkActive="page_actuelle" routerLink="/app/amis" title="Mes amis"><lucide-icon name="users"></lucide-icon><span class="menu-item-text">Mes amis</span></a></li>
+      <li><a routerLinkActive="page_actuelle" routerLink="/app/notation" title="Notation"><lucide-icon name="star"></lucide-icon><span class="menu-item-text">Notation</span></a></li>
     }
-    <li>
-      <a routerLinkActive="page_actuelle" routerLink="/profil">
-        <lucide-icon name="user"></lucide-icon>
-        Profil
-      </a>
-    </li>
-
+    <!-- Lien Profil commun -->
+    <li><a routerLinkActive="page_actuelle" routerLink="/app/profil" title="Profil"><lucide-icon name="user"></lucide-icon><span class="menu-item-text">Profil</span></a></li>
   </ul>
 
-  <!-- Footer commun -->
+  <!-- Footer avec UNIQUEMENT le bouton Toggle -->
   <div class="sidebar-footer">
-    <a (click)="auth.deconnexion()" routerLink="/accueil" class="logout-btn" title="Déconnexion">
-      <lucide-icon name="log-out"></lucide-icon>
-    </a>
+    <!-- Bouton pour réduire/étendre -->
+    <button
+      type="button"
+      (click)="toggleSidebar()"
+      class="toggle-btn"
+      [attr.aria-expanded]="!(isCollapsed$ | async)"
+      [attr.aria-label]="(isCollapsed$ | async) ? 'Étendre la barre latérale' : 'Réduire la barre latérale'">
+      @if (!(isCollapsed$ | async)) {
+        <lucide-icon name="chevrons-left" aria-hidden="true"></lucide-icon>
+      } @else {
+        <lucide-icon name="chevrons-right" aria-hidden="true"></lucide-icon>
+      }
+    </button>
+    <!-- Le bouton Déconnexion a été supprimé d'ici -->
   </div>
 </div>

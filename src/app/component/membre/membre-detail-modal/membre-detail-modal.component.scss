@@ -1,160 +1,102 @@
-/* Styles pour membre-detail-modal.component.scss */
-/* Utilise les variables définies dans le :root global */
+/* membre-detail-modal.component.scss */
 
-/* --- Overlay --- */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6); /* Fond semi-transparent */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+// --- Utilisation des variables globales de styles.txt ---
+// @import 'path/to/variables'; // Généralement importé globalement dans angular.json
+
+:host {
+  display: block; // Assure que le composant prend sa place
 }
 
-/* --- Conteneur Principal de la Modale --- */
-.modal-content {
-  background: var(--main-white);
-  border-radius: var(--border-radius); /* Utilisation variable root */
-  width: 90%;
-  max-width: 700px;
-  max-height: 90vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12); /* Ombre standard */
-}
+// --------------------------------------------------
+// Styles UNIQUEMENT SPÉCIFIQUES au contenu de MembreDetailModal
+// --------------------------------------------------
 
-/* --- Entête --- */
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing-md) var(--spacing-lg); /* Utilisation variables root */
-  border-bottom: 1px solid var(--border-color); /* Utilisation variable root */
-  background-color: var(--main-blue);
-  color: var(--main-white);
-  flex-shrink: 0;
-}
+// --- Styles pour l'affichage des informations ---
 
-.modal-header h2 {
-  margin: 0;
-  font-size: 1.2rem;
-  font-weight: 600;
+.info-section {
+  margin-bottom: var(--spacing-lg);
 }
-
-.close-btn {
-  background: none;
-  border: none;
-  color: var(--main-white);
-  font-size: 1.5rem;
-  line-height: 1;
-  padding: var(--spacing-sm); /* Utilisation variable root */
-  cursor: pointer;
-  opacity: 0.8;
-  transition: opacity 0.2s ease, transform 0.2s ease; /* Transition simple */
-}
-
-.close-btn:hover {
-  opacity: 1;
-  transform: rotate(90deg);
-}
-
-/* --- Corps --- */
-.modal-body {
-  padding: var(--spacing-lg); /* Utilisation variable root */
-  overflow-y: auto;
-  flex-grow: 1;
-  background-color: var(--main-white);
-}
-
-/* --- Sections & Groupes de Formulaires --- */
-.form-section {
-  margin-bottom: var(--spacing-lg); /* Utilisation variable root */
-}
-.form-section:last-of-type {
+.info-section:last-of-type {
   margin-bottom: 0;
 }
 
-.form-section h3 {
-  font-size: 1rem;
+.info-section-title {
+  font-size: 1.1rem; // Taille titre de section
   font-weight: 600;
   color: var(--main-blue);
   margin-top: 0;
-  margin-bottom: var(--spacing-md); /* Utilisation variable root */
-  padding-bottom: var(--spacing-sm); /* Utilisation variable root */
-  border-bottom: 1px solid var(--border-color); /* Utilisation variable root */
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--border-color-light, #eee); // Séparateur léger
+  display: inline-flex; // Pour icône
+  align-items: center;
+  gap: var(--spacing-sm);
+
+  lucide-icon {
+    width: 18px; height: 18px; // Taille icône titre section
+  }
 }
 
-.form-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-md); /* Utilisation variable root */
-  margin-bottom: var(--spacing-md); /* Utilisation variable root */
-}
-.form-row:last-child {
-  margin-bottom: 0;
+// Grille pour aligner les paires label/valeur
+.info-grid {
+  display: grid;
+  // 2 colonnes par défaut, s'adapte
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-sm) var(--spacing-lg); // Espace vertical plus petit, horizontal plus grand
 }
 
-.form-group {
-  flex: 1 1 calc(50% - var(--spacing-md)); /* Ajustement avec gap */
-  min-width: 200px;
-  margin-bottom: 0;
+.info-item {
+  // Chaque item est un bloc simple dans la grille
 }
 
-.form-group.full-width {
-  flex-basis: 100%;
-}
-
-.form-group label {
-  display: block;
-  font-size: 0.875rem;
+.info-item label, // Si on utilise <label> au lieu de <span>
+.info-item .info-label {
+  display: block; // Label au-dessus de la valeur
+  font-size: 0.85rem;
   font-weight: 500;
-  color: var(--text-medium); /* Utilisation variable root */
-  margin-bottom: var(--spacing-sm); /* Utilisation variable root */
+  color: var(--text-medium);
+  margin-bottom: var(--spacing-xs);
 }
 
-/* --- Valeurs en lecture seule --- */
+// Style de la valeur affichée
 .read-only-value {
-  background-color: var(--bg-light-gray); /* Utilisation variable root */
-  padding: 0.75rem 1rem; /* Pas de variable directe, ajustement fin */
-  border-radius: 6px; /* Légèrement différent de --border-radius */
-  border: 1px solid var(--border-color); /* Utilisation variable root */
-  color: var(--text-dark); /* Utilisation variable root */
+  background-color: var(--bg-light-gray);
+  padding: 8px 12px; // Padding légèrement réduit
+  border-radius: var(--border-radius-sm); // Rayon standard input
+  border: 1px solid var(--border-color-light, #eee); // Bordure très légère
+  color: var(--text-dark);
   font-size: 0.95rem;
-  min-height: 42px;
+  min-height: 38px; // Hauteur minimale cohérente avec inputs
   display: flex;
   align-items: center;
-  word-break: break-word;
+  word-break: break-word; // Permet retour à la ligne
+}
+
+// Badge spécifique pour le rôle
+.role-badge {
+  font-weight: 600;
+  // Optionnel: ajouter des couleurs selon le rôle
+  // &.role-admin { background-color: var(--danger); color: white; }
 }
 
 
-/* --- Section Changement de Rôle (Radio façon Boutons) --- */
+// --- Section Changement de Rôle (Radio façon Boutons) ---
 .role-change-section {
-  /* Calcul de la couleur RGBA à partir de --main-blue (#1a5f7a -> 26, 95, 122) */
-  background-color: rgba(26, 95, 122, 0.03);
-  padding: var(--spacing-md); /* Utilisation variable root */
-  border-radius: var(--border-radius); /* Utilisation variable root */
-  /* Calcul de la couleur RGBA à partir de --main-blue (#1a5f7a -> 26, 95, 122) */
-  border: 1px solid rgba(26, 95, 122, 0.1);
-  margin-top: var(--spacing-md); /* Utilisation variable root */
-}
-
-.role-change-section h3 {
-  border-bottom: none;
-  margin-bottom: 0.75rem;
+  background-color: rgba(var(--main-blue-rgb, 26, 95, 122), 0.03);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(var(--main-blue-rgb, 26, 95, 122), 0.1);
+  margin-top: var(--spacing-lg); // Espace après la section précédente
 }
 
 .radio-inputs {
   display: flex;
-  gap: var(--spacing-md); /* Utilisation variable root */
-  margin-top: var(--spacing-sm); /* Utilisation variable root */
+  flex-wrap: wrap; // Permet retour à la ligne si manque de place
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-sm);
 }
 
-/* Masquer la vraie radio */
+// Masquer la vraie radio
 .radio-inputs .radio-input {
   position: absolute;
   opacity: 0;
@@ -163,9 +105,10 @@
   pointer-events: none;
 }
 
-/* Style du SPAN qui suit l'input DANS le label */
+// Style du SPAN qui suit l'input DANS le label
 .radio-inputs label {
-  flex: 1;
+  flex: 1; // Prend l'espace disponible
+  min-width: 100px; // Largeur minimale
   display: block;
   position: relative;
   cursor: pointer;
@@ -174,33 +117,32 @@
 .radio-inputs label span {
   display: block;
   padding: 0.75rem 1rem;
-  border: 2px solid var(--border-color); /* Utilisation variable root */
-  border-radius: var(--border-radius); /* Utilisation variable root */
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius);
   background-color: var(--main-white);
   text-align: center;
   font-weight: 500;
-  color: var(--text-medium); /* Utilisation variable root */
-  transition: var(--transition-standard); /* Utilisation variable root */
+  color: var(--text-medium);
+  transition: var(--transition-standard);
 }
 
-/* État survol (sur le LABEL) */
+// État survol
 .radio-inputs label:hover span {
   border-color: var(--main-blue);
-  background-color: var(--bg-light-gray); /* Utilisation variable root */
+  background-color: var(--bg-light-gray);
   color: var(--main-blue);
 }
 
-/* État sélectionné (quand l'input associé est checked) */
+// État sélectionné
 .radio-inputs .radio-input:checked + span {
   border-color: var(--main-orange);
-  /* Calcul de la couleur RGBA à partir de --main-orange (#f26122 -> 242, 97, 34) */
-  background-color: rgba(242, 97, 34, 0.1);
+  background-color: rgba(var(--main-orange-rgb, 242, 97, 34), 0.1);
   color: var(--main-orange);
   font-weight: 600;
   box-shadow: 0 0 0 1px var(--main-orange);
 }
 
-/* État focus (accessibilité sur l'input caché) */
+// État focus
 .radio-inputs .radio-input:focus-visible + span {
   outline: 2px solid var(--main-blue);
   outline-offset: 2px;
@@ -208,79 +150,28 @@
 .radio-inputs .radio-input:checked:focus-visible + span {
   outline-color: var(--main-orange);
 }
-/* --- Fin Styles Radio --- */
+// --- Fin Styles Radio ---
 
-
-/* --- Pied de page --- */
-.modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: var(--spacing-md); /* Utilisation variable root */
-  padding: var(--spacing-md) var(--spacing-lg); /* Utilisation variable root */
-  border-top: 1px solid var(--border-color); /* Utilisation variable root */
-  background-color: var(--bg-light-gray); /* Utilisation variable root */
-  flex-shrink: 0;
-}
-
-/* --- Styles des Boutons --- */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-sm); /* Utilisation variable root */
-  padding: var(--spacing-sm) var(--spacing-md); /* Utilisation variables root */
-  border-radius: 6px; /* Gardé à 6px pour les boutons */
-  font-weight: 500;
-  font-size: 0.9rem;
-  cursor: pointer;
+// Style si modale en chargement
+.loading-content {
+  // Styles pour un conteneur simple centré
+  padding: var(--spacing-xl);
   text-align: center;
-  border: none;
-  transition: var(--transition-standard); /* Utilisation variable root */
+  min-height: 200px; // Hauteur minimale pendant chargement
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Style spécifique pour que les icônes dans les boutons soient correctes */
-.btn lucide-icon {
-  width: 16px;
-  height: 16px;
+// Responsive
+@media screen and (max-width: 576px) {
+  .info-grid {
+    grid-template-columns: 1fr; // Une seule colonne sur mobile
+    gap: var(--spacing-sm);
+  }
+  .radio-inputs {
+    flex-direction: column; // Empile les options de rôle
+    gap: var(--spacing-sm);
+  }
 }
 
-/* Bouton Primaire (Enregistrer - utilise main-blue comme dans l'autre modal) */
-.btn-primary {
-  background-color: var(--main-blue);
-  color: var(--main-white);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Ombre standard */
-}
-
-.btn-primary:hover:not(:disabled) {
-  /* Assombrir légèrement --main-blue */
-  background-color: hsl(199, 64%, 25%); /* Ajustement manuel de la teinte */
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12); /* Ombre standard */
-}
-
-.btn-primary:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: none;
-}
-
-/* Bouton Secondaire (Fermer) */
-.btn-secondary {
-  background-color: var(--main-white);
-  color: var(--text-medium); /* Utilisation variable root */
-  border: 1px solid var(--border-color); /* Utilisation variable root */
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background-color: var(--bg-light-gray); /* Utilisation variable root */
-  border-color: var(--text-light); /* Utilisation variable root */
-  color: var(--text-dark); /* Utilisation variable root */
-}
-
-/* État Désactivé */
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}

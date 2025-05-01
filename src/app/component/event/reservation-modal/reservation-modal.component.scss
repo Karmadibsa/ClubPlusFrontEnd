@@ -1,141 +1,168 @@
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.35);
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.175);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000; /* Assure que la modal est au-dessus de tout */
+/* reserve-event-modal.component.scss */
+
+// --- Utilisation des variables globales de styles.txt ---
+// @import 'path/to/variables'; // Généralement importé globalement dans angular.json
+
+:host {
+  display: block; // Assure que le composant prend sa place
 }
 
-.modal-content {
-  background-color: var(--main-white, #ffffff);
-  padding: 40px; /* Plus d'espace intérieur */
-  border-radius: 25px; /* Coins arrondis modernes */
-  box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.4); /* Ombre plus prononcée */
-  max-width: 700px; /* Largeur maximale */
-  width: 90%; /* Responsive */
-  max-height: 90vh; /* Hauteur maximale */
-  overflow-y: auto; /* Scroll si nécessaire */
-}
+// --------------------------------------------------
+// Styles UNIQUEMENT SPÉCIFIQUES au contenu de cette modale
+// --------------------------------------------------
 
-.back-btn {
-  display: inline-block;
-  margin-bottom: 20px;
-  padding: 10px 20px;
-  background-color: #ff6f00; /* Orange vif pour attirer l'attention */
-  color: #ffffff;
-  border-radius: 30px; /* Coins arrondis élégants */
-  font-weight: bold;
-  text-decoration: none;
-  transition: background-color, transform, box-shadow ease-in-out .3s;
-}
+// Styles pour le corps spécifique de la modale de réservation
 
-.back-btn:hover {
-  background-color: #e65c00; /* Orange légèrement plus foncé au survol */
-}
-
-.event-name {
-  font-size: 2.5rem; /* Texte plus grand pour le titre */
-  color: var(--main-blue, #0056b3); /* Couleur principale bleue */
-  margin-bottom: 20px;
+// Détails de l'événement
+.event-details {
+  margin-bottom: var(--spacing-lg); // Espace avant le formulaire
 }
 
 .event-info {
-  background-color: #f9f9f9; /* Fond léger pour les informations */
-  padding: 20px;
-  border-radius: 20px; /* Coins arrondis modernes */
+  background-color: var(--bg-light-gray); // Fond léger pour les informations
+  padding: var(--spacing-md); // Padding standard
+  border-radius: var(--border-radius-sm); // Rayon cohérent avec les formulaires
+  border: 1px solid var(--border-color-light, #eee); // Bordure légère
 }
 
 .info-item {
   display: flex;
-  align-items: flex-start;
-  margin-bottom: 15px;
+  align-items: flex-start; // Labels alignés en haut
+  margin-bottom: var(--spacing-sm); // Espace entre items
+  font-size: 0.95rem; // Taille standard
+}
+.info-item:last-child {
+  margin-bottom: 0;
 }
 
 .info-label {
-  min-width: 120px; /* Alignement amélioré des labels */
-  font-weight: bold;
-  color: var(--main-orange);
-}
-
-.info-label {
-  min-width: 120px; /* Alignement amélioré des labels */
-  font-weight: bold;
-  color: #ff6f00; /* Couleur orange pour les labels */
+  min-width: 100px; // Largeur minimale pour alignement
+  font-weight: 600; // Label en gras
+  color: var(--main-blue); // Label en bleu
+  margin-right: var(--spacing-sm);
+  flex-shrink: 0;
 }
 
 .info-value {
   flex: 1;
-  color: #333; /* Texte sombre pour une meilleure lisibilité */
+  color: var(--text-dark); // Texte sombre standard
 }
 
+// Formulaire de réservation
+.reservation-form {
+  margin-top: var(--spacing-lg); // Espace après les détails
+}
+
+// Titre "Sélectionnez votre catégorie"
+.category-selection-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: var(--spacing-sm);
+}
+
+// Notice d'information
 .reservation-notice {
-  background-color: #fff4e5; /* Fond légèrement orange */
-  border: 1px solid #ffc107; /* Bordure orange clair */
-  color: #856404; /* Texte brun pour contraste */
-  padding: 15px;
-  border-radius: 15px; /* Coins arrondis modernes */
-  margin-bottom: 20px;
+  background-color: rgba(var(--main-orange-rgb, 255, 107, 53), 0.1); // Fond orange très léger
+  border: 1px solid rgba(var(--main-orange-rgb, 255, 107, 53), 0.3); // Bordure orange légère
+  color: var(--main-orange-dark, #c8431b); // Texte orange foncé
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  margin-bottom: var(--spacing-lg); // Espace avant les catégories
+  font-size: 0.9rem;
+
+  p { margin: 0; }
 }
 
+// Conteneur des catégories sélectionnables
 .categories {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px; /* Espacement entre les catégories */
-  margin-bottom: 30px;
-  justify-content: space-around;
-  user-select: none;
+  display: grid; // Utilisation de Grid pour un meilleur contrôle
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); // Colonnes flexibles
+  gap: var(--spacing-md); // Espace entre les catégories
+  margin-bottom: var(--spacing-lg); // Espace avant le bouton (maintenant dans footer)
+  user-select: none; // Empêche la sélection de texte
 }
 
+// Un item catégorie
 .category-item {
-  border: 2px solid #e0e0e0; /* Bordure grise légère */
-  border-radius: 20px; /* Coins arrondis modernes */
-  overflow: hidden;
-  transition: all 0.3s ease;
-  width: 40%;
+  border: 2px solid var(--border-color); // Bordure standard
+  border-radius: var(--border-radius); // Rayon standard
+  overflow: hidden; // Cache le radio button
+  transition: all 0.2s ease-in-out;
+  cursor: pointer; // Indique qu'il est cliquable
+  position: relative; // Pour positionner le radio
+
+  &:hover {
+    border-color: var(--main-orange); // Change bordure au survol
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); // Légère ombre
+  }
 }
 
-.category-item:hover {
-  transform: scale(1.05); /* Effet de zoom au survol */
-}
-
+// Label visible qui agit comme bouton radio stylé
 .category-label {
-  padding: 20px;
+  display: block; // Prend toute la place de .category-item
+  padding: var(--spacing-md);
   text-align: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .category-name {
-  font-size: 1.2rem; /* Texte légèrement agrandi */
+  font-size: 1.1rem; // Taille du nom
+  font-weight: 600; // Nom en gras
+  color: var(--text-dark); // Couleur standard
+  margin-bottom: var(--spacing-xs); // Petit espace si capacité affichée
 }
 
+// Cacher le radio button réel
 input[type="radio"] {
-  display: none; /* Cache le bouton radio par défaut */
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
+// Style quand le radio button est sélectionné (via le clic sur le label)
 input[type="radio"]:checked + .category-label {
-  background-color: var(--main-orange); /* Fond orange vif quand sélectionné */
+  background-color: var(--main-orange);
+  border-color: var(--main-orange); // Assure cohérence bordure (même si hidden)
+  color: var(--main-white); // Texte blanc sur fond orange
+
+  .category-name {
+    color: var(--main-white); // Nom blanc aussi
+  }
 }
 
-.btn-primary {
-  width: 100%;
-  padding: 15px;
-  font-size: 1.2rem; /* Bouton légèrement agrandi */
-  background-color: #ff6f00; /* Orange vif pour le bouton principal */
-  color: white;
-  border-radius: 30px; /* Coins arrondis élégants */
-  border: none;
-  cursor: pointer;
-  transition: background-color, transform, box-shadow ease-in-out .3s;
+// Style pour focus visible sur l'item quand le radio caché a le focus
+input[type="radio"]:focus-visible + .category-label {
+  outline: 2px solid var(--main-blue);
+  outline-offset: 2px;
 }
 
-.btn-primary:hover {
-  background-color: #e65c00; /* Orange légèrement plus foncé au survol */
+
+// Message si aucune catégorie disponible
+.no-categories-available {
+  grid-column: 1 / -1; // Prend toute la largeur de la grille
+  text-align: center;
+  font-style: italic;
+  color: var(--text-medium);
+  padding: var(--spacing-md) 0;
+}
+
+// Erreur de sélection (utilise .invalid-feedback global)
+.selection-error.invalid-feedback {
+  display: block; // Force l'affichage si la condition est vraie
+  text-align: center;
+  margin-top: calc(-1 * var(--spacing-md)); // Remonte un peu l'erreur
+  margin-bottom: var(--spacing-lg); // Espace avant le footer
+}
+
+// Style du bouton "Réserver" (dans le footer, utilise .btn .btn-primary global)
+// Pas besoin de redéfinir .btn-primary ici.
+
+// Responsive: ajuster la grille des catégories
+@media screen and (max-width: 576px) {
+  .categories {
+    grid-template-columns: 1fr; // Une seule colonne sur très petit écran
+  }
 }
 

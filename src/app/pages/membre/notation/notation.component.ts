@@ -12,7 +12,6 @@ import {ItemnotationComponent} from '../../../component/notation/itemnotation/it
 @Component({
   selector: 'app-notation',
   imports: [
-    SidebarComponent,
     FormsModule,
     LucideAngularModule,
     DatePipe,

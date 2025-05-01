@@ -1,0 +1,107 @@
+/* participation-event-modal.component.scss */
+
+// --- Utilisation des variables globales de styles.txt ---
+// @import 'path/to/variables';
+
+:host { display: block; }
+
+// --------------------------------------------------
+// Styles SPÉCIFIQUES au contenu
+// --------------------------------------------------
+
+// --- Section Filtres (Layout amélioré) ---
+.filter-section {
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center; // Centre verticalement filtres statut et recherche
+  flex-wrap: wrap; // Permet au champ de recherche de passer en dessous
+  gap: var(--spacing-md); // Espace entre groupe statut et groupe recherche
+
+  // Groupe pour les filtres de statut
+  .status-filters {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; // Permet aux boutons de passer à la ligne
+    gap: var(--spacing-sm);
+    flex-grow: 1; // Prend l'espace disponible
+
+    span { // Label "Filtrer par statut :"
+      margin-right: var(--spacing-sm);
+      font-weight: 600;
+      color: var(--text-dark);
+      flex-shrink: 0; // Empêche de rétrécir
+    }
+  }
+
+  // Groupe pour le champ de recherche (utilise .form-group global)
+  .search-filter-group {
+    flex-grow: 1; // Permet au champ de prendre de la place
+    flex-basis: 250px; // Largeur de base avant de grandir/rétrécir
+    min-width: 200px; // Largeur minimale
+    margin-bottom: 0; // Annule marge par défaut de .form-group ici
+  }
+}
+
+// Style spécifique pour les boutons de filtre (inchangé)
+.btn-filter { /* ... styles existants ... */ }
+
+// Style optionnel pour l'icône dans le champ de recherche
+.input-with-icon {
+  position: relative;
+  display: flex; // Pour aligner icône et input si besoin (pas strict nécessaire ici)
+  align-items: center;
+
+  lucide-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px; height: 16px;
+    color: var(--text-light);
+    pointer-events: none; // N'interfère pas avec le clic sur l'input
+  }
+
+  // L'input utilise .form-control global
+  input.form-control {
+    padding-left: 35px; // Espace pour l'icône
+  }
+}
+
+
+// --- Style spécifique Table Participations (inchangé) ---
+.participation-table-wrapper { /* ... */ }
+.participation-table { /* ... */
+  th, td { /* ... */ }
+  thead th { /* ... */ }
+}
+
+// --- Messages spécifiques (inchangé) ---
+.error-message { /* ... */ }
+
+// --- Badge de Statut (inchangé) ---
+.status-badge { /* ... */
+  &.status-confirme { /* ... */ }
+  &.status-utilise { /* ... */ }
+  &.status-annule { /* ... */ }
+}
+
+// --- Responsive pour la section filtre ---
+@media screen and (max-width: 768px) {
+  .filter-section {
+    flex-direction: column; // Empile groupe statut et recherche
+    align-items: stretch; // Étire les éléments
+
+    .status-filters {
+      justify-content: center; // Centre les boutons statut
+      margin-bottom: var(--spacing-md); // Espace sous les boutons statut
+    }
+
+    .search-filter-group {
+      width: 100%; // Prend toute la largeur
+      flex-basis: auto;
+    }
+  }
+}
+

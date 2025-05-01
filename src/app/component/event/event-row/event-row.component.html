@@ -1,43 +1,46 @@
-<td>{{ evenement.id }}</td>
-<td>{{ evenement.nom }}</td>
-  <td>{{ evenement.start | date:'dd/MM/yyyy HH:mm' }} - {{ evenement.end | date:'dd/MM HH:mm' }}</td>
-<td>{{ evenement.description }}</td>
-<td>{{ evenement.placeReserve }} / {{ evenement.placeTotal }}</td>
-<td>{{ evenement.location }}</td>
-<td>
-  @for (categorie of evenement.categories; track categorie.id;let last = $last) {
-  <span>
-    {{ categorie.nom }}
-    @if (!last) {
-      <span aria-hidden="true">, </span> <!-- Utilise un span avec aria-hidden car la virgule est purement visuelle -->
-    }
-  </span>
+<!-- event-row.component.html -->
+<td data-label="Titre">{{ evenement.nom }}</td>
+<td data-label="Début - Fin">{{ evenement.start | date:'dd/MM/yyyy HH:mm' }} - {{ evenement.end | date:'dd/MM HH:mm' }}</td>
+<td data-label="Description">{{ evenement.description }}</td>
+<td data-label="Participants">{{ evenement.placeReserve }} / {{ evenement.placeTotal }}</td>
+<td data-label="Lieu">{{ evenement.location }}</td>
+<td data-label="Catégories">
+  @for (categorie of evenement.categories; track categorie.id; let last = $last) {
+    <span>{{ categorie.nom }}{{ !last ? ', ' : '' }}</span>
   }
 </td>
-<td>
+<td data-label="Actions"> <!-- Label pour la cellule actions -->
   <div class="btn-actions">
-    <!-- Bouton Voir les reservations -->
-    <button class="btn" (click)="onRequestViewReservations()">
+    <button class="btn btn-secondary" title="Voir Réservations" (click)="ouvrirModalParticipation()">
       <lucide-icon name="eye" class="icon"></lucide-icon>
     </button>
-    <!-- Bouton Modifier -->
-    <button class="btn btn-edit" (click)="ouvrirModal()">
+    <button class="btn btn-edit" title="Modifier" (click)="ouvrirModalEdit()">
       <lucide-icon name="pen" class="icon"></lucide-icon>
     </button>
-
-    <!-- Bouton Supprimer -->
-    <button class="btn btn-delete" (click)="requestDelete()">
+    <button class="btn btn-danger" title="Supprimer" (click)="requestDelete()">
       <lucide-icon name="trash" class="icon"></lucide-icon>
     </button>
   </div>
 </td>
 
 <!-- Modal d'édition -->
-@if (isModalVisible){
+@if (isModalEditVisible){
 <app-edit-event
-  [isVisible]="isModalVisible"
+  [isVisible]="isModalEditVisible"
   [event]="evenement"
   (saveSuccess)="sauvegarderEvenement($event)"
-  (close)="fermerModal()">
+  (close)="fermerModalEdit()">
 </app-edit-event>
 }
+
+
+<!-- Modale de participation -->
+@if (isParticipationModalVisible) {
+  <app-participation-event-modal
+    [isVisible]="isParticipationModalVisible"
+    [eventId]="evenement?.id!"
+    [eventTitle]="evenement?.nom!"
+    (closeModal)="handleCloseParticipationModal()">
+  </app-participation-event-modal>
+}
+

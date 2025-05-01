@@ -10,7 +10,6 @@ import {Membre} from '../../../model/membre';
 @Component({
   selector: 'app-inscription-membre',
   imports: [
-    NgIf,
     ReactiveFormsModule,
     RouterLink
   ],

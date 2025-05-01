@@ -1,128 +1,67 @@
-.container {
-  padding: 20px;
-  margin: 2% 2% 2% 17%;
-  background-color: var(--bg-light-gray);
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-  border-left: solid var(--main-orange) 2px;
+// --- Styles spécifiques à la page Mon Club ---
+
+:host {
+  display: block; // Assure que le composant prend l'espace nécessaire
 }
 
-.main-header {
-  text-align: center;
-  margin-bottom: 30px;
+// --- Style spécifique pour le bouton "Copier Code Club" ---
+.btn-copy-code {
+  // Hérite des styles .btn et .btn-secondary définis globalement dans styles.txt
+  position: relative; // Pour le positionnement du feedback
+  overflow: hidden; // Cache le feedback qui sort
+
+  .icon {
+    // Hérite taille et gap de .btn global
+    transition: transform 0.2s ease;
+  }
+
+  .copy-feedback {
+    display: none; // Caché par défaut
+    margin-left: var(--spacing-sm, 8px);
+    font-weight: 600; // Un peu plus gras
+    color: var(--success, #28a745); // Utilise la variable de succès
+    position: absolute; // Positionné par rapport au bouton
+    left: 50%; // Centré horizontalement
+    top: 50%; // Centré verticalement
+    transform: translate(-50%, -50%); // Ajustement précis du centrage
+    white-space: nowrap; // Empêche retour à la ligne
+  }
+
+  // État visuel lorsque le code est copié
+  &.is-copied {
+    background-color: var(--success-light, #d4edda); // Fond succès léger (définir si besoin)
+    color: var(--success-dark, #155724); // Texte succès foncé (définir si besoin)
+    border-color: var(--success, #28a745); // Bordure couleur succès
+    cursor: default; // Curseur par défaut
+
+    .copy-button-text {
+      // Masque le texte original avec une animation
+      opacity: 0;
+      transition: opacity 0.1s ease-out;
+    }
+    .copy-feedback {
+      display: inline-block; // Affiche le feedback
+      // Animation d'apparition si désiré (ex: fade-in)
+      animation: fadeIn 0.3s ease-in;
+    }
+    .icon {
+      transform: scale(1.1); // Légère animation sur l'icône
+    }
+
+    &:hover, &:active, &:focus-visible {
+      // Empêche les changements de style au survol/focus/clic quand copié
+      background-color: var(--success-light, #d4edda);
+      color: var(--success-dark, #155724);
+      border-color: var(--success, #28a745);
+      box-shadow: none; // Annule l'ombre focus
+      transform: none; // Annule transform: translateY
+    }
+  }
 }
 
-.subtitle {
-  color: #666;
+// Animation optionnelle pour le feedback "Copié!"
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
-.club-main {
-  background-color: #f9f9f9;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.info-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 15px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.full-width {
-  width: 100%;
-}
-
-.half-width {
-  width: calc(50% - 10px);
-}
-
-.form-control {
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-.readonly-field {
-  background-color: #e9ecef; /* Grisé pour indiquer que le champ est en lecture seule */
-}
-
-.actions-container {
-  display: flex;
-  justify-content: space-between;
-}
-
-.btn {
-  padding: 10px 20px;
-  border-radius: 5px;
-}
-
-.btn-primary {
-  background-color: var(--main-blue);
-  color: white;
-  border: none;
-}
-
-.btn-primary:hover {
-  background-color: var(--main-blue);
-}
-
-.btn-secondary {
-  background-color: #6c757d;
-  color: white;
-}
-
-.header {
-  text-align: center;
-  margin-bottom: 25px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.header h1 {
-  font-size: 2rem;
-  color: var(--main-blue);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-
-.btn-primary {
-  background-color: #f26122; /* Couleur principale (orange) */
-  color: #fff; /* Texte en blanc */
-  border: none; /* Supprime les bordures */
-  padding: 10px 20px; /* Espacement interne */
-  font-size: 16px; /* Taille du texte */
-  border-radius: 5px; /* Coins arrondis */
-  cursor: pointer; /* Curseur en forme de main */
-  transition: background-color 0.3s ease; /* Animation au survol */
-  display: flex;
-  align-items: center;
-}
-
-.btn-primary:hover {
-  background-color: #d9541e; /* Couleur légèrement plus foncée au survol */
-}
-
-.btn-primary:active {
-  background-color: #c8431b; /* Couleur encore plus foncée lors du clic */
-}
-
-.icon{
-  display: flex;
-  align-items: center;
-  padding-right: 5px;
-
-}

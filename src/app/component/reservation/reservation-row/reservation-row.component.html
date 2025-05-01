@@ -1,15 +1,38 @@
-<td>{{ reservation.event.start | date:'dd/MM/yyyy' }}</td>
-<td>{{ reservation.event.start | date:'HH:mm' }}</td>
-<td>{{ reservation.event.nom }}</td>
-<td>{{ reservation.categorie.nom }}</td>
-<td class="actions-cell">
-  <button class="btn btn-primary show-qr-btn" (click)="onOpenQrModal()">
-    <lucide-icon name="qr-code"></lucide-icon>
-  </button>
-  <button class="btn btn-secondary" (click)="onGeneratePDF()">
-    <lucide-icon name="download"></lucide-icon>
-  </button>
-  <button class="btn btn-danger" (click)="onDelete()">
-    <lucide-icon name="trash"></lucide-icon>
-  </button>
+<!-- app-reservation-row.component.html -->
+
+<td [attr.data-label]="'Date'">{{ reservation.event?.start | date:'dd/MM/yyyy' }}</td>
+<td [attr.data-label]="'Heure'">{{ reservation.event?.start | date:'HH:mm' }}</td>
+<td [attr.data-label]="'Nom de l\'événement'">{{ reservation.event?.nom }}</td>
+<td [attr.data-label]="'Catégorie'">{{ reservation.categorie?.nom }}</td>
+
+<!-- Cellule Actions -->
+<td class="actions-cell" [attr.data-label]="'Actions'">
+  <div class="btn-actions">
+    <!-- Bouton QR Code : appelle la méthode locale -->
+    <button type="button" class="btn btn-primary btn-sm" (click)="openQrCodeModalHandler()" title="Afficher le QR Code">
+      <lucide-icon name="qr-code"></lucide-icon>
+      <span class="visually-hidden">Afficher QR Code</span>
+    </button>
+    <!-- Bouton PDF : émet au parent -->
+    <button type="button" class="btn btn-secondary btn-sm" (click)="onGeneratePDF()" title="Télécharger le PDF">
+      <lucide-icon name="download"></lucide-icon>
+      <span class="visually-hidden">Télécharger PDF</span>
+    </button>
+    <!-- Bouton Annuler : émet au parent -->
+    <button type="button" class="btn btn-danger btn-sm" (click)="onDelete()" title="Annuler la réservation">
+      <lucide-icon name="trash"></lucide-icon>
+      <span class="visually-hidden">Annuler</span>
+    </button>
+  </div> <!-- Fin .btn-actions -->
 </td>
+
+<!-- Modale QR Code gérée par cette ligne -->
+@if (isQrModalOpen) {
+  <app-qr-code-modal
+    [isOpen]="isQrModalOpen"
+    [qrData]="reservation?.qrcodeData || ''"
+    [ticketInfo]="reservation"
+    (close)="closeQrModalHandler()">
+  </app-qr-code-modal>
+}
+

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReservationEventModalComponent } from './reservation-event-modal.component';
+import { ParticipationEventModalComponent } from './participation-event-modal.component';
 
 describe('ReservationEventModalComponent', () => {
-  let component: ReservationEventModalComponent;
-  let fixture: ComponentFixture<ReservationEventModalComponent>;
+  let component: ParticipationEventModalComponent;
+  let fixture: ComponentFixture<ParticipationEventModalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReservationEventModalComponent]
+      imports: [ParticipationEventModalComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ReservationEventModalComponent);
+    fixture = TestBed.createComponent(ParticipationEventModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

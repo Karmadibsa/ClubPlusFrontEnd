@@ -1,23 +1,15 @@
-<!-- membre-row.component.html -->
-<td>{{ membre.id }}</td>
-<td>{{ membre.nom }} {{ membre.prenom }}</td>
-<td>{{ membre.date_naissance | date:'dd/MM/yyyy' }}</td>
-<!--<td>{{ membre.date_inscription | date:'dd/MM/yyyy' }}</td>-->
-<td>{{ membre.ville }}</td>
-<td>{{ membre.telephone || 'N/A' }}</td> <!-- Afficher N/A si le téléphone est null/vide -->
-<td>{{ membre.email }}</td>
-<td>{{ membre.role }}</td>
-
-<!-- === COLONNE ACTIONS MODIFIÉE === -->
-<td>
-  <div class="btn-actions" style="justify-content: center;">
-    <!-- Ce bouton appelle maintenant la méthode locale pour ouvrir la modale -->
-    <button class="btn btn-edit" title="Voir Détails / Gérer le rôle" (click)="openDetailsModal()">
+<td data-label="Nom">{{ membre.nom }} {{ membre.prenom }}</td>
+<td data-label="Naissance">{{ membre.date_naissance | date:'dd/MM/yyyy' }}</td>
+<td data-label="Ville">{{ membre.ville }}</td>
+<td data-label="Téléphone">{{ membre.telephone || 'N/A' }}</td>
+<td data-label="Email">{{ membre.email }}</td>
+<td data-label="Rôle">{{ membre.role }}</td>
+<td data-label="Actions"> <!-- Label pour la cellule actions -->
+  <div class="btn-actions">
+    <button class="btn btn-edit" title="Détails/Gérer rôle" (click)="openDetailsModal()">
       <lucide-icon name="user-cog" class="icon"></lucide-icon>
     </button>
-    <!-- Autres boutons d'action potentiels peuvent être ajoutés ici -->
   </div>
-</td>
 <!-- ================================ -->
 
 <!-- === MODALE INTÉGRÉE DANS LA LIGNE === -->
@@ -31,3 +23,4 @@
   </app-membre-detail-modal>
 }
 <!-- ==================================== -->
+</td>

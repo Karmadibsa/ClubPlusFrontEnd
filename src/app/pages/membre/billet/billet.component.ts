@@ -179,13 +179,7 @@ export class BilletComponent {
     }
   }
 
-  onSubmit(): void {
-    if (this.reservationForm.valid) {
-      console.log('Formulaire soumis', this.reservationForm.value);
-    } else {
-      console.log('Formulaire invalide');
-    }
-  }
+
 
   // Méthode appelée lorsqu'on clique sur le bouton Annuler/Supprimer d'une réservation
   onCancelReservation(reservation: any): void {

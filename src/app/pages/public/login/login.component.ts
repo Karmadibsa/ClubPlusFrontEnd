@@ -15,7 +15,6 @@ import {AuthService} from '../../../service/security/auth.service'; // Pour rela
   standalone: true,
   imports: [
     RouterLink,
-    NgIf,
     LucideAngularModule,
     ReactiveFormsModule,
   ],
@@ -23,7 +22,7 @@ import {AuthService} from '../../../service/security/auth.service'; // Pour rela
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-
+protected isLoading = false
   // --- Injections ---
   private fb = inject(FormBuilder);
   private router = inject(Router);
@@ -48,6 +47,7 @@ notification = inject(NotificationService)
 
   // --- Méthode de soumission ---
   onConnexion(): void {
+    this.isLoading = true
 if(this.loginForm.valid){
   this.http.post(
     "http://localhost:8080/api/auth/connexion",
@@ -64,10 +64,10 @@ if(this.loginForm.valid){
           return;
         }
         if (userRole === 'ROLE_ADMIN' || userRole === 'ROLE_RESERVATION') {
-          this.router.navigateByUrl("/dashboard");
+          this.router.navigateByUrl("/app/dashboard");
           this.notification.show(`Connexion réussie (${userRole}). Accès au tableau de bord.`, "valid");
         } else if (userRole === 'ROLE_MEMBRE') {
-          this.router.navigateByUrl("/event"); // Assurez-vous que cette route existe
+          this.router.navigateByUrl("/app/event"); // Assurez-vous que cette route existe
           this.notification.show("Connexion réussie (MEMBRE). Accès aux événements.", "valid");
         } else {
           console.warn("Rôle utilisateur non géré pour la redirection:", userRole);

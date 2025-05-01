@@ -1,50 +1,64 @@
-<div class="sidebar">
-  <app-sidebar></app-sidebar>
+<!-- Structure basée sur template.txt -->
+<div class="page-header">
+  <!-- Icône appropriée pour la gestion des membres -->
+  <h1 class="page-title">Liste des Membres</h1>
 </div>
-<div class="container">
-  <div class="header">
-    <h1>Liste des Membres</h1>
 
-  </div>
+<!-- Section Filtres -->
+<section class="filters-section" aria-labelledby="filters-title">
+  <h2 id="filters-title" class="visually-hidden">Options de filtrage des membres</h2>
   <app-filter-membre
     [membres]="allMembres"
     (filteredMembresChange)="handleFilteredMembresChange($event)">
   </app-filter-membre>
-  <div class="table-container">
-    <table class="full-width-table">
+</section>
+
+<!-- Section Principale contenant le tableau -->
+<section class="main-section">
+  <h2 id="main-title" class="visually-hidden">Tableau des membres</h2>
+
+  <!-- Wrapper pour le scroll horizontal du tableau -->
+  <!-- La classe .table-container n'est pas standard dans styles.txt, utilisons .table-wrapper -->
+  <div class="table-wrapper">
+    <!-- Utilisation de la classe globale .data-table -->
+    <table class="data-table" aria-label="Liste des membres">
       <thead>
       <tr>
-        <th>ID</th>
         <th>Nom et Prénom</th>
         <th>Date de Naissance</th>
-<!--        <th>Date d'Inscription</th>-->
-        <th>Adresse</th>
+        <th>Ville</th> <!-- Changé depuis Adresse pour correspondre à membre-row -->
         <th>Téléphone</th>
         <th>Email</th>
-        <th>Role</th>
+        <th>Rôle</th>
         <th>Actions</th>
       </tr>
       </thead>
       <tbody>
+      <!-- Itération avec le composant enfant app-membre-row -->
+      <!-- IMPORTANT: app-membre-row DOIT générer des <td> avec [attr.data-label] pour le responsive -->
         @for (member of paginatedMembres ; track member.id) {
-          <tr app-membre-row [membre]="member" (roleChangeRequested)="handleSaveRole($event)"></tr>
-        }@empty {
-          <!-- Optionnel: Message si aucun membre à afficher -->
-          <tr>
-            <td colspan="8" style="text-align: center; padding: 20px;">
-              Aucun membre trouvé ou correspondant aux filtres.
-            </td>
+          <tr app-membre-row
+              [membre]="member"
+              (roleChangeRequested)="handleSaveRole($event)">
+          </tr>
+        } @empty {
+          <!-- Message si tableau vide, utilise la classe globale -->
+          <tr class="empty-table-message">
+            <!-- Le colspan doit correspondre au nombre de <th> -->
+            <td colspan="8">Aucun membre trouvé ou correspondant aux filtres.</td>
           </tr>
         }
       </tbody>
     </table>
   </div>
+</section> <!-- Fin .main-section -->
 
+<!-- Section Pagination -->
+<nav class="pagination-section" aria-label="Pagination des membres">
   <app-pagination
     [currentPage]="currentPage"
     [totalItems]="filteredMembres.length"
     [itemsPerPage]="itemsPerPage"
     (pageChange)="onPageChange($event)">
   </app-pagination>
-</div>
-
+</nav>

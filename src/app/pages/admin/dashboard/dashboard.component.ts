@@ -29,7 +29,9 @@ import { RoleType } from '../../../model/role';         // Type pour les rôles 
 import { ChartData, ChartOptions } from 'chart.js'; // Types pour configurer les graphiques
 import { BaseChartDirective } from 'ng2-charts';
 import {CreateEventButtonComponent} from '../../../component/event/create-event-button/create-event-button.component';
-import {EditEventModalComponent} from '../../../component/event/edit-event/edit-event.component';   // La directive pour afficher un graphique dans le HTML
+import {EditEventModalComponent} from '../../../component/event/edit-event/edit-event.component';
+import {SidebarStateService} from '../../../service/sidebar-state.service';
+import {LucideAngularModule} from 'lucide-angular';   // La directive pour afficher un graphique dans le HTML
 
 // -------------------------
 
@@ -47,6 +49,7 @@ import {EditEventModalComponent} from '../../../component/event/edit-event/edit-
     MembreRowComponent,
     CreateEventButtonComponent,
     EditEventModalComponent,
+    LucideAngularModule,
   ],
   templateUrl: './dashboard.component.html', // Fichier HTML de ce composant
   styleUrls: ['./dashboard.component.scss'],   // Fichier CSS/SCSS de ce composant
@@ -56,7 +59,6 @@ import {EditEventModalComponent} from '../../../component/event/edit-event/edit-
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent implements OnInit, OnDestroy { // Implémente OnInit (pour l'init) et OnDestroy (pour le nettoyage)
-
   // --- Dépendances Injectées ---
   // On demande à Angular de nous fournir des instances des services dont on a besoin.
   // 'inject()' est la façon moderne de le faire.
@@ -163,8 +165,7 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
   // --- Cycle de Vie Angular ---
 
   // Fonction exécutée par Angular juste après la création du composant
-  ngOnInit(): void {
-    console.log("DashboardComponent initialisé.");
+  ngOnInit(): void {console.log("DashboardComponent initialisé.");
     // Récupère l'ID du club que l'utilisateur actuel gère (depuis AuthService)
     const clubId = this.authService.getManagedClubId();
     if (clubId !== null) {
@@ -341,7 +342,7 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
         data: orderedKeys.map(key => ratings[key] ?? 0), // Les valeurs Y (la note, 0 si manquante)
         label: 'Note Moyenne', // Nom du jeu de données
         // Styles des barres
-        backgroundColor: 'rgba(242, 97, 34, 0.6)', // Couleur orange semi-transparente
+        backgroundColor: 'rgba(242, 97, 34)', // Couleur orange semi-transparente
         borderColor: '#f26122',
         borderRadius: 5,
         // ... autres styles ...

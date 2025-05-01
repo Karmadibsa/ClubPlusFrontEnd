@@ -1,133 +1,170 @@
-<!-- edit-event.component.html - VERSION SIMPLIFIÉE -->
 @if (isVisible) {
-<div class="modal-overlay" (click)="closeModal()">
-  <!-- Affiche le contenu seulement si le formulaire est prêt -->
-  @if (eventForm){
-  <div class="modal-content" (click)="$event.stopPropagation()">
+  <!-- Utilise les classes globales .modal-overlay et .is-visible -->
+  <div class="modal-overlay"
+       [class.is-visible]="isVisible"
+       (click)="closeModal()">
 
-    <header class="modal-header">
-      <!-- Affiche "Modifier" ou "Créer" selon le mode -->
-      <h2>{{ isEditMode ? 'Modifier' : 'Créer' }} l'Événement</h2>
-      <button class="close-btn" (click)="closeModal()" title="Fermer">
-        <lucide-icon name="x" size="20"></lucide-icon>
-      </button>
-    </header>
+    <!-- Utilise la classe globale .modal-content et le modificateur .modal-content-lg -->
+    <div class="modal-content modal-content-lg" (click)="$event.stopPropagation()">
 
-    <main class="modal-body">
-      <!-- LIAISON PRINCIPALE : Le formulaire HTML est lié au FormGroup 'eventForm' du TS -->
-      <form [formGroup]="eventForm" novalidate>
+      <!-- Utilise les classes globales .modal-header et .modal-header-primary -->
+      <header class="modal-header modal-header-primary">
+        <!-- Ajout d'une icône pour cohérence -->
+        <h2>
+          <lucide-icon [name]="isEditMode ? 'edit' : 'plus-circle'" aria-hidden="true"></lucide-icon>
+          {{ isEditMode ? 'Modifier' : 'Créer' }} l'Événement
+        </h2>
+        <!-- Utilise la classe globale .modal-close-button -->
+        <button class="modal-close-button" (click)="closeModal()" title="Fermer" type="button">
+          <lucide-icon name="x" size="20"></lucide-icon>
+        </button>
+      </header>
 
-        <!-- Titre & Lieu -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="nom">Titre</label>
-            <!-- LIAISON CHAMP : Cet input est lié au contrôle 'nom' dans 'eventForm' -->
-            <input id="nom" type="text" formControlName="nom" />
-            <!-- *** Section erreurs supprimée pour simplifier *** -->
-          </div>
-          <div class="form-group">
-            <label for="location">Lieu</label>
-            <!-- LIAISON CHAMP : Cet input est lié au contrôle 'location' -->
-            <input id="location" type="text" formControlName="location" />
-            <!-- *** Section erreurs supprimée pour simplifier *** -->
-          </div>
-        </div>
+      <!-- Utilise la classe globale .modal-body -->
+      <main class="modal-body">
+        <!-- Affiche le contenu seulement si le formulaire est prêt -->
+        @if (eventForm){
+          <form [formGroup]="eventForm" novalidate>
 
-        <!-- Description -->
-        <div class="form-group">
-          <label for="description">Description</label>
-          <!-- LIAISON CHAMP : Ce textarea est lié au contrôle 'description' -->
-          <textarea id="description" rows="5" formControlName="description"></textarea>
-          <!-- *** Section erreurs supprimée pour simplifier *** -->
-        </div>
-
-        <!-- Dates -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="start">Date et Heure de début</label>
-            <!-- LIAISON CHAMP : Cet input est lié au contrôle 'start' -->
-            <input id="start" type="datetime-local" formControlName="start" />
-            <!-- *** Section erreurs supprimée pour simplifier *** -->
-          </div>
-          <div class="form-group">
-            <label for="end">Date et Heure de fin</label>
-            <!-- LIAISON CHAMP : Cet input est lié au contrôle 'end' -->
-            <input id="end" type="datetime-local" formControlName="end" />
-            <!-- *** Section erreurs supprimée pour simplifier *** -->
-            <!-- *** Section erreur validateur global supprimée pour simplifier *** -->
-          </div>
-        </div>
-
-        <!-- Catégories -->
-        <div class="form-group">
-          <label>Catégories</label>
-
-          <!-- LIAISON LISTE : Ce div contient la liste liée au FormArray 'categories' -->
-          <div formArrayName="categories" class="scroll">
-
-            <!-- Boucle pour afficher chaque catégorie dans le FormArray -->
-            <!-- 'categoryCtrl' est une variable temporaire pour chaque groupe, 'i' est l'index (0, 1, 2...) -->
-            @for (categoryCtrl of categoriesFormArray.controls; track i; let i = $index) {
-            <div [formGroupName]="i" class="category-item">
-              <!-- LIAISON GROUPE LISTE : Chaque ligne est liée à un FormGroup dans le FormArray (index 0, 1, 2...) -->
-
-              <div class="category-inputs">
-                <div class="form-group category-name">
-                  <label for="cat-nom-{{i}}" class="sr-only">Nom catégorie {{i+1}}</label>
-                  <!-- LIAISON CHAMP LISTE : Input lié au contrôle 'nom' DANS le groupe de cette catégorie -->
-                  <input id="cat-nom-{{i}}" type="text" placeholder="Nom catégorie" formControlName="nom" />
-                  <!-- *** Section erreurs supprimée pour simplifier *** -->
-                </div>
-                <div class="form-group category-capacity">
-                  <label for="cat-cap-{{i}}" class="sr-only">Capacité catégorie {{i+1}}</label>
-                  <!-- LIAISON CHAMP LISTE : Input lié au contrôle 'capacite' DANS le groupe de cette catégorie -->
-                  <input id="cat-cap-{{i}}" type="number" min="0" placeholder="Capacité" formControlName="capacite" />
-                  <!-- *** Section erreurs supprimée pour simplifier *** -->
+            <!-- Titre & Lieu -->
+            <!-- Utilise la classe globale .form-row -->
+            <div class="form-row">
+              <!-- Utilise la classe globale .form-group -->
+              <div class="form-group">
+                <label for="nom">Titre <span class="required-indicator">*</span></label>
+                <!-- Utilise la classe globale .form-control -->
+                <input id="nom" type="text" formControlName="nom" class="form-control"
+                       [class.is-invalid]="eventForm.get('nom')?.invalid && eventForm.get('nom')?.touched"
+                       aria-required="true" aria-describedby="nom-error"/>
+                <!-- Utilise la classe globale .invalid-feedback -->
+                <div id="nom-error" class="invalid-feedback" role="alert">
+                  @if (eventForm.get('nom')?.hasError('required')) { Le titre est requis. }
                 </div>
               </div>
-
-              <!-- Bouton pour supprimer CETTE ligne catégorie -->
-              <button type="button" class="btn btn-outline btn-delete-category" (click)="removeCategory(i)" title="Supprimer cette catégorie">
-                <lucide-icon name="trash-2" size="16"></lucide-icon>
-              </button>
+              <div class="form-group">
+                <label for="location">Lieu <span class="required-indicator">*</span></label>
+                <input id="location" type="text" formControlName="location" class="form-control"
+                       [class.is-invalid]="eventForm.get('location')?.invalid && eventForm.get('location')?.touched"
+                       aria-required="true" aria-describedby="location-error"/>
+                <div id="location-error" class="invalid-feedback" role="alert">
+                  @if (eventForm.get('location')?.hasError('required')) { Le lieu est requis. }
+                </div>
+              </div>
             </div>
-            }
-            <!-- Message si aucune catégorie n'est dans la liste -->
-            @if (categoriesFormArray.length === 0) {
-            <div class="no-categories-message">
-              Aucune catégorie définie. Cliquez sur "Ajouter" pour en créer une.
+
+            <!-- Description -->
+            <div class="form-group">
+              <label for="description">Description <span class="required-indicator">*</span></label>
+              <textarea id="description" rows="4" formControlName="description" class="form-control"
+                        [class.is-invalid]="eventForm.get('description')?.invalid && eventForm.get('description')?.touched"
+                        aria-required="true" aria-describedby="description-error"></textarea>
+              <div id="description-error" class="invalid-feedback" role="alert">
+                @if (eventForm.get('description')?.hasError('required')) { La description est requise. }
+              </div>
             </div>
-            }
-            <!-- *** Section erreur FormArray supprimée pour simplifier *** -->
-          </div>
 
-          <!-- Bouton pour ajouter une nouvelle catégorie (vide) -->
-          <div class="category-actions">
-            <button type="button" class="btn btn-primary" (click)="addCategory()">
-              <lucide-icon name="circle-plus" size="16"></lucide-icon> Ajouter une catégorie
-            </button>
-          </div>
-        </div>
+            <!-- Dates -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="start">Date et Heure de début <span class="required-indicator">*</span></label>
+                <input id="start" type="datetime-local" formControlName="start" class="form-control"
+                       [class.is-invalid]="eventForm.get('start')?.invalid && eventForm.get('start')?.touched"
+                       aria-required="true" aria-describedby="start-error"/>
+                <div id="start-error" class="invalid-feedback" role="alert">
+                  @if (eventForm.get('start')?.hasError('required')) { La date de début est requise. }
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="end">Date et Heure de fin <span class="required-indicator">*</span></label>
+                <input id="end" type="datetime-local" formControlName="end" class="form-control"
+                       [class.is-invalid]="(eventForm.get('end')?.invalid && eventForm.get('end')?.touched) || eventForm.hasError('dateInvalid')"
+                       aria-required="true" aria-describedby="end-error"/>
+                <div id="end-error" class="invalid-feedback" role="alert">
+                  @if (eventForm.get('end')?.hasError('required')) { La date de fin est requise. }
+                  @if (eventForm.hasError('dateInvalid')) { La date de fin doit être après la date de début. }
+                </div>
+              </div>
+            </div>
 
-      </form> <!-- Fin du formulaire -->
-    </main>
+            <!-- Catégories -->
+            <!-- Utilise .form-group mais sera stylé spécifiquement pour cette section -->
+            <div class="form-group categories-section">
+              <label class="categories-label">Catégories <span class="required-indicator">*</span></label>
 
-    <footer class="modal-footer">
-      <!-- Bouton Annuler -->
-      <button type="button" class="btn btn-secondary" (click)="closeModal()" [disabled]="isSaving">
-        <lucide-icon name="circle-x" size="16"></lucide-icon> Annuler
-      </button>
-      <!-- Bouton Enregistrer (désactivé si sauvegarde en cours) -->
-      <!-- Note: On a enlevé [disabled]="eventForm.invalid" pour l'instant pour simplifier -->
-      <button type="button" class="btn btn-primary" (click)="saveChanges()" [disabled]="isSaving">
-        @if (!isSaving){<lucide-icon name="save" size="16"></lucide-icon>}
-        @if (isSaving){<lucide-icon name="loader-circle" size="16" class="animate-spin"></lucide-icon>}
-        {{ isSaving ? 'Sauvegarde...' : 'Enregistrer' }}
-      </button>
-    </footer>
+              <!-- div scrollable spécifique à cette modale -->
+              <div formArrayName="categories" class="scrollable-categories">
+                @for (categoryCtrl of categoriesFormArray.controls; track i; let i = $index) {
+                  <!-- Conteneur spécifique pour un item catégorie -->
+                  <div [formGroupName]="i" class="category-item">
+                    <!-- Inputs spécifiques -->
+                    <div class="category-inputs">
+                      <div class="form-group category-name">
+                        <label for="cat-nom-{{i}}" class="visually-hidden">Nom catégorie {{i+1}}</label>
+                        <input id="cat-nom-{{i}}" type="text" placeholder="Nom catégorie" formControlName="nom" class="form-control"
+                               [class.is-invalid]="categoryCtrl.get('nom')?.invalid && categoryCtrl.get('nom')?.touched"
+                               aria-required="true" [attr.aria-describedby]="'cat-cap-' + i + '-error'"/>
+                        <div id="cat-nom-{{i}}-error" class="invalid-feedback">@if(categoryCtrl.get('nom')?.hasError('required')){Nom requis}</div>
+                      </div>
+                      <div class="form-group category-capacity">
+                        <label for="cat-cap-{{i}}" class="visually-hidden">Capacité catégorie {{i+1}}</label>
+                        <input id="cat-cap-{{i}}" type="number" min="0" placeholder="Capacité" formControlName="capacite" class="form-control"
+                               [class.is-invalid]="categoryCtrl.get('capacite')?.invalid && categoryCtrl.get('capacite')?.touched"
+                               aria-required="true" [attr.aria-describedby]="'cat-cap-' + i + '-error'"/>
+                        <div id="cat-cap-{{i}}-error" class="invalid-feedback">@if(categoryCtrl.get('capacite')?.hasError('required')){Capacité requise} @if(categoryCtrl.get('capacite')?.hasError('min')){Minimum 0}</div>
+                      </div>
+                    </div>
+                    <!-- Bouton Supprimer utilisant classes globales + spécifiques -->
+                    <button type="button" class="btn btn-danger btn-sm btn-delete-category" (click)="removeCategory(i)" title="Supprimer cette catégorie">
+                      <lucide-icon name="trash-2"></lucide-icon>
+                      <span class="visually-hidden">Supprimer catégorie {{i+1}}</span>
+                    </button>
+                  </div>
+                }
+                <!-- Message spécifique si vide -->
+                @if (categoriesFormArray.length === 0) {
+                  <div class="no-categories-message">
+                    Aucune catégorie définie. Cliquez sur "Ajouter" pour en créer une.
+                  </div>
+                }
+                <!-- Erreur globale pour le FormArray -->
+                @if (categoriesFormArray.invalid && categoriesFormArray.dirty && categoriesFormArray.length > 0) {
+                  <div class="form-array-error invalid-feedback">Veuillez vérifier les informations des catégories.</div>
+                }
+                @if (categoriesFormArray.hasError('required') && categoriesFormArray.dirty) {
+                  <div class="form-array-error invalid-feedback">Au moins une catégorie est requise.</div>
+                }
+              </div>
 
+              <!-- Actions spécifiques aux catégories -->
+              <div class="category-actions">
+                <button type="button" class="btn btn-secondary btn-sm" (click)="addCategory()">
+                  <lucide-icon name="plus"></lucide-icon> Ajouter une catégorie
+                </button>
+              </div>
+            </div>
+
+          </form>
+        } @else {
+          <!-- Optionnel: Indicateur de chargement si eventForm n'est pas prêt -->
+          <div class="loading-indicator">Chargement du formulaire...</div>
+        }
+      </main>
+
+      <!-- Utilise la classe globale .modal-footer -->
+      <footer class="modal-footer">
+        <!-- Utilise les classes globales .btn .btn-secondary -->
+        <button type="button" class="btn btn-secondary" (click)="closeModal()" [disabled]="isSaving">
+          <lucide-icon name="x"></lucide-icon> Annuler
+        </button>
+        <!-- Utilise les classes globales .btn .btn-primary -->
+        <button type="button" class="btn btn-primary" (click)="saveChanges()" [disabled]="isSaving || eventForm.invalid || !eventForm.dirty">
+          @if (!isSaving){<lucide-icon name="save"></lucide-icon>}
+          @if (isSaving){<lucide-icon name="loader" class="animate-spin"></lucide-icon>}
+          {{ isSaving ? 'Sauvegarde...' : 'Enregistrer' }}
+        </button>
+      </footer>
+
+    </div>
   </div>
-  }
-</div>
-  }
+}
 
