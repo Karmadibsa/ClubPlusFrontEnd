@@ -16,6 +16,8 @@ import {managerGuard} from './service/security/manager.guard';
 import {AmisComponent} from './pages/membre/amis/amis.component';
 import {NotationComponent} from './pages/membre/notation/notation.component';
 import {UserLayoutComponent} from './component/navigation/user-layout/user-layout.component';
+import {ForgotpasswordComponent} from './pages/public/forgotpassword/forgotpassword.component';
+import {ChangepasswordComponent} from './pages/public/changepassword/changepassword.component';
 
 
 export const routes: Routes = [
@@ -35,6 +37,15 @@ export const routes: Routes = [
     path: "connexion",
     component: LoginComponent,
   },
+  {
+    path: "forgotpassword",
+    component: ForgotpasswordComponent,
+  },
+  {
+    path: "changepassword",
+    component: ChangepasswordComponent,
+  },
+
   {
     path: 'app', // Ou un autre préfixe comme 'membre', ou même '' si c'est le défaut après login
     component: UserLayoutComponent, // Le composant parent qui contient la sidebar

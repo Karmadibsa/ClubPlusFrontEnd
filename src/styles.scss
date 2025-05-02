@@ -66,6 +66,31 @@ html {
 
 }
 
+
+/* --- Utilitaires --- */
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important; // Pour éviter tout espace résiduel
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important; // Empêche le retour à la ligne
+  border: 0 !important;
+}
+
+.non-selectable {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.animate-spin { animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
 /* Application globale de la police Poppins */
 html,
 body {
@@ -517,29 +542,7 @@ mat-snack-bar-container{
     }
   } /* Fin de table.data-table */
 
-  /* --- Utilitaires --- */
 
-  .visually-hidden {
-    position: absolute !important;
-    width: 1px !important;
-    height: 1px !important;
-    padding: 0 !important;
-    margin: -1px !important; // Pour éviter tout espace résiduel
-    overflow: hidden !important;
-    clip: rect(0, 0, 0, 0) !important;
-    white-space: nowrap !important; // Empêche le retour à la ligne
-    border: 0 !important;
-  }
-
-  .non-selectable {
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-  }
-
-  .animate-spin { animation: spin 1s linear infinite; }
-  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
   // @media (prefers-reduced-motion: reduce) { .animate-spin { animation: none; } } // Important pour l'accessibilité
 
   /* --- Responsive --- */
