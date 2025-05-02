@@ -18,6 +18,8 @@ import {NotationComponent} from './pages/membre/notation/notation.component';
 import {UserLayoutComponent} from './component/navigation/user-layout/user-layout.component';
 import {ForgotpasswordComponent} from './pages/public/forgotpassword/forgotpassword.component';
 import {ChangepasswordComponent} from './pages/public/changepassword/changepassword.component';
+import {AboutComponent} from './pages/public/about/about.component';
+import {ContactComponent} from './pages/public/contact/contact.component';
 
 
 export const routes: Routes = [
@@ -44,6 +46,14 @@ export const routes: Routes = [
   {
     path: "changepassword",
     component: ChangepasswordComponent,
+  },
+  {
+    path: "about",
+    component: AboutComponent,
+  },
+  {
+    path: "contact",
+    component: ContactComponent,
   },
 
   {

@@ -1,0 +1,128 @@
+<app-navbar></app-navbar> <!-- Suppose que la navbar est hors layout utilisateur -->
+
+<!-- Section Introduction (Style "Hero" adapté) -->
+<section class="contact-hero-section">
+  <div class="contact-hero-content">
+    <h1 class="contact-hero-title">
+      <lucide-icon name="mail" aria-hidden="true"></lucide-icon>
+      Nous Contacter
+    </h1>
+    <p class="contact-hero-description">
+      Une question ? Une suggestion ? N'hésitez pas à nous envoyer un message via le formulaire ci-dessous.
+    </p>
+  </div>
+</section>
+
+<!-- Section Formulaire de Contact -->
+<section class="contact-section">
+  <div class="contact-form-container">
+    <h2 class="section-title">Envoyer un message</h2>
+
+    <!-- Formulaire Réactif Angular -->
+    <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" novalidate>
+
+      <!-- Affichage Messages Succès/Erreur Globaux -->
+      <div *ngIf="successMessage" class="alert alert-success" role="alert">
+        {{ successMessage }}
+      </div>
+      <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Champ Nom -->
+      <div class="form-group">
+        <label for="contact-name">Votre Nom<span class="required-indicator">*</span></label>
+        <input type="text" id="contact-name" class="form-control" formControlName="name"
+               [class.is-invalid]="name?.invalid && name?.dirty"
+               required aria-describedby="name-error">
+        <div id="name-error" *ngIf="name?.invalid && name?.dirty">
+          <small *ngIf="name?.errors?.['required']" class="invalid-feedback">
+            Votre nom est requis.
+          </small>
+        </div>
+      </div>
+
+      <!-- Champ Email -->
+      <div class="form-group">
+        <label for="contact-email">Votre Email<span class="required-indicator">*</span></label>
+        <input type="email" id="contact-email" class="form-control" formControlName="email"
+               [class.is-invalid]="email?.invalid && email?.dirty"
+               required aria-describedby="email-error">
+        <div id="email-error" *ngIf="email?.invalid &&  email?.dirty">
+          <small *ngIf="email?.errors?.['required']" class="invalid-feedback">
+            Votre adresse e-mail est requise.
+          </small>
+          <small *ngIf="email?.errors?.['email']" class="invalid-feedback">
+            Veuillez entrer une adresse e-mail valide.
+          </small>
+        </div>
+      </div>
+
+      <!-- Champ Sujet -->
+      <div class="form-group">
+        <label for="contact-subject">Sujet<span class="required-indicator">*</span></label>
+        <input type="text" id="contact-subject" class="form-control" formControlName="subject"
+               [class.is-invalid]="subject?.invalid &&  subject?.dirty"
+               required aria-describedby="subject-error">
+        <div id="subject-error" *ngIf="subject?.invalid &&  subject?.dirty">
+          <small *ngIf="subject?.errors?.['required']" class="invalid-feedback">
+            Le sujet est requis.
+          </small>
+        </div>
+      </div>
+
+      <!-- Champ Message -->
+      <div class="form-group">
+        <label for="contact-message">Message<span class="required-indicator">*</span></label>
+        <textarea id="contact-message" class="form-control" formControlName="message" rows="6"
+                  [class.is-invalid]="message?.invalid && message?.dirty"
+                  required aria-describedby="message-error"></textarea>
+        <div id="message-error" *ngIf="message?.invalid && message?.dirty">
+          <small *ngIf="message?.errors?.['required']" class="invalid-feedback">
+            Votre message est requis.
+          </small>
+          <small *ngIf="message?.errors?.['minlength']" class="invalid-feedback">
+            Votre message doit contenir au moins 10 caractères.
+          </small>
+        </div>
+      </div>
+
+      <!-- Bouton d'envoi -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading || contactForm.invalid">
+          <span *ngIf="isLoading; else sendText" class="animate-spin" aria-hidden="true">
+             <lucide-icon name="loader-circle"></lucide-icon>
+          </span>
+          <ng-template #sendText>
+            <lucide-icon name="send" aria-hidden="true"></lucide-icon>
+            Envoyer le Message
+          </ng-template>
+        </button>
+      </div>
+
+    </form>
+  </div>
+</section>
+
+<!-- Section Infos Additionnelles (Optionnel) -->
+<section class="contact-section bg-alternate">
+  <div class="contact-info-container centered-text">
+    <h2>Informations</h2>
+    <p>
+      Application <strong>{{ appName }}</strong> développée par <strong>{{ developerName }}</strong>.
+    </p>
+    <div class="link-section">
+
+    <!-- Ajoutez ici email/téléphone direct si pertinent -->
+     <p><lucide-icon name="mail"></lucide-icon> {{mail}}</p>
+    <p><lucide-icon name="phone"></lucide-icon>
+      {{telephone }}</p>
+    <p><lucide-icon name="linkedin"></lucide-icon>
+      {{ linkedin }}</p>
+    <p><lucide-icon name="github"></lucide-icon>
+      {{ github }}</p>
+    </div>
+  </div>
+</section>
+
+<app-footer></app-footer> <!-- Suppose que le footer est hors layout utilisateur -->

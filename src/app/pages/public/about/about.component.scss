@@ -1,0 +1,203 @@
+// Utilisation exclusive des variables globales de :root
+
+:host {
+  display: block;
+  background-color: var(--bg-global, #f5f5f5); // Fond global
+  color: var(--text-dark); // Couleur de texte par défaut
+}
+
+/* --- Section Héros Adaptée --- */
+.about-hero-section {
+  // Similaire à .hero-section mais peut-être plus simple
+  background: linear-gradient(135deg, var(--bg-light-gray) 0%, var(--main-white) 100%);
+  padding: var(--spacing-xl, 32px) var(--spacing-lg, 24px);
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 250px; // Moins haute que la page d'accueil
+  transition: background-color 0.3s ease; // Pour dark mode
+}
+
+.about-hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.about-hero-title {
+  font-size: 2.8rem; // Légèrement plus petit que l'accueil
+  color: var(--text-dark);
+  margin-bottom: var(--spacing-md, 16px);
+  transition: color 0.3s ease;
+
+  strong {
+    color: var(--main-orange); // Garde l'accent orange
+    transition: color 0.3s ease;
+  }
+}
+
+.about-hero-description {
+  font-size: 1.1rem;
+  color: var(--text-medium);
+  line-height: 1.6;
+  transition: color 0.3s ease;
+}
+
+/* --- Styles Communs aux Sections --- */
+.about-section {
+  padding: var(--spacing-xl, 32px) var(--spacing-lg, 24px);
+  transition: background-color 0.3s ease, border-color 0.3s ease; // Transition couleur
+
+  .section-title {
+    text-align: center;
+    color: var(--main-orange);
+  }
+}
+
+// Section avec fond alterné
+.bg-alternate {
+  background-color: var(--bg-light-gray);
+}
+
+// Section avec fond coloré (bleu)
+.bg-colored {
+  background-color: var(--main-blue); // Fond bleu principal
+  color: var(--main-white); // Texte blanc par défaut sur fond bleu
+  transition: background-color 0.3s ease, color 0.3s ease; // Inclut transition couleur texte
+
+  // Ajuste la couleur des liens ou éléments spécifiques si nécessaire sur fond bleu
+  a { color: var(--secondary-blue); } // Exemple: liens en bleu plus clair
+
+  // Les titres et textes utilisent la couleur blanche définie ci-dessus
+  h2, p {
+    color: var(--main-white);
+  }
+}
+
+.about-section-content {
+  max-width: 900px; // Limite la largeur du contenu
+  margin: 0 auto; // Centre le contenu
+
+  &.centered-text {
+    text-align: center;
+  }
+
+  // Contenu spécifique pour la section colorée (pour s'assurer que le texte est bien blanc)
+  &.colored-section-content {
+    h2, p { color: var(--main-white); transition: color 0.3s ease; }
+  }
+
+  h2, .section-title { // Styles communs pour les titres de section
+    font-size: 2rem;
+    color: var(--main-blue); // Titre bleu par défaut
+    margin-bottom: var(--spacing-lg, 24px);
+    text-align: center;
+    transition: color 0.3s ease;
+  }
+
+  p {
+    font-size: 1rem;
+    color: var(--text-medium); // Texte medium par défaut
+    line-height: 1.6;
+    margin-top: 0;
+    margin-bottom: var(--spacing-md, 16px);
+    max-width: 700px; // Limite largeur des paragraphes pour lisibilité
+    margin-left: auto;
+    margin-right: auto;
+    transition: color 0.3s ease;
+
+    strong {
+      font-weight: 600;
+      color: var(--main-orange); // Orange pour mise en évidence
+      transition: color 0.3s ease;
+    }
+  }
+}
+
+/* --- Grille pour les Fonctionnalités (Style "Features Grid") --- */
+.about-grid { // On garde le nom de classe pour l'instant, mais on applique Flexbox
+  display: flex; // *** CHANGEMENT ICI: Utilise Flexbox ***
+  flex-wrap: wrap; // Permet aux éléments de passer à la ligne
+  justify-content: center; // Centre les éléments horizontalement
+  gap: var(--spacing-lg, 24px); // Espace entre les éléments
+  max-width: 1100px; // Limite la largeur totale
+  margin: 0 auto; // Centre la zone flex
+}
+
+.about-item {
+  background-color: var(--main-white); // Fond blanc (s'adapte au dark mode)
+  padding: var(--spacing-md, 16px);
+  border-radius: var(--border-radius, 8px);
+  text-align: center;
+  border: 1px solid var(--border-color, #eee); // Bordure légère
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  display: flex; // Pour aligner icône et texte
+  flex-direction: column; // Icône au-dessus du texte
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+
+  lucide-icon {
+    width: 32px; // Icônes un peu plus grandes
+    height: 32px;
+    color: var(--main-orange); // Icônes orange
+    margin-bottom: var(--spacing-xs, 4px);
+    transition: color 0.3s ease;
+  }
+
+  p {
+    font-size: 0.95rem;
+    color: var(--text-dark); // Texte standard
+    margin-bottom: 0;
+    max-width: 100%; // Prend toute la largeur de l'item
+    transition: color 0.3s ease;
+  }
+}
+
+/* --- Liste des Technologies (Similaire à page d'accueil) --- */
+.techno-list {
+  list-style: none;
+  padding-left: 0;
+  margin: var(--spacing-md, 16px) auto 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; // Centre les tags
+  gap: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+  max-width: 700px; // Limite la largeur de la zone des tags
+
+  li {
+    // Tags avec fond blanc/contraste sur fond bleu
+    background-color: rgba(255, 255, 255, 0.15); // Fond blanc très transparent
+    color: var(--main-white); // Texte blanc
+    padding: var(--spacing-xs, 4px) var(--spacing-sm, 8px);
+    border-radius: var(--border-radius-sm, 4px);
+    font-size: 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.3); // Bordure blanche transparente
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+/* --- Responsive (Similaire à l'accueil) --- */
+@media (max-width: 768px) {
+  .about-hero-title {
+    font-size: 2rem;
+  }
+
+  .about-hero-description {
+    font-size: 1rem;
+  }
+
+  .about-section {
+    padding: var(--spacing-lg, 24px) var(--spacing-md, 16px);
+
+  }
+
+  .about-section-content h2,
+  .about-section-content .section-title {
+    font-size: 1.6rem;
+  }
+
+  // La grille s'adapte automatiquement grâce à `repeat(auto-fit, ...)`
+}
+
+
