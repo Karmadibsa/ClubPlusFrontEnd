@@ -18,6 +18,7 @@ import {Evenement} from '../../../model/evenement'; // Assure-toi que ce modèle
 import {LucideAngularModule} from 'lucide-angular';
 import {FilterEventComponent} from '../../../component/event/filter-event/filter-event.component';
 import {PaginationComponent} from '../../../component/navigation/pagination/pagination.component';
+import {EditEventModalComponent} from '../../../component/event/edit-event/edit-event.component';
 
 
 @Component({
@@ -30,7 +31,8 @@ import {PaginationComponent} from '../../../component/navigation/pagination/pagi
     // Assure-toi que le nom est correct
     CreateEventButtonComponent,
     FilterEventComponent,
-    PaginationComponent
+    PaginationComponent,
+    EditEventModalComponent
   ],
   templateUrl: './eventAdmin.component.html',
   styleUrls: ['./eventAdmin.component.scss'],

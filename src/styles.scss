@@ -483,6 +483,7 @@ mat-snack-bar-container{
   .form-control,
   input[type="text"], input[type="email"], input[type="tel"], input[type="password"],
   input[type="date"], input[type="time"], textarea, select {
+    color: var(--text-dark);
     width: 100%; padding: 10px 12px; border: 1px solid var(--border-color, #ccc);
     border-radius: var(--border-radius-sm, 4px); font-size: 1rem; line-height: 1.5;
     transition: border-color 0.3s ease, box-shadow 0.3s ease; background-color: var(--main-white, #fff);

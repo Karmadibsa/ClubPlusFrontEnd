@@ -65,4 +65,11 @@
   </app-pagination>
 </nav>
 
-
+@if (isEditEventModalVisible) {
+  <app-edit-event
+    [isVisible]="isEditEventModalVisible"
+    [event]="selectedEventForEditModal"
+    (saveSuccess)="handleSaveEventSuccess($event)"
+    (close)="handleCloseEditModal()">
+  </app-edit-event>
+}

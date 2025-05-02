@@ -185,7 +185,7 @@
         </button>
         <!-- Utilise les classes globales .btn .btn-primary -->
         <button type="button" class="btn btn-primary" (click)="saveChanges()"
-                [disabled]="isSaving || eventForm.invalid || !eventForm.dirty">
+                [disabled]="isSaving || eventForm.invalid">
           @if (!isSaving) {
             <lucide-icon name="save"></lucide-icon>
           }

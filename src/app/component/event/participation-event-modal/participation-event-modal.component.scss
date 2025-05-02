@@ -46,8 +46,33 @@
   }
 }
 
-// Style spécifique pour les boutons de filtre (inchangé)
-.btn-filter { /* ... styles existants ... */
+// Style spécifique pour les boutons de filtre
+.btn-filter {
+  // Hérite de .btn global (padding, border-radius, transition, display:inline-flex, etc.)
+  // Surcharges/ajustements spécifiques pour les filtres :
+  font-size: 0.85rem; // Plus petit
+  font-weight: 500;
+  padding: var(--spacing-xs) var(--spacing-sm); // Padding réduit
+  background-color: var(--bg-light-gray);
+  border: 1px solid var(--border-color);
+  color: var(--text-medium);
+  // Le gap pour icône éventuelle est hérité de .btn
+
+  // Pas besoin de redéfinir :hover car le :hover global de .btn est souvent suffisant
+  // Si un style spécifique est voulu pour le survol des filtres inactifs:
+  &:hover:not(.active) {
+    background-color: var(--bg-medium-gray);
+    border-color: var(--text-light);
+    color: var(--text-dark);
+  }
+
+  // État actif spécifique aux filtres
+  &.active {
+    background-color: var(--main-blue);
+    color: var(--main-white);
+    border-color: var(--main-blue);
+    font-weight: 600;
+  }
 }
 
 // Style optionnel pour l'icône dans le champ de recherche
@@ -75,31 +100,69 @@
 
 
 // --- Style spécifique Table Participations (inchangé) ---
-.participation-table-wrapper { /* ... */
+.participation-table-wrapper {
+  margin-top: var(--spacing-md);
 }
 
-.participation-table { /* ... */
-  th, td { /* ... */
+.participation-table {
+  // Surcharges spécifiques pour la table DANS CETTE MODALE :
+
+  th, td {
+    // Padding global est --spacing-md (~16px)
+    // On réduit pour plus de densité :
+    padding: var(--spacing-sm); // Padding réduit (~8px)
+
+    // Bordure globale est juste border-bottom
+    // On met une bordure complète pour un look plus "grille":
+    border: 1px solid var(--border-color-light, #eee);
   }
 
-  thead th { /* ... */
+  thead th { // Surcharge du thead global (qui est bleu)
+    background-color: var(--bg-light-gray); // Fond plus léger
+    color: var(--text-dark); // Texte sombre sur fond clair
+    font-weight: 600; // Hérité mais confirmation
+    position: sticky; // Fige l'en-tête lors du scroll du .modal-body
+    top: -1px;        // Compense le padding du .modal-body si > 0
+    z-index: 1;       // Assure qu'il est au-dessus du contenu tbody
   }
+
+  // tbody tr:hover { // Style de survol hérité du global .data-table }
 }
 
-// --- Messages spécifiques (inchangé) ---
-.error-message { /* ... */
+
+// --- Messages spécifiques (si différents du global) ---
+// .loading-indicator { /* Style global suffit */ }
+// .no-data-message { /* Style global suffit */ }
+
+.error-message {
+  padding: var(--spacing-md);
+  text-align: center;
+  color: var(--danger);
+  font-weight: bold;
+  background-color: rgba(var(--danger-rgb, 220, 53, 69), 0.1);
+  border: 1px solid var(--danger);
+  border-radius: var(--border-radius-sm);
 }
 
-// --- Badge de Statut (inchangé) ---
-.status-badge { /* ... */
-  &.status-confirme { /* ... */
-  }
 
-  &.status-utilise { /* ... */
-  }
+// --- Badge de Statut ---
+.status-badge {
+  padding: 3px var(--spacing-sm);
+  border-radius: 12px; // Forme pilule
+  font-size: 0.85em;
+  font-weight: 600;
+  color: var(--main-white);
+  text-transform: capitalize;
+  display: inline-block;
+  line-height: 1.4;
+  text-align: center; // Centre le texte dans le badge
+  min-width: 70px; // Donne une largeur minimale pour l'alignement visuel
 
-  &.status-annule { /* ... */
-  }
+  // Classes spécifiques basées sur le statut (variables globales)
+  &.status-confirme { background-color: var(--success); }
+  &.status-utilise { background-color: var(--info); }
+  &.status-annule { background-color: var(--danger); }
+  // &.status-pending { background-color: var(--warning); color: var(--text-dark); } // Exemple
 }
 
 // --- Responsive pour la section filtre ---
