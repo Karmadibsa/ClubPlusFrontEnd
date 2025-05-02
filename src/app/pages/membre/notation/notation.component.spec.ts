@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { NotationComponent } from './notation.component';
+import {NotationComponent} from './notation.component';
 
 describe('NotationComponent', () => {
   let component: NotationComponent;
@@ -10,7 +10,7 @@ describe('NotationComponent', () => {
     await TestBed.configureTestingModule({
       imports: [NotationComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(NotationComponent);
     component = fixture.componentInstance;

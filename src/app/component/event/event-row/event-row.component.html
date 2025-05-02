@@ -1,6 +1,8 @@
 <!-- event-row.component.html -->
 <td data-label="Titre">{{ evenement.nom }}</td>
-<td data-label="Début - Fin">{{ evenement.start | date:'dd/MM/yyyy HH:mm' }} - {{ evenement.end | date:'dd/MM HH:mm' }}</td>
+<td data-label="Début - Fin">{{ evenement.start | date:'dd/MM/yyyy HH:mm' }}
+  - {{ evenement.end | date:'dd/MM HH:mm' }}
+</td>
 <td data-label="Description">{{ evenement.description }}</td>
 <td data-label="Participants">{{ evenement.placeReserve }} / {{ evenement.placeTotal }}</td>
 <td data-label="Lieu">{{ evenement.location }}</td>
@@ -24,13 +26,13 @@
 </td>
 
 <!-- Modal d'édition -->
-@if (isModalEditVisible){
-<app-edit-event
-  [isVisible]="isModalEditVisible"
-  [event]="evenement"
-  (saveSuccess)="sauvegarderEvenement($event)"
-  (close)="fermerModalEdit()">
-</app-edit-event>
+@if (isModalEditVisible) {
+  <app-edit-event
+    [isVisible]="isModalEditVisible"
+    [event]="evenement"
+    (saveSuccess)="sauvegarderEvenement($event)"
+    (close)="fermerModalEdit()">
+  </app-edit-event>
 }
 
 
@@ -38,8 +40,8 @@
 @if (isParticipationModalVisible) {
   <app-participation-event-modal
     [isVisible]="isParticipationModalVisible"
-    [eventId]="evenement?.id!"
-    [eventTitle]="evenement?.nom!"
+    [eventId]="evenement.id!"
+    [eventTitle]="evenement.nom!"
     (closeModal)="handleCloseParticipationModal()">
   </app-participation-event-modal>
 }

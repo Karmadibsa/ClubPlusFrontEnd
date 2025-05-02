@@ -18,7 +18,6 @@ import {NotationComponent} from './pages/membre/notation/notation.component';
 import {UserLayoutComponent} from './component/navigation/user-layout/user-layout.component';
 
 
-
 export const routes: Routes = [
   {
     path: "accueil",
@@ -42,11 +41,11 @@ export const routes: Routes = [
     canActivate: [connecteGuard], // Protège TOUTES les routes enfants ci-dessous
     children: [
       // Routes Membre/Admin qui s'afficheront dans le <router-outlet> de UserLayoutComponent
-      { path: "event", component: EventComponent }, // Note: plus besoin de canActivate ici si déjà sur le parent
-      { path: "profil", component: MonCompteComponent },
-      { path: "billet", component: BilletComponent },
-      { path: "amis", component: AmisComponent },
-      { path: "notation", component: NotationComponent },
+      {path: "event", component: EventComponent}, // Note: plus besoin de canActivate ici si déjà sur le parent
+      {path: "profil", component: MonCompteComponent},
+      {path: "billet", component: BilletComponent},
+      {path: "amis", component: AmisComponent},
+      {path: "notation", component: NotationComponent},
       {
         path: "dashboard",
         component: DashboardComponent,
@@ -68,7 +67,7 @@ export const routes: Routes = [
         canActivate: [managerGuard]
       },
       // Redirection par défaut DANS le layout utilisateur (ex: vers dashboard ou event)
-      { path: "", redirectTo: "event", pathMatch: "full" } // Ou 'dashboard' si c'est la page par défaut
+      {path: "", redirectTo: "event", pathMatch: "full"} // Ou 'dashboard' si c'est la page par défaut
     ]
   },
 

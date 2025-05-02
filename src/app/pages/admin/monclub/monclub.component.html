@@ -38,14 +38,15 @@
           <input
             type="text"
             id="nom"
-          formControlName="nom"
-          placeholder="Nom du club"
-          class="form-control"
-          [class.is-invalid]="clubForm.get('nom')?.invalid && (clubForm.get('nom')?.touched || clubForm.get('nom')?.dirty)"
-          aria-required="true"
-          aria-describedby="nom-error"
+            formControlName="nom"
+            placeholder="Nom du club"
+            class="form-control"
+            [class.is-invalid]="clubForm.get('nom')?.invalid && (clubForm.get('nom')?.touched || clubForm.get('nom')?.dirty)"
+            aria-required="true"
+            aria-describedby="nom-error"
           />
-          <div id="nom-error" class="invalid-feedback" role="alert" aria-live="assertive"> <!-- ID conservé, classe standard -->
+          <div id="nom-error" class="invalid-feedback" role="alert" aria-live="assertive">
+            <!-- ID conservé, classe standard -->
             @if (clubForm.get('nom')?.hasError('required')) {
               Le nom du club est requis.
             }
@@ -72,11 +73,11 @@
             <input
               type="text"
               id="numero_voie"
-            formControlName="numero_voie"
-            placeholder="Numéro"
-            class="form-control"
-            [class.is-invalid]="clubForm.get('numero_voie')?.invalid && (clubForm.get('numero_voie')?.touched || clubForm.get('numero_voie')?.dirty)"
-            aria-describedby="numero_voie-error"
+              formControlName="numero_voie"
+              placeholder="Numéro"
+              class="form-control"
+              [class.is-invalid]="clubForm.get('numero_voie')?.invalid && (clubForm.get('numero_voie')?.touched || clubForm.get('numero_voie')?.dirty)"
+              aria-describedby="numero_voie-error"
             />
             <div id="numero_voie-error" class="invalid-feedback" role="alert" aria-live="assertive">
               <!-- Erreurs -->
@@ -87,15 +88,17 @@
             <input
               type="text"
               id="rue"
-            formControlName="rue"
-            placeholder="Nom de la rue"
-            class="form-control"
-            [class.is-invalid]="clubForm.get('rue')?.invalid && (clubForm.get('rue')?.touched || clubForm.get('rue')?.dirty)"
-            aria-required="true"
-            aria-describedby="rue-error"
+              formControlName="rue"
+              placeholder="Nom de la rue"
+              class="form-control"
+              [class.is-invalid]="clubForm.get('rue')?.invalid && (clubForm.get('rue')?.touched || clubForm.get('rue')?.dirty)"
+              aria-required="true"
+              aria-describedby="rue-error"
             />
             <div id="rue-error" class="invalid-feedback" role="alert" aria-live="assertive">
-              @if (clubForm.get('rue')?.hasError('required')) { La rue est requise. }
+              @if (clubForm.get('rue')?.hasError('required')) {
+                La rue est requise.
+              }
             </div>
           </div>
         </div>
@@ -106,17 +109,21 @@
             <input
               type="text"
               id="codepostal"
-            formControlName="codepostal"
-            placeholder="Code postal"
-            class="form-control"
-            [class.is-invalid]="clubForm.get('codepostal')?.invalid && (clubForm.get('codepostal')?.touched || clubForm.get('codepostal')?.dirty)"
-            aria-required="true"
-            aria-describedby="codepostal-error postal-format-hint"
+              formControlName="codepostal"
+              placeholder="Code postal"
+              class="form-control"
+              [class.is-invalid]="clubForm.get('codepostal')?.invalid && (clubForm.get('codepostal')?.touched || clubForm.get('codepostal')?.dirty)"
+              aria-required="true"
+              aria-describedby="codepostal-error postal-format-hint"
             />
             <small id="postal-format-hint" class="form-text text-muted">Format: 5 chiffres (ex: 75001)</small>
             <div id="codepostal-error" class="invalid-feedback" role="alert" aria-live="assertive">
-              @if (clubForm.get('codepostal')?.hasError('required')) { Le code postal est requis. }
-              @if (clubForm.get('codepostal')?.hasError('pattern')) { Format invalide (5 chiffres attendus). }
+              @if (clubForm.get('codepostal')?.hasError('required')) {
+                Le code postal est requis.
+              }
+              @if (clubForm.get('codepostal')?.hasError('pattern')) {
+                Format invalide (5 chiffres attendus).
+              }
             </div>
           </div>
           <div class="form-group">
@@ -124,15 +131,17 @@
             <input
               type="text"
               id="ville"
-            formControlName="ville"
-            placeholder="Ville"
-            class="form-control"
-            [class.is-invalid]="clubForm.get('ville')?.invalid && (clubForm.get('ville')?.touched || clubForm.get('ville')?.dirty)"
-            aria-required="true"
-            aria-describedby="ville-error"
+              formControlName="ville"
+              placeholder="Ville"
+              class="form-control"
+              [class.is-invalid]="clubForm.get('ville')?.invalid && (clubForm.get('ville')?.touched || clubForm.get('ville')?.dirty)"
+              aria-required="true"
+              aria-describedby="ville-error"
             />
             <div id="ville-error" class="invalid-feedback" role="alert" aria-live="assertive">
-              @if (clubForm.get('ville')?.hasError('required')) { La ville est requise. }
+              @if (clubForm.get('ville')?.hasError('required')) {
+                La ville est requise.
+              }
             </div>
           </div>
         </div>
@@ -154,14 +163,16 @@
             <input
               type="tel"
               id="telephone"
-            formControlName="telephone"
-            placeholder="Numéro de téléphone"
-            class="form-control"
-            [class.is-invalid]="clubForm.get('telephone')?.invalid && (clubForm.get('telephone')?.touched || clubForm.get('telephone')?.dirty)"
-            aria-describedby="telephone-error"
+              formControlName="telephone"
+              placeholder="Numéro de téléphone"
+              class="form-control"
+              [class.is-invalid]="clubForm.get('telephone')?.invalid && (clubForm.get('telephone')?.touched || clubForm.get('telephone')?.dirty)"
+              aria-describedby="telephone-error"
             />
             <div id="telephone-error" class="invalid-feedback" role="alert" aria-live="assertive">
-              @if (clubForm.get('telephone')?.hasError('pattern')) { Format invalide. }
+              @if (clubForm.get('telephone')?.hasError('pattern')) {
+                Format invalide.
+              }
             </div>
           </div>
           <div class="form-group">
@@ -169,16 +180,20 @@
             <input
               type="email"
               id="email"
-            formControlName="email"
-            placeholder="Adresse email du club"
-            class="form-control"
-            [class.is-invalid]="clubForm.get('email')?.invalid && (clubForm.get('email')?.touched || clubForm.get('email')?.dirty)"
-            aria-required="true"
-            aria-describedby="email-error"
+              formControlName="email"
+              placeholder="Adresse email du club"
+              class="form-control"
+              [class.is-invalid]="clubForm.get('email')?.invalid && (clubForm.get('email')?.touched || clubForm.get('email')?.dirty)"
+              aria-required="true"
+              aria-describedby="email-error"
             />
             <div id="email-error" class="invalid-feedback" role="alert" aria-live="assertive">
-              @if (clubForm.get('email')?.hasError('required')) { L'email est requis. }
-              @if (clubForm.get('email')?.hasError('email')) { Format invalide. }
+              @if (clubForm.get('email')?.hasError('required')) {
+                L'email est requis.
+              }
+              @if (clubForm.get('email')?.hasError('email')) {
+                Format invalide.
+              }
             </div>
           </div>
         </div>
@@ -187,7 +202,8 @@
 
     <!-- Actions du formulaire - Utilise la classe standard .form-actions -->
     <div class="form-actions">
-      <button type="submit" class="btn btn-primary" [disabled]="clubForm.invalid || clubForm.pending || !clubForm.dirty">
+      <button type="submit" class="btn btn-primary"
+              [disabled]="clubForm.invalid || clubForm.pending || !clubForm.dirty">
         <lucide-icon name="save" class="icon" aria-hidden="true"></lucide-icon>
         Enregistrer les modifications
       </button>

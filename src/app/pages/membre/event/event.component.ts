@@ -1,19 +1,14 @@
 import {ChangeDetectorRef, Component, inject} from '@angular/core';
 import {FormsModule} from "@angular/forms";
-import {
-  EventCardComponent
-} from "../../../component/event/eventcard/eventcard.component";
-import {AsyncPipe, NgForOf} from "@angular/common";
+import {EventCardComponent} from "../../../component/event/eventcard/eventcard.component";
 import {LucideAngularModule} from "lucide-angular";
-import {SidebarComponent} from '../../../component/navigation/sidebar/sidebar.component';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpErrorResponse} from '@angular/common/http';
 import {Evenement} from '../../../model/evenement';
 import {EventService} from '../../../service/event.service';
 import {NotificationService} from '../../../service/notification.service';
-import {Observable, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {FilterEventComponent} from '../../../component/event/filter-event/filter-event.component';
 import {PaginationComponent} from '../../../component/navigation/pagination/pagination.component';
-import {SidebarStateService} from '../../../service/sidebar-state.service';
 
 @Component({
   selector: 'app-event',
@@ -22,10 +17,8 @@ import {SidebarStateService} from '../../../service/sidebar-state.service';
     FormsModule,
     EventCardComponent,
     LucideAngularModule,
-    SidebarComponent,
     FilterEventComponent,
     PaginationComponent,
-    AsyncPipe,
   ],
   styleUrls: ['./event.component.scss']
 })
@@ -47,7 +40,6 @@ export class EventComponent {
   // --- Autres États ---
   isLoading = false;
   private eventsSubscription: Subscription | null = null;
-
 
 
   ngOnInit(): void {

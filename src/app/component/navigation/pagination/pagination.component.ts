@@ -1,5 +1,4 @@
-import {Component, EventEmitter, inject, Input, Output, SimpleChanges} from '@angular/core';
-import {AuthService} from '../../../service/security/auth.service';
+import {Component, EventEmitter, Input, Output, SimpleChanges} from '@angular/core';
 
 @Component({
   selector: 'app-pagination',
@@ -31,7 +30,7 @@ export class PaginationComponent {
     }
     this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
     // Générer les numéros de page (simple pour l'instant, peut être amélioré)
-    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    this.pages = Array.from({length: this.totalPages}, (_, i) => i + 1);
   }
 
   selectPage(page: number): void {

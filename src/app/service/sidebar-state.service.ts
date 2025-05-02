@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 
 @Injectable({
@@ -11,7 +11,8 @@ export class SidebarStateService {
   // Exposition de l'état sous forme d'Observable pour que les composants s'y abonnent
   public isCollapsed$: Observable<boolean> = this.isCollapsedSubject.asObservable();
 
-  constructor() { }
+  constructor() {
+  }
 
   // Méthode pour récupérer l'état initial depuis localStorage
   private getInitialState(): boolean {

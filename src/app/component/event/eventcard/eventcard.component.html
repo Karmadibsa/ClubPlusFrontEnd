@@ -2,14 +2,16 @@
 
 <!-- Utilisation d'une div comme conteneur principal de la carte -->
 <!-- Les styles SCSS doivent définir .event-card pour ressembler à une carte -->
-<div class="event-card card" role="article" [attr.aria-labelledby]="'event-title-' + event?.id"> <!-- Ajout classe .card globale -->
+<div class="event-card card" role="article" [attr.aria-labelledby]="'event-title-' + event.id">
+  <!-- Ajout classe .card globale -->
 
   <!-- En-tête de la carte -->
   <header class="event-card-header">
-    <h3 class="event-title" [id]="'event-title-' + event?.id">{{ event?.nom }}</h3> <!-- Utiliser H3 si H2 est titre de section parent -->
+    <h3 class="event-title" [id]="'event-title-' + event.id">{{ event.nom }}</h3>
+    <!-- Utiliser H3 si H2 est titre de section parent -->
     <div class="event-time">
       <lucide-icon name="calendar-clock" size="16" aria-hidden="true"></lucide-icon>
-      <span>{{ event?.start | date:'dd/MM/yyyy HH:mm' }} - {{ event?.end | date:'HH:mm' }}</span>
+      <span>{{ event.start | date:'dd/MM/yyyy HH:mm' }} - {{ event.end | date:'HH:mm' }}</span>
     </div>
   </header>
 
@@ -18,7 +20,7 @@
     <div class="event-section event-description">
       <dl>
         <dt class="section-title visually-hidden">Description</dt>
-        <dd class="description-text">{{ event?.description }}</dd>
+        <dd class="description-text">{{ event.description }}</dd>
       </dl>
     </div>
     <div class="event-section event-details">
@@ -28,9 +30,9 @@
             <lucide-icon name="users" size="16" aria-hidden="true"></lucide-icon>
             Places :
           </dt>
-          <dd>{{ event?.placeReserve ?? 0 }}/{{ event?.placeTotal ?? 0 }}</dd>
+          <dd>{{ event.placeReserve ?? 0 }}/{{ event.placeTotal ?? 0 }}</dd>
         </div>
-        @if ((event?.amiParticipants?.length ?? 0) > 0) {
+        @if ((event.amiParticipants?.length ?? 0) > 0) {
           <div class="detail-item amis-section">
             <dt class="section-title">
               <lucide-icon name="user-check" size="16" aria-hidden="true"></lucide-icon>

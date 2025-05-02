@@ -1,6 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core'; // Ajout OnInit
-import { CommonModule } from '@angular/common'; // Ajout pour standalone
-import {SidebarComponent} from "../../../component/navigation/sidebar/sidebar.component";
+import {CommonModule} from '@angular/common'; // Ajout pour standalone
 import {FormsModule} from '@angular/forms';
 import {Membre} from '../../../model/membre';
 import {AmisService} from '../../../service/amis.service';
@@ -15,7 +14,6 @@ import {Clipboard} from '@angular/cdk/clipboard'; // Assurez que le chemin est c
   standalone: true, // Ajout car imports est utilisé
   imports: [
     CommonModule, // Ajout
-    SidebarComponent,
     FormsModule,
     LucideAngularModule
   ],
@@ -39,7 +37,8 @@ export class AmisComponent implements OnInit { // Implémente OnInit
   friendSearchTerm: string = ''; // <-- NOUVEAU: Terme de recherche pour les amis
 
 
-  constructor(private amisService: AmisService) {}
+  constructor(private amisService: AmisService) {
+  }
 
   ngOnInit(): void {
     this.loadInitialData();
@@ -78,7 +77,8 @@ export class AmisComponent implements OnInit { // Implémente OnInit
     if (code) {
       this.clipboard.copy(code);
       this.notification.show('Code ami copié dans le presse-papiers !', 'valid');
-    }}
+    }
+  }
 
   loadFriends(): void {
     this.isLoading = true;
@@ -93,7 +93,9 @@ export class AmisComponent implements OnInit { // Implémente OnInit
         this.notification.show("Erreur chargement amis.", 'error');
         this.isLoading = false; // Mettre à false en cas d'erreur
       },
-      complete: () => { this.isLoading = false; }
+      complete: () => {
+        this.isLoading = false;
+      }
     });
   }
 

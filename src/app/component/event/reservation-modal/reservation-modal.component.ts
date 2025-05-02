@@ -1,6 +1,5 @@
-import {Component, EventEmitter, inject, Inject, Input, Output} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {DatePipe, NgForOf} from '@angular/common';
+import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
+import {DatePipe} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {ReservationService} from '../../../service/reservation.service';
 import {NotificationService} from '../../../service/notification.service';
@@ -15,7 +14,6 @@ import {Categorie} from '../../../model/categorie';
   imports: [
     DatePipe,
     FormsModule,
-    NgForOf,
     LucideAngularModule
   ]
 })
@@ -28,7 +26,7 @@ export class ReservationModalComponent {
   // ------------------------
 
   private notification = inject(NotificationService);
-  private reservationService= inject(ReservationService);
+  private reservationService = inject(ReservationService);
 
   selectedCategory: Categorie | null = null; // Typage
   isSubmitting = false;

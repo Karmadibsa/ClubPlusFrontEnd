@@ -16,6 +16,7 @@
 .info-section {
   margin-bottom: var(--spacing-lg);
 }
+
 .info-section:last-of-type {
   margin-bottom: 0;
 }
@@ -33,7 +34,8 @@
   gap: var(--spacing-sm);
 
   lucide-icon {
-    width: 18px; height: 18px; // Taille icône titre section
+    width: 18px;
+    height: 18px; // Taille icône titre section
   }
 }
 
@@ -147,9 +149,11 @@
   outline: 2px solid var(--main-blue);
   outline-offset: 2px;
 }
+
 .radio-inputs .radio-input:checked:focus-visible + span {
   outline-color: var(--main-orange);
 }
+
 // --- Fin Styles Radio ---
 
 // Style si modale en chargement

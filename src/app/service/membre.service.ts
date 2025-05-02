@@ -5,7 +5,6 @@ import {environment} from '../../environments/environments';
 import {RoleType} from '../model/role';
 import {catchError, tap} from 'rxjs/operators';
 import {Membre} from '../model/membre';
-import {Club} from '../model/club';
 
 @Injectable({
   providedIn: 'root'
@@ -55,6 +54,7 @@ export class MembreService {
       catchError(this.handleError)
     );
   }
+
   getMembersByClub(clubId: number): Observable<Membre[]> {
     const url = `${environment.apiUrl}/clubs/${clubId}/membres`;
     console.log('Appel API Membres:', url); // Pour le débogage
@@ -91,7 +91,7 @@ export class MembreService {
     // Le deuxième argument (corps de la requête) est 'null' car les données sont passées via HttpParams.
     // On spécifie le type de retour attendu <Membre>. Si l'API ne retourne rien (204 No Content),
     // utilisez Observable<void> ou Observable<HttpResponse<any>> pour plus de contrôle.
-    return this.http.put<Membre>(url, null, { params: params }).pipe(
+    return this.http.put<Membre>(url, null, {params: params}).pipe(
     );
   }
 

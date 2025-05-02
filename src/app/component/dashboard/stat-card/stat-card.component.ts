@@ -20,5 +20,6 @@ export class StatCardComponent {
    */
   @Input() value: string | number | null | undefined = ''; // Accepte différents types, valeur par défaut
 
-  constructor() { }
+  constructor() {
+  }
 }

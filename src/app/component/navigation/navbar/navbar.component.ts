@@ -1,8 +1,6 @@
 import {Component, inject} from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
 import {AuthService} from '../../../service/security/auth.service';
-import {FormBuilder} from '@angular/forms';
-import {HttpClient} from '@angular/common/http';
 import {NotificationService} from '../../../service/notification.service';
 import {LucideAngularModule} from 'lucide-angular';
 

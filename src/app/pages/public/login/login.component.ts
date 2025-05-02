@@ -1,12 +1,8 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
-import {NgIf} from '@angular/common';
 import {LucideAngularModule} from 'lucide-angular';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
-import {catchError} from 'rxjs/operators'; // Pour la gestion d'erreurs RxJS
-import {throwError} from 'rxjs';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {NotificationService} from '../../../service/notification.service';
 import {AuthService} from '../../../service/security/auth.service'; // Pour relancer les erreurs RxJS
 
@@ -22,20 +18,20 @@ import {AuthService} from '../../../service/security/auth.service'; // Pour rela
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-protected isLoading = false
+  protected isLoading = false
   // --- Injections ---
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private http = inject(HttpClient); // Injection de HttpClient
   auth = inject(AuthService)
-notification = inject(NotificationService)
+  notification = inject(NotificationService)
   // --- Propriétés ---
   passwordFieldType: string = 'password';
 
-    loginForm = this.fb.group({
-      email: ['alice.admin@club.fr', [Validators.required, Validators.email]],
-      password: ['password', Validators.required]
-    });
+  loginForm = this.fb.group({
+    email: ['alice.admin@club.fr', [Validators.required, Validators.email]],
+    password: ['password', Validators.required]
+  });
 
   // --- Identifiants de test (basés sur votre SQL [1]) ---
   // IMPORTANT: Assurez-vous que ces utilisateurs existent et sont actifs dans votre BDD
@@ -48,41 +44,42 @@ notification = inject(NotificationService)
   // --- Méthode de soumission ---
   onConnexion(): void {
     this.isLoading = true
-if(this.loginForm.valid){
-  this.http.post(
-    "http://localhost:8080/api/auth/connexion",
-    this.loginForm.value,
-    {responseType: "text"})
-    .subscribe({
-      next : jwt => {
-        this.auth.decodeJwt(jwt)
-        const userRole = this.auth.role;
-        if (!userRole) {
-          console.error("Impossible de déterminer le rôle utilisateur après connexion (this.auth.role est null).");
-          this.notification.show("Erreur de rôle après connexion.", "error");
-          this.router.navigateByUrl('/');
-          return;
-        }
-        if (userRole === 'ROLE_ADMIN' || userRole === 'ROLE_RESERVATION') {
-          this.router.navigateByUrl("/app/dashboard");
-          this.notification.show(`Connexion réussie (${userRole}). Accès au tableau de bord.`, "valid");
-        } else if (userRole === 'ROLE_MEMBRE') {
-          this.router.navigateByUrl("/app/event"); // Assurez-vous que cette route existe
-          this.notification.show("Connexion réussie (MEMBRE). Accès aux événements.", "valid");
-        } else {
-          console.warn("Rôle utilisateur non géré pour la redirection:", userRole);
-          this.notification.show(`Connexion réussie (${userRole}), redirection par défaut.`, "info");
-          this.router.navigateByUrl("/");
-        }
-      },
-      error : erreur => {
-        if(erreur.status === 401){
-          this.notification.show("L'e-mail et/ou le mot de passe n'est pas correct", "error")
-        }
-      }
-    })
-}
+    if (this.loginForm.valid) {
+      this.http.post(
+        "http://localhost:8080/api/auth/connexion",
+        this.loginForm.value,
+        {responseType: "text"})
+        .subscribe({
+          next: jwt => {
+            this.auth.decodeJwt(jwt)
+            const userRole = this.auth.role;
+            if (!userRole) {
+              console.error("Impossible de déterminer le rôle utilisateur après connexion (this.auth.role est null).");
+              this.notification.show("Erreur de rôle après connexion.", "error");
+              this.router.navigateByUrl('/');
+              return;
+            }
+            if (userRole === 'ROLE_ADMIN' || userRole === 'ROLE_RESERVATION') {
+              this.router.navigateByUrl("/app/dashboard");
+              this.notification.show(`Connexion réussie (${userRole}). Accès au tableau de bord.`, "valid");
+            } else if (userRole === 'ROLE_MEMBRE') {
+              this.router.navigateByUrl("/app/event"); // Assurez-vous que cette route existe
+              this.notification.show("Connexion réussie (MEMBRE). Accès aux événements.", "valid");
+            } else {
+              console.warn("Rôle utilisateur non géré pour la redirection:", userRole);
+              this.notification.show(`Connexion réussie (${userRole}), redirection par défaut.`, "info");
+              this.router.navigateByUrl("/");
+            }
+          },
+          error: erreur => {
+            if (erreur.status === 401) {
+              this.notification.show("L'e-mail et/ou le mot de passe n'est pas correct", "error")
+            }
+          }
+        })
+    }
   }
+
 // --- Méthode générique de simulation ---
   private simulateLoginWithCredentials(email: string, password: string, roleName: string): void {
     console.warn(`Simulation de connexion en tant que ${roleName} via formulaire...`);
@@ -114,6 +111,7 @@ if(this.loginForm.valid){
   simulateLoginAsResa(): void {
     this.simulateLoginWithCredentials(this.RESA_EMAIL, this.COMMON_PASSWORD, 'RESERVATION');
   }
+
   // --- Méthode pour basculer l'affichage du mot de passe ---
   togglePasswordVisibility(): void {
     this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';

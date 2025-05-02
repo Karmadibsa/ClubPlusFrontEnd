@@ -21,7 +21,7 @@ export class ItemnotationComponent {
 
   updateRating(index: number): void {
     // La note est l'index (0-4) + 1 = (1-5)
-    const newRating = index +1 ;
+    const newRating = index + 1;
     this.quantity.set(newRating);
     this.ratingChanged.emit(newRating); // Émission de la note numérique (1-5)
   }

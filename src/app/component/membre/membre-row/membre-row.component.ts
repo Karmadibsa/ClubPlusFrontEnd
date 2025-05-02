@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {LucideAngularModule} from 'lucide-angular';
-import {DatePipe, NgIf} from '@angular/common';
+import {DatePipe} from '@angular/common';
 import {Membre} from '../../../model/membre';
 import {RoleType} from '../../../model/role';
 import {MembreDetailModalComponent} from '../membre-detail-modal/membre-detail-modal.component';
@@ -11,8 +11,7 @@ import {MembreDetailModalComponent} from '../membre-detail-modal/membre-detail-m
   imports: [
     LucideAngularModule,
     DatePipe,
-    MembreDetailModalComponent,
-    NgIf
+    MembreDetailModalComponent
   ],
   styleUrls: ['./membre-row.component.scss']
 })

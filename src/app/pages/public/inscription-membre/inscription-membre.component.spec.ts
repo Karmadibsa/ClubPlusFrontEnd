@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { InscriptionMembreComponent } from './inscription-membre.component';
+import {InscriptionMembreComponent} from './inscription-membre.component';
 
 describe('InscriptionMembreComponent', () => {
   let component: InscriptionMembreComponent;
@@ -10,7 +10,7 @@ describe('InscriptionMembreComponent', () => {
     await TestBed.configureTestingModule({
       imports: [InscriptionMembreComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(InscriptionMembreComponent);
     component = fixture.componentInstance;

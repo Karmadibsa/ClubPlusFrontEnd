@@ -3,7 +3,9 @@
 // --- Utilisation des variables globales de styles.txt ---
 // @import 'path/to/variables';
 
-:host { display: block; }
+:host {
+  display: block;
+}
 
 // --------------------------------------------------
 // Styles SPÉCIFIQUES au contenu
@@ -45,7 +47,8 @@
 }
 
 // Style spécifique pour les boutons de filtre (inchangé)
-.btn-filter { /* ... styles existants ... */ }
+.btn-filter { /* ... styles existants ... */
+}
 
 // Style optionnel pour l'icône dans le champ de recherche
 .input-with-icon {
@@ -58,7 +61,8 @@
     left: 10px;
     top: 50%;
     transform: translateY(-50%);
-    width: 16px; height: 16px;
+    width: 16px;
+    height: 16px;
     color: var(--text-light);
     pointer-events: none; // N'interfère pas avec le clic sur l'input
   }
@@ -71,20 +75,31 @@
 
 
 // --- Style spécifique Table Participations (inchangé) ---
-.participation-table-wrapper { /* ... */ }
+.participation-table-wrapper { /* ... */
+}
+
 .participation-table { /* ... */
-  th, td { /* ... */ }
-  thead th { /* ... */ }
+  th, td { /* ... */
+  }
+
+  thead th { /* ... */
+  }
 }
 
 // --- Messages spécifiques (inchangé) ---
-.error-message { /* ... */ }
+.error-message { /* ... */
+}
 
 // --- Badge de Statut (inchangé) ---
 .status-badge { /* ... */
-  &.status-confirme { /* ... */ }
-  &.status-utilise { /* ... */ }
-  &.status-annule { /* ... */ }
+  &.status-confirme { /* ... */
+  }
+
+  &.status-utilise { /* ... */
+  }
+
+  &.status-annule { /* ... */
+  }
 }
 
 // --- Responsive pour la section filtre ---

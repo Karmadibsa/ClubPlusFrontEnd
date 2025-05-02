@@ -1,8 +1,8 @@
 // src/app/model/reservation.ts (ou un nom similaire)
-import { Membre } from './membre'; // Assurez-vous que ce chemin est correct
-import { Evenement } from './evenement';   // Assurez-vous que ce chemin est correct
-import { Categorie } from './categorie'; // Assurez-vous que ce chemin est correct
-import { ReservationStatus } from './reservationstatus'; // Assurez-vous que ce chemin est correct
+import {Membre} from './membre'; // Assurez-vous que ce chemin est correct
+import {Evenement} from './evenement'; // Assurez-vous que ce chemin est correct
+import {Categorie} from './categorie'; // Assurez-vous que ce chemin est correct
+import {ReservationStatus} from './reservationstatus'; // Assurez-vous que ce chemin est correct
 
 export interface Reservation {
   id: number;

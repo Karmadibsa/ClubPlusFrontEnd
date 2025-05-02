@@ -1,24 +1,20 @@
 // ----- IMPORTATIONS -----
-import { Component, inject, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Nécessaire pour les imports standalone si utilisé dans le template
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import {Observable, Subscription} from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common'; // Nécessaire pour les imports standalone si utilisé dans le template
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Subscription} from 'rxjs';
+import {HttpErrorResponse} from '@angular/common/http';
 
 // Services
-import { ClubService } from '../../../service/club.service'; // Le service dédié pour le club
-import { AuthService } from '../../../service/security/auth.service'; // Pour obtenir l'ID du club
-import { NotificationService } from '../../../service/notification.service'; // Pour les messages
-
+import {ClubService} from '../../../service/club.service'; // Le service dédié pour le club
+import {AuthService} from '../../../service/security/auth.service'; // Pour obtenir l'ID du club
+import {NotificationService} from '../../../service/notification.service'; // Pour les messages
 // Composants
-import { SidebarComponent } from '../../../component/navigation/sidebar/sidebar.component';
 
 // Modèles
-import { Club } from '../../../model/club'; // L'interface Club
-
+import {Club} from '../../../model/club'; // L'interface Club
 // Autres
-import { LucideAngularModule } from 'lucide-angular';
-import {SidebarStateService} from '../../../service/sidebar-state.service';
+import {LucideAngularModule} from 'lucide-angular';
 
 @Component({
   selector: 'app-monclub',
@@ -26,7 +22,6 @@ import {SidebarStateService} from '../../../service/sidebar-state.service';
   imports: [
     CommonModule, // Fournit @if, etc.
     ReactiveFormsModule, // Indispensable pour [formGroup]
-    SidebarComponent,
     LucideAngularModule
   ],
   templateUrl: './monclub.component.html',
@@ -82,7 +77,7 @@ export class MonclubComponent implements OnInit, OnDestroy { // Implémente OnIn
       ville: ['', Validators.required],
       telephone: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      codeClub: [{ value: '', disabled: true }] // Champ non modifiable, désactivé
+      codeClub: [{value: '', disabled: true}] // Champ non modifiable, désactivé
     });
     this.clubForm.disable(); // Désactive le formulaire tant que les données ne sont pas chargées
   }

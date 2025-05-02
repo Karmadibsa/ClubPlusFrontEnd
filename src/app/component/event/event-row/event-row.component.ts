@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {DatePipe, NgForOf, NgIf} from '@angular/common';
+import {DatePipe} from '@angular/common';
 import {LucideAngularModule} from 'lucide-angular';
 import {EditEventModalComponent} from '../edit-event/edit-event.component';
 import {Evenement} from '../../../model/evenement';
@@ -12,8 +12,6 @@ import {ParticipationEventModalComponent} from '../participation-event-modal/par
     DatePipe,
     LucideAngularModule,
 
-    NgForOf,
-    NgIf,
     EditEventModalComponent,
     ParticipationEventModalComponent
   ],
@@ -50,10 +48,12 @@ export class EventRowComponent {
       console.error("EventRow: Données 'evenement' non disponibles pour ouvrir la modale.");
     }
   }
+
   // Appelée par l'événement (closeModal) de app-participation-event-modal
   handleCloseParticipationModal(): void {
     this.isParticipationModalVisible = false;
   }
+
   /**
    * Appelée lorsque l'utilisateur clique sur le bouton "Supprimer" de CETTE ligne.
    * Émet un événement `deleteRequest` vers le composant parent avec l'événement à supprimer.

@@ -1,6 +1,6 @@
 import {Component, EventEmitter, inject, Input, Output, SimpleChanges} from '@angular/core';
 import {LucideAngularModule} from 'lucide-angular';
-import {DatePipe, NgIf} from '@angular/common';
+import {DatePipe} from '@angular/common';
 import {RoleType} from '../../../model/role';
 import {AuthService} from '../../../service/security/auth.service';
 import {FormsModule} from '@angular/forms';
@@ -16,7 +16,7 @@ import {Membre} from '../../../model/membre';
   templateUrl: './membre-detail-modal.component.html',
   styleUrl: './membre-detail-modal.component.scss'
 })
-export class MembreDetailModalComponent  {
+export class MembreDetailModalComponent {
 
   authService = inject(AuthService);
   @Input() isVisible: boolean = false;
@@ -51,7 +51,7 @@ export class MembreDetailModalComponent  {
   triggerSaveRole(): void {
     if (this.membre && this.selectedRole && this.selectedRole !== this.initialRole) {
       console.log(`Modal: Émission saveRole - Membre ID: ${this.membre.id}, Nouveau Rôle: ${this.selectedRole}`);
-      this.saveRole.emit({ membreId: this.membre.id, newRole: this.selectedRole });
+      this.saveRole.emit({membreId: this.membre.id, newRole: this.selectedRole});
       this.closeModal();
     } else {
       console.warn("Modal: Aucun changement de rôle valide à enregistrer.");

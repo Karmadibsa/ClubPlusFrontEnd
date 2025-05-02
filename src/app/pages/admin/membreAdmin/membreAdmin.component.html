@@ -36,7 +36,7 @@
       <tbody>
       <!-- Itération avec le composant enfant app-membre-row -->
       <!-- IMPORTANT: app-membre-row DOIT générer des <td> avec [attr.data-label] pour le responsive -->
-        @for (member of paginatedMembres ; track member.id) {
+        @for (member of paginatedMembres; track member.id) {
           <tr app-membre-row
               [membre]="member"
               (roleChangeRequested)="handleSaveRole($event)">

@@ -1,32 +1,24 @@
 // Importations nécessaires pour Angular, les formulaires, les icônes, etc.
 import {
-  ChangeDetectorRef,         // Pour forcer la détection de changements (utile avec OnPush ou setTimeout)
-  Component,                 // Décorateur pour définir un composant Angular
-  EventEmitter,              // Pour créer des événements personnalisés (@Output)
-  inject,                    // Fonction moderne pour l'injection de dépendances
-  Input,                     // Pour recevoir des données du parent
-  OnChanges,                 // Interface pour réagir aux changements des @Input
-  OnInit,                    // Interface pour exécuter du code à l'initialisation
-  Output,                    // Pour envoyer des événements au parent
-  SimpleChanges              // Type pour les changements détectés par ngOnChanges
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
 } from '@angular/core';
-import {
-  AbstractControl,           // Classe de base pour les contrôles de formulaire (FormControl, FormGroup, FormArray)
-  FormArray,                 // Pour gérer une liste de contrôles (nos catégories)
-  FormBuilder,               // Service pour créer facilement des FormGroup/FormArray
-  FormGroup,                 // Représente un groupe de contrôles (notre formulaire principal)
-  ReactiveFormsModule,       // Module nécessaire pour utiliser les Reactive Forms (FormGroup, formControlName...)
-  Validators                 // Fournit des fonctions de validation standard (required, minLength...)
-} from '@angular/forms';
-import { CommonModule, DatePipe } from '@angular/common'; // CommonModule (*ngIf...), DatePipe (formater les dates)
-import { LucideAngularModule } from 'lucide-angular';     // Pour utiliser les icônes Lucide
-
+import {AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {CommonModule, DatePipe} from '@angular/common'; // CommonModule (*ngIf...), DatePipe (formater les dates)
+import {LucideAngularModule} from 'lucide-angular'; // Pour utiliser les icônes Lucide
 // Importations de vos services et modèles (interfaces) - Adaptez les chemins si nécessaire
-import { NotificationService } from '../../../service/notification.service'; // Service pour afficher des notifications
-import { EventService } from '../../../service/event.service';             // Service pour interagir avec l'API des événements
+import {NotificationService} from '../../../service/notification.service'; // Service pour afficher des notifications
+import {EventService} from '../../../service/event.service'; // Service pour interagir avec l'API des événements
 // Importez les interfaces définissant la structure des données événement/catégorie
-import { Evenement, CreateEventPayload, UpdateEventPayload } from '../../../model/evenement';
-import { CategorieCreatePayload, CategorieUpdatePayload } from '../../../model/categorie';
+import {CreateEventPayload, Evenement, UpdateEventPayload} from '../../../model/evenement';
+import {CategorieCreatePayload} from '../../../model/categorie';
 import {AuthService} from '../../../service/security/auth.service'; // On importe aussi les types spécifiques aux payloads API
 
 @Component({
@@ -301,7 +293,7 @@ export class EditEventModalComponent implements OnInit, OnChanges {
 
     // Si les deux dates sont présentes et que start >= end...
     if (startValue && endValue && new Date(startValue) >= new Date(endValue)) {
-      return { 'dateOrderInvalid': true }; // ... signaler une erreur.
+      return {'dateOrderInvalid': true}; // ... signaler une erreur.
     }
     return null; // ... sinon, tout va bien (pas d'erreur).
   }

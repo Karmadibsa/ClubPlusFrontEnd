@@ -22,19 +22,23 @@
       <!-- Wrapper pour le défilement horizontal -->
       <div class="table-wrapper">
         <!-- Tableau avec classes globales et accessibilité -->
-        <table class="data-table ticket-table" aria-labelledby="main-billets-title" aria-describedby="reservations-caption">
-          <caption id="reservations-caption" class="visually-hidden">Tableau listant vos réservations avec options pour afficher, télécharger ou annuler.</caption>
+        <table class="data-table ticket-table" aria-labelledby="main-billets-title"
+               aria-describedby="reservations-caption">
+          <caption id="reservations-caption" class="visually-hidden">Tableau listant vos réservations avec options pour
+            afficher, télécharger ou annuler.
+          </caption>
           <thead>
           <tr>
             <th scope="col">Date</th>
             <th scope="col">Heure</th>
             <th scope="col">Nom de l'événement</th>
             <th scope="col">Catégorie</th>
-            <th scope="col" class="actions-header">Actions</th> <!-- Classe optionnelle si centrage spécifique nécessaire au-delà du global -->
+            <th scope="col" class="actions-header">Actions</th>
+            <!-- Classe optionnelle si centrage spécifique nécessaire au-delà du global -->
           </tr>
           </thead>
           <tbody>
-            @for (reservation of reservations ; track reservation.id) {
+            @for (reservation of reservations; track reservation.id) {
               <tr app-reservation-row
                   [reservation]="reservation"
                   (generatePDF)="generatePDF($event)"
@@ -59,26 +63,29 @@
 <div class="hidden-functional">
   <!-- Zone QR codes (inchangée) -->
   <div class="qr-code-generation-area">
-    @for ( reservation of reservations; track reservation.id) {
+    @for (reservation of reservations; track reservation.id) {
       @if (reservation?.qrcodeData) {
-        <qrcode [qrdata]="reservation.qrcodeData ?? ''" [width]="256" [errorCorrectionLevel]="'M'" (qrCodeURL)="onChangeURL($event, reservation)" id="qr-code-{{reservation.id}}"></qrcode>
+        <qrcode [qrdata]="reservation.qrcodeData ?? ''" [width]="256" [errorCorrectionLevel]="'M'"
+                (qrCodeURL)="onChangeURL($event, reservation)" id="qr-code-{{reservation.id}}"></qrcode>
       }
     }
   </div>
 
   <!-- Template PDF (inchangé mais utilise classes pour styles) -->
   <div id="pdf-content" class="pdf-template">
-    @if (selectedTicket){
+    @if (selectedTicket) {
       <div class="pdf-page">
         <div class="pdf-header"><h1>Votre billet</h1></div>
         <div class="pdf-ticket-info">
-          <p><strong>Événement:</strong> {{ selectedTicket.event?.nom }}</p>
-          <p><strong>Date:</strong> {{ selectedTicket.event?.start | date:'dd/MM/yyyy' }}</p>
-          <p><strong>Lieu:</strong> {{ selectedTicket.event?.location }}</p>
-          <p><strong>Catégorie:</strong> {{ selectedTicket.categorie?.nom }}</p>
-          <p><strong>Nom:</strong> {{ selectedTicket.membre?.prenom }} {{ selectedTicket.membre?.nom }}</p>
+          <p><strong>Événement:</strong> {{ selectedTicket.event.nom }}</p>
+          <p><strong>Date:</strong> {{ selectedTicket.event.start | date:'dd/MM/yyyy' }}</p>
+          <p><strong>Lieu:</strong> {{ selectedTicket.event.location }}</p>
+          <p><strong>Catégorie:</strong> {{ selectedTicket.categorie.nom }}</p>
+          <p><strong>Nom:</strong> {{ selectedTicket.membre.prenom }} {{ selectedTicket.membre.nom }}</p>
           <div class="pdf-qr-code">
-            @if (selectedTicket?.qrcodeData) { <qrcode [qrdata]="selectedTicket?.qrcodeData ?? ''" [width]="150" [errorCorrectionLevel]="'M'"></qrcode> }
+            @if (selectedTicket.qrcodeData) {
+              <qrcode [qrdata]="selectedTicket.qrcodeData" [width]="150" [errorCorrectionLevel]="'M'"></qrcode>
+            }
           </div>
         </div>
         <div class="pdf-footer"><p>Merci et profitez de l'événement !</p></div>

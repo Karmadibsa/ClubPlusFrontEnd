@@ -15,7 +15,7 @@ import {AsyncPipe} from '@angular/common';
   templateUrl: './user-layout.component.html',
   styleUrl: './user-layout.component.scss'
 })
-export class UserLayoutComponent implements OnInit{
+export class UserLayoutComponent implements OnInit {
   sidebarStateService = inject(SidebarStateService);
   isSidebarCollapsed$: Observable<boolean> | undefined;
 

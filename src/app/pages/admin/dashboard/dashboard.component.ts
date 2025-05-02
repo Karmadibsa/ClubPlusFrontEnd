@@ -1,37 +1,30 @@
 // ----- IMPORTATIONS -----
 // Modules Angular essentiels
-import { Component, inject, OnInit, ChangeDetectorRef, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule, PercentPipe } from '@angular/common'; // Pour *ngIf, *ngFor, le pipe 'percent'
-import { HttpClient, HttpErrorResponse } from '@angular/common/http'; // Pour faire les appels API
-import { Router } from '@angular/router'; // Pour la navigation (si besoin)
-import { forkJoin, Observable, of, Subscription } from 'rxjs'; // Outils pour gérer plusieurs appels API en parallèle (forkJoin)
-import { catchError, map } from 'rxjs/operators'; // Outil pour gérer les erreurs API (catchError)
-
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {CommonModule, PercentPipe} from '@angular/common'; // Pour *ngIf, *ngFor, le pipe 'percent'
+import {HttpClient, HttpErrorResponse} from '@angular/common/http'; // Pour faire les appels API
+import {Router} from '@angular/router'; // Pour la navigation (si besoin)
+import {forkJoin, Observable, of, Subscription} from 'rxjs'; // Outils pour gérer plusieurs appels API en parallèle (forkJoin)
+import {catchError} from 'rxjs/operators'; // Outil pour gérer les erreurs API (catchError)
 // Services de votre application
-import { AuthService } from '../../../service/security/auth.service';       // Pour savoir qui est connecté et quel club il gère
-import { NotificationService } from '../../../service/notification.service'; // Pour afficher des messages (succès, erreur)
-import { MembreService } from '../../../service/membre.service';           // Pour les opérations liées aux membres
-import { EventService } from '../../../service/event.service';             // Pour les opérations liées aux événements
-
+import {AuthService} from '../../../service/security/auth.service'; // Pour savoir qui est connecté et quel club il gère
+import {NotificationService} from '../../../service/notification.service'; // Pour afficher des messages (succès, erreur)
+import {MembreService} from '../../../service/membre.service'; // Pour les opérations liées aux membres
+import {EventService} from '../../../service/event.service'; // Pour les opérations liées aux événements
 // Composants utilisés dans le template HTML
-import { SidebarComponent } from '../../../component/navigation/sidebar/sidebar.component'; // Votre menu latéral
-import { StatCardComponent } from '../../../component/dashboard/stat-card/stat-card.component'; // Carte pour afficher un chiffre clé
-import { EventRowComponent } from '../../../component/event/event-row/event-row.component';       // Ligne du tableau des événements
-import { MembreRowComponent } from '../../../component/membre/membre-row/membre-row.component';      // Ligne du tableau des membres
-import { MembreDetailModalComponent } from '../../../component/membre/membre-detail-modal/membre-detail-modal.component'; // Modale pour voir/modifier un membre
-
+import {StatCardComponent} from '../../../component/dashboard/stat-card/stat-card.component'; // Carte pour afficher un chiffre clé
+import {EventRowComponent} from '../../../component/event/event-row/event-row.component'; // Ligne du tableau des événements
+import {MembreRowComponent} from '../../../component/membre/membre-row/membre-row.component'; // Ligne du tableau des membres
 // Types de données (Modèles)
-import { Membre } from '../../../model/membre'; // Interface décrivant un Membre (à créer/vérifier)
-import { Evenement } from '../../../model/evenement'; // Interface décrivant un Evenement (à créer/vérifier)
-import { RoleType } from '../../../model/role';         // Type pour les rôles ('MEMBRE', 'RESERVATION', 'ADMIN')
-
+import {Membre} from '../../../model/membre'; // Interface décrivant un Membre (à créer/vérifier)
+import {Evenement} from '../../../model/evenement'; // Interface décrivant un Evenement (à créer/vérifier)
+import {RoleType} from '../../../model/role'; // Type pour les rôles ('MEMBRE', 'RESERVATION', 'ADMIN')
 // Outils pour les graphiques (Chart.js via ng2-charts)
-import { ChartData, ChartOptions } from 'chart.js'; // Types pour configurer les graphiques
-import { BaseChartDirective } from 'ng2-charts';
+import {ChartData, ChartOptions} from 'chart.js'; // Types pour configurer les graphiques
+import {BaseChartDirective} from 'ng2-charts';
 import {CreateEventButtonComponent} from '../../../component/event/create-event-button/create-event-button.component';
 import {EditEventModalComponent} from '../../../component/event/edit-event/edit-event.component';
-import {SidebarStateService} from '../../../service/sidebar-state.service';
-import {LucideAngularModule} from 'lucide-angular';   // La directive pour afficher un graphique dans le HTML
+import {LucideAngularModule} from 'lucide-angular'; // La directive pour afficher un graphique dans le HTML
 
 // -------------------------
 
@@ -42,7 +35,6 @@ import {LucideAngularModule} from 'lucide-angular';   // La directive pour affic
   imports: [                 // Liste des modules et composants nécessaires pour le template HTML
     CommonModule,
     PercentPipe,
-    SidebarComponent,
     BaseChartDirective,      // Nécessaire pour <canvas baseChart ...>
     StatCardComponent,
     EventRowComponent,
@@ -102,18 +94,18 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
     responsive: true, // Le graphique s'adapte à la taille du conteneur
     maintainAspectRatio: false, // Permet de définir hauteur/largeur indépendamment
     plugins: { // Configuration des extensions Chart.js
-      legend: { display: false }, // Cache la légende (souvent redondante pour des graphiques simples)
+      legend: {display: false}, // Cache la légende (souvent redondante pour des graphiques simples)
       tooltip: { // Configuration de la bulle d'info au survol
         enabled: true,
         backgroundColor: 'rgba(0, 0, 0, 0.85)', // Fond sombre semi-transparent
-        titleFont: { family: "'Poppins', sans-serif", weight: 'bold', size: 13 },
-        bodyFont: { family: "'Poppins', sans-serif", size: 12 },
+        titleFont: {family: "'Poppins', sans-serif", weight: 'bold', size: 13},
+        bodyFont: {family: "'Poppins', sans-serif", size: 12},
         padding: 12,
         cornerRadius: 3,
         displayColors: false, // Cache la petite boîte de couleur dans le tooltip
       }
     },
-    font: { family: "'Poppins', sans-serif", size: 12 }, // Police par défaut pour le graphique
+    font: {family: "'Poppins', sans-serif", size: 12}, // Police par défaut pour le graphique
     // L'animation simple par défaut de Chart.js est utilisée.
   };
 
@@ -123,14 +115,14 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
     scales: { // Configuration des axes
       y: { // Axe Y (vertical - Nombre d'inscriptions)
         beginAtZero: true, // Commence à 0
-        grid: { color: 'rgba(0, 0, 0, 0.05)' }, // Couleur légère pour la grille
-        ticks: { color: '#555', precision: 0 }, // Couleur et format des graduations (entiers)
-        border: { display: false } // Cache la ligne de l'axe
+        grid: {color: 'rgba(0, 0, 0, 0.05)'}, // Couleur légère pour la grille
+        ticks: {color: '#555', precision: 0}, // Couleur et format des graduations (entiers)
+        border: {display: false} // Cache la ligne de l'axe
       },
       x: { // Axe X (horizontal - Mois)
-        grid: { display: false }, // Cache la grille verticale
-        ticks: { color: '#555' },
-        border: { display: false }
+        grid: {display: false}, // Cache la grille verticale
+        ticks: {color: '#555'},
+        border: {display: false}
       }
     },
     interaction: { // Comportement au survol
@@ -139,7 +131,7 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
     },
   };
   // Données pour le graphique ligne (initialement vide)
-  public membersChartData: ChartData<'line'> = { labels: [], datasets: [] };
+  public membersChartData: ChartData<'line'> = {labels: [], datasets: []};
 
   // Options spécifiques pour le graphique BARRES des notes
   public ratingsChartOptions: ChartOptions<'bar'> = {
@@ -147,25 +139,26 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
     scales: {
       y: { // Axe Y (vertical - Note moyenne)
         beginAtZero: true, max: 5, // Échelle de 0 à 5
-        grid: { color: 'rgba(0, 0, 0, 0.05)' },
-        ticks: { color: '#555', stepSize: 1 }, // Graduation tous les 1 point
-        border: { display: false }
+        grid: {color: 'rgba(0, 0, 0, 0.05)'},
+        ticks: {color: '#555', stepSize: 1}, // Graduation tous les 1 point
+        border: {display: false}
       },
       x: { // Axe X (horizontal - Catégories de notes)
-        grid: { display: false },
-        ticks: { color: '#555' },
-        border: { display: false }
+        grid: {display: false},
+        ticks: {color: '#555'},
+        border: {display: false}
       }
     }
   };
   // Données pour le graphique barres (initialement vide)
-  public ratingsChartData: ChartData<'bar'> = { labels: [], datasets: [] };
+  public ratingsChartData: ChartData<'bar'> = {labels: [], datasets: []};
 
 
   // --- Cycle de Vie Angular ---
 
   // Fonction exécutée par Angular juste après la création du composant
-  ngOnInit(): void {console.log("DashboardComponent initialisé.");
+  ngOnInit(): void {
+    console.log("DashboardComponent initialisé.");
     // Récupère l'ID du club que l'utilisateur actuel gère (depuis AuthService)
     const clubId = this.authService.getManagedClubId();
     if (clubId !== null) {
@@ -269,8 +262,8 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
     this.averageEventOccupancy = null;
     this.totalActiveMembers = null;
     this.totalParticipations = null;
-    this.membersChartData = { labels: [], datasets: [] };
-    this.ratingsChartData = { labels: [], datasets: [] };
+    this.membersChartData = {labels: [], datasets: []};
+    this.ratingsChartData = {labels: [], datasets: []};
     this.lastFiveMembers = [];
     this.nextFiveEvents = [];
     this.cdr.detectChanges(); // Rafraîchir pour montrer l'état '...' ou vide
@@ -304,7 +297,7 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
   private updateMembersChartData(registrations: MonthlyRegistrationPoint[] | undefined | null): void {
     if (!registrations || registrations.length === 0) {
       console.log("Pas de données d'inscription pour le graphique.");
-      this.membersChartData = { labels: [], datasets: [] }; // Assurer que c'est vide
+      this.membersChartData = {labels: [], datasets: []}; // Assurer que c'est vide
       return;
     }
     // Transformation des données reçues en format attendu par Chart.js
@@ -328,12 +321,19 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
   private updateRatingsChartData(ratings: AverageRatings | undefined | null): void {
     if (!ratings || Object.keys(ratings).length === 0) {
       console.log("Pas de données de notes pour le graphique.");
-      this.ratingsChartData = { labels: [], datasets: [] }; // Assurer que c'est vide
+      this.ratingsChartData = {labels: [], datasets: []}; // Assurer que c'est vide
       return;
     }
     // Ordre et libellés souhaités pour l'axe X
     const orderedKeys = ['organisation', 'proprete', 'ambiance', 'fairPlay', 'niveauJoueurs', 'moyenneGenerale'];
-    const displayLabels: Record<string, string> = { /* ... comme avant ... */ organisation: 'Organisation', proprete: 'Propreté', ambiance: 'Ambiance', fairPlay: 'Fairplay', niveauJoueurs: 'Niveau', moyenneGenerale: 'Moyenne' };
+    const displayLabels: Record<string, string> = { /* ... comme avant ... */
+      organisation: 'Organisation',
+      proprete: 'Propreté',
+      ambiance: 'Ambiance',
+      fairPlay: 'Fairplay',
+      niveauJoueurs: 'Niveau',
+      moyenneGenerale: 'Moyenne'
+    };
 
     // Transformation des données reçues
     this.ratingsChartData = {
@@ -381,7 +381,7 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
 
           this.lastFiveMembers = [
             ...this.lastFiveMembers.slice(0, index), // partie avant
-            { ...this.lastFiveMembers[index], role: data.newRole }, // membre mis à jour (juste le rôle ici)
+            {...this.lastFiveMembers[index], role: data.newRole}, // membre mis à jour (juste le rôle ici)
             ...this.lastFiveMembers.slice(index + 1) // partie après
           ];
           console.log("Dashboard: Liste locale des membres mise à jour.");
@@ -398,6 +398,7 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
       }
     });
   }
+
   /**
    * Gère la demande de suppression émise par une ligne d'événement.
    * Affiche une confirmation, appelle le service si confirmé, et met à jour l'UI.
@@ -411,27 +412,27 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
     //
     // if (confirmation) {
     //   console.log("Confirmation reçue. Appel de l'API de suppression...");
-      // 2. Appel au service (si confirmé)
-      this.eventService.softDeleteEvent(eventToDelete.id).subscribe({
-        // 3. Traitement du succès
-        next: () => {
-          this.notification.show(`L'événement "${eventToDelete.nom}" a été désactivé.`, 'valid');
+    // 2. Appel au service (si confirmé)
+    this.eventService.softDeleteEvent(eventToDelete.id).subscribe({
+      // 3. Traitement du succès
+      next: () => {
+        this.notification.show(`L'événement "${eventToDelete.nom}" a été désactivé.`, 'valid');
 
-          // 4. Mise à jour de la liste locale (création d'un NOUVEAU tableau sans l'élément supprimé)
-          this.nextFiveEvents = this.nextFiveEvents.filter(event => event.id !== eventToDelete.id);
+        // 4. Mise à jour de la liste locale (création d'un NOUVEAU tableau sans l'élément supprimé)
+        this.nextFiveEvents = this.nextFiveEvents.filter(event => event.id !== eventToDelete.id);
 
-          // 5. Rafraîchissement de l'affichage (important avec OnPush)
-          this.cdr.detectChanges();
-          console.log("Événement retiré de la liste locale et affichage mis à jour.");
-        },
-        // 6. Traitement de l'erreur
-        error: (error) => {
-          console.error("Erreur lors de la désactivation de l'événement:", error);
-          // Affiche l'erreur formatée venant du service
-          this.notification.show(error.message || "Erreur inconnue lors de la désactivation.", 'error');
-          // On ne modifie pas la liste locale en cas d'erreur
-        }
-      });
+        // 5. Rafraîchissement de l'affichage (important avec OnPush)
+        this.cdr.detectChanges();
+        console.log("Événement retiré de la liste locale et affichage mis à jour.");
+      },
+      // 6. Traitement de l'erreur
+      error: (error) => {
+        console.error("Erreur lors de la désactivation de l'événement:", error);
+        // Affiche l'erreur formatée venant du service
+        this.notification.show(error.message || "Erreur inconnue lors de la désactivation.", 'error');
+        // On ne modifie pas la liste locale en cas d'erreur
+      }
+    });
     // } else {
     //   console.log("Suppression annulée par l'utilisateur.");
     //   this.notification.show("Désactivation annulée.", "info");

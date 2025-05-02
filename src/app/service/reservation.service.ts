@@ -25,7 +25,7 @@ export class ReservationService {
 
     // Construit l'URL et effectue la requête GET avec les paramètres
     const url = `${this.apiUrl}/event/${eventId}`;
-    return this.http.get<Reservation[]>(url, { params });
+    return this.http.get<Reservation[]>(url, {params});
   }
 
   /**
@@ -43,7 +43,7 @@ export class ReservationService {
     console.log(`Service: Appel API POST vers ${this.apiUrl} avec params: ${params.toString()}`);
 
     // Effectuer la requête POST avec les paramètres dans l'URL et un corps vide {} [3][6][from previous answer]
-    return this.http.post<any>(this.apiUrl, {}, { params: params })
+    return this.http.post<any>(this.apiUrl, {}, {params: params})
       .pipe(
         catchError(this.handleError) // Gérer les erreurs [3][6]
       );

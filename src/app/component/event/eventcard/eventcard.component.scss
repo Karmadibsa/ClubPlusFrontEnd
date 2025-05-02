@@ -1,6 +1,6 @@
 :host {
   display: block; // Permet à la carte de prendre la hauteur/largeur dans une grille
-  height: 100%;   // Si les cartes doivent avoir la même hauteur dans une grille parente
+  height: 100%; // Si les cartes doivent avoir la même hauteur dans une grille parente
 }
 
 .event-card {
@@ -62,7 +62,12 @@
   // Style commun pour les sections de contenu
   .event-section {
     // Pas besoin de margin-top si on utilise gap sur le parent
-    dl { margin: 0; padding: 0; } // Reset styles dl
+    dl {
+      margin: 0;
+      padding: 0;
+    }
+
+    // Reset styles dl
   }
 }
 
@@ -156,6 +161,7 @@
     transform: scale(1.03); // Effet subtil
     box-shadow: 0 2px 5px rgba(var(--main-orange-rgb), 0.2);
   }
+
   &:focus-visible {
     outline: none;
     box-shadow: 0 0 0 3px rgba(var(--main-orange-rgb), 0.4);

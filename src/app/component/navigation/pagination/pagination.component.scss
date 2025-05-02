@@ -22,9 +22,11 @@
       color: white;
       border-color: var(--main-blue);
     }
+
     &.btn-secondary { // Style bouton page non actuelle
       background-color: white;
       color: var(--main-blue);
+
       &:hover:not(:disabled) {
         background-color: var(--bg-light-gray);
       }

@@ -1,25 +1,22 @@
 // ----- IMPORTATIONS -----
-import { Component, inject, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core'; // Ajout OnInit, OnDestroy, ChangeDetectionStrategy
-import { CommonModule } from '@angular/common'; // Nécessaire pour @for
-import {Observable, Subscription} from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit} from '@angular/core'; // Ajout OnInit, OnDestroy, ChangeDetectionStrategy
+import {CommonModule} from '@angular/common'; // Nécessaire pour @for
+import {Subscription} from 'rxjs';
+import {HttpErrorResponse} from '@angular/common/http';
 
 // Services
-import { AuthService } from '../../../service/security/auth.service';
-import { NotificationService } from '../../../service/notification.service';
-import { MembreService } from '../../../service/membre.service';
+import {AuthService} from '../../../service/security/auth.service';
+import {NotificationService} from '../../../service/notification.service';
+import {MembreService} from '../../../service/membre.service';
 
 // Composants
-import { MembreRowComponent } from '../../../component/membre/membre-row/membre-row.component';
-import { SidebarComponent } from '../../../component/navigation/sidebar/sidebar.component';
+import {MembreRowComponent} from '../../../component/membre/membre-row/membre-row.component';
 
 // Modèles
-import { Membre } from '../../../model/membre'; // Assure-toi que ce type est correct
-import { RoleType } from '../../../model/role';
+import {Membre} from '../../../model/membre'; // Assure-toi que ce type est correct
+import {RoleType} from '../../../model/role';
 import {FilterMembreComponent} from '../../../component/membre/filter-membre/filter-membre.component';
-import {Evenement} from '../../../model/evenement';
 import {PaginationComponent} from '../../../component/navigation/pagination/pagination.component';
-import {SidebarStateService} from '../../../service/sidebar-state.service';
 
 // Autres (si besoin)
 // import { LucideAngularModule } from 'lucide-angular';
@@ -60,7 +57,6 @@ export class MembreAdminComponent implements OnInit, OnDestroy { // Implémente 
   // --- AJOUT : État pour la Pagination ---
   currentPage: number = 1;
   itemsPerPage: number = 10; // Ou une autre valeur par défaut
-
 
 
   ngOnInit(): void {
@@ -176,7 +172,7 @@ export class MembreAdminComponent implements OnInit, OnDestroy { // Implémente 
           this.membres = [
             ...this.membres.slice(0, index),
             // Fusionne l'ancien membre avec le nouveau rôle (ou utilise updatedMember si l'API le renvoie complet)
-            { ...this.membres[index], role: data.newRole },
+            {...this.membres[index], role: data.newRole},
             ...this.membres.slice(index + 1)
           ];
           console.log("MembreAdmin: Liste locale des membres mise à jour.");

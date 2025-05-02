@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Input, Output, OnChanges, SimpleChanges, inject} from '@angular/core';
-import { FormsModule } from '@angular/forms'; // Nécessaire pour [(ngModel)]
-import { LucideAngularModule } from 'lucide-angular';
-import { CommonModule } from '@angular/common'; // Peut être utile pour des pipes ou directives
-import { Evenement } from '../../../model/evenement';
+import {Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {FormsModule} from '@angular/forms'; // Nécessaire pour [(ngModel)]
+import {LucideAngularModule} from 'lucide-angular';
+import {CommonModule} from '@angular/common'; // Peut être utile pour des pipes ou directives
+import {Evenement} from '../../../model/evenement';
 import {AuthService} from '../../../service/security/auth.service'; // Assurez-vous que le chemin est correct
 
 @Component({

@@ -22,5 +22,6 @@ interface MonthlyRegistrationPoint {
 interface AverageRatings {
   // La clé est la catégorie de note (ex: 'organisation'), la valeur est la note moyenne
   [category: string]: number | null | undefined;
+
   // Ex: { organisation: 4.2, ambiance: 4.8, moyenneGenerale: 4.5 }
 }

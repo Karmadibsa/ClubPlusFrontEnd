@@ -35,9 +35,19 @@
   // Style scrollbar optionnel (hérite potentiellement du global)
   scrollbar-width: thin;
   scrollbar-color: var(--text-light) transparent;
-  &::-webkit-scrollbar { width: 6px; }
-  &::-webkit-scrollbar-track { background: transparent; }
-  &::-webkit-scrollbar-thumb { background-color: var(--text-light); border-radius: 3px; }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--text-light);
+    border-radius: 3px;
+  }
 }
 
 // Un item (ligne) dans la liste des catégories
@@ -52,6 +62,7 @@
   border: 1px solid var(--border-color-light, #eee); // Bordure légère
   margin-bottom: var(--spacing-sm); // Espace entre items
 }
+
 .category-item:last-child {
   margin-bottom: 0;
 }
@@ -73,6 +84,7 @@
     min-width: 150px; // Largeur minimale pour le nom
     flex-basis: 200px; // Base de largeur
   }
+
   &.category-capacity {
     min-width: 80px; // Largeur minimale capacité
     flex-basis: 100px; // Base de largeur plus petite

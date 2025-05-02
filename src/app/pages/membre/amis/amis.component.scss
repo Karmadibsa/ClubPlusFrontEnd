@@ -15,7 +15,7 @@
     gap: var(--spacing-sm, 8px);
     padding: var(--spacing-xs, 4px) var(--spacing-md, 16px);
     background-color: var(--main-blue); // Utilise la variable globale
-    color: var(--main-white);         // Utilise la variable globale
+    color: var(--main-white); // Utilise la variable globale
     border-radius: var(--border-radius); // Utilise la variable globale
     cursor: pointer;
     transition: var(--transition-standard); // Utilise la variable globale
@@ -47,7 +47,9 @@
     &:hover {
       background-color: var(--main-blue-dark); // Variable globale pour hover
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); // Ombre spécifique si non gérée globalement
-      .copy-icon { opacity: 1; }
+      .copy-icon {
+        opacity: 1;
+      }
     }
 
     // L'état focus-visible est géré globalement via .btn ou input,
@@ -176,8 +178,16 @@
   .add-by-code-container {
     flex-direction: column; // Empiler sur mobile
     align-items: stretch; // Éléments prennent toute la largeur
-    input.form-control { flex-grow: 0; } // Reset flex-grow
-    button.btn.btn-primary { width: 100%; } // Bouton pleine largeur
+    input.form-control {
+      flex-grow: 0;
+    }
+
+    // Reset flex-grow
+    button.btn.btn-primary {
+      width: 100%;
+    }
+
+    // Bouton pleine largeur
   }
 
   .current-user-friend-code {

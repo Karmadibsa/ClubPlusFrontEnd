@@ -10,17 +10,17 @@
       <lucide-icon name="user-cog" class="icon"></lucide-icon>
     </button>
   </div>
-<!-- ================================ -->
+  <!-- ================================ -->
 
-<!-- === MODALE INTÉGRÉE DANS LA LIGNE === -->
-<!-- Elle n'est rendue dans le DOM que si isModalVisible est vrai -->
-@if (isModalVisible) {
-  <app-membre-detail-modal
-    [isVisible]="isModalVisible"
-    [membre]="membre"
-    (close)="handleCloseModal()"
-    (saveRole)="handleSaveRoleFromModal($event)">
-  </app-membre-detail-modal>
-}
-<!-- ==================================== -->
+  <!-- === MODALE INTÉGRÉE DANS LA LIGNE === -->
+  <!-- Elle n'est rendue dans le DOM que si isModalVisible est vrai -->
+  @if (isModalVisible) {
+    <app-membre-detail-modal
+      [isVisible]="isModalVisible"
+      [membre]="membre"
+      (close)="handleCloseModal()"
+      (saveRole)="handleSaveRoleFromModal($event)">
+    </app-membre-detail-modal>
+  }
+  <!-- ==================================== -->
 </td>

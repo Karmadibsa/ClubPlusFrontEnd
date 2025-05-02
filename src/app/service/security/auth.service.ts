@@ -1,5 +1,5 @@
 // src/app/services/auth.service.ts
-import {inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +8,7 @@ export class AuthService {
 
   // Vérifier si l'utilisateur peut modifier les rôles
   canChangeRoles(): boolean {
-    if(this.role === 'ROLE_ADMIN' || 'ROLE_RESERVATION') {
+    if (this.role === 'ROLE_ADMIN' || 'ROLE_RESERVATION') {
       return true;
     } else {
       return false;
@@ -21,9 +21,9 @@ export class AuthService {
 
   constructor() {
     const jwt = localStorage.getItem("jwt")
-if(jwt != null){
-    this.decodeJwt(jwt)
-}
+    if (jwt != null) {
+      this.decodeJwt(jwt)
+    }
   }
 
   /**
@@ -76,8 +76,7 @@ if(jwt != null){
   }
 
 
-
-  deconnexion(){
+  deconnexion() {
     localStorage.removeItem("jwt")
     this.connecte = false;
     this.role = null;
@@ -88,7 +87,7 @@ if(jwt != null){
     return this.managedClubId;
   }
 
-  getRole(){
+  getRole() {
     return this.role;
   }
 

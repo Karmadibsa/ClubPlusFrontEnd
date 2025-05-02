@@ -1,33 +1,29 @@
 // ----- IMPORTATIONS -----
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   inject,
-  OnInit,
-  ChangeDetectorRef,
-  ChangeDetectionStrategy,
+  LOCALE_ID,
   OnDestroy,
-  LOCALE_ID
+  OnInit
 } from '@angular/core';
-import {CommonModule, DatePipe, formatDate} from '@angular/common'; // Pour @if etc.
+import {CommonModule, formatDate} from '@angular/common'; // Pour @if etc.
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms'; // ReactiveFormsModule requis pour [formGroup]
-import {Observable, Subscription} from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
+import {Subscription} from 'rxjs';
+import {HttpErrorResponse} from '@angular/common/http';
 
 // Services
-import { MembreService } from '../../../service/membre.service'; // Service pour les données du membre
-import { NotificationService } from '../../../service/notification.service'; // Pour les messages
-
+import {MembreService} from '../../../service/membre.service'; // Service pour les données du membre
+import {NotificationService} from '../../../service/notification.service'; // Pour les messages
 // Composants
-import { SidebarComponent } from '../../../component/navigation/sidebar/sidebar.component';
 
 // Modèles
-import { Membre } from '../../../model/membre'; // L'interface Membre
-
+import {Membre} from '../../../model/membre'; // L'interface Membre
 // Autres
-import { LucideAngularModule } from 'lucide-angular';
+import {LucideAngularModule} from 'lucide-angular';
 import {Router, RouterLink} from '@angular/router';
 import {AuthService} from '../../../service/security/auth.service';
-import {SidebarStateService} from '../../../service/sidebar-state.service';
 
 @Component({
   selector: 'app-moncompte',
@@ -35,8 +31,6 @@ import {SidebarStateService} from '../../../service/sidebar-state.service';
   imports: [
     CommonModule,
     ReactiveFormsModule, // Important pour utiliser [formGroup] et formControlName
-    SidebarComponent,
-    DatePipe,
     LucideAngularModule,
     FormsModule,
     RouterLink
@@ -188,7 +182,7 @@ export class MonCompteComponent implements OnInit, OnDestroy {
         this.isSavingInfo = false;
         this.infoForm.enable();
         // Repatcher au cas où l'API aurait modifié/formaté des données
-        const formattedData = { ...updatedMembre, date_naissance: this.formatDateForInput(updatedMembre.date_naissance) };
+        const formattedData = {...updatedMembre, date_naissance: this.formatDateForInput(updatedMembre.date_naissance)};
         this.infoForm.patchValue(formattedData);
         this.cdr.detectChanges();
       },
@@ -201,18 +195,19 @@ export class MonCompteComponent implements OnInit, OnDestroy {
       }
     });
   }
+
   /** Affiche la section de confirmation de suppression */
   initiateAccountDeletion(): void {
-      const today = new Date();
-      // Utiliser formatDate directement
-      // Le 3ème argument est le locale ID (ex: 'fr-FR'), le 4ème le fuseau horaire (optionnel)
-      const formattedDate = formatDate(today, 'dd/MM/yyyy', this.locale);
-      this.requiredConfirmationPhrase = `SUPPRIMER MON COMPTE LE ${formattedDate}`;
+    const today = new Date();
+    // Utiliser formatDate directement
+    // Le 3ème argument est le locale ID (ex: 'fr-FR'), le 4ème le fuseau horaire (optionnel)
+    const formattedDate = formatDate(today, 'dd/MM/yyyy', this.locale);
+    this.requiredConfirmationPhrase = `SUPPRIMER MON COMPTE LE ${formattedDate}`;
 
-      this.showDeleteConfirmation = true;
-      this.deleteConfirmationInput = '';
-      this.cdr.detectChanges();
-    }
+    this.showDeleteConfirmation = true;
+    this.deleteConfirmationInput = '';
+    this.cdr.detectChanges();
+  }
 
   /** Cache la section de confirmation */
   cancelAccountDeletion(): void {

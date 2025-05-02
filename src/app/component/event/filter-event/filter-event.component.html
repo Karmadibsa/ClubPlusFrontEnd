@@ -42,16 +42,16 @@
   </div>
 
 
-  @if (auth.role == "ROLE_MEMBRE"){
-  <div class="checkbox-container">
-    <input
-      type="checkbox"
-      [(ngModel)]="filterWithFriends"
-      (change)="applyFilters()"
-      id="with-friends-checkbox"
-    />
-    <label for="with-friends-checkbox">Avec amis</label>
-  </div>
+  @if (auth.role == "ROLE_MEMBRE") {
+    <div class="checkbox-container">
+      <input
+        type="checkbox"
+        [(ngModel)]="filterWithFriends"
+        (change)="applyFilters()"
+        id="with-friends-checkbox"
+      />
+      <label for="with-friends-checkbox">Avec amis</label>
+    </div>
   }
 
   <!-- Bouton de tri -->

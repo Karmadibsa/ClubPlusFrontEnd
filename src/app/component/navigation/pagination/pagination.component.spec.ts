@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { PaginationComponent } from './pagination.component';
+import {PaginationComponent} from './pagination.component';
 
 describe('PaginationComponent', () => {
   let component: PaginationComponent;
@@ -10,7 +10,7 @@ describe('PaginationComponent', () => {
     await TestBed.configureTestingModule({
       imports: [PaginationComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(PaginationComponent);
     component = fixture.componentInstance;

@@ -38,7 +38,7 @@
       <tbody>
       <!-- Itération avec le composant enfant app-event-row -->
       <!-- IMPORTANT: app-event-row DOIT générer des <td> avec [attr.data-label] pour le responsive -->
-        @for (event of paginatedEvenements ; track event.id) {
+        @for (event of paginatedEvenements; track event.id) {
           <tr app-event-row
               [evenement]="event"
               (modifier)="handleOpenEditModal($event)"

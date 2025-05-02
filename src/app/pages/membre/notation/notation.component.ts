@@ -1,9 +1,8 @@
 import {Component, inject} from '@angular/core';
-import {SidebarComponent} from "../../../component/navigation/sidebar/sidebar.component";
 import {FormsModule} from '@angular/forms';
 import {EventService} from '../../../service/event.service';
 import {NotificationService} from '../../../service/notification.service';
-import { Evenement } from '../../../model/evenement';
+import {Evenement} from '../../../model/evenement';
 import {EventRatingPayload, Notation} from '../../../model/notation';
 import {LucideAngularModule} from 'lucide-angular';
 import {DatePipe} from '@angular/common';
@@ -28,11 +27,11 @@ export class NotationComponent {
   selectedEventId: number | null = null;
   selectedEvent: Evenement | null = null;
 
-  ratingModel: EventRatingPayload = { ambiance: 0, proprete: 0, organisation: 0, fairPlay: 0, niveauJoueurs: 0 };
+  ratingModel: EventRatingPayload = {ambiance: 0, proprete: 0, organisation: 0, fairPlay: 0, niveauJoueurs: 0};
   ratingCriteria: Array<{ key: keyof EventRatingPayload, label: string }> = [
-    { key: 'ambiance', label: 'Ambiance' }, { key: 'proprete', label: 'Propreté' },
-    { key: 'organisation', label: 'Organisation' }, { key: 'fairPlay', label: 'Fair-play' },
-    { key: 'niveauJoueurs', label: 'Niveau des joueurs' }
+    {key: 'ambiance', label: 'Ambiance'}, {key: 'proprete', label: 'Propreté'},
+    {key: 'organisation', label: 'Organisation'}, {key: 'fairPlay', label: 'Fair-play'},
+    {key: 'niveauJoueurs', label: 'Niveau des joueurs'}
   ];
 
   isLoading: boolean = false;
@@ -45,15 +44,23 @@ export class NotationComponent {
 
   loadUnratedEvents(): void {
     this.isLoading = true;
-    this.unratedEvents = []; this.selectedEventId = null; this.selectedEvent = null; this.resetRatingModel();
+    this.unratedEvents = [];
+    this.selectedEventId = null;
+    this.selectedEvent = null;
+    this.resetRatingModel();
 
     this.eventService.getUnratedParticipatedEvents().subscribe({ // Appelle la méthode du service mise à jour
-      next: (events) => { this.unratedEvents = events; },
+      next: (events) => {
+        this.unratedEvents = events;
+      },
       error: (err) => {
         this.isLoading = false;
-        this.notification.show("Erreur chargement des événements à noter.", 'error'); console.error(err);
+        this.notification.show("Erreur chargement des événements à noter.", 'error');
+        console.error(err);
       },
-      complete: () => { this.isLoading = false; }
+      complete: () => {
+        this.isLoading = false;
+      }
     });
   }
 
@@ -61,16 +68,23 @@ export class NotationComponent {
     if (this.selectedEventId) {
       this.selectedEvent = this.unratedEvents.find(event => event.id === +this.selectedEventId!) || null;
       this.resetRatingModel();
-    } else { this.selectedEvent = null; }
+    } else {
+      this.selectedEvent = null;
+    }
   }
 
-  setRating(criterion: keyof EventRatingPayload, value: number): void { this.ratingModel[criterion] = value; }
+  setRating(criterion: keyof EventRatingPayload, value: number): void {
+    this.ratingModel[criterion] = value;
+  }
 
-  isRatingComplete(): boolean { return this.ratingCriteria.every(crit => this.ratingModel[crit.key] >= 1 && this.ratingModel[crit.key] <= 5); }
+  isRatingComplete(): boolean {
+    return this.ratingCriteria.every(crit => this.ratingModel[crit.key] >= 1 && this.ratingModel[crit.key] <= 5);
+  }
 
   submitRating(): void {
     if (!this.selectedEventId || !this.isRatingComplete()) {
-      this.notification.show('Sélectionnez un événement et notez tous les critères (1-5).', 'warning'); return;
+      this.notification.show('Sélectionnez un événement et notez tous les critères (1-5).', 'warning');
+      return;
     }
     this.isSubmitting = true;
     this.eventService.submitEventRating(this.selectedEventId, this.ratingModel).subscribe({
@@ -82,12 +96,15 @@ export class NotationComponent {
       },
       error: (err) => {
         this.isSubmitting = false;
-        this.notification.show(`Erreur enregistrement notation. ${err.message || ''}`, 'error'); console.error(err);
+        this.notification.show(`Erreur enregistrement notation. ${err.message || ''}`, 'error');
+        console.error(err);
       }
     });
   }
 
-  resetRatingModel(): void { this.ratingModel = { ambiance: 0, proprete: 0, organisation: 0, fairPlay: 0, niveauJoueurs: 0 }; }
+  resetRatingModel(): void {
+    this.ratingModel = {ambiance: 0, proprete: 0, organisation: 0, fairPlay: 0, niveauJoueurs: 0};
+  }
 
   // Méthode pour gérer la mise à jour de n'importe quel critère (reçoit la note 1-5)
   onRatingUpdate(criterionKey: keyof EventRatingPayload, rating5: number): void {

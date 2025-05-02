@@ -1,6 +1,6 @@
-import {Component, EventEmitter, inject, Output} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {LucideAngularModule} from 'lucide-angular';
-import {Router, RouterLink, RouterLinkActive} from "@angular/router";
+import {RouterLink, RouterLinkActive} from "@angular/router";
 import {FormsModule} from '@angular/forms';
 import {AuthService} from '../../../service/security/auth.service';
 import {SidebarStateService} from '../../../service/sidebar-state.service';

@@ -1,107 +1,109 @@
+<!-- Utilisation des classes globales et de la variante blur -->
+<div class="modal-overlay modal-overlay-blur"
+     [class.is-visible]="isVisible"
+     (click)="onClose()"> <!-- Utiliser onClose défini dans le TS -->
 
-  <!-- Utilisation des classes globales et de la variante blur -->
-  <div class="modal-overlay modal-overlay-blur"
-       [class.is-visible]="isVisible"
-       (click)="onClose()"> <!-- Utiliser onClose défini dans le TS -->
+  <!-- Contenu de la modale, utilise les classes globales -->
+  <div class="modal-content" (click)="stopPropagation($event)">
 
-    <!-- Contenu de la modale, utilise les classes globales -->
-    <div class="modal-content" (click)="stopPropagation($event)">
+    <!-- En-tête standard de la modale -->
+    <header class="modal-header">
+      <h2>
+        <lucide-icon name="calendar-plus" aria-hidden="true"></lucide-icon>
+        Réserver pour : {{ event?.nom }}
+      </h2>
+      <!-- Bouton de fermeture standard -->
+      <button class="modal-close-button" type="button" (click)="onClose()" title="Fermer">
+        <lucide-icon name="x"></lucide-icon>
+      </button>
+    </header>
 
-      <!-- En-tête standard de la modale -->
-      <header class="modal-header">
-        <h2>
-          <lucide-icon name="calendar-plus" aria-hidden="true"></lucide-icon>
-          Réserver pour : {{ event?.nom }}
-        </h2>
-        <!-- Bouton de fermeture standard -->
-        <button class="modal-close-button" type="button" (click)="onClose()" title="Fermer">
-          <lucide-icon name="x"></lucide-icon>
-        </button>
-      </header>
+    <!-- Corps de la modale -->
+    <main class="modal-body">
 
-      <!-- Corps de la modale -->
-      <main class="modal-body">
-
-        <!-- Détails de l'événement (styles spécifiques conservés dans SCSS) -->
-        <div class="event-details">
-          <div class="event-info">
-            <div class="info-item">
-              <span class="info-label">Lieu:</span>
-              <span class="info-value">{{ event?.location }}</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Date:</span>
-              <span class="info-value">{{ event?.start | date:'dd/MM/yyyy HH:mm' }} - {{ event?.end | date:'HH:mm' }}</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Description:</span>
-              <span class="info-value">{{ event?.description }}</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Places:</span>
-              <span class="info-value">{{ event?.placeReserve ?? 0 }} / {{ event?.placeTotal ?? 0 }}</span>
-            </div>
+      <!-- Détails de l'événement (styles spécifiques conservés dans SCSS) -->
+      <div class="event-details">
+        <div class="event-info">
+          <div class="info-item">
+            <span class="info-label">Lieu:</span>
+            <span class="info-value">{{ event?.location }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Date:</span>
+            <span class="info-value">{{ event?.start | date:'dd/MM/yyyy HH:mm' }}
+              - {{ event?.end | date:'HH:mm' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Description:</span>
+            <span class="info-value">{{ event?.description }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Places:</span>
+            <span class="info-value">{{ event?.placeReserve ?? 0 }} / {{ event?.placeTotal ?? 0 }}</span>
           </div>
         </div>
+      </div>
 
-        <!-- Section formulaire de réservation -->
-        <div class="reservation-form">
-          <h4 class="category-selection-title">Sélectionnez votre catégorie</h4>
+      <!-- Section formulaire de réservation -->
+      <div class="reservation-form">
+        <h4 class="category-selection-title">Sélectionnez votre catégorie</h4>
 
-          <!-- Notice (style spécifique conservé dans SCSS) -->
-          <div class="reservation-notice">
-            <p>Attention : une seule réservation est possible à la fois par adhérent et maximum deux places par événement.</p>
-          </div>
-
-          <!-- Formulaire pour la sélection (Template-driven avec ngModel ici) -->
-          <!-- #reservationNgForm="ngForm" n'est plus nécessaire si pas de validation complexe ou de soumission directe du form -->
-          <form>
-            <!-- Conteneur des catégories (style spécifique conservé dans SCSS) -->
-            <div class="categories">
-              <!-- Utilisation de @for pour itérer -->
-              @for (category of event?.categories; track category.id; let i = $index) {
-                <div class="category-item">
-                  <input type="radio"
-                         [id]="'category-' + i"
-                         name="categorySelection"
-                  [(ngModel)]="selectedCategory"
-                  [value]="category"
-                  required /> <!-- Validation HTML simple -->
-                  <label [for]="'category-' + i" class="category-label">
-                    <div class="category-name">{{ category.nom }}</div>
-                    <div class="category-name">{{ category.placeDisponible }} places restantes</div>
-                  </label>
-                </div>
-              } @empty {
-                <p class="no-categories-available">Aucune catégorie disponible pour cet événement.</p>
-              }
-            </div>
-            <!-- Erreur si aucune sélection n'est faite (affichée conditionnellement près du bouton submit) -->
-          </form>
+        <!-- Notice (style spécifique conservé dans SCSS) -->
+        <div class="reservation-notice">
+          <p>Attention : une seule réservation est possible à la fois par adhérent et maximum deux places par
+            événement.</p>
         </div>
 
-      </main>
+        <!-- Formulaire pour la sélection (Template-driven avec ngModel ici) -->
+        <!-- #reservationNgForm="ngForm" n'est plus nécessaire si pas de validation complexe ou de soumission directe du form -->
+        <form>
+          <!-- Conteneur des catégories (style spécifique conservé dans SCSS) -->
+          <div class="categories">
+            <!-- Utilisation de @for pour itérer -->
+            @for (category of event?.categories; track category.id; let i = $index) {
+              <div class="category-item">
+                <input type="radio"
+                       [id]="'category-' + i"
+                       name="categorySelection"
+                       [(ngModel)]="selectedCategory"
+                       [value]="category"
+                       required/> <!-- Validation HTML simple -->
+                <label [for]="'category-' + i" class="category-label">
+                  <div class="category-name">{{ category.nom }}</div>
+                  <div class="category-name">{{ category.placeDisponible }} places restantes</div>
+                </label>
+              </div>
+            } @empty {
+              <p class="no-categories-available">Aucune catégorie disponible pour cet événement.</p>
+            }
+          </div>
+          <!-- Erreur si aucune sélection n'est faite (affichée conditionnellement près du bouton submit) -->
+        </form>
+      </div>
 
-      <!-- Pied de page standard de la modale -->
-      <footer class="modal-footer">
-        <!-- Message d'erreur pour sélection -->
-        @if (!selectedCategory && isSubmitting) { <!-- Affiche si on tente de soumettre sans sélection -->
-          <span class="selection-error invalid-feedback">Veuillez sélectionner une catégorie.</span>
+    </main>
+
+    <!-- Pied de page standard de la modale -->
+    <footer class="modal-footer">
+      <!-- Message d'erreur pour sélection -->
+      @if (!selectedCategory && isSubmitting) {
+        <!-- Affiche si on tente de soumettre sans sélection -->
+        <span class="selection-error invalid-feedback">Veuillez sélectionner une catégorie.</span>
+      }
+
+      <!-- Bouton Annuler (optionnel, le X suffit) -->
+      <!-- <button type="button" class="btn btn-secondary" (click)="onClose()">Annuler</button> -->
+
+      <!-- Bouton Réserver utilisant les classes globales -->
+      <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="!selectedCategory || isSubmitting">
+        @if (isSubmitting) {
+          <lucide-icon name="loader" class="animate-spin"></lucide-icon> Sauvegarde...
+        } @else {
+          <lucide-icon name="ticket" aria-hidden="true"></lucide-icon> Réserver
         }
+      </button>
+    </footer>
 
-        <!-- Bouton Annuler (optionnel, le X suffit) -->
-        <!-- <button type="button" class="btn btn-secondary" (click)="onClose()">Annuler</button> -->
-
-        <!-- Bouton Réserver utilisant les classes globales -->
-        <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="!selectedCategory || isSubmitting">
-          @if(isSubmitting) {
-            <lucide-icon name="loader" class="animate-spin"></lucide-icon> Sauvegarde...
-          } @else {
-            <lucide-icon name="ticket" aria-hidden="true"></lucide-icon> Réserver
-          }
-        </button>
-      </footer>
-
-    </div>
   </div>
+</div>
 

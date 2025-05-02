@@ -1,9 +1,9 @@
 <!-- app-reservation-row.component.html -->
 
-<td [attr.data-label]="'Date'">{{ reservation.event?.start | date:'dd/MM/yyyy' }}</td>
-<td [attr.data-label]="'Heure'">{{ reservation.event?.start | date:'HH:mm' }}</td>
-<td [attr.data-label]="'Nom de l\'événement'">{{ reservation.event?.nom }}</td>
-<td [attr.data-label]="'Catégorie'">{{ reservation.categorie?.nom }}</td>
+<td [attr.data-label]="'Date'">{{ reservation.event.start | date:'dd/MM/yyyy' }}</td>
+<td [attr.data-label]="'Heure'">{{ reservation.event.start | date:'HH:mm' }}</td>
+<td [attr.data-label]="'Nom de l\'événement'">{{ reservation.event.nom }}</td>
+<td [attr.data-label]="'Catégorie'">{{ reservation.categorie.nom }}</td>
 
 <!-- Cellule Actions -->
 <td class="actions-cell" [attr.data-label]="'Actions'">
@@ -30,7 +30,7 @@
 @if (isQrModalOpen) {
   <app-qr-code-modal
     [isOpen]="isQrModalOpen"
-    [qrData]="reservation?.qrcodeData || ''"
+    [qrData]="reservation.qrcodeData || ''"
     [ticketInfo]="reservation"
     (close)="closeQrModalHandler()">
   </app-qr-code-modal>

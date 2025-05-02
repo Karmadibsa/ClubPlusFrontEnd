@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { MembreDetailModalComponent } from './membre-detail-modal.component';
+import {MembreDetailModalComponent} from './membre-detail-modal.component';
 
 describe('MembreDetailModalComponent', () => {
   let component: MembreDetailModalComponent;
@@ -10,7 +10,7 @@ describe('MembreDetailModalComponent', () => {
     await TestBed.configureTestingModule({
       imports: [MembreDetailModalComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(MembreDetailModalComponent);
     component = fixture.componentInstance;

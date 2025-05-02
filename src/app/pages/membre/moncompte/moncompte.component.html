@@ -3,7 +3,10 @@
 <!-- En-tête standard de la page -->
 <!-- Utilise les classes .page-header et .page-title (implicite pour h1) des styles globaux [5] -->
 <div class="page-header">
-  <h1 class="page-title" id="main-account-title"><lucide-icon name="user-cog" aria-hidden="true"></lucide-icon> Mon Compte</h1>
+  <h1 class="page-title" id="main-account-title">
+    <lucide-icon name="user-cog" aria-hidden="true"></lucide-icon>
+    Mon Compte
+  </h1>
   <!-- Bouton déconnexion utilisant les classes globales .btn .btn-secondary [5] -->
   <a (click)="auth.deconnexion()" routerLink="/accueil" class="logout-btn btn btn-danger" title="Déconnexion">
     <lucide-icon name="log-out" aria-hidden="true"></lucide-icon>
@@ -28,41 +31,61 @@
       <!-- Section Infos Personnelles -->
       <fieldset class="card-section"> <!-- Utilise classe globale [5] -->
         <legend class="section-header"> <!-- Utilise classe globale [5] -->
-          <h2><lucide-icon name="user" aria-hidden="true"></lucide-icon> Informations personnelles</h2>
-          <p class="section-description">Vos informations personnelles principales</p> <!-- Utilise classe globale [5] -->
+          <h2>
+            <lucide-icon name="user" aria-hidden="true"></lucide-icon>
+            Informations personnelles
+          </h2>
+          <p class="section-description">Vos informations personnelles principales</p>
+          <!-- Utilise classe globale [5] -->
         </legend>
 
         <div class="card-content"> <!-- Utilise classe globale [5] -->
           <!-- Ligne Prénom, Nom, Date Naissance -->
           <div class="form-row"> <!-- Utilise classe globale [5] -->
             <div class="form-group third"> <!-- Utilise classes globales [5] -->
-              <label for="firstname">Prénom<span class="required-indicator">*</span></label> <!-- Utilise classe globale [5] -->
-              <input type="text" id="firstname" formControlName="prenom" class="form-control" aria-required="true" aria-describedby="prenom-error"/> <!-- Utilise classe globale [5] -->
-              <div id="prenom-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici</div> <!-- Utilise classe globale [5] -->
+              <label for="firstname">Prénom<span class="required-indicator">*</span></label>
+              <!-- Utilise classe globale [5] -->
+              <input type="text" id="firstname" formControlName="prenom" class="form-control" aria-required="true"
+                     aria-describedby="prenom-error"/> <!-- Utilise classe globale [5] -->
+              <div id="prenom-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici
+              </div> <!-- Utilise classe globale [5] -->
             </div>
             <div class="form-group third"> <!-- Utilise classes globales [5] -->
-              <label for="lastname">Nom<span class="required-indicator">*</span></label> <!-- Utilise classe globale [5] -->
-              <input type="text" id="lastname" formControlName="nom" class="form-control" aria-required="true" aria-describedby="nom-error"/> <!-- Utilise classe globale [5] -->
-              <div id="nom-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici</div> <!-- Utilise classe globale [5] -->
+              <label for="lastname">Nom<span class="required-indicator">*</span></label>
+              <!-- Utilise classe globale [5] -->
+              <input type="text" id="lastname" formControlName="nom" class="form-control" aria-required="true"
+                     aria-describedby="nom-error"/> <!-- Utilise classe globale [5] -->
+              <div id="nom-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici</div>
+              <!-- Utilise classe globale [5] -->
             </div>
             <div class="form-group third"> <!-- Utilise classes globales [5] -->
-              <label for="birthdate">Date de naissance<span class="required-indicator">*</span></label> <!-- Utilise classe globale [5] -->
-              <input type="date" id="birthdate" formControlName="date_naissance" class="form-control" aria-required="true" aria-describedby="date_naissance-error"/> <!-- Utilise classe globale [5] -->
-              <div id="date_naissance-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici</div> <!-- Utilise classe globale [5] -->
+              <label for="birthdate">Date de naissance<span class="required-indicator">*</span></label>
+              <!-- Utilise classe globale [5] -->
+              <input type="date" id="birthdate" formControlName="date_naissance" class="form-control"
+                     aria-required="true" aria-describedby="date_naissance-error"/> <!-- Utilise classe globale [5] -->
+              <div id="date_naissance-error" class="invalid-feedback" role="alert" aria-live="assertive">Message
+                d'erreur ici
+              </div> <!-- Utilise classe globale [5] -->
             </div>
           </div>
 
           <!-- Ligne Email, Téléphone -->
           <div class="form-row"> <!-- Utilise classe globale [5] -->
             <div class="form-group half"> <!-- Utilise classes globales [5] -->
-              <label for="email">Email<span class="required-indicator">*</span></label> <!-- Utilise classe globale [5] -->
-              <input type="email" id="email" formControlName="email" class="form-control" aria-required="true" aria-describedby="email-error"/> <!-- Utilise classe globale [5] -->
-              <div id="email-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici</div> <!-- Utilise classe globale [5] -->
+              <label for="email">Email<span class="required-indicator">*</span></label>
+              <!-- Utilise classe globale [5] -->
+              <input type="email" id="email" formControlName="email" class="form-control" aria-required="true"
+                     aria-describedby="email-error"/> <!-- Utilise classe globale [5] -->
+              <div id="email-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici
+              </div> <!-- Utilise classe globale [5] -->
             </div>
             <div class="form-group half"> <!-- Utilise classes globales [5] -->
               <label for="phone">Téléphone</label>
-              <input type="tel" id="phone" formControlName="telephone" class="form-control" aria-describedby="telephone-error"/> <!-- Utilise classe globale [5] -->
-              <div id="telephone-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici</div> <!-- Utilise classe globale [5] -->
+              <input type="tel" id="phone" formControlName="telephone" class="form-control"
+                     aria-describedby="telephone-error"/> <!-- Utilise classe globale [5] -->
+              <div id="telephone-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur
+                ici
+              </div> <!-- Utilise classe globale [5] -->
             </div>
           </div>
         </div> <!-- Fin card-content infos perso -->
@@ -71,7 +94,10 @@
       <!-- Section Adresse (toujours DANS le même formulaire infoForm) -->
       <fieldset class="card-section"> <!-- Utilise classe globale [5] -->
         <legend class="section-header"> <!-- Utilise classe globale [5] -->
-          <h2><lucide-icon name='map-pin' aria-hidden="true"></lucide-icon> Adresse</h2>
+          <h2>
+            <lucide-icon name='map-pin' aria-hidden="true"></lucide-icon>
+            Adresse
+          </h2>
           <p class='section-description'>Votre adresse postale complète</p> <!-- Utilise classe globale [5] -->
         </legend>
         <div class="card-content"> <!-- Utilise classe globale [5] -->
@@ -79,34 +105,49 @@
           <div class='form-row'> <!-- Utilise classe globale [5] -->
             <div class='form-group quarter'> <!-- Utilise classes globales [5] -->
               <label for='street-number'>N°</label>
-              <input type='text' id='street-number' formControlName='numero_voie' class="form-control" aria-describedby="numero_voie-error"/> <!-- Utilise classe globale [5] -->
-              <div id="numero_voie-error" class="invalid-feedback" role="alert" aria-live="assertive"></div> <!-- Utilise classe globale [5] -->
+              <input type='text' id='street-number' formControlName='numero_voie' class="form-control"
+                     aria-describedby="numero_voie-error"/> <!-- Utilise classe globale [5] -->
+              <div id="numero_voie-error" class="invalid-feedback" role="alert" aria-live="assertive"></div>
+              <!-- Utilise classe globale [5] -->
             </div>
             <div class='form-group three-quarters'> <!-- Utilise classes globales [5] -->
-              <label for='street'>Rue<span class="required-indicator">*</span></label> <!-- Utilise classe globale [5] -->
-              <input type='text' id='street' formControlName='rue' class="form-control" aria-required="true" aria-describedby="rue-error"/> <!-- Utilise classe globale [5] -->
-              <div id="rue-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici</div> <!-- Utilise classe globale [5] -->
+              <label for='street'>Rue<span class="required-indicator">*</span></label>
+              <!-- Utilise classe globale [5] -->
+              <input type='text' id='street' formControlName='rue' class="form-control" aria-required="true"
+                     aria-describedby="rue-error"/> <!-- Utilise classe globale [5] -->
+              <div id="rue-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici</div>
+              <!-- Utilise classe globale [5] -->
             </div>
           </div>
 
           <!-- Ligne code postal et ville -->
           <div class='form-row'> <!-- Utilise classe globale [5] -->
             <div class='form-group half'> <!-- Utilise classes globales [5] -->
-              <label for='postal-code'>Code postal<span class="required-indicator">*</span></label> <!-- Utilise classe globale [5] -->
-              <input type='text' id='postal-code' formControlName='codepostal' class="form-control" aria-required="true" aria-describedby="codepostal-error postal-format-hint"/> <!-- Utilise classe globale [5] -->
-              <small id="postal-format-hint" class="form-text text-muted">Format: 5 chiffres</small> <!-- Utilise classes globales [5] -->
-              <div id="codepostal-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici</div> <!-- Utilise classe globale [5] -->
+              <label for='postal-code'>Code postal<span class="required-indicator">*</span></label>
+              <!-- Utilise classe globale [5] -->
+              <input type='text' id='postal-code' formControlName='codepostal' class="form-control" aria-required="true"
+                     aria-describedby="codepostal-error postal-format-hint"/> <!-- Utilise classe globale [5] -->
+              <small id="postal-format-hint" class="form-text text-muted">Format: 5 chiffres</small>
+              <!-- Utilise classes globales [5] -->
+              <div id="codepostal-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur
+                ici
+              </div> <!-- Utilise classe globale [5] -->
             </div>
             <div class='form-group half'> <!-- Utilise classes globales [5] -->
-              <label for='city'>Ville<span class="required-indicator">*</span></label> <!-- Utilise classe globale [5] -->
-              <input type='text' id='city' formControlName='ville' class="form-control" aria-required="true" aria-describedby="ville-error"/> <!-- Utilise classe globale [5] -->
-              <div id="ville-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici</div> <!-- Utilise classe globale [5] -->
+              <label for='city'>Ville<span class="required-indicator">*</span></label>
+              <!-- Utilise classe globale [5] -->
+              <input type='text' id='city' formControlName='ville' class="form-control" aria-required="true"
+                     aria-describedby="ville-error"/> <!-- Utilise classe globale [5] -->
+              <div id="ville-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici
+              </div> <!-- Utilise classe globale [5] -->
             </div>
           </div>
 
           <!-- Bouton Mettre à jour pour infoForm (infos perso + adresse) -->
           <div class="form-actions"> <!-- Utilise classe globale [5] -->
-            <button type="submit" class='btn btn-primary' [disabled]="infoForm.invalid || infoForm.pending || !infoForm.dirty"> <!-- Utilise classes globales [5] -->
+            <button type="submit" class='btn btn-primary'
+                    [disabled]="infoForm.invalid || infoForm.pending || !infoForm.dirty">
+              <!-- Utilise classes globales [5] -->
               <lucide-icon name="save" aria-hidden="true"></lucide-icon>
               Mettre à jour mes informations
             </button>
@@ -158,50 +199,62 @@
     <section class="card-section danger-zone" aria-labelledby="danger-zone-title">
       <!-- Le header de la danger zone est un DIV ici car parent = section -->
       <div class="section-header"> <!-- Style global pour header dans .danger-zone [5] -->
-        <h2 id="danger-zone-title"><lucide-icon name="triangle-alert" aria-hidden="true"></lucide-icon> Zone Dangereuse</h2>
+        <h2 id="danger-zone-title">
+          <lucide-icon name="triangle-alert" aria-hidden="true"></lucide-icon>
+          Zone Dangereuse
+        </h2>
       </div>
       <div class="card-content"> <!-- Utilise classe globale [5] -->
-        <p>Supprimer votre compte est une action <strong>irréversible</strong>. Toutes vos données, réservations, amitiés et informations seront définitivement anonymisées.</p>
+        <p>Supprimer votre compte est une action <strong>irréversible</strong>. Toutes vos données, réservations,
+          amitiés et informations seront définitivement anonymisées.</p>
 
         @if (!showDeleteConfirmation) {
-          <button type="button" class="btn btn-danger" (click)="initiateAccountDeletion()"> <!-- Utilise classes globales [5] -->
+          <button type="button" class="btn btn-danger" (click)="initiateAccountDeletion()">
+            <!-- Utilise classes globales [5] -->
             Supprimer mon compte
           </button>
         } @else {
           <!-- La section de confirmation utilise des classes spécifiques CONSERVÉES dans le SCSS local -->
-          <div class="confirmation-section" role="alertdialog" aria-labelledby="confirm-delete-title" aria-describedby="confirm-delete-desc">
-            <h3 id="confirm-delete-title" class="visually-hidden">Confirmation de suppression de compte</h3> <!-- Utilise classe globale [5] -->
-            <p id="confirm-delete-desc" class="confirmation-prompt">Pour confirmer la suppression définitive de votre compte, veuillez taper la phrase suivante exactement comme indiqué ci-dessous :</p>
-            <p class="confirmation-phrase non-selectable" aria-hidden="true"><strong>{{ requiredConfirmationPhrase }}</strong></p> <!-- Classe locale -->
+          <div class="confirmation-section" role="alertdialog" aria-labelledby="confirm-delete-title"
+               aria-describedby="confirm-delete-desc">
+            <h3 id="confirm-delete-title" class="visually-hidden">Confirmation de suppression de compte</h3>
+            <!-- Utilise classe globale [5] -->
+            <p id="confirm-delete-desc" class="confirmation-prompt">Pour confirmer la suppression définitive de votre
+              compte, veuillez taper la phrase suivante exactement comme indiqué ci-dessous :</p>
+            <p class="confirmation-phrase non-selectable" aria-hidden="true">
+              <strong>{{ requiredConfirmationPhrase }}</strong></p> <!-- Classe locale -->
 
             <div class="form-group"> <!-- Utilise classe globale [5] -->
               <label for="delete-confirm-input">Tapez la phrase ici :</label>
               <input type="text"
                      id="delete-confirm-input"
                      class="form-control"
-              [(ngModel)]="deleteConfirmationInput"
-              placeholder="Recopiez la phrase de confirmation"
-              autocomplete="off"
-              aria-required="true"
-              aria-describedby="delete-confirm-error"
+                     [(ngModel)]="deleteConfirmationInput"
+                     placeholder="Recopiez la phrase de confirmation"
+                     autocomplete="off"
+                     aria-required="true"
+                     aria-describedby="delete-confirm-error"
               />
-              <div id="delete-confirm-error" class="invalid-feedback" role="alert" aria-live="assertive"></div> <!-- Utilise classe globale [5] -->
+              <div id="delete-confirm-error" class="invalid-feedback" role="alert" aria-live="assertive"></div>
+              <!-- Utilise classe globale [5] -->
             </div>
             <!-- Classe .confirmation-actions conservée localement -->
             <div class="confirmation-actions">
-              <button type="button" class="btn btn-secondary" (click)="cancelAccountDeletion()" [disabled]="isDeletingAccount"> <!-- Utilise classes globales [5] -->
+              <button type="button" class="btn btn-secondary" (click)="cancelAccountDeletion()"
+                      [disabled]="isDeletingAccount"> <!-- Utilise classes globales [5] -->
                 Annuler
               </button>
               <button type="button"
                       class="btn btn-danger"
-              (click)="confirmAccountDeletion()"
-              [disabled]="isDeletingAccount || deleteConfirmationInput !== requiredConfirmationPhrase">
-              @if (!isDeletingAccount) {
-                <lucide-icon name="trash-2" aria-hidden="true"></lucide-icon> Confirmer la suppression
-              } @else {
-                <!-- Utilise classe globale utilitaire .animate-spin [5] -->
-                <lucide-icon name="loader" class="animate-spin" aria-hidden="true"></lucide-icon> Suppression en cours...
-              }
+                      (click)="confirmAccountDeletion()"
+                      [disabled]="isDeletingAccount || deleteConfirmationInput !== requiredConfirmationPhrase">
+                @if (!isDeletingAccount) {
+                  <lucide-icon name="trash-2" aria-hidden="true"></lucide-icon> Confirmer la suppression
+                } @else {
+                  <!-- Utilise classe globale utilitaire .animate-spin [5] -->
+                  <lucide-icon name="loader" class="animate-spin"
+                               aria-hidden="true"></lucide-icon> Suppression en cours...
+                }
               </button>
             </div>
           </div>

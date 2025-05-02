@@ -64,9 +64,11 @@
     &::-webkit-scrollbar {
       width: 6px;
     }
+
     &::-webkit-scrollbar-track {
       background: transparent;
     }
+
     &::-webkit-scrollbar-thumb {
       background-color: rgba(255, 255, 255, 0.3);
       border-radius: 3px;
@@ -152,9 +154,11 @@
         height: calc(var(--icon-size) * 0.9);
         stroke: currentColor;
       }
+
       &:hover {
         background-color: rgba(255, 255, 255, 0.15);
       }
+
       &:focus-visible {
         // Style focus cohérent avec les boutons globaux (simulé avec outline ici)
         outline: 2px solid rgba(var(--main-orange-rgb, 255, 107, 53), 0.5);
@@ -179,6 +183,7 @@
         transform: scale(0.5);
         pointer-events: none;
       }
+
       // Si vous ajoutez une icône alternative pour le mode réduit, décommentez et stylez-la ici
       // .logo-collapsed-icon { opacity: 1; transform: ...; }
     }
@@ -207,9 +212,13 @@
     }
 
     // Footer reste centré
-  } // Fin &.is-collapsed
+  }
 
-} // Fin .sidebar desktop
+  // Fin &.is-collapsed
+
+}
+
+// Fin .sidebar desktop
 
 
 /* ====================================== */
@@ -250,7 +259,9 @@
       height: 100%;
       overflow: hidden;
       scrollbar-width: none; // Cache scrollbar
-      &::-webkit-scrollbar { display: none; }
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
 
     ul.menu-items li {
@@ -267,7 +278,8 @@
       gap: 0; // Pas d'espace car texte caché
       color: var(--text-medium); // Couleur inactive
       border-radius: 0; // Pas de coins arrondis
-      width: 100%; height: 100%;
+      width: 100%;
+      height: 100%;
       transition: none; // Pas de transition
 
       lucide-icon {
@@ -280,11 +292,18 @@
       .menu-item-text {
         display: none; // Cache complètement le texte
       }
+
       // --------------------------------
 
       // Annuler hover/focus desktop
-      &:hover { background: none; }
-      &:focus-visible { outline: none; background: none; }
+      &:hover {
+        background: none;
+      }
+
+      &:focus-visible {
+        outline: none;
+        background: none;
+      }
 
       // État actif mobile (juste la couleur change)
       &.page_actuelle {
@@ -293,7 +312,10 @@
         font-weight: normal; // Pas besoin de gras si texte caché
       }
     }
-  } // Fin .sidebar @media mobile
+  }
+  // Fin .sidebar @media mobile
 
-} // Fin @media screen and (max-width: 768px)
+}
+
+// Fin @media screen and (max-width: 768px)
 

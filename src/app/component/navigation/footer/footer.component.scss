@@ -1,17 +1,17 @@
 .footer {
   background-color: var(--neutral-blue); // Couleur de fond du footer
-  color: var(--main-white);             // Couleur de texte par défaut pour les enfants
+  color: var(--main-white); // Couleur de texte par défaut pour les enfants
   padding: var(--spacing-lg) var(--spacing-md); // Padding vertical et horizontal
   // Utilisation de Flexbox pour centrer le contenu interne
   display: flex;
   justify-content: center; // Centre horizontalement le conteneur .footer-logo
-  align-items: center;    // Centre verticalement le conteneur .footer-logo
+  align-items: center; // Centre verticalement le conteneur .footer-logo
 
   .footer-logo {
     // Conteneur pour l'image et le paragraphe
-    display: flex;          // Utilise flex pour organiser ses enfants
+    display: flex; // Utilise flex pour organiser ses enfants
     flex-direction: column; // Empile l'image et le texte verticalement
-    align-items: center;    // Centre l'image et le texte horizontalement
+    align-items: center; // Centre l'image et le texte horizontalement
 
     img {
       max-height: 50px; // Limite la hauteur du logo (ajustez si nécessaire)

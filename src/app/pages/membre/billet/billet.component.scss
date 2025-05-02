@@ -28,6 +28,7 @@
     margin-bottom: 20px;
     border-bottom: 1px solid #eee;
     padding-bottom: 10px;
+
     h1 {
       font-size: 22px;
       color: var(--main-blue);
@@ -38,8 +39,16 @@
   .pdf-ticket-info {
     font-size: 13px;
     line-height: 1.6;
-    p { margin: 5px 0; }
-    strong { font-weight: bold; color: #000; margin-right: 5px; }
+
+    p {
+      margin: 5px 0;
+    }
+
+    strong {
+      font-weight: bold;
+      color: #000;
+      margin-right: 5px;
+    }
   }
 
   .pdf-qr-code {

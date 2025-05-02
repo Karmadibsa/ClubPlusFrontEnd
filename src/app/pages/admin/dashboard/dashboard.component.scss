@@ -133,12 +133,18 @@ table.data-table {
   .chart-container {
     height: var(--chart-height-mobile, 350px); // Hauteur réduite sur mobile
     padding: var(--spacing-md, 16px);
-    h3 { font-size: 1.1rem; }
+
+    h3 {
+      font-size: 1.1rem;
+    }
   }
 
   .table-container {
     padding: var(--spacing-md, 16px);
-    .header-event h3 { font-size: 1.15rem; }
+
+    .header-event h3 {
+      font-size: 1.15rem;
+    }
   }
 
 }

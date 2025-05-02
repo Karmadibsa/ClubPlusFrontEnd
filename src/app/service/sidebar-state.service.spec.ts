@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { SidebarStateService } from './sidebar-state.service';
+import {SidebarStateService} from './sidebar-state.service';
 
 describe('SidebarStateService', () => {
   let service: SidebarStateService;

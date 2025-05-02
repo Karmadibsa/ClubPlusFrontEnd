@@ -1,5 +1,4 @@
-
-import { Membre } from '../model/membre';
+import {Membre} from '../model/membre';
 
 // Interface pour représenter une DemandeAmi
 export interface DemandeAmi {

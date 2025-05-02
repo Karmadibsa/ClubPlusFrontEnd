@@ -118,7 +118,9 @@ form {
   font-weight: 600;
   font-family: var(--font-family);
 
-  strong { font-weight: 700; }
+  strong {
+    font-weight: 700;
+  }
 }
 
 .form-input, // Classe pour inputs, selects, textareas

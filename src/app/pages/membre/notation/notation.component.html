@@ -33,14 +33,14 @@
           <label for="eventSelect">Choisissez l'événement à évaluer :</label>
           <select id="eventSelect"
                   class="form-control event-select"
-          [(ngModel)]="selectedEventId"
-          (ngModelChange)="onEventSelected()">
-          <option [ngValue]="null" disabled>-- Sélectionnez un événement --</option>
-          @for (event of unratedEvents; track event.id) {
-            <option [value]="event.id">
-              {{ event.nom }} ({{ event.start | date:'dd/MM/yyyy HH:mm' }})
-            </option>
-          }
+                  [(ngModel)]="selectedEventId"
+                  (ngModelChange)="onEventSelected()">
+            <option [ngValue]="null" disabled>-- Sélectionnez un événement --</option>
+            @for (event of unratedEvents; track event.id) {
+              <option [value]="event.id">
+                {{ event.nom }} ({{ event.start | date:'dd/MM/yyyy HH:mm' }})
+              </option>
+            }
           </select>
           <!-- Pas de .invalid-feedback ou .form-text montré dans l'exemple initial -->
         </div>
@@ -59,7 +59,7 @@
         <legend class="section-header"> <!-- Classe de styles.txt -->
           <h2>
             <lucide-icon name="book-open-check" aria-hidden="true"></lucide-icon>
-            Détail de l'évaluation pour "{{ selectedEvent?.nom }}"
+            Détail de l'évaluation pour "{{ selectedEvent.nom }}"
           </h2>
           <!-- <p class="section-description">Description si nécessaire</p> -->
         </legend>
@@ -83,18 +83,18 @@
             <button type="button"
                     (click)="submitRating()"
                     class="btn btn-primary"
-            [disabled]="isSubmitting || !isRatingComplete()">
-            @if (!isSubmitting) {
-                  <lucide-icon name="send"></lucide-icon>
-              <span>
+                    [disabled]="isSubmitting || !isRatingComplete()">
+              @if (!isSubmitting) {
+                <lucide-icon name="send"></lucide-icon>
+                <span>
                   Soumettre l'évaluation
                 </span>
-            } @else {
-                  <lucide-icon name="loader" class="animate-spin"></lucide-icon>
-              <span>
+              } @else {
+                <lucide-icon name="loader" class="animate-spin"></lucide-icon>
+                <span>
                   Soumission en cours...
                 </span>
-            }
+              }
             </button>
           </div>
         </div> <!-- Fin .card-content -->

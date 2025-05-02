@@ -31,6 +31,7 @@
   margin-bottom: var(--spacing-sm); // Espace entre items
   font-size: 0.95rem; // Taille standard
 }
+
 .info-item:last-child {
   margin-bottom: 0;
 }
@@ -71,7 +72,9 @@
   margin-bottom: var(--spacing-lg); // Espace avant les catégories
   font-size: 0.9rem;
 
-  p { margin: 0; }
+  p {
+    margin: 0;
+  }
 }
 
 // Conteneur des catégories sélectionnables
@@ -94,7 +97,7 @@
 
   &:hover {
     border-color: var(--main-orange); // Change bordure au survol
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); // Légère ombre
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); // Légère ombre
   }
 }
 

@@ -8,7 +8,7 @@
     <div class="current-user-friend-code"
          (click)="copyCode(currentUser.codeAmi)"
          title="Copier votre code ami : {{ currentUser.codeAmi }}"
-         role="button" tabindex="0"  >
+         role="button" tabindex="0">
       <span class="label">Votre Code Ami</span>
       <code class="code-display">{{ currentUser.codeAmi }}</code>
       <lucide-icon name="copy" size="16" class="copy-icon"></lucide-icon>
@@ -26,7 +26,8 @@
     <!-- Utilisation d'un H3 pour la sous-section ou garder H2 si sémantiquement fort -->
     <h3>Ajouter un ami par code</h3>
     <!-- Input avec classe .form-control globale -->
-    <input type="text" class="form-control" [(ngModel)]="friendCodeToAdd" placeholder="Entrez le code ami..." (keyup.enter)="addFriendByCode()" [disabled]="isLoading">
+    <input type="text" class="form-control" [(ngModel)]="friendCodeToAdd" placeholder="Entrez le code ami..."
+           (keyup.enter)="addFriendByCode()" [disabled]="isLoading">
     <!-- Bouton Ajouter utilisant les classes .btn .btn-primary globales -->
     <button class="btn btn-primary" (click)="addFriendByCode()" [disabled]="isLoading">
       <lucide-icon name="user-plus" size="16"></lucide-icon> <!-- icône sans classe spécifique si gérée par .btn -->
@@ -35,7 +36,8 @@
   </div>
 
   <!-- Indicateur de chargement global (si actif pendant l'ajout) -->
-  @if (isLoading && activeTab !== 'friends' && activeTab !== 'received' && activeTab !== 'sent') { // Condition ajustée si besoin
+  @if (isLoading && activeTab !== 'friends' && activeTab !== 'received' && activeTab !== 'sent') {
+    // Condition ajustée si besoin
     <div class="loading-indicator">
       <lucide-icon name="loader-2" class="animate-spin"></lucide-icon>
       <span>Traitement en cours...</span>
@@ -71,9 +73,9 @@
         <lucide-icon name="search" size="18" class="search-icon"></lucide-icon>
         <input type="text"
                class="form-control friend-search-input"
-        [(ngModel)]="friendSearchTerm"
-        (input)="filterFriendsList()"
-        placeholder="Rechercher un ami par nom ou prénom...">
+               [(ngModel)]="friendSearchTerm"
+               (input)="filterFriendsList()"
+               placeholder="Rechercher un ami par nom ou prénom...">
       </div>
 
       <!-- Indicateur de chargement pour CET onglet -->
@@ -103,7 +105,8 @@
                   <td [attr.data-label]="'Actions'" class="actions-cell"> <!-- Classe globale pour cellule actions -->
                     <div class="btn-actions"> <!-- Wrapper global pour boutons actions -->
                       <!-- Bouton Retirer utilisant .btn .btn-danger -->
-                      <button class="btn btn-danger" (click)="removeFriend(friend.id)" [disabled]="isLoading" title="Retirer cet ami">
+                      <button class="btn btn-danger" (click)="removeFriend(friend.id)" [disabled]="isLoading"
+                              title="Retirer cet ami">
                         <lucide-icon name="user-minus" size="16"></lucide-icon>
                         <!-- Span optionnel pour lecteurs d'écran si bouton icône seule -->
                         <!-- <span class="visually-hidden">Retirer</span> -->
@@ -147,15 +150,18 @@
             <tbody>
               @for (request of receivedRequests; track request.id) {
                 <tr>
-                  <td [attr.data-label]="'De la part de'">{{ request.envoyeur?.prenom }} {{ request.envoyeur?.nom }}</td>
+                  <td [attr.data-label]="'De la part de'">{{ request.envoyeur.prenom }} {{ request.envoyeur.nom }}
+                  </td>
                   <td [attr.data-label]="'Actions'" class="actions-cell">
                     <div class="btn-actions">
                       <!-- Bouton Accepter utilisant .btn .btn-accept (ou .btn-success) -->
-                      <button class="btn btn-accept" (click)="acceptFriendRequest(request.id)" [disabled]="isLoading" title="Accepter la demande">
+                      <button class="btn btn-accept" (click)="acceptFriendRequest(request.id)" [disabled]="isLoading"
+                              title="Accepter la demande">
                         <lucide-icon name="user-check" size="16"></lucide-icon>
                       </button>
                       <!-- Bouton Refuser utilisant .btn .btn-danger -->
-                      <button class="btn btn-danger" (click)="rejectFriendRequest(request.id)" [disabled]="isLoading" title="Refuser la demande">
+                      <button class="btn btn-danger" (click)="rejectFriendRequest(request.id)" [disabled]="isLoading"
+                              title="Refuser la demande">
                         <lucide-icon name="user-x" size="16"></lucide-icon>
                       </button>
                     </div>
@@ -197,12 +203,13 @@
             <tbody>
               @for (request of sentRequests; track request.id) {
                 <tr>
-                  <td [attr.data-label]="'Envoyée à'">{{ request.recepteur?.prenom }} {{ request.recepteur?.nom }}</td>
+                  <td [attr.data-label]="'Envoyée à'">{{ request.recepteur.prenom }} {{ request.recepteur.nom }}</td>
                   <td [attr.data-label]="'Statut'">{{ request.statut }}</td>
                   <td [attr.data-label]="'Action'" class="actions-cell">
                     <div class="btn-actions">
                       <!-- Bouton Annuler utilisant .btn .btn-secondary ou .btn-warning -->
-                      <button class="btn btn-danger" (click)="cancelSentFriendRequest(request.id)" [disabled]="isLoading" title="Annuler la demande">
+                      <button class="btn btn-danger" (click)="cancelSentFriendRequest(request.id)"
+                              [disabled]="isLoading" title="Annuler la demande">
                         <lucide-icon name="ban" size="16"></lucide-icon>
                       </button>
                     </div>

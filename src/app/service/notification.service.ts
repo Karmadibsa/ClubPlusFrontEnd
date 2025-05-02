@@ -5,10 +5,10 @@ import {MatSnackBar} from '@angular/material/snack-bar';
   providedIn: 'root'
 })
 export class NotificationService {
-    notification = inject(MatSnackBar)
+  notification = inject(MatSnackBar)
 
-  show(message : string, type : "valid" | "error"| "info"| "warning" = "info"){
-      this.notification.open(message, "", {duration : 5000, verticalPosition:"top", panelClass:type})
+  show(message: string, type: "valid" | "error" | "info" | "warning" = "info") {
+    this.notification.open(message, "", {duration: 5000, verticalPosition: "top", panelClass: type})
   }
 
 }

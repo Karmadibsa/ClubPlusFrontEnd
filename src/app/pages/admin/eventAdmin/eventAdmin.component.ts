@@ -1,31 +1,23 @@
 // ----- IMPORTATIONS -----
-import { Component, inject, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Pour @if, @for si tu migres, ou NgIf/NgForOf
-import {Observable, Subscription} from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common'; // Pour @if, @for si tu migres, ou NgIf/NgForOf
+import {Subscription} from 'rxjs';
+import {HttpErrorResponse} from '@angular/common/http';
 
 // Services
-import { EventService } from '../../../service/event.service';             // Service pour les événements
-import { AuthService } from '../../../service/security/auth.service';       // Pour l'ID du club/user
-import { NotificationService } from '../../../service/notification.service'; // Pour les notifications
-
+import {EventService} from '../../../service/event.service'; // Service pour les événements
+import {AuthService} from '../../../service/security/auth.service'; // Pour l'ID du club/user
+import {NotificationService} from '../../../service/notification.service'; // Pour les notifications
 // Composants
-import { EventRowComponent } from '../../../component/event/event-row/event-row.component';
-import { SidebarComponent } from '../../../component/navigation/sidebar/sidebar.component';
-import { EditEventModalComponent } from '../../../component/event/edit-event/edit-event.component'; // Le nom semble être EditEventComponent basé sur tes imports
-import { CreateEventButtonComponent } from '../../../component/event/create-event-button/create-event-button.component';
+import {EventRowComponent} from '../../../component/event/event-row/event-row.component';
+import {CreateEventButtonComponent} from '../../../component/event/create-event-button/create-event-button.component';
 
 // Modèles
-import { Evenement } from '../../../model/evenement'; // Assure-toi que ce modèle existe et est correct
-
+import {Evenement} from '../../../model/evenement'; // Assure-toi que ce modèle existe et est correct
 // Autres
-import { LucideAngularModule } from 'lucide-angular';
-import {
-  ParticipationEventModalComponent
-} from '../../../component/event/participation-event-modal/participation-event-modal.component';
+import {LucideAngularModule} from 'lucide-angular';
 import {FilterEventComponent} from '../../../component/event/filter-event/filter-event.component';
 import {PaginationComponent} from '../../../component/navigation/pagination/pagination.component';
-import {SidebarStateService} from '../../../service/sidebar-state.service'; // Si utilisé dans le template
 
 
 @Component({
@@ -35,9 +27,8 @@ import {SidebarStateService} from '../../../service/sidebar-state.service'; // S
     CommonModule, // Contient NgIf, NgForOf OU les nouveaux @if, @for
     EventRowComponent,
     LucideAngularModule,
-    EditEventModalComponent, // Assure-toi que le nom est correct
+    // Assure-toi que le nom est correct
     CreateEventButtonComponent,
-    ParticipationEventModalComponent,
     FilterEventComponent,
     PaginationComponent
   ],
@@ -134,7 +125,7 @@ export class EventAdminComponent implements OnInit, OnDestroy {
     const endIndex = startIndex + this.itemsPerPage;
     // Utiliser slice pour extraire la bonne portion de la liste filtrée
     this.paginatedEvenements = this.filteredEvenements.slice(startIndex, endIndex);
-    console.log(`Affichage page ${this.currentPage}, index ${startIndex} à ${endIndex-1}`);
+    console.log(`Affichage page ${this.currentPage}, index ${startIndex} à ${endIndex - 1}`);
     this.cdr.detectChanges(); // Mettre à jour l'affichage
   }
 
@@ -260,7 +251,6 @@ export class EventAdminComponent implements OnInit, OnDestroy {
     console.log('EventAdmin: isReservationModalVisible est maintenant:', this.isReservationModalVisible); // <-- LOG 4 (Le voyez-vous ?)
     this.cdr.detectChanges(); // Important avec OnPush
   }
-
 
 
   /**

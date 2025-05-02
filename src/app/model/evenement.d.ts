@@ -1,5 +1,5 @@
-import { Categorie } from './categorie';   // Assurez-vous que ce chemin est correct
-import { Club } from './club';   // Assurez-vous que ce chemin est correct
+import {Categorie} from './categorie'; // Assurez-vous que ce chemin est correct
+import {Club} from './club'; // Assurez-vous que ce chemin est correct
 
 
 /**

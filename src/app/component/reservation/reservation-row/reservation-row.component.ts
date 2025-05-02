@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {SafeUrl} from '@angular/platform-browser';
 import {LucideAngularModule} from 'lucide-angular';
 import {DatePipe} from '@angular/common';
 import {QrCodeModalComponent} from "../qr-code-modal/qr-code-modal.component";
@@ -9,11 +8,11 @@ import {Reservation} from '../../../model/reservation';
   selector: '[app-reservation-row]',
   standalone: true,
   templateUrl: './reservation-row.component.html',
-    imports: [
-        LucideAngularModule,
-        DatePipe,
-        QrCodeModalComponent
-    ],
+  imports: [
+    LucideAngularModule,
+    DatePipe,
+    QrCodeModalComponent
+  ],
   styleUrls: ['./reservation-row.component.scss']
 })
 export class ReservationRowComponent {
@@ -50,6 +49,6 @@ export class ReservationRowComponent {
   onDelete(): void {
     if (!this.reservation) return;
     this.deleteReservation.emit(this.reservation);
-    }
   }
+}
 

@@ -3,7 +3,8 @@
     <h1>Connexion</h1>
 
     <!-- Formulaire Angular -->
-    <form [formGroup]="loginForm" (ngSubmit)="onConnexion()" novalidate> <!-- novalidate pour désactiver validation HTML5 -->
+    <form [formGroup]="loginForm" (ngSubmit)="onConnexion()" novalidate>
+      <!-- novalidate pour désactiver validation HTML5 -->
 
       <!-- Champ Email -->
       <div class="form-group">
@@ -75,7 +76,8 @@
       </div>
 
       <!-- Bouton de connexion -->
-      <button type="submit" class="login-btn" [disabled]="loginForm.invalid || isLoading"> <!-- isLoading pour désactiver pendant chargement -->
+      <button type="submit" class="login-btn" [disabled]="loginForm.invalid || isLoading">
+        <!-- isLoading pour désactiver pendant chargement -->
         @if (!isLoading) {
           <strong>Se connecter</strong>
         } @else {
@@ -87,7 +89,8 @@
     <!-- ========================================= -->
     <!-- == BOUTONS DE SIMULATION (DEV ONLY) == -->
     <!-- ========================================= -->
-    <div class="dev-simulation-section" style="margin-top: 20px; border-top: 1px dashed #ccc; padding-top: 15px; text-align: center;">
+    <div class="dev-simulation-section"
+         style="margin-top: 20px; border-top: 1px dashed #ccc; padding-top: 15px; text-align: center;">
       <h4 style="margin-bottom: 10px; color: #555;">Simulations (Dev)</h4>
       <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;"> <!-- flex-wrap ajouté -->
         <button type="button" (click)="simulateLoginAsMember()" class="dev-sim-btn">MEMBRE</button>

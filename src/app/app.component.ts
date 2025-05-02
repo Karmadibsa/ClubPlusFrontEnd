@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {RouterOutlet} from '@angular/router';
 import {LucideAngularModule} from 'lucide-angular';
 import {AuthService} from './service/security/auth.service';
 

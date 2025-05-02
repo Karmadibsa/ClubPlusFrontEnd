@@ -12,6 +12,7 @@ export class ClubService {
   private http = inject(HttpClient);
   // Utilise l'URL de base de l'API définie dans les fichiers d'environnement
   private apiUrl = `${environment.apiUrl}/clubs`;
+
   // Charger les données existantes du club depuis l'API
 
   /**
@@ -50,6 +51,7 @@ export class ClubService {
       catchError(this.handleError)
     );
   }
+
 // --- Gestionnaire d'Erreurs Privé ---
 
   /**

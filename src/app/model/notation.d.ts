@@ -1,4 +1,4 @@
-import { Evenement } from './evenement';   // Assurez-vous que ce chemin est correct
+import {Evenement} from './evenement'; // Assurez-vous que ce chemin est correct
 
 /**
  * Interface TypeScript correspondant à l'entité Java `Notation`.

@@ -1,12 +1,9 @@
-import {Component, Inject, inject, Input} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {DatePipe} from "@angular/common";
-import {MatCard, MatCardContent, MatCardHeader, MatCardModule} from "@angular/material/card";
+import {MatCardModule} from "@angular/material/card";
 import {LucideAngularModule} from 'lucide-angular';
-import {MatDialog} from '@angular/material/dialog';
-import {HttpClient} from '@angular/common/http';
 import {ReservationModalComponent} from '../reservation-modal/reservation-modal.component';
 import {Evenement} from '../../../model/evenement';
-import {NotificationService} from '../../../service/notification.service';
 
 @Component({
   selector: 'app-event-card',

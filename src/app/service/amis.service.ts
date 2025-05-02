@@ -6,7 +6,6 @@ import {Membre} from '../model/membre';
 import {DemandeAmi} from '../model/demandeAmi';
 
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -75,7 +74,7 @@ export class AmisService {
     let params = new HttpParams().set('code', codeAmi); // Paramètre de requête
 
     console.log(`AmisService: Appel POST ${url} avec code=${codeAmi}`);
-    return this.http.post<DemandeAmi>(url, {}, { params: params }).pipe( // Envoi corps vide, mais avec params
+    return this.http.post<DemandeAmi>(url, {}, {params: params}).pipe( // Envoi corps vide, mais avec params
       tap((demande) => console.log(`AmisService: Demande d'ami envoyée via code ${codeAmi}`, demande)),
       catchError(this.handleError)
     );

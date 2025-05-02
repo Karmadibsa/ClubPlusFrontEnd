@@ -1,9 +1,9 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {environment} from '../../environments/environments';
 import {catchError, tap} from 'rxjs/operators';
-import {Evenement, CreateEventPayload, UpdateEventPayload} from '../model/evenement';
+import {CreateEventPayload, Evenement, UpdateEventPayload} from '../model/evenement';
 import {EventRatingPayload, Notation} from '../model/notation';
 
 
@@ -66,6 +66,7 @@ export class EventService {
       catchError(this.handleError) // Appelle notre fonction de gestion d'erreur en cas d'échec
     );
   }
+
   //
   // getAllEvents(): Observable<Evenement[]> {
   //   // Construit les paramètres de requête

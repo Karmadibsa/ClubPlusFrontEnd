@@ -3,11 +3,8 @@ import {CommonModule} from '@angular/common';
 
 import {LucideAngularModule} from 'lucide-angular';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {SidebarComponent} from "../../../component/navigation/sidebar/sidebar.component";
-import {QrCodeModalComponent} from '../../../component/reservation/qr-code-modal/qr-code-modal.component';
 import {HttpClient} from '@angular/common/http';
 import {ReservationRowComponent} from '../../../component/reservation/reservation-row/reservation-row.component';
-import html2canvas from 'html2canvas'; // Pour capturer le contenu HTML
 import jspdf from 'jspdf';
 import {QRCodeComponent} from 'angularx-qrcode';
 import {SafeUrl} from '@angular/platform-browser';
@@ -16,12 +13,10 @@ import {ReservationService} from '../../../service/reservation.service';
 import {NotificationService} from '../../../service/notification.service';
 
 
-
-
 @Component({
   selector: 'app-billet',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule, FormsModule, SidebarComponent, QrCodeModalComponent, ReservationRowComponent, ReactiveFormsModule, QRCodeComponent],
+  imports: [CommonModule, LucideAngularModule, FormsModule, ReservationRowComponent, ReactiveFormsModule, QRCodeComponent],
   templateUrl: './billet.component.html',
   styleUrl: './billet.component.scss'
 })
@@ -33,7 +28,10 @@ export class BilletComponent {
   reservations: Reservation[] = [];
   reservationForm!: FormGroup;
   private http = inject(HttpClient);
-  constructor(private fb: FormBuilder) {}
+
+  constructor(private fb: FormBuilder) {
+  }
+
   errorMessage: string | null = null;
   isLoading: boolean = false;
 
@@ -53,7 +51,7 @@ export class BilletComponent {
       error: (err) => {
         this.notification.show("Erreur lors du chargement de vos reservations", 'error')
       }
-  })
+    })
   }
 
   openQrModal(reservation: Reservation): void {
@@ -86,7 +84,7 @@ export class BilletComponent {
         r: parseInt(result[1], 16),
         g: parseInt(result[2], 16),
         b: parseInt(result[3], 16)
-      } : { r: 0, g: 0, b: 0 };
+      } : {r: 0, g: 0, b: 0};
     }
 
     // Créer un en-tête coloré
@@ -96,7 +94,7 @@ export class BilletComponent {
     // Titre en blanc sur l'en-tête orange
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(24);
-    doc.text('Votre billet', pageWidth/2, 25, { align: 'center' });
+    doc.text('Votre billet', pageWidth / 2, 25, {align: 'center'});
 
     // Section d'informations principales
     doc.setTextColor(0, 0, 0);
@@ -116,11 +114,11 @@ export class BilletComponent {
 
     // Ajouter un rectangle d'accent pour la section QR code
     doc.setFillColor(hexToRgb(mainBlue).r, hexToRgb(mainBlue).g, hexToRgb(mainBlue).b);
-    doc.rect(margin, 110, pageWidth - (margin*2), 1, 'F');
+    doc.rect(margin, 110, pageWidth - (margin * 2), 1, 'F');
 
     doc.setTextColor(hexToRgb(mainOrange).r, hexToRgb(mainOrange).g, hexToRgb(mainOrange).b);
     doc.setFontSize(14);
-    doc.text('Scannez le QR code ci-dessous', pageWidth/2, 120, { align: 'center' });
+    doc.text('Scannez le QR code ci-dessous', pageWidth / 2, 120, {align: 'center'});
 
     // Si nous avons l'URL du QR code
     if (reservation.qrcodeData) {
@@ -142,7 +140,7 @@ export class BilletComponent {
         const qrDataUrl = canvas.toDataURL('image/png');
 
         // Ajouter l'image QR code au PDF
-        doc.addImage(qrDataUrl, 'PNG', (pageWidth-60)/2, 130, 60, 60);
+        doc.addImage(qrDataUrl, 'PNG', (pageWidth - 60) / 2, 130, 60, 60);
 
         // Ajouter un pied de page coloré
         doc.setFillColor(hexToRgb(mainBlue).r, hexToRgb(mainBlue).g, hexToRgb(mainBlue).b);
@@ -151,7 +149,7 @@ export class BilletComponent {
         // Texte du pied de page
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(10);
-        doc.text('Présentez ce billet à l\'entrée de l\'événement', pageWidth/2, pageHeight - 10, { align: 'center' });
+        doc.text('Présentez ce billet à l\'entrée de l\'événement', pageWidth / 2, pageHeight - 10, {align: 'center'});
 
         // Sauvegarder le PDF
         doc.save(`billet-${reservation.event?.nom || 'evenement'}.pdf`);
@@ -165,10 +163,6 @@ export class BilletComponent {
   }
 
 
-
-
-
-
   onChangeURL(url: SafeUrl, reservation: Reservation): void {
     console.log(`QR code généré pour la réservation ${reservation.id}:`, url);
     const index = this.reservations.findIndex(r => r.id === reservation.id);
@@ -178,7 +172,6 @@ export class BilletComponent {
       }
     }
   }
-
 
 
   // Méthode appelée lorsqu'on clique sur le bouton Annuler/Supprimer d'une réservation

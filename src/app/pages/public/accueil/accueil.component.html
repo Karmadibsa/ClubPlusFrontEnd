@@ -12,18 +12,25 @@
 </section>
 
 <section class="features-section">
+  @if (!isLoading && stats) {
   <div class="feature-item">
-    <h3>250+</h3>
+    <h3>{{ formatNumber(stats.clubCount) }}</h3>
     <p>Clubs utilisent notre solution</p>
   </div>
   <div class="feature-item">
-    <h3>600+</h3>
-    <p>Événements organisés avec succès</p>
+    <h3>{{ formatNumber(stats.eventCount) }}</h3>
+    <p>Événements organisés</p>
   </div>
   <div class="feature-item">
-    <h3>11K+</h3>
-    <p>Membres actifs connectés</p>
+    <h3>{{ formatNumber(stats.memberCount) }}</h3>
+    <p>Membres actifs</p>
   </div>
+  } @else {
+    <div class="feature-item">
+      <h3>Chargement....</h3>
+      <lucide-icon name="loader" class="animate-spin" ></lucide-icon>
+    </div>
+  }
 </section>
 
 <section class="app-download">

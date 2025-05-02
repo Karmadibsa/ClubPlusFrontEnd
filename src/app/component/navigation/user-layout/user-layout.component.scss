@@ -76,8 +76,9 @@ $bottom-nav-height-mobile: 60px;
     display: block; // Annule display: flex
   }
 }
- app-sidebar {
-   flex-shrink: 0;
- }
+
+app-sidebar {
+  flex-shrink: 0;
+}
 
 

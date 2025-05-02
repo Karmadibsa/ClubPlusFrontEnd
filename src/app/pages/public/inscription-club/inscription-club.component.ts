@@ -1,18 +1,10 @@
 import {Component, inject} from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators
-} from '@angular/forms';
-import {NgIf} from '@angular/common';
+import {AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Router, RouterLink} from '@angular/router';
-import {passwordMatchValidator} from '../../../service/validator/password-match.validator';
-import {NotificationService} from '../../../service/notification.service'; // <-- 1. Importer Router
+import {NotificationService} from '../../../service/notification.service';
+import {PasswordValidators} from '../../../service/validator/password.validator';
+import {NgClass} from '@angular/common'; // <-- 1. Importer Router
 
 
 @Component({
@@ -20,7 +12,8 @@ import {NotificationService} from '../../../service/notification.service'; // <-
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    RouterLink
+    RouterLink,
+    NgClass
   ],
   templateUrl: './inscription-club.component.html',
   styleUrl: './inscription-club.component.scss'
@@ -42,38 +35,45 @@ export class InscriptionClubComponent {
   }
 
   ngOnInit(): void {
-    // Pré-remplissage du formulaire avec les données de test [1]
     this.registrationForm = this.fb.group({
-      // --- Club Details ---
-      nom: ['Club Test', Validators.required], // [1]
-      date_creation: ['2020-01-01', Validators.required], // [1]
-      numero_voie: ['123', Validators.required], // [1]
-      rue: ['Rue de Test', Validators.required], // [1]
-      codepostal: ['75001', Validators.required], // [1]
-      ville: ['Paris', Validators.required], // [1]
-      telephone: ['0102030405', Validators.required], // [1]
-      email: ['test@club.com', [Validators.required, Validators.email]], // [1]
+      // --- Club Details (inchangés) ---
+      nom: ['Club Test', Validators.required],
+      date_creation: ['2020-01-01', Validators.required],
+      numero_voie: ['123', Validators.required],
+      rue: ['Rue de Test', Validators.required],
+      codepostal: ['75001', Validators.required],
+      ville: ['Paris', Validators.required],
+      telephone: ['0102030405', Validators.required],
+      email: ['test@club.com', [Validators.required, Validators.email]],
 
-      // --- Admin Details (Nested Group) ---
+      // --- Admin Details ---
       admin: this.fb.group({
-        nom: ['AdminTest', Validators.required], // [1]
-        prenom: ['Jean', Validators.required], // [1]
-        date_naissance: ['1990-05-15', Validators.required], // [1]
-        // Admin's Address
-        numero_voie: ['123', Validators.required], // [1]
-        rue: ["Rue de l'Admin", Validators.required], // [1]
-        codepostal: ['75001', Validators.required], // [1]
-        ville: ['Paris', Validators.required], // [1]
-        // Admin's Contact
-        telephone: ['0607080910', Validators.required], // [1]
-        email: ['admin@test.com', [Validators.required, Validators.email]], // [1]
-        // Password Group (nested within admin)
+        nom: ['AdminTest', Validators.required],
+        prenom: ['Jean', Validators.required],
+        date_naissance: ['1990-05-15', Validators.required],
+        numero_voie: ['123', Validators.required],
+        rue: ["Rue de l'Admin", Validators.required],
+        codepostal: ['75001', Validators.required],
+        ville: ['Paris', Validators.required],
+        telephone: ['0607080910', Validators.required],
+        email: ['admin@test.com', [Validators.required, Validators.email]],
+
+        // --- Password Group (nested within admin) ---
         passwordGroup: this.fb.group({
-          password: ['password', [Validators.required, Validators.minLength(8)]], // [1]
-          confirmPassword: ['password', Validators.required] // [1]
-        }, { validators: passwordMatchValidator })
-      })
-    });
+          // 2. UTILISER LE NOUVEAU VALIDATEUR pour le mot de passe
+          // 4. (Optionnel) Mettre la valeur initiale à ''
+          password: ['', [
+            Validators.required,
+            PasswordValidators.passwordComplexity() // Remplace minLength, etc.
+          ]],
+          // 4. (Optionnel) Mettre la valeur initiale à ''
+          confirmPassword: ['', Validators.required]
+        }, {
+          // 3. UTILISER LE NOUVEAU VALIDATEUR pour la correspondance
+          validators: PasswordValidators.passwordMatch('password', 'confirmPassword')
+        }) // Fin passwordGroup
+      }) // Fin admin group
+    }); // Fin registrationForm
   }
 
   // Getters pour simplifier l'accès dans le template et gérer la nullité potentielle
@@ -161,4 +161,5 @@ export class InscriptionClubComponent {
         }
       });
     }
-  }}
+  }
+}

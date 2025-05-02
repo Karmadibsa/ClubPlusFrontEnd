@@ -2,15 +2,15 @@
   <h2 class="rating-title">{{ title }}</h2>
   <div class="stars-wrapper">
     <!-- Boucle sur 5 étoiles -->
-    @for (itemIndex of starIndexes ; track itemIndex) {
-    <span
-      class="star"
-      [class.filled]="quantity() > itemIndex"
-      (click)="updateRating(itemIndex)"
-      [attr.aria-label]="'Note ' + (itemIndex + 1) + ' sur 5'"
-    >
+    @for (itemIndex of starIndexes; track itemIndex) {
+      <span
+        class="star"
+        [class.filled]="quantity() > itemIndex"
+        (click)="updateRating(itemIndex)"
+        [attr.aria-label]="'Note ' + (itemIndex + 1) + ' sur 5'"
+      >
     ★ <!-- Vous pouvez utiliser une icône lucide ici si vous préférez -->
-    <!-- <lucide-icon name="star" [class.filled]="quantity() > index"></lucide-icon> -->
+        <!-- <lucide-icon name="star" [class.filled]="quantity() > index"></lucide-icon> -->
     </span>
     }
   </div>

@@ -4,25 +4,43 @@
   <!-- Logo Container (avec icône alternative pour mode réduit) -->
   <div class="logo-container" aria-hidden="true">
     <!-- Logo normal (sera masqué par CSS si réduit) -->
-    <img src="LogoClubPlussansfond.webp" alt="Logo Club Plus" class="logo" />
+    <img src="LogoClubPlussansfond.webp" alt="Logo Club Plus" class="logo"/>
 
   </div>
 
   <!-- Menu Items (structure inchangée, pas de @if sur les span) -->
   <ul class="menu-items">
-    @if (auth.role == "ROLE_ADMIN" || auth.role == "ROLE_RESERVATION"){
-      <li><a routerLinkActive="page_actuelle" routerLink="/app/dashboard" title="Dashboard"><lucide-icon name="layout-dashboard"></lucide-icon><span class="menu-item-text">Dashboard</span></a></li>
-      <li><a routerLinkActive="page_actuelle" routerLink="/app/eventadmin" title="Événements"><lucide-icon name="calendar"></lucide-icon><span class="menu-item-text">Événements</span></a></li>
-      <li><a routerLinkActive="page_actuelle" routerLink="/app/membreadmin" title="Membres"><lucide-icon name="users"></lucide-icon><span class="menu-item-text">Membres</span></a></li>
-      <li><a routerLinkActive="page_actuelle" routerLink="/app/monclub" title="Mon Club"><lucide-icon name="house"></lucide-icon><span class="menu-item-text">Mon Club</span></a></li>
+    @if (auth.role == "ROLE_ADMIN" || auth.role == "ROLE_RESERVATION") {
+      <li><a routerLinkActive="page_actuelle" routerLink="/app/dashboard" title="Dashboard">
+        <lucide-icon name="layout-dashboard"></lucide-icon>
+        <span class="menu-item-text">Dashboard</span></a></li>
+      <li><a routerLinkActive="page_actuelle" routerLink="/app/eventadmin" title="Événements">
+        <lucide-icon name="calendar"></lucide-icon>
+        <span class="menu-item-text">Événements</span></a></li>
+      <li><a routerLinkActive="page_actuelle" routerLink="/app/membreadmin" title="Membres">
+        <lucide-icon name="users"></lucide-icon>
+        <span class="menu-item-text">Membres</span></a></li>
+      <li><a routerLinkActive="page_actuelle" routerLink="/app/monclub" title="Mon Club">
+        <lucide-icon name="house"></lucide-icon>
+        <span class="menu-item-text">Mon Club</span></a></li>
     } @else {
-      <li><a routerLinkActive="page_actuelle" routerLink="/app/event" title="Calendrier"><lucide-icon name="calendar"></lucide-icon><span class="menu-item-text">Calendrier</span></a></li>
-      <li><a routerLinkActive="page_actuelle" routerLink="/app/billet" title="Mes billets"><lucide-icon name="ticket"></lucide-icon><span class="menu-item-text">Mes billets</span></a></li>
-      <li><a routerLinkActive="page_actuelle" routerLink="/app/amis" title="Mes amis"><lucide-icon name="users"></lucide-icon><span class="menu-item-text">Mes amis</span></a></li>
-      <li><a routerLinkActive="page_actuelle" routerLink="/app/notation" title="Notation"><lucide-icon name="star"></lucide-icon><span class="menu-item-text">Notation</span></a></li>
+      <li><a routerLinkActive="page_actuelle" routerLink="/app/event" title="Calendrier">
+        <lucide-icon name="calendar"></lucide-icon>
+        <span class="menu-item-text">Calendrier</span></a></li>
+      <li><a routerLinkActive="page_actuelle" routerLink="/app/billet" title="Mes billets">
+        <lucide-icon name="ticket"></lucide-icon>
+        <span class="menu-item-text">Mes billets</span></a></li>
+      <li><a routerLinkActive="page_actuelle" routerLink="/app/amis" title="Mes amis">
+        <lucide-icon name="users"></lucide-icon>
+        <span class="menu-item-text">Mes amis</span></a></li>
+      <li><a routerLinkActive="page_actuelle" routerLink="/app/notation" title="Notation">
+        <lucide-icon name="star"></lucide-icon>
+        <span class="menu-item-text">Notation</span></a></li>
     }
     <!-- Lien Profil commun -->
-    <li><a routerLinkActive="page_actuelle" routerLink="/app/profil" title="Profil"><lucide-icon name="user"></lucide-icon><span class="menu-item-text">Profil</span></a></li>
+    <li><a routerLinkActive="page_actuelle" routerLink="/app/profil" title="Profil">
+      <lucide-icon name="user"></lucide-icon>
+      <span class="menu-item-text">Profil</span></a></li>
   </ul>
 
   <!-- Footer avec UNIQUEMENT le bouton Toggle -->

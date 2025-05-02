@@ -23,7 +23,7 @@
       <!-- Utilise la classe globale .modal-body -->
       <main class="modal-body">
         <!-- Affiche le contenu seulement si le formulaire est prêt -->
-        @if (eventForm){
+        @if (eventForm) {
           <form [formGroup]="eventForm" novalidate>
 
             <!-- Titre & Lieu -->
@@ -38,7 +38,9 @@
                        aria-required="true" aria-describedby="nom-error"/>
                 <!-- Utilise la classe globale .invalid-feedback -->
                 <div id="nom-error" class="invalid-feedback" role="alert">
-                  @if (eventForm.get('nom')?.hasError('required')) { Le titre est requis. }
+                  @if (eventForm.get('nom')?.hasError('required')) {
+                    Le titre est requis.
+                  }
                 </div>
               </div>
               <div class="form-group">
@@ -47,7 +49,9 @@
                        [class.is-invalid]="eventForm.get('location')?.invalid && eventForm.get('location')?.touched"
                        aria-required="true" aria-describedby="location-error"/>
                 <div id="location-error" class="invalid-feedback" role="alert">
-                  @if (eventForm.get('location')?.hasError('required')) { Le lieu est requis. }
+                  @if (eventForm.get('location')?.hasError('required')) {
+                    Le lieu est requis.
+                  }
                 </div>
               </div>
             </div>
@@ -59,7 +63,9 @@
                         [class.is-invalid]="eventForm.get('description')?.invalid && eventForm.get('description')?.touched"
                         aria-required="true" aria-describedby="description-error"></textarea>
               <div id="description-error" class="invalid-feedback" role="alert">
-                @if (eventForm.get('description')?.hasError('required')) { La description est requise. }
+                @if (eventForm.get('description')?.hasError('required')) {
+                  La description est requise.
+                }
               </div>
             </div>
 
@@ -71,7 +77,9 @@
                        [class.is-invalid]="eventForm.get('start')?.invalid && eventForm.get('start')?.touched"
                        aria-required="true" aria-describedby="start-error"/>
                 <div id="start-error" class="invalid-feedback" role="alert">
-                  @if (eventForm.get('start')?.hasError('required')) { La date de début est requise. }
+                  @if (eventForm.get('start')?.hasError('required')) {
+                    La date de début est requise.
+                  }
                 </div>
               </div>
               <div class="form-group">
@@ -80,8 +88,12 @@
                        [class.is-invalid]="(eventForm.get('end')?.invalid && eventForm.get('end')?.touched) || eventForm.hasError('dateInvalid')"
                        aria-required="true" aria-describedby="end-error"/>
                 <div id="end-error" class="invalid-feedback" role="alert">
-                  @if (eventForm.get('end')?.hasError('required')) { La date de fin est requise. }
-                  @if (eventForm.hasError('dateInvalid')) { La date de fin doit être après la date de début. }
+                  @if (eventForm.get('end')?.hasError('required')) {
+                    La date de fin est requise.
+                  }
+                  @if (eventForm.hasError('dateInvalid')) {
+                    La date de fin doit être après la date de début.
+                  }
                 </div>
               </div>
             </div>
@@ -99,24 +111,36 @@
                     <!-- Inputs spécifiques -->
                     <div class="category-inputs">
                       <div class="form-group category-name">
-                        <label for="cat-nom-{{i}}" class="visually-hidden">Nom catégorie {{i+1}}</label>
-                        <input id="cat-nom-{{i}}" type="text" placeholder="Nom catégorie" formControlName="nom" class="form-control"
+                        <label for="cat-nom-{{i}}" class="visually-hidden">Nom catégorie {{ i + 1 }}</label>
+                        <input id="cat-nom-{{i}}" type="text" placeholder="Nom catégorie" formControlName="nom"
+                               class="form-control"
                                [class.is-invalid]="categoryCtrl.get('nom')?.invalid && categoryCtrl.get('nom')?.touched"
                                aria-required="true" [attr.aria-describedby]="'cat-cap-' + i + '-error'"/>
-                        <div id="cat-nom-{{i}}-error" class="invalid-feedback">@if(categoryCtrl.get('nom')?.hasError('required')){Nom requis}</div>
+                        <div id="cat-nom-{{i}}-error"
+                             class="invalid-feedback">@if (categoryCtrl.get('nom')?.hasError('required')) {
+                          Nom requis
+                        }</div>
                       </div>
                       <div class="form-group category-capacity">
-                        <label for="cat-cap-{{i}}" class="visually-hidden">Capacité catégorie {{i+1}}</label>
-                        <input id="cat-cap-{{i}}" type="number" min="0" placeholder="Capacité" formControlName="capacite" class="form-control"
+                        <label for="cat-cap-{{i}}" class="visually-hidden">Capacité catégorie {{ i + 1 }}</label>
+                        <input id="cat-cap-{{i}}" type="number" min="0" placeholder="Capacité"
+                               formControlName="capacite" class="form-control"
                                [class.is-invalid]="categoryCtrl.get('capacite')?.invalid && categoryCtrl.get('capacite')?.touched"
                                aria-required="true" [attr.aria-describedby]="'cat-cap-' + i + '-error'"/>
-                        <div id="cat-cap-{{i}}-error" class="invalid-feedback">@if(categoryCtrl.get('capacite')?.hasError('required')){Capacité requise} @if(categoryCtrl.get('capacite')?.hasError('min')){Minimum 0}</div>
+                        <div id="cat-cap-{{i}}-error"
+                             class="invalid-feedback">@if (categoryCtrl.get('capacite')?.hasError('required')) {
+                          Capacité requise
+                        }
+                          @if (categoryCtrl.get('capacite')?.hasError('min')) {
+                            Minimum 0
+                          }</div>
                       </div>
                     </div>
                     <!-- Bouton Supprimer utilisant classes globales + spécifiques -->
-                    <button type="button" class="btn btn-danger btn-sm btn-delete-category" (click)="removeCategory(i)" title="Supprimer cette catégorie">
+                    <button type="button" class="btn btn-danger btn-sm btn-delete-category" (click)="removeCategory(i)"
+                            title="Supprimer cette catégorie">
                       <lucide-icon name="trash-2"></lucide-icon>
-                      <span class="visually-hidden">Supprimer catégorie {{i+1}}</span>
+                      <span class="visually-hidden">Supprimer catégorie {{ i + 1 }}</span>
                     </button>
                   </div>
                 }
@@ -128,7 +152,8 @@
                 }
                 <!-- Erreur globale pour le FormArray -->
                 @if (categoriesFormArray.invalid && categoriesFormArray.dirty && categoriesFormArray.length > 0) {
-                  <div class="form-array-error invalid-feedback">Veuillez vérifier les informations des catégories.</div>
+                  <div class="form-array-error invalid-feedback">Veuillez vérifier les informations des catégories.
+                  </div>
                 }
                 @if (categoriesFormArray.hasError('required') && categoriesFormArray.dirty) {
                   <div class="form-array-error invalid-feedback">Au moins une catégorie est requise.</div>
@@ -138,7 +163,8 @@
               <!-- Actions spécifiques aux catégories -->
               <div class="category-actions">
                 <button type="button" class="btn btn-secondary btn-sm" (click)="addCategory()">
-                  <lucide-icon name="plus"></lucide-icon> Ajouter une catégorie
+                  <lucide-icon name="plus"></lucide-icon>
+                  Ajouter une catégorie
                 </button>
               </div>
             </div>
@@ -154,12 +180,18 @@
       <footer class="modal-footer">
         <!-- Utilise les classes globales .btn .btn-secondary -->
         <button type="button" class="btn btn-secondary" (click)="closeModal()" [disabled]="isSaving">
-          <lucide-icon name="x"></lucide-icon> Annuler
+          <lucide-icon name="x"></lucide-icon>
+          Annuler
         </button>
         <!-- Utilise les classes globales .btn .btn-primary -->
-        <button type="button" class="btn btn-primary" (click)="saveChanges()" [disabled]="isSaving || eventForm.invalid || !eventForm.dirty">
-          @if (!isSaving){<lucide-icon name="save"></lucide-icon>}
-          @if (isSaving){<lucide-icon name="loader" class="animate-spin"></lucide-icon>}
+        <button type="button" class="btn btn-primary" (click)="saveChanges()"
+                [disabled]="isSaving || eventForm.invalid || !eventForm.dirty">
+          @if (!isSaving) {
+            <lucide-icon name="save"></lucide-icon>
+          }
+          @if (isSaving) {
+            <lucide-icon name="loader" class="animate-spin"></lucide-icon>
+          }
           {{ isSaving ? 'Sauvegarde...' : 'Enregistrer' }}
         </button>
       </footer>

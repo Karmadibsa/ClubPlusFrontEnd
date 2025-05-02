@@ -31,6 +31,7 @@
       color: var(--text-dark); // Couleur de texte sombre définie dans les variables.
       margin-bottom: var(--spacing-md); // Marge inférieure.
 
+
       strong {
         // Mise en évidence d'une partie du titre avec la couleur orange principale.
         color: var(--main-orange);
@@ -234,4 +235,6 @@
       }
     }
   }
-} // Fin des Media Queries
+}
+
+// Fin des Media Queries
