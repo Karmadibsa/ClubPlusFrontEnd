@@ -6,6 +6,7 @@ import {AuthService} from '../../../service/security/auth.service';
 import {SidebarStateService} from '../../../service/sidebar-state.service';
 import {Observable, Subscription} from 'rxjs';
 import {AsyncPipe} from '@angular/common';
+import {ThemeService} from '../../../service/theme.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -20,6 +21,8 @@ import {AsyncPipe} from '@angular/common';
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
+  private themeService = inject(ThemeService);
+  isDarkMode: () => boolean = this.themeService.isDarkMode.bind(this.themeService);
 
   auth = inject(AuthService);
   sidebarStateService = inject(SidebarStateService); // Injection du service
@@ -35,7 +38,9 @@ export class SidebarComponent {
     // Très important pour éviter les fuites mémoire !
     this.stateSubscription?.unsubscribe();
   }
-
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
+  }
   toggleSidebar(): void {
     this.sidebarStateService.toggleSidebar(); // Appelle la méthode du service
     // Plus besoin d'émettre l'événement ou de gérer localStorage ici

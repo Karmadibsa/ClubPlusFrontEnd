@@ -1,12 +1,5 @@
 /* sidebar.component.scss */
 
-// --- Variables Locales Spécifiques ---
-:host {
-  --sidebar-width-collapsed: 70px; // Largeur en mode réduit (ajustable)
-  --bottom-nav-height-mobile: 60px; // Hauteur barre mobile
-  --icon-size-mobile: 24px; // Taille icône mobile (peut être = --icon-size)
-}
-
 /* =================================== */
 /* == STYLES SIDEBAR DESKTOP (> 768px) == */
 /* =================================== */
@@ -25,7 +18,7 @@
   top: 0;
   z-index: 1000; // S'assurer qu'elle est au-dessus du contenu principal
   box-sizing: border-box;
-  transition: width 0.3s ease, min-width 0.3s ease;
+  transition: all 0.3s ease;
   // --- Logo ---
   .logo-container {
     padding: var(--spacing-md) 0;
@@ -136,6 +129,7 @@
     display: flex;
     justify-content: center; // Centre le bouton
     align-items: center;
+    flex-direction: column;
 
     .toggle-btn {
       background: none;
@@ -184,6 +178,8 @@
         pointer-events: none;
       }
 
+
+
       // Si vous ajoutez une icône alternative pour le mode réduit, décommentez et stylez-la ici
       // .logo-collapsed-icon { opacity: 1; transform: ...; }
     }
@@ -211,9 +207,12 @@
       }
     }
 
+  .theme-toggle-container {
+    .theme-icon {
+      display: none;
+    }}
     // Footer reste centré
   }
-
   // Fin &.is-collapsed
 
 }
@@ -318,4 +317,98 @@
 }
 
 // Fin @media screen and (max-width: 768px)
+.theme-toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+}
 
+.theme-icon {
+  color: var(--text-light);
+  transition: color 0.3s ease; // Transition directe pour la couleur de l'icône
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+
+  &.active {
+    color: var(--main-orange);
+  }
+
+  // Cacher en mode réduit
+  .sidebar.is-collapsed & {
+    display: none;
+  }
+}
+
+/* Le conteneur du switch (le label) */
+.theme-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Cache la checkbox native */
+input.visually-hidden {
+  position: absolute !important; width: 1px !important; height: 1px !important;
+  padding: 0 !important; margin: -1px !important; overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important;
+}
+
+/* Le fond (la glissière) */
+.slider {
+  position: absolute;
+  inset: 0;
+  background-color: var(--bg-medium-gray);
+  border-radius: 26px;
+  // Utilise la transition globale UNIQUEMENT pour la couleur du fond
+  transition: background-color 0.3s ease;
+
+  /* Le cercle (le pouce) */
+  &::before {
+    content: "";
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: var(--main-white);
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+
+    /* === TRANSITION POUR LE MOUVEMENT (directe) === */
+    /* On cible transform avec une durée standard de 0.3s */
+    transition: transform 0.3s ease;
+    /* ============================================ */
+  }
+}
+
+/* Styles quand la checkbox est cochée */
+input:checked + .slider {
+  background-color: var(--main-orange);
+}
+
+input:checked + .slider::before {
+  /* La transformation qui sera animée */
+  transform: translateX(24px);
+}
+
+/* Style de Focus */
+input:focus-visible + .slider {
+  box-shadow: 0 0 0 3px rgba(var(--main-orange-rgb, 255, 107, 53), 0.4);
+}
+
+/* Ajustements Dark Mode */
+html[data-theme="dark"] {
+  .slider {
+    background-color: var(--border-color);
+  }
+  .slider::before {
+    background-color: var(--text-dark);
+  }
+}
+/* --- FIN Styles Toggle Switch Corrigés --- */

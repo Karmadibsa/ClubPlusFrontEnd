@@ -6,9 +6,9 @@ import {Subscription} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 
 // Services
-import {ClubService} from '../../../service/club.service'; // Le service dédié pour le club
+import {ClubService} from '../../../service/model/club.service'; // Le service dédié pour le club
 import {AuthService} from '../../../service/security/auth.service'; // Pour obtenir l'ID du club
-import {NotificationService} from '../../../service/notification.service'; // Pour les messages
+import {NotificationService} from '../../../service/model/notification.service'; // Pour les messages
 // Composants
 
 // Modèles

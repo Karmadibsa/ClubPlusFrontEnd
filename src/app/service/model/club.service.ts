@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {environment} from '../../environments/environments';
-import {Club} from '../model/club';
+import {environment} from '../../../environments/environments';
+import {Club} from '../../model/club';
 import {catchError, tap} from 'rxjs/operators';
 import {Observable, throwError} from 'rxjs';
 

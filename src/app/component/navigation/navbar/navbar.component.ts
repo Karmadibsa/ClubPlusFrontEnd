@@ -1,7 +1,7 @@
 import {Component, inject} from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
 import {AuthService} from '../../../service/security/auth.service';
-import {NotificationService} from '../../../service/notification.service';
+import {NotificationService} from '../../../service/model/notification.service';
 import {LucideAngularModule} from 'lucide-angular';
 
 @Component({

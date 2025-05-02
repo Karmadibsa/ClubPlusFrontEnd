@@ -1,9 +1,9 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
-import {environment} from '../../environments/environments';
-import {Reservation} from '../model/reservation';
+import {environment} from '../../../environments/environments';
+import {Reservation} from '../../model/reservation';
 import {Observable, throwError} from 'rxjs';
-import {ReservationStatus} from '../model/reservationstatus';
+import {ReservationStatus} from '../../model/reservationstatus';
 import {catchError} from 'rxjs/operators';
 
 @Injectable({

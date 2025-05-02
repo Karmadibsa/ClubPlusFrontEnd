@@ -5,9 +5,9 @@ import {Subscription} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 
 // Services
-import {EventService} from '../../../service/event.service'; // Service pour les événements
+import {EventService} from '../../../service/model/event.service'; // Service pour les événements
 import {AuthService} from '../../../service/security/auth.service'; // Pour l'ID du club/user
-import {NotificationService} from '../../../service/notification.service'; // Pour les notifications
+import {NotificationService} from '../../../service/model/notification.service'; // Pour les notifications
 // Composants
 import {EventRowComponent} from '../../../component/event/event-row/event-row.component';
 import {CreateEventButtonComponent} from '../../../component/event/create-event-button/create-event-button.component';

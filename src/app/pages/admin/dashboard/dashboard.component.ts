@@ -8,9 +8,9 @@ import {forkJoin, Observable, of, Subscription} from 'rxjs'; // Outils pour gér
 import {catchError} from 'rxjs/operators'; // Outil pour gérer les erreurs API (catchError)
 // Services de votre application
 import {AuthService} from '../../../service/security/auth.service'; // Pour savoir qui est connecté et quel club il gère
-import {NotificationService} from '../../../service/notification.service'; // Pour afficher des messages (succès, erreur)
-import {MembreService} from '../../../service/membre.service'; // Pour les opérations liées aux membres
-import {EventService} from '../../../service/event.service'; // Pour les opérations liées aux événements
+import {NotificationService} from '../../../service/model/notification.service'; // Pour afficher des messages (succès, erreur)
+import {MembreService} from '../../../service/model/membre.service'; // Pour les opérations liées aux membres
+import {EventService} from '../../../service/model/event.service'; // Pour les opérations liées aux événements
 // Composants utilisés dans le template HTML
 import {StatCardComponent} from '../../../component/dashboard/stat-card/stat-card.component'; // Carte pour afficher un chiffre clé
 import {EventRowComponent} from '../../../component/event/event-row/event-row.component'; // Ligne du tableau des événements

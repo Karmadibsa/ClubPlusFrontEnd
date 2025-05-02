@@ -3,7 +3,7 @@ import {Router, RouterLink} from '@angular/router';
 import {LucideAngularModule} from 'lucide-angular';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
-import {NotificationService} from '../../../service/notification.service';
+import {NotificationService} from '../../../service/model/notification.service';
 import {AuthService} from '../../../service/security/auth.service'; // Pour relancer les erreurs RxJS
 
 @Component({

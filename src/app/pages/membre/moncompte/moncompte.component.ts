@@ -14,8 +14,8 @@ import {Subscription} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 
 // Services
-import {MembreService} from '../../../service/membre.service'; // Service pour les données du membre
-import {NotificationService} from '../../../service/notification.service'; // Pour les messages
+import {MembreService} from '../../../service/model/membre.service'; // Service pour les données du membre
+import {NotificationService} from '../../../service/model/notification.service'; // Pour les messages
 // Composants
 
 // Modèles

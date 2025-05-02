@@ -14,8 +14,8 @@ import {AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule,
 import {CommonModule, DatePipe} from '@angular/common'; // CommonModule (*ngIf...), DatePipe (formater les dates)
 import {LucideAngularModule} from 'lucide-angular'; // Pour utiliser les icônes Lucide
 // Importations de vos services et modèles (interfaces) - Adaptez les chemins si nécessaire
-import {NotificationService} from '../../../service/notification.service'; // Service pour afficher des notifications
-import {EventService} from '../../../service/event.service'; // Service pour interagir avec l'API des événements
+import {NotificationService} from '../../../service/model/notification.service'; // Service pour afficher des notifications
+import {EventService} from '../../../service/model/event.service'; // Service pour interagir avec l'API des événements
 // Importez les interfaces définissant la structure des données événement/catégorie
 import {CreateEventPayload, Evenement, UpdateEventPayload} from '../../../model/evenement';
 import {CategorieCreatePayload} from '../../../model/categorie';

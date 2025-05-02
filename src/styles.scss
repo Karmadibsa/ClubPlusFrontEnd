@@ -14,6 +14,51 @@ html {
   ));
 }
 
+/* ---- Définitions Raffinées pour le Mode Sombre ---- */
+html[data-theme="dark"] {
+
+  /* --- Couleurs Primaires & Accents (SWAP Orange/Bleu comme demandé) --- */
+  /* Orange devient Bleu (Couleur principale d'action -> Bleu en dark) */
+  --main-orange: #5da4c7;       /* Un bleu plus clair et moins saturé que l'original, pour un meilleur contraste */
+  --main-orange-dark: #4a90ae;  /* Version légèrement plus foncée pour hover/active */
+  --main-orange-rgb: 93, 164, 199; /* RGB correspondant à #5da4c7 */
+
+  /* Bleu devient Orange (Couleur secondaire/liens -> Orange en dark) */
+  --main-blue: #fa8241;        /* Un orange légèrement ajusté, peut-être moins vif que l'original */
+  --main-blue-dark: #f26115;   /* L'orange original (plus foncé) pour hover/active */
+  /* Ajoutons une variable RGB pour le nouveau bleu (maintenant orange) */
+  --main-blue-rgb: 250, 130, 65; /* RGB correspondant à #fa8241 */
+
+  /* --- Couleurs de Base Inversées --- */
+  --main-white: #1e1e1e;      // Fond des cartes/éléments principaux surélevés
+  --main-black: #f0f0f0;      // Couleur de texte la plus claire (pas blanc pur)
+
+  /* --- Couleurs de Fond --- */
+  --bg-global: #121212;      // Fond global très sombre (standard Material Design)
+  --bg-light-gray: #2a2a2a;   // Équivalent sombre de light-gray
+  --bg-medium-gray: #383838;  // Équivalent sombre de medium-gray (pour fonds désactivés, etc.)
+
+  /* --- Couleurs de Texte --- */
+  --text-dark: #f0f0f0;       // Texte principal (clair)
+  --text-medium: #b0b0b0;     // Texte secondaire (moins clair)
+  --text-light: #757575;      // Texte tertiaire/placeholders (le plus sombre)
+
+  /* --- Couleurs d'État (Ajustées pour lisibilité sur fond sombre) --- */
+  --success: #66bb6a;         // Vert plus clair/doux
+  --success-dark: #4caf50;     // L'original clair comme version "foncée" en dark mode
+  --warning: #ffa726;         // Jaune/Orange plus clair
+  --danger: #ef5350;          // Rouge légèrement moins saturé
+  --danger-dark: #e53935;      // Version plus foncée du rouge dark
+  --info: #42a5f5;            // Bleu d'info plus clair
+
+  /* --- Couleurs de Bordure --- */
+  --border-color: #444444;      // Bordure principale, visible sur #1e1e1e
+  --border-color-light: #555555; // Bordure plus subtile (ex: séparateurs internes)
+
+  /* --- Variables de Contraste / Focus --- */
+  /* Le focus doit utiliser la couleur d'accentuation principale (qui est maintenant orange via --main-blue) */
+  --input-focus-shadow: rgba(var(--main-blue-rgb), 0.4); // Ombre de focus basée sur le nouvel orange (#fa8241)
+}
 
 :root {
   /* Couleurs principales */
@@ -62,7 +107,13 @@ html {
     --sidebar-padding: 1.5%;
     --icon-size: 24px;
     --border-radius: 8px;
-    --transition-standard: all 0.3s ease;
+
+
+  --sidebar-width-collapsed: 70px; // Largeur en mode réduit (ajustable)
+  --bottom-nav-height-mobile: 60px; // Hauteur barre mobile
+  --icon-size-mobile: 24px; // Taille icône mobile (peut être = --icon-size)
+  --transition-standard: all 0.3s ease;
+
 
 }
 
@@ -98,7 +149,8 @@ body {
   font-size: 16px;
   line-height: 1.5;
   color: var(--text-dark);
-  background-color: #f5f5f5;
+  background-color: var(--bg-medium-gray);
+  transition: var(--transition-standard);
 
 }
 
@@ -317,7 +369,7 @@ mat-snack-bar-container{
     background-color: transparent; color: var(--text-medium, #666);
     border: none; border-bottom: 3px solid transparent; cursor: pointer;
     font-size: 1rem; font-weight: 500;
-    transition: var(--transition-standard, all 0.3s ease);
+    transition: var(--transition-standard);
     margin-bottom: -1px; display: inline-flex; align-items: center;
     gap: var(--spacing-sm, 8px);
 
@@ -337,7 +389,7 @@ mat-snack-bar-container{
     cursor: pointer;
     font-weight: 600;
     border: 1px solid transparent;
-    transition: var(--transition-standard, all 0.3s ease);
+    transition: var(--transition-standard);
     /* Utilisation de Flexbox pour le cas général (texte + icône) */
     display: inline-flex;
     align-items: center;
@@ -433,7 +485,7 @@ mat-snack-bar-container{
   input[type="date"], input[type="time"], textarea, select {
     width: 100%; padding: 10px 12px; border: 1px solid var(--border-color, #ccc);
     border-radius: var(--border-radius-sm, 4px); font-size: 1rem; line-height: 1.5;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease; background-color: var(--main-white, #fff);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; background-color: var(--main-white, #fff);
     &:focus { outline: none; border-color: var(--main-orange); box-shadow: 0 0 0 3px rgba(var(--main-orange-rgb, 255, 107, 53), 0.3); }
     &.is-invalid { border-color: var(--danger); &:focus { box-shadow: 0 0 0 3px rgba(var(--danger-rgb, 220, 53, 69), 0.25); } }
     &:disabled { background-color: var(--bg-medium-gray, #e9ecef); cursor: not-allowed; }
@@ -479,7 +531,7 @@ mat-snack-bar-container{
     }
 
     tbody tr {
-      transition: background-color 0.2s ease; /* Transition douce au survol */
+      transition: background-color 0.3s ease; /* Transition douce au survol */
 
       /* Effet de survol sur les lignes, sauf message vide */
       &:hover:not(.empty-table-message) {

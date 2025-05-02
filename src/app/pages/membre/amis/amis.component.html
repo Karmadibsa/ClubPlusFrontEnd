@@ -39,7 +39,7 @@
   @if (isLoading && activeTab !== 'friends' && activeTab !== 'received' && activeTab !== 'sent') {
     // Condition ajustée si besoin
     <div class="loading-indicator">
-      <lucide-icon name="loader-2" class="animate-spin"></lucide-icon>
+      <lucide-icon name="loader" class="animate-spin"></lucide-icon>
       <span>Traitement en cours...</span>
     </div>
   }
@@ -81,7 +81,7 @@
       <!-- Indicateur de chargement pour CET onglet -->
       @if (isLoading && !friends.length) {
         <div class="loading-indicator">
-          <lucide-icon name="loader-2" class="animate-spin"></lucide-icon>
+          <lucide-icon name="loader" class="animate-spin"></lucide-icon>
           <span>Chargement des amis...</span>
         </div>
       } @else {
@@ -135,7 +135,7 @@
       <h3>Demandes d'ami Reçues</h3>
       @if (isLoading && !receivedRequests.length) {
         <div class="loading-indicator">
-          <lucide-icon name="loader-2" class="animate-spin"></lucide-icon>
+          <lucide-icon name="loader" class="animate-spin"></lucide-icon>
           <span>Chargement des demandes...</span>
         </div>
       } @else {
@@ -187,7 +187,7 @@
       <h3>Demandes d'ami Envoyées</h3>
       @if (isLoading && !sentRequests.length) {
         <div class="loading-indicator">
-          <lucide-icon name="loader-2" class="animate-spin"></lucide-icon>
+          <lucide-icon name="loader" class="animate-spin"></lucide-icon>
           <span>Chargement des demandes...</span>
         </div>
       } @else {

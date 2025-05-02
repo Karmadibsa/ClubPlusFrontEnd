@@ -5,7 +5,7 @@ import {environment} from '../../../../environments/environments';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {HomepageStats} from '../../../model/HomepageStats';
-import {PublicDataService} from '../../../service/public-data.service';
+import {PublicDataService} from '../../../service/model/public-data.service';
 import {finalize} from 'rxjs/operators';
 import {LucideAngularModule} from 'lucide-angular';
 

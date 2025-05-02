@@ -58,6 +58,26 @@
         <lucide-icon name="chevrons-right" aria-hidden="true"></lucide-icon>
       }
     </button>
+    <div class="theme-toggle-container" title="Changer de thème">
+      <!-- Icône Soleil (Mode Clair) -->
+      <lucide-icon name="sun" class="theme-icon" [class.active]="!isDarkMode()"></lucide-icon>
+
+      <!-- L'interrupteur à bascule (Toggle Switch) -->
+      <label class="theme-switch" for="themeToggleCheckbox">
+        <input type="checkbox"
+               id="themeToggleCheckbox"
+               class="visually-hidden"
+               [checked]="isDarkMode()"
+               (change)="toggleTheme()"
+               aria-label="Activer le mode sombre">
+        <span class="slider"></span>
+      </label>
+
+      <!-- Icône Lune (Mode Sombre) -->
+
+      <lucide-icon name="moon" class="theme-icon" [class.active]="isDarkMode()"></lucide-icon>
+    </div>
+
     <!-- Le bouton Déconnexion a été supprimé d'ici -->
   </div>
 </div>

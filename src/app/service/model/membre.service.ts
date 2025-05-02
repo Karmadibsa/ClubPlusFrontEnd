@@ -1,10 +1,10 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
-import {environment} from '../../environments/environments';
-import {RoleType} from '../model/role';
+import {environment} from '../../../environments/environments';
+import {RoleType} from '../../model/role';
 import {catchError, tap} from 'rxjs/operators';
-import {Membre} from '../model/membre';
+import {Membre} from '../../model/membre';
 
 @Injectable({
   providedIn: 'root'

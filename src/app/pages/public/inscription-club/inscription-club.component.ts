@@ -2,7 +2,7 @@ import {Component, inject} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Router, RouterLink} from '@angular/router';
-import {NotificationService} from '../../../service/notification.service';
+import {NotificationService} from '../../../service/model/notification.service';
 import {PasswordValidators} from '../../../service/validator/password.validator';
 import {NgClass} from '@angular/common'; // <-- 1. Importer Router
 
