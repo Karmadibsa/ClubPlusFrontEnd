@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, inject, AfterViewInit } fro
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {NgIf} from '@angular/common';
+import {PasswordValidators} from '../../../service/validator/password.validator';
 
 @Component({
   selector: 'app-changepassword',
@@ -91,8 +92,7 @@ export class ChangepasswordComponent {
     this.resetPasswordForm = this.fb.group({
       newPassword: ['', [
         Validators.required,
-        Validators.minLength(8) // Exemple: longueur minimale
-        // Ajoutez d'autres validateurs de complexité si nécessaire
+        PasswordValidators.passwordComplexity()
       ]],
       confirmPassword: ['', [Validators.required]]
     }, {

@@ -35,15 +35,15 @@ export class InscriptionMembreComponent {
   ngOnInit(): void {
     this.memberRegistrationForm = this.fb.group({
       // Champs pour le corps JSON (payload)
-      nom: ['TestNom', Validators.required],
-      prenom: ['TestPrenom', Validators.required],
-      date_naissance: ['2000-01-01', Validators.required],
-      numero_voie: ['123', Validators.required],
-      rue: ['Rue de Test', Validators.required],
-      codepostal: ['75001', Validators.required],
-      ville: ['Paris', Validators.required],
-      telephone: ['0601020304', Validators.required],
-      email: ['test.email@example.com', [Validators.required, Validators.email]],
+      nom: ['', Validators.required],
+      prenom: ['', Validators.required],
+      date_naissance: ['', Validators.required],
+      numero_voie: ['', Validators.required],
+      rue: ['', Validators.required],
+      codepostal: ['', Validators.required],
+      ville: ['', Validators.required],
+      telephone: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       // 2. UTILISER LE NOUVEAU VALIDATEUR pour le mot de passe
       password: ['', [
         Validators.required,
@@ -52,11 +52,35 @@ export class InscriptionMembreComponent {
       // 5. METTRE A JOUR valeur initiale de confirmPassword
       confirmPassword: ['', [Validators.required]], // Initialisé à vide
       // Champ séparé pour construire l'URL
-      codeClub: ['CLUB-0001', Validators.required]
+      codeClub: ['CLUB-', Validators.required]
     }, {
       // 3. UTILISER LE NOUVEAU VALIDATEUR pour la correspondance
       validators: PasswordValidators.passwordMatch('password', 'confirmPassword')
     });
+    // this.memberRegistrationForm = this.fb.group({
+    //   // Champs pour le corps JSON (payload)
+    //   nom: ['TestNom', Validators.required],
+    //   prenom: ['TestPrenom', Validators.required],
+    //   date_naissance: ['2000-01-01', Validators.required],
+    //   numero_voie: ['123', Validators.required],
+    //   rue: ['Rue de Test', Validators.required],
+    //   codepostal: ['75001', Validators.required],
+    //   ville: ['Paris', Validators.required],
+    //   telephone: ['0601020304', Validators.required],
+    //   email: ['test.email@example.com', [Validators.required, Validators.email]],
+    //   // 2. UTILISER LE NOUVEAU VALIDATEUR pour le mot de passe
+    //   password: ['', [
+    //     Validators.required,
+    //     PasswordValidators.passwordComplexity() // Remplace minLength, maxLength, pattern
+    //   ]],
+    //   // 5. METTRE A JOUR valeur initiale de confirmPassword
+    //   confirmPassword: ['', [Validators.required]], // Initialisé à vide
+    //   // Champ séparé pour construire l'URL
+    //   codeClub: ['CLUB-0001', Validators.required]
+    // }, {
+    //   // 3. UTILISER LE NOUVEAU VALIDATEUR pour la correspondance
+    //   validators: PasswordValidators.passwordMatch('password', 'confirmPassword')
+    // });
   }
 
   // --- Getters (utiles pour le template) ---

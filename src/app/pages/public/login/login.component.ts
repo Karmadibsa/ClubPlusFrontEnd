@@ -29,9 +29,14 @@ export class LoginComponent {
   passwordFieldType: string = 'password';
 
   loginForm = this.fb.group({
-    email: ['alice.admin@club.fr', [Validators.required, Validators.email]],
-    password: ['password', Validators.required]
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', Validators.required]
   });
+
+  // loginForm = this.fb.group({
+  //   email: ['alice.admin@club.fr', [Validators.required, Validators.email]],
+  //   password: ['password', Validators.required]
+  // });
 
   // --- Identifiants de test (basés sur votre SQL [1]) ---
   // IMPORTANT: Assurez-vous que ces utilisateurs existent et sont actifs dans votre BDD
