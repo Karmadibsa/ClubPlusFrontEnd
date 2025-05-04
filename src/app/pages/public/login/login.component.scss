@@ -1,245 +1,280 @@
 /*------------------------------------*\
   #PAGE: CONNEXION
-  Styles pour la page et le formulaire de connexion.
+  Styles pour la page et le formulaire de connexion,
+  utilisant les variables CSS globales définies dans :root.
 \*------------------------------------*/
 
 // --- Conteneur Principal & Login ---
 
-// Conteneur global pour centrer la boîte de connexion dans la page.
+// Conteneur global pour centrer la boîte de connexion
 .container {
   width: 100%;
-  min-height: 100vh; // Prend au moins toute la hauteur de la fenêtre.
+  min-height: 100vh;
   display: flex;
-  justify-content: center; // Centre horizontalement le contenu.
-  align-items: center; // Centre verticalement le contenu.
-  // La variable --background-color doit être définie globalement (:root ou dans un fichier importé).
-  background-color: var(--background-color, #f4f7f6); // Fallback gris clair si variable non définie.
-  padding: 1rem; // Ajoute un peu d'espace sur les bords.
+  justify-content: center;
+  align-items: center;
+  // Utilise une variable globale pour le fond de la page
+  background-color: var(--bg-medium-gray, #e9ecef); // Fallback gris clair
+  padding: var(--spacing-md, 16px); // Espace sur les bords
   box-sizing: border-box;
 }
 
-// Conteneur spécifique du formulaire de connexion.
+// Conteneur spécifique du formulaire de connexion
 .login-container {
-  // La variable --container-background doit être définie globalement.
-  background: var(--container-background, white); // Fallback blanc si variable non définie.
-  padding: 30px 40px; // Marges internes.
-  border-radius: 8px; // Coins arrondis.
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); // Ombre portée.
-  width: 100%; // Prend la largeur disponible.
-  max-width: 450px; // Limite la largeur maximale.
-  text-align: center; // Centre le titre H1 et les liens en bas.
+  background: var(--main-white, white); // Fond blanc via variable globale
+  padding: var(--spacing-xl, 32px) var(--spacing-xl, 40px); // Espacement interne (ajusté à 32px pour variable)
+  border-radius: var(--border-radius, 8px); // Coins arrondis via variable globale
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); // Ombre portée (peut être mise en variable si besoin)
+  width: 100%;
+  max-width: 450px; // Limite la largeur
+  text-align: center;
 
   h1 {
-    // Style du titre principal "Connexion".
-    // La variable --text-color doit être définie globalement.
-    color: var(--text-color, #333); // Fallback couleur texte foncée.
-    margin-bottom: 25px; // Marge inférieure.
-    font-size: 2rem; // Taille de police.
-    font-weight: 600; // Épaisseur de la police.
+    // Titre principal "Connexion"
+    color: var(--main-blue, #1a5f7a); // Titre bleu via variable globale
+    margin-bottom: var(--spacing-lg, 24px); // Marge inférieure via variable
+    font-size: 2rem;
+    font-weight: 600;
   }
 }
 
 // --- Formulaire ---
 form {
-  display: flex; // Utilise Flexbox.
-  flex-direction: column; // Dispose les éléments enfants verticalement.
-  gap: 18px; // Espace entre les groupes de formulaire (.form-group).
-  text-align: left; // Aligne les labels et inputs à gauche par défaut.
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md, 16px); // Espace entre les groupes via variable (ajusté à 16px)
+  text-align: left; // Labels/inputs alignés à gauche
 }
 
-// Groupe contenant un label, un input et potentiellement un message d'erreur.
+// Groupe label + input + erreur
 .form-group {
   display: flex;
-  flex-direction: column; // Label au-dessus de l'input.
-  width: 100%; // Prend toute la largeur du formulaire.
+  flex-direction: column;
+  width: 100%;
 
   label {
-    margin-bottom: 6px; // Espace sous le label, avant l'input.
-    color: var(--text-color, #333); // Couleur du label via variable ou fallback.
-    font-size: 0.9rem; // Taille du texte du label.
-    font-weight: 500; // Épaisseur du texte du label.
+    margin-bottom: var(--spacing-xs, 4px); // Espace sous le label via variable (ajusté à 4px)
+    color: var(--text-dark, #333333); // Couleur label via variable globale
+    font-size: 0.9rem;
+    font-weight: 500;
   }
 
-  // Styles communs aux champs email et password dans ce formulaire.
+  // Styles communs inputs
   input[type="email"],
   input[type="password"],
-  input[type="text"] { // Ajout de type="text" pour quand le mdp est visible
-    padding: 12px 15px; // Marge intérieure du champ.
-    // La variable --input-border-color doit être définie globalement.
-    border: 1px solid var(--input-border-color, #ccc); // Bordure via variable ou fallback.
-    border-radius: 4px; // Coins arrondis.
-    font-size: 1rem; // Taille du texte saisi.
-    width: 100%; // Prend toute la largeur disponible.
-    box-sizing: border-box; // Le padding et la bordure sont inclus dans la largeur.
-    transition: border-color 0.3s ease, box-shadow 0.3s ease; // Transition douce pour le focus.
+  input[type="text"] { // Inclut type="text" pour mot de passe visible
+    padding: 12px 15px;
+    border: 1px solid var(--border-color, #dee2e6); // Bordure via variable globale
+    border-radius: var(--spacing-xs, 4px); // Coins arrondis via variable (ajusté à 4px)
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    transition: var(--transition-standard, all 0.3s ease); // Transition via variable
 
     &:focus {
-      // Style au focus pour accessibilité et clarté.
-      // La variable --main-blue doit être définie globalement.
-      border-color: var(--main-blue, #007bff); // Couleur de bordure au focus via variable ou fallback.
-      outline: none; // Supprime l'outline par défaut du navigateur.
-      // Utilise la couleur principale pour l'ombre de focus.
-      box-shadow: 0 0 0 2px rgba(var(--main-blue, 0, 123, 255), 0.2); // Ombre légère au focus.
+      // Style au focus
+      border-color: var(--main-blue, #1a5f7a); // Bordure bleue au focus (variable globale)
+      outline: none;
+      box-shadow: 0 0 0 3px var(--input-focus-shadow, rgba(26, 95, 122, 0.25)); // Ombre focus via variable globale
     }
-  }
 
-  // Style appliqué par Angular aux inputs invalides après interaction.
-  input.ng-invalid.ng-touched {
-    // La variable --danger-red doit être définie globalement.
-    border-color: var(--danger-red, #dc3545); // Bordure rouge pour erreur via variable ou fallback.
+    // Style Angular pour inputs invalides après interaction
+    &.ng-invalid.ng-touched {
+      border-color: var(--danger, #dc3545); // Bordure rouge erreur via variable globale
+      &:focus {
+        // Ajuste l'ombre de focus en cas d'erreur si nécessaire (basé sur --danger-rgb si défini)
+        // box-shadow: 0 0 0 3px rgba(var(--danger-rgb, 220, 53, 69), 0.25);
+        // Sinon, on garde l'ombre bleue par défaut ou on l'enlève
+        box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25); // Fallback ombre rouge
+      }
+    }
   }
 }
 
 // --- Champ Mot de Passe avec Bouton Toggle ---
 .password-input {
-  position: relative; // Permet de positionner le bouton absolument à l'intérieur.
-  display: flex; // Nécessaire pour que l'input prenne la largeur.
-  align-items: center; // Centre verticalement l'input et le bouton (si hauteurs différentes).
+  position: relative;
+  display: flex;
+  align-items: center;
 
-  // L'input dans ce conteneur (type password ou text).
+  // L'input dans ce conteneur
   input {
-    // Ajoute un padding à droite pour ne pas que le texte aille sous l'icône.
-    padding-right: 45px; // Espace réservé pour le bouton toggle.
+    padding-right: 45px; // Espace pour le bouton toggle
   }
 
-  // Bouton permettant d'afficher/masquer le mot de passe.
+  // Bouton afficher/masquer
   .toggle-password {
-    position: absolute; // Positionné par rapport à .password-input.
-    right: 0px; // Collé au bord droit.
-    top: 0; // Alignement vertical haut.
-    bottom: 0; // Alignement vertical bas.
-    background: none; // Pas de fond.
-    border: none; // Pas de bordure.
-    padding: 0 12px; // Zone cliquable horizontale.
-    cursor: pointer; // Curseur main.
-    display: flex; // Pour centrer l'icône à l'intérieur.
-    align-items: center; // Centre l'icône verticalement.
-    justify-content: center; // Centre l'icône horizontalement.
-    color: #777; // Couleur de l'icône par défaut (gris).
-    transition: color 0.2s ease; // Transition douce de la couleur.
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: none;
+    border: none;
+    padding: 0 12px; // Zone cliquable
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-medium, #666666); // Couleur icône via variable
+    transition: var(--transition-standard, all 0.3s ease); // Transition via variable
 
-    // Cibler l'icône (Lucide ou <i>) à l'intérieur du bouton.
-    lucide-icon, i {
-      width: 18px; // Taille de l'icône.
-      height: 18px; // Taille de l'icône.
-      display: block; // Assure un bon rendu.
+    // Icône Lucide
+    lucide-icon {
+      width: 18px;
+      height: 18px;
+      display: block;
+      stroke-width: 2px; // Assure l'épaisseur standard de Lucide
     }
 
     &:hover {
-      // Changement de couleur au survol.
-      color: var(--main-blue, #007bff); // Couleur principale au survol via variable ou fallback.
+      color: var(--main-blue, #1a5f7a); // Couleur principale au survol via variable
     }
 
     &:focus {
-      // Style de focus pour l'accessibilité (si différent du hover).
-      outline: 1px dotted var(--main-blue, #007bff); // Outline fin pour le focus clavier.
+      // Style de focus pour accessibilité
+      outline: 1px dotted var(--main-blue, #1a5f7a);
       outline-offset: 2px;
-      color: var(--main-blue, #007bff);
+      color: var(--main-blue, #1a5f7a);
+    }
+    &:focus-visible { // Style de focus clavier plus moderne
+      outline: 2px solid var(--main-blue, #1a5f7a);
+      outline-offset: 2px;
+      color: var(--main-blue, #1a5f7a);
     }
   }
 }
 
 // --- Bouton de Connexion ---
 .login-btn {
-  margin-top: 15px; // Espace au-dessus du bouton.
-  background-color: var(--main-blue, #007bff); // Couleur de fond via variable ou fallback.
-  color: white; // Texte blanc.
-  border: none; // Pas de bordure.
-  border-radius: 4px; // Coins arrondis.
-  padding: 12px 15px; // Padding interne.
-  font-size: 1.1rem; // Taille du texte.
-  font-weight: 600; // Épaisseur du texte.
-  cursor: pointer; // Curseur main.
-  transition: background-color 0.3s ease, opacity 0.3s ease; // Transitions.
-  width: 100%; // Prend toute la largeur du conteneur.
+  margin-top: var(--spacing-md, 16px); // Espace au-dessus via variable
+  // Utilise la couleur d'action principale orange
+  background-color: var(--main-orange, #f26115); // Fond orange via variable globale
+  color: var(--main-white, white); // Texte blanc via variable
+  border: none;
+  border-radius: var(--spacing-xs, 4px); // Coins arrondis via variable
+  padding: 12px 15px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-standard, all 0.3s ease); // Transition via variable
+  width: 100%;
 
-  &:hover:not(:disabled) { // Effet au survol seulement si non désactivé.
-    background-color: var(--main-orange, #fd7e14); // Couleur au survol via variable ou fallback.
+  &:hover:not(:disabled) {
+    // Utilise la version foncée de l'orange pour le survol
+    background-color: var(--main-orange-dark, #d9541e); // Orange foncé au survol via variable
   }
 
-  &:disabled { // Style lorsque le bouton est désactivé.
-    background-color: #ccc; // Fond gris.
-    cursor: not-allowed; // Curseur interdit.
-    opacity: 0.7; // Légèrement transparent.
+  &:disabled {
+    background-color: #ccc; // Fond gris simple pour désactivé
+    cursor: not-allowed;
+    opacity: 0.7;
   }
 
   strong {
-    display: block; // Assure que le texte prend la place.
+    display: block;
+  }
+}
+
+// --- Liens supplémentaires (Mot de passe oublié, Inscription) ---
+.extra-links {
+  margin-top: var(--spacing-lg, 24px); // Espace au-dessus via variable
+  display: flex;
+  flex-direction: column; // Liens l'un sous l'autre
+  align-items: center; // Centrés
+  gap: var(--spacing-sm, 8px); // Espace entre les liens via variable
+
+  .extra-link {
+    color: var(--main-blue, #1a5f7a); // Couleur bleue lien via variable
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: var(--transition-standard, all 0.3s ease);
+
+    &:hover {
+      text-decoration: underline;
+      color: var(--main-blue-dark, #134b63); // Bleu foncé au survol via variable
+    }
   }
 }
 
 
 // --- Lien Retour à l'accueil ---
 .home-link {
-  margin-top: 25px; // Espace au-dessus du lien.
+  margin-top: var(--spacing-lg, 24px); // Espace au-dessus via variable
 
   .home-btn {
-    display: inline-flex; // Alignement icône et texte.
-    align-items: center; // Centrage vertical.
-    gap: 8px; // Espace entre icône et texte.
-    color: #666; // Couleur discrète par défaut.
-    text-decoration: none; // Pas de soulignement.
-    font-size: 0.9rem; // Taille du texte.
-    transition: color 0.2s ease; // Transition couleur.
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm, 8px); // Espace icône/texte via variable
+    color: var(--text-medium, #666666); // Couleur discrète via variable
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: var(--transition-standard, all 0.3s ease); // Transition via variable
 
-    // Style pour l'icône (Lucide ou <i>)
-    i[data-lucide="arrow-left"] {
+    // Style pour l'icône Lucide
+    lucide-icon {
       width: 16px;
       height: 16px;
-      display: block; // Bon rendu.
-      // S'assurer que l'icône Lucide hérite de la couleur.
-      stroke: currentColor;
+      display: block;
+      stroke: currentColor; // Hérite la couleur du lien
       stroke-width: 2px;
     }
 
     &:hover {
-      color: var(--main-blue, #007bff); // Couleur au survol via variable ou fallback.
-      text-decoration: underline; // Soulignement au survol.
+      color: var(--main-blue, #1a5f7a); // Couleur bleue au survol via variable
+      text-decoration: underline;
     }
   }
 }
 
 // --- Messages d'Erreur ---
-// Bandeau pour erreur générale (si réactivé dans le HTML)
-.error-message {
-  color: white;
-  background-color: var(--danger-red, #dc3545); // Couleur de fond via variable ou fallback.
-  padding: 10px;
-  margin-bottom: 15px; // Espace en dessous.
-  border-radius: 4px;
-  font-size: 0.9rem;
-  text-align: center;
-}
-
-// Message d'erreur sous un champ de formulaire spécifique.
+// Message d'erreur sous un champ spécifique
 .validation-error {
-  color: var(--danger-red, #dc3545); // Couleur du texte via variable ou fallback.
-  font-size: 0.8rem; // Taille du texte réduite.
-  margin-top: 4px; // Espace au-dessus (entre input et erreur).
-  min-height: 1em; // Réserve la hauteur pour éviter les sauts de layout quand l'erreur apparaît/disparaît.
-  text-align: left; // Assure l'alignement à gauche sous le champ.
+  color: var(--danger, #dc3545); // Couleur texte erreur via variable globale
+  font-size: 0.8rem;
+  margin-top: var(--spacing-xs, 4px); // Espace au-dessus via variable
+  min-height: 1em; // Évite les sauts de layout
+  text-align: left; // Alignement gauche
 }
 
-// --- Section Simulation (Styles spécifiques aux boutons dev) ---
+// --- Section Simulation (Styles DEV ONLY) ---
 .dev-simulation-section {
-  // Styles optionnels pour la section de simulation.
+  margin-top: var(--spacing-lg, 24px); // Ajusté pour variable
+  border-top: 1px dashed #ccc; // Style simple gardé
+  padding-top: var(--spacing-md, 16px); // Ajusté pour variable
+  text-align: center;
+
+  h4 {
+    margin-bottom: var(--spacing-sm, 8px); // Ajusté pour variable
+    color: var(--text-medium, #666666); // Couleur via variable
+  }
+
+  // Conteneur flex pour les boutons
+  div {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-sm, 8px); // Espace entre boutons via variable
+    flex-wrap: wrap;
+  }
 
   .dev-sim-btn {
-    // Styles pour les boutons de simulation.
-    // Vous pouvez utiliser des classes .btn globales ou définir des styles ici.
-    padding: 8px 12px;
+    // Styles simples pour boutons de simulation
+    padding: var(--spacing-xs, 4px) var(--spacing-sm, 8px); // Padding via variables
     font-size: 0.85rem;
-    // Ajouter des couleurs distinctes si nécessaire.
-    background-color: #6c757d; // Exemple de couleur grise.
-    color: white;
+    background-color: var(--text-medium, #6c757d); // Fond gris via variable (fallback ajusté)
+    color: var(--main-white, white); // Texte blanc via variable
     border: none;
-    border-radius: 4px;
+    border-radius: var(--spacing-xs, 4px); // Coins arrondis via variable
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: var(--transition-standard, all 0.2s ease); // Transition via variable
 
     &:hover {
-      background-color: #5a6268; // Assombrir au survol.
+      background-color: var(--text-dark, #5a6268); // Fond plus foncé au survol via variable (fallback ajusté)
     }
+  }
+  p {
+    font-size: 0.8em;
+    color: var(--text-light, #777); // Couleur via variable (fallback ajusté)
+    margin-top: var(--spacing-xs, 5px); // Espace via variable (fallback ajusté)
   }
 }
 
@@ -248,38 +283,41 @@ form {
 \*------------------------------------*/
 @media (max-width: 500px) {
   .login-container {
-    padding: 25px 20px; // Réduit le padding sur très petits écrans.
+    padding: var(--spacing-lg, 24px) var(--spacing-md, 16px); // Padding réduit via variables
   }
 
   h1 {
-    font-size: 1.8rem; // Réduit la taille du titre.
+    font-size: 1.8rem; // Taille titre réduite
   }
 
   .form-group input[type="email"],
   .form-group input[type="password"],
   .form-group input[type="text"] {
-    padding: 10px 12px; // Réduit légèrement le padding des inputs.
-    // Si le bouton toggle est présent, s'assurer que padding-right reste suffisant.
-    &.password-input input { // Cible l'input dans le conteneur password
-      padding-right: 40px; // Ajuster si besoin.
+    padding: 10px 12px; // Padding inputs réduit
+
+    // Assurer espace pour toggle password
+    .password-input & { // Cible input dans .password-input
+      padding-right: 40px; // Ajuster si besoin
     }
   }
 
   .toggle-password {
-    padding: 0 10px; // Ajuster padding bouton toggle.
+    padding: 0 10px; // Padding bouton toggle ajusté
   }
 
   .login-btn {
-    font-size: 1rem; // Réduit taille texte bouton principal.
+    font-size: 1rem; // Taille texte bouton réduite
     padding: 10px 15px;
   }
 
   .home-link {
-    margin-top: 20px; // Réduit espace au-dessus du lien retour.
+    margin-top: var(--spacing-md, 16px); // Espace réduit via variable
   }
 
-  .dev-simulation-section button {
-    padding: 6px 10px; // Réduit taille boutons dev.
-    font-size: 0.8rem;
+  .dev-simulation-section {
+    .dev-sim-btn {
+      padding: 6px 10px; // Réduit taille boutons dev.
+      font-size: 0.8rem;
+    }
   }
 }
