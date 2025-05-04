@@ -1,9 +1,10 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {LucideAngularModule} from 'lucide-angular';
 import {EditEventModalComponent} from '../edit-event/edit-event.component';
 import {Evenement} from '../../../model/evenement';
 import {ParticipationEventModalComponent} from '../participation-event-modal/participation-event-modal.component';
+import {SweetAlertService} from '../../../service/sweet-alert.service';
 
 @Component({
   selector: '[app-event-row]',
@@ -18,6 +19,9 @@ import {ParticipationEventModalComponent} from '../participation-event-modal/par
   styleUrls: ['./event-row.component.scss']
 })
 export class EventRowComponent {
+
+  private swalService = inject(SweetAlertService);
+
   @Input() evenement!: Evenement;
   @Output() deleteRequest = new EventEmitter<Evenement>(); // RENOMMÉ de 'supprimer'. Utilisez Evenement.
   @Output() modifier = new EventEmitter<any>();
@@ -59,14 +63,24 @@ export class EventRowComponent {
    * Émet un événement `deleteRequest` vers le composant parent avec l'événement à supprimer.
    */
   requestDelete(): void {
-    console.log("Demande de suppression émise pour :", this.evenement);
-    const confirmation = confirm(`Désactiver "${this.evenement.nom}" ?`);
-    if (confirmation) {
-      this.deleteRequest.emit(this.evenement);
-    }
-    // Émet l'événement vers le parent (DashboardComponent) qui contiendra la logique
-    // d'appel API et de confirmation.
-    // this.deleteRequest.emit(this.evenement);
-  }
+    console.log("Initiation demande de suppression pour :", this.evenement);
 
+    // --- Remplacement de confirm() ---
+    this.swalService.confirmAction(
+      'Désactiver cet événement ?', // Titre
+      `Êtes-vous sûr de vouloir désactiver l'événement "${this.evenement.nom}" ?`, // Texte
+
+      // --- Callback si confirmé ---
+      () => {
+        // --- Émettre l'événement seulement si confirmé ---
+        console.log('Confirmation reçue, émission de deleteRequest pour', this.evenement);
+        this.deleteRequest.emit(this.evenement);
+        // -----------------------------------------------
+      }
+      // --- Fin Callback ---
+      , 'Oui, désactiver' // Texte bouton confirmer (optionnel)
+      // , 'Annuler' // Texte bouton annuler (optionnel)
+    );
+    // ------------------------------
+  }
 }

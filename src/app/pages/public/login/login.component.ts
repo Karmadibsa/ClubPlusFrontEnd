@@ -82,13 +82,10 @@ export class LoginComponent {
 
         if (userRole === 'ROLE_ADMIN' || userRole === 'ROLE_RESERVATION') {
           this.router.navigateByUrl("/app/dashboard");
-          this.notification.show(`Connexion réussie (${userRole}). Accès au tableau de bord.`, "success");
         } else if (userRole === 'ROLE_MEMBRE') {
           this.router.navigateByUrl("/app/event"); // Vérifie que cette route est correcte
-          this.notification.show("Connexion réussie (MEMBRE). Accès aux événements.", "success");
         } else {
           console.warn("Rôle utilisateur non géré pour la redirection:", userRole);
-          this.notification.show(`Connexion réussie (${userRole}), redirection par défaut.`, "info");
           this.router.navigateByUrl("/");
         }
       },

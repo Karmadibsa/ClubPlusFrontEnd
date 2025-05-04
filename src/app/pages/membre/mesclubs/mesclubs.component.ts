@@ -18,6 +18,7 @@ import {SweetAlertService} from '../../../service/sweet-alert.service';
   styleUrl: './mesclubs.component.scss'
 })
 export class MesclubsComponent {
+  private swalService = inject(SweetAlertService);
 
   // --- Injections ---
   private membreService = inject(MembreService);
@@ -130,40 +131,62 @@ export class MesclubsComponent {
       }
     });
   }
-
   leaveClub(club: Club): void {
+    // Empêche double-clic (reste identique)
     if (this.leavingClubId !== null) {
       return;
     }
 
-    if (!confirm(`Êtes-vous sûr de vouloir quitter le club "${club.nom}" ?`)) {
-      return;
-    }
+    // --- Remplacement de confirm() ---
+    this.swalService.confirmAction(
+      'Quitter ce club ?', // Titre
+      `Êtes-vous sûr de vouloir quitter le club "${club.nom}" ? Cette action est irréversible.`, // Texte
 
-    this.leavingClubId = club.id;
-    this.errorJoiningClub = null;
-    this.errorLeavingClubIds.delete(club.id);
-    this.cdr.detectChanges();
+      // --- Callback : Code à exécuter SI confirmé ---
+      () => {
+        // --- Tout le code qui était APRES le `if (confirm(...))` va ICI ---
+        console.log('Confirmation reçue, départ du club ID:', club.id);
+        this.leavingClubId = club.id;
+        this.errorJoiningClub = null; // Efface l'erreur de join si elle était affichée
+        this.errorLeavingClubIds.delete(club.id); // Efface une erreur précédente pour CE club
+        this.cdr.detectChanges(); // Met à jour l'UI pour montrer l'état "leaving" (si OnPush)
 
-    this.leaveSub?.unsubscribe();
+        this.leaveSub?.unsubscribe(); // Annule requête précédente
 
-    this.leaveSub = this.membreService.leaveClub(club.id).pipe(
-      finalize(() => {
-        this.leavingClubId = null;
-        this.cdr.detectChanges();
-      })
-    ).subscribe({
-      next: () => {
-        this.notification.show(`Vous avez quitté le club "${club.nom}".`, 'success');
-        this.loadUserClubs(); // Recharge la liste (qui appellera filterClubsList)
-      },
-      error: (error) => {
-        console.error(`Erreur pour quitter club ${club.id}:`, error);
-        this.errorLeavingClubIds.add(club.id);
-        this.notification.show(error?.message || `Impossible de quitter le club "${club.nom}".`, 'error');
-        // Change detection est déjà appelée dans finalize
+        this.leaveSub = this.membreService.leaveClub(club.id).pipe(
+          finalize(() => {
+            // Ceci s'exécute que l'appel réussisse ou échoue
+            this.leavingClubId = null; // Réinitialise l'ID en cours
+            this.cdr.detectChanges(); // Met à jour l'UI (si OnPush)
+          })
+        ).subscribe({
+          next: () => {
+            // Succès : Utilise showToast (ou show si vous préférez une notif plus marquée)
+            this.swalService.show(`Vous avez quitté le club "${club.nom}".`, 'success');
+            this.loadUserClubs(); // Recharge la liste des clubs
+          },
+          error: (error) => {
+            // Erreur
+            console.error(`Erreur pour quitter club ${club.id}:`, error);
+            this.errorLeavingClubIds.add(club.id); // Marque ce club comme ayant eu une erreur
+            const message = error?.message || `Impossible de quitter le club "${club.nom}".`;
+            // Erreur : Utilise showToast (ou show)
+            this.swalService.show(message, 'error');
+            // Pas besoin de detectChanges ici, géré par finalize
+          }
+        });
+        // ================================================================
       }
-    });
+      // ---- Fin du Callback ----
+
+      , 'Oui, quitter' // Texte bouton confirmer (optionnel)
+      // , 'Annuler' // Texte bouton annuler (optionnel)
+      // , '#dc3545' // Couleur confirmer (rouge danger, optionnel)
+      // , '#6c757d' // Couleur annuler (gris, optionnel)
+    );
+    // --- Fin de l'appel à confirmAction ---
+
+    // Ne mettez rien ici qui dépend de la confirmation.
   }
 
   // --- Filtering Logic ---

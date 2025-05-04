@@ -22,6 +22,9 @@ import {SweetAlertService} from '../../../service/sweet-alert.service'; // Assur
   styleUrls: ['./amis.component.scss'] // Utilise styleUrls (pluriel)
 })
 export class AmisComponent implements OnInit { // Implémente OnInit
+
+  private swalService = inject(SweetAlertService);
+
   private clipboard = inject(Clipboard); // <-- Injecter Clipboard
   private membreService = inject(MembreService); // <-- Injection de MembreService via inject
   private notification = inject(SweetAlertService);
@@ -179,22 +182,40 @@ export class AmisComponent implements OnInit { // Implémente OnInit
   }
 
   removeFriend(friendId: number): void {
-    if (!confirm("Êtes-vous sûr de vouloir retirer cet ami ?")) {
-      return;
-    }
-    this.isLoading = true; // Ajout
-    this.amisService.removeFriend(friendId).subscribe({
-      next: () => {
-        this.isLoading = false; // Ajout
-        this.notification.show("Ami retiré avec succès.", 'success');
-        this.loadFriends();
-      },
-      error: (err) => {
-        this.isLoading = false; // Ajout
-        console.error("Erreur lors de la suppression de l'ami:", err);
-        this.notification.show(err.message || "Erreur lors de la suppression de l'ami.", 'error'); // Message d'erreur plus précis
+
+    // --- Remplacement de confirm() ---
+    this.swalService.confirmAction(
+      'Retirer cet ami ?', // Titre
+      'Êtes-vous sûr de vouloir retirer définitivement cet ami de votre liste ?', // Texte
+
+      // --- Callback si confirmé ---
+      () => {
+        // --- Code qui était après le confirm() va ici ---
+        console.log('Confirmation reçue, suppression ami ID:', friendId);
+        this.isLoading = true;
+        // Optionnel: this.cdr.detectChanges(); si OnPush
+
+        this.amisService.removeFriend(friendId).subscribe({
+          next: () => {
+            this.isLoading = false;
+            this.swalService.show('Ami retiré avec succès.', 'success'); // Nouveau
+            this.loadFriends(); // Recharger la liste
+            // Optionnel: this.cdr.detectChanges(); si OnPush
+          },
+          error: (err) => {
+            this.isLoading = false;
+            console.error("Erreur lors de la suppression de l'ami:", err);
+            const message = err.message || "Erreur lors de la suppression de l'ami.";
+            this.swalService.show(message, 'error'); // Nouveau
+            // Optionnel: this.cdr.detectChanges(); si OnPush
+          }
+        });
+        // ---------------------------------------------
       }
-    });
+      // --- Fin Callback ---
+      , 'Oui, retirer' // Texte bouton confirmer (optionnel)
+      // , 'Annuler' // Texte bouton annuler (optionnel)
+    );
   }
 
   acceptFriendRequest(requestId: number): void {
