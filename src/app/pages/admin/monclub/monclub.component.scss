@@ -73,3 +73,17 @@
   }
 }
 
+.confirmation-phrase {
+  user-select: none; // Style utilitaire, peut être globalisé
+  background-color: var(--bg-medium-gray); // Utilise variable globale [5]
+  padding: 10px;
+  border-radius: var(--border-radius-sm, 4px); // Utilise variable globale [5]
+  font-family: monospace;
+  margin-bottom: var(--spacing-md); // Utilise variable globale [5]
+  word-break: break-all;
+  text-align: center;
+
+  strong {
+    color: var(--text-dark); // Utilise variable globale [5]
+  }
+}

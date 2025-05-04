@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environments';
 import {Club} from '../../model/club';
 import {catchError, tap} from 'rxjs/operators';
@@ -52,6 +52,10 @@ export class ClubService {
     );
   }
 
+
+
+
+
 // --- Gestionnaire d'Erreurs Privé ---
 
   /**
@@ -78,5 +82,8 @@ export class ClubService {
     return throwError(() => new Error(errorMessage));
   }
 
+  deleteClub(id: number): Observable<void> { // Retourne Observable<void> car DELETE renvoie souvent 204 No Content
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }
 

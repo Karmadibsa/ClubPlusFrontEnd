@@ -19,6 +19,7 @@ import {LucideAngularModule} from 'lucide-angular';
 import {FilterEventComponent} from '../../../component/event/filter-event/filter-event.component';
 import {PaginationComponent} from '../../../component/navigation/pagination/pagination.component';
 import {EditEventModalComponent} from '../../../component/event/edit-event/edit-event.component';
+import {SweetAlertService} from '../../../service/sweet-alert.service';
 
 
 @Component({
@@ -43,7 +44,7 @@ export class EventAdminComponent implements OnInit, OnDestroy {
   // --- Injection des Services ---
   private eventService = inject(EventService);
   private authService = inject(AuthService); // Nécessaire si la modale ne récupère pas l'ID elle-même
-  private notification = inject(NotificationService);
+  private notification = inject(SweetAlertService);
   private cdr = inject(ChangeDetectorRef); // Nécessaire avec OnPush
 
   // --- AJOUT/MODIFICATION : État pour listes d'événements ---
@@ -150,7 +151,7 @@ export class EventAdminComponent implements OnInit, OnDestroy {
     // ... (confirmation optionnelle) ...
     this.eventService.softDeleteEvent(eventToDelete.id).subscribe({
       next: () => {
-        this.notification.show(`L'événement "${eventToDelete.nom}" a été désactivé.`, 'valid');
+        this.notification.show(`L'événement "${eventToDelete.nom}" a été désactivé.`, 'success');
         // **Important: Mettre à jour les DEUX listes principales**
         this.allEvenements = this.allEvenements.filter(e => e.id !== eventToDelete.id);
         this.filteredEvenements = this.filteredEvenements.filter(e => e.id !== eventToDelete.id);
@@ -212,7 +213,7 @@ export class EventAdminComponent implements OnInit, OnDestroy {
 
     this.chargerEvenements();
 
-    this.notification.show(`Événement "${savedEvent.nom}" sauvegardé avec succès.`, 'valid');
+    this.notification.show(`Événement "${savedEvent.nom}" sauvegardé avec succès.`, 'success');
   }
 
 

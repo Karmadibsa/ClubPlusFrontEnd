@@ -6,6 +6,7 @@ import {NotificationService} from '../../../service/model/notification.service';
 import {LucideAngularModule} from 'lucide-angular';
 import {Evenement} from '../../../model/evenement';
 import {Categorie} from '../../../model/categorie';
+import {SweetAlertService} from '../../../service/sweet-alert.service';
 
 @Component({
   selector: 'app-reservation-modal',
@@ -25,7 +26,7 @@ export class ReservationModalComponent {
   @Output() reserveSuccess = new EventEmitter<any>(); // Pour notifier le parent (la carte)
   // ------------------------
 
-  private notification = inject(NotificationService);
+  private notification = inject(SweetAlertService);
   private reservationService = inject(ReservationService);
 
   selectedCategory: Categorie | null = null; // Typage
@@ -51,8 +52,7 @@ export class ReservationModalComponent {
 
     this.reservationService.createReservation(eventId, categorieId).subscribe({
       next: (response) => {
-        console.log('Réservation réussie !', response);
-        this.notification.show('Réservation effectuée avec succès !', 'valid');
+        this.notification.show('Réservation effectuée avec succès !', 'success');
         this.reserveSuccess.emit(response);
         this.onClose(); // Fermer après succès
       },

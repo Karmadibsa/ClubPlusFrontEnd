@@ -1,10 +1,13 @@
 import {Component, inject} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Router, RouterLink} from '@angular/router';
 import {NotificationService} from '../../../service/model/notification.service';
 import {PasswordValidators} from '../../../service/validator/password.validator';
-import {NgClass} from '@angular/common'; // <-- 1. Importer Router
+import {NgClass} from '@angular/common';
+import {Subscription} from 'rxjs';
+import {AuthService} from '../../../service/security/auth.service';
+import {Club, ClubRegistrationPayload} from '../../../model/club';
+import {SweetAlertService} from '../../../service/sweet-alert.service'; // <-- 1. Importer Router
 
 
 @Component({
@@ -19,24 +22,22 @@ import {NgClass} from '@angular/common'; // <-- 1. Importer Router
   styleUrl: './inscription-club.component.scss'
 })
 export class InscriptionClubComponent {
-  registrationForm: FormGroup;
-  errorMessage: string | null = null;
+
+  registrationForm!: FormGroup;
+  private registrationSubscription: Subscription | null = null; // Pour se désabonner
   isLoading: boolean = false;
 
   private fb = inject(FormBuilder);
-  private http = inject(HttpClient);
+  private authService = inject(AuthService); // Injecter AuthService
   private router = inject(Router);
-  private notification = inject(NotificationService);
-
-  readonly apiUrl = 'http://localhost:8080/api/clubs/inscription';
+  private notification = inject(SweetAlertService);
 
   constructor() {
-    this.registrationForm = this.fb.group({}); // Initialisation temporaire
   }
 
   ngOnInit(): void {
+    // Initialisation du formulaire (INCHANGÉE)
     this.registrationForm = this.fb.group({
-      // --- Club Details (inchangés) ---
       nom: ['Club Test', Validators.required],
       date_creation: ['2020-01-01', Validators.required],
       numero_voie: ['123', Validators.required],
@@ -45,8 +46,6 @@ export class InscriptionClubComponent {
       ville: ['Paris', Validators.required],
       telephone: ['0102030405', Validators.required],
       email: ['test@club.com', [Validators.required, Validators.email]],
-
-      // --- Admin Details ---
       admin: this.fb.group({
         nom: ['AdminTest', Validators.required],
         prenom: ['Jean', Validators.required],
@@ -57,109 +56,94 @@ export class InscriptionClubComponent {
         ville: ['Paris', Validators.required],
         telephone: ['0607080910', Validators.required],
         email: ['admin@test.com', [Validators.required, Validators.email]],
-
-        // --- Password Group (nested within admin) ---
         passwordGroup: this.fb.group({
-          // 2. UTILISER LE NOUVEAU VALIDATEUR pour le mot de passe
-          // 4. (Optionnel) Mettre la valeur initiale à ''
-          password: ['', [
-            Validators.required,
-            PasswordValidators.passwordComplexity() // Remplace minLength, etc.
-          ]],
-          // 4. (Optionnel) Mettre la valeur initiale à ''
+          password: ['', [Validators.required, PasswordValidators.passwordComplexity()]],
           confirmPassword: ['', Validators.required]
-        }, {
-          // 3. UTILISER LE NOUVEAU VALIDATEUR pour la correspondance
-          validators: PasswordValidators.passwordMatch('password', 'confirmPassword')
-        }) // Fin passwordGroup
-      }) // Fin admin group
-    }); // Fin registrationForm
+        }, { validators: PasswordValidators.passwordMatch('password', 'confirmPassword') })
+      })
+    });
   }
 
-  // Getters pour simplifier l'accès dans le template et gérer la nullité potentielle
-  // (C'est une bonne pratique pour éviter les erreurs "Object is possibly 'null'")
-  getControl(name: string): AbstractControl | null {
-    return this.registrationForm.get(name);
+
+  ngOnDestroy(): void {
+    this.registrationSubscription?.unsubscribe(); // Nettoyage
   }
 
-  getAdminControl(name: string): AbstractControl | null {
-    return this.registrationForm.get(['admin', name]); // Accès imbriqué
-  }
-
-  getAdminPasswordGroup(): AbstractControl | null {
-    return this.registrationForm.get(['admin', 'passwordGroup']);
-  }
-
-  getAdminPasswordControl(name: string): AbstractControl | null {
-    return this.registrationForm.get(['admin', 'passwordGroup', name]);
-  }
+  getControl(name: string): AbstractControl | null { return this.registrationForm.get(name); }
+  getAdminControl(name: string): AbstractControl | null { return this.registrationForm.get(['admin', name]); }
+  getAdminPasswordGroup(): AbstractControl | null { return this.registrationForm.get(['admin', 'passwordGroup']); }
+  getAdminPasswordControl(name: string): AbstractControl | null { return this.registrationForm.get(['admin', 'passwordGroup', name]); }
 
   onSubmit(): void {
-    this.errorMessage = null;
-
-    // *** CORRECTION PRINCIPALE ***
-    // Marquer tous les champs comme 'touched' AVANT la vérification de validité [4]
+    // 1. Validation et préparation (presque INCHANGÉES)
+    // this.errorMessage = null; // Retiré
     this.registrationForm.markAllAsTouched();
 
-    if (this.registrationForm.valid && !this.isLoading) {
-      this.isLoading = true;
-      // Construction du payload (identique à la réponse précédente)
-      const formValue = this.registrationForm.getRawValue();
-      const payload = {
-        nom: formValue.nom,
-        date_creation: formValue.date_creation,
-        numero_voie: formValue.numero_voie,
-        rue: formValue.rue,
-        codepostal: formValue.codepostal,
-        ville: formValue.ville,
-        telephone: formValue.telephone,
-        email: formValue.email, // Email du club
-        admin: {
-          nom: formValue.admin.nom,
-          prenom: formValue.admin.prenom,
-          date_naissance: formValue.admin.date_naissance,
-          numero_voie: formValue.admin.numero_voie, // Adresse admin
-          rue: formValue.admin.rue,
-          codepostal: formValue.admin.codepostal,
-          ville: formValue.admin.ville,
-          telephone: formValue.admin.telephone, // Tel admin
-          email: formValue.admin.email, // Email admin
-          // Extraire UNIQUEMENT le mot de passe, pas la confirmation
-          password: formValue.admin.passwordGroup.password
-        }
-      };
-
-      console.log('Sending Payload:', JSON.stringify(payload, null, 2));
-
-      // Appel HTTP (identique à la réponse précédente)
-      this.http.post<any>(this.apiUrl, payload).subscribe({
-        next: (response) => {
-          this.isLoading = false;
-          console.log('Inscription réussie!', response);
-          // Utiliser NotificationService pour le succès
-          this.notification.show('Club et administrateur inscrits avec succès !', 'valid'); // Utiliser 'success'
-          this.router.navigate(['/connexion']); // Rediriger vers la connexion
-        },
-        error: (error: HttpErrorResponse) => {
-          this.isLoading = false;
-          console.error('Erreur lors de l\'inscription:', error);
-          let errorMsg = `Une erreur serveur est survenue (${error.status}). Veuillez réessayer plus tard.`;
-
-          // Gestion détaillée des erreurs (similaire à l'inscription membre)
-          if (error.status === 409) { // Conflit (ex: email club ou admin déjà utilisé)
-            errorMsg = error.error?.message || error.error || "Un email fourni est peut-être déjà utilisé.";
-          } else if (error.status === 400) { // Mauvaise requête (validation backend échouée)
-            errorMsg = error.error?.message || error.error || "Données invalides. Vérifiez les informations saisies.";
-          } else if (error.error && typeof error.error === 'string') {
-            errorMsg = `Erreur ${error.status}: ${error.error}`;
-          } else if (error.error && error.error.message) {
-            errorMsg = `Erreur ${error.status}: ${error.error.message}`;
-          } // Ajouter d'autres cas si nécessaire (403, etc.)
-
-          // Utiliser NotificationService pour l'erreur
-          this.notification.show(errorMsg, 'error');
-        }
-      });
+    if (this.registrationForm.invalid) {
+      // Logique de message d'erreur inchangée, utilise this.notification
+      let errorMsg = "Veuillez corriger les erreurs dans le formulaire.";
+      // (Ajouter ici la logique pour vérifier passwordMismatch ou autres erreurs spécifiques si besoin)
+      this.notification.show(errorMsg, 'warning');
+      return;
     }
+    if (this.isLoading) return; // Empêche double soumission
+
+    this.isLoading = true;
+
+    // Construction du payload (INCHANGÉE)
+    const formValue = this.registrationForm.getRawValue(); // Utilise getRawValue
+    const payload: ClubRegistrationPayload = {
+      nom: formValue.nom,
+      date_creation: formValue.date_creation,
+      numero_voie: formValue.numero_voie,
+      rue: formValue.rue,
+      codepostal: formValue.codepostal,
+      ville: formValue.ville,
+      telephone: formValue.telephone,
+      email: formValue.email,
+      admin: {
+        nom: formValue.admin.nom,
+        prenom: formValue.admin.prenom,
+        date_naissance: formValue.admin.date_naissance,
+        numero_voie: formValue.admin.numero_voie,
+        rue: formValue.admin.rue,
+        codepostal: formValue.admin.codepostal,
+        ville: formValue.admin.ville,
+        telephone: formValue.admin.telephone,
+        email: formValue.admin.email,
+        password: formValue.admin.passwordGroup.password // <- Prend seulement le password
+      }
+    };
+    console.log('Sending Payload:', JSON.stringify(payload, null, 2));
+
+    // Annule la souscription précédente si elle existe
+    this.registrationSubscription?.unsubscribe();
+
+    // 2. Appel au Service (MODIFIÉ)
+    this.registrationSubscription = this.authService.registerClub(payload).subscribe({
+      next: (response: Club | any) => { // Utilise le type de retour du service (Club ou any)
+        // 3. Gestion du Succès (INCHANGÉE)
+        this.isLoading = false;
+        console.log('Inscription réussie!', response);
+        this.notification.show('Club et administrateur inscrits avec succès !', 'success');
+        this.router.navigate(['/connexion']);
+      },
+      error: (error: Error) => { // Type Error via handleError
+        // 4. Gestion de l'Erreur (Utilise error.message)
+        this.isLoading = false;
+        console.error('Erreur reçue dans InscriptionClubComponent:', error);
+        let errorMsg = error.message || `Une erreur serveur est survenue. Veuillez réessayer plus tard.`;
+
+        // Tentative d'affiner le message basé sur le contenu de l'erreur
+        if (error.message.includes('409')) { // Conflit
+          errorMsg = "Un email fourni (club ou admin) est peut-être déjà utilisé.";
+        } else if (error.message.includes('400')) { // Mauvaise requête / Validation
+          errorMsg = "Données invalides. Vérifiez les informations saisies.";
+        }
+        // else { Utilise errorMsg déjà défini }
+
+        this.notification.show(errorMsg, 'error');
+      }
+    });
   }
 }

@@ -7,7 +7,8 @@ import {DemandeAmi} from '../../../model/demandeAmi';
 import {NotificationService} from '../../../service/model/notification.service';
 import {LucideAngularModule} from 'lucide-angular';
 import {MembreService} from '../../../service/model/membre.service';
-import {Clipboard} from '@angular/cdk/clipboard'; // Assurez que le chemin est correct
+import {Clipboard} from '@angular/cdk/clipboard';
+import {SweetAlertService} from '../../../service/sweet-alert.service'; // Assurez que le chemin est correct
 
 @Component({
   selector: 'app-amis',
@@ -23,7 +24,7 @@ import {Clipboard} from '@angular/cdk/clipboard'; // Assurez que le chemin est c
 export class AmisComponent implements OnInit { // Implémente OnInit
   private clipboard = inject(Clipboard); // <-- Injecter Clipboard
   private membreService = inject(MembreService); // <-- Injection de MembreService via inject
-  private notification = inject(NotificationService);
+  private notification = inject(SweetAlertService);
   // --- State Variables ---
   friends: Membre[] = [];
   filteredFriends: Membre[] = []; // <-- NOUVEAU: Liste affichée et filtrée
@@ -33,7 +34,7 @@ export class AmisComponent implements OnInit { // Implémente OnInit
 
   activeTab: 'friends' | 'received' | 'sent' = 'friends';
   isLoading: boolean = false;
-  friendCodeToAdd: string = '';
+  friendCodeToAdd: string = 'AMIS-';
   friendSearchTerm: string = ''; // <-- NOUVEAU: Terme de recherche pour les amis
 
 
@@ -76,7 +77,7 @@ export class AmisComponent implements OnInit { // Implémente OnInit
   copyCode(code: string | undefined): void {
     if (code) {
       this.clipboard.copy(code);
-      this.notification.show('Code ami copié dans le presse-papiers !', 'valid');
+      this.notification.show('Code ami copié dans le presse-papiers !', 'success');
     }
   }
 
@@ -163,7 +164,7 @@ export class AmisComponent implements OnInit { // Implémente OnInit
     this.amisService.sendFriendRequestByCode(code).subscribe({
       next: (demandeCreee) => {
         this.isLoading = false;
-        this.notification.show(`Demande d'ami envoyée avec succès !`, 'valid');
+        this.notification.show(`Demande d'ami envoyée avec succès !`, 'success');
         this.friendCodeToAdd = ''; // Vider le champ après succès
         this.loadSentRequests(); // Mettre à jour la liste des demandes envoyées
       },
@@ -185,7 +186,7 @@ export class AmisComponent implements OnInit { // Implémente OnInit
     this.amisService.removeFriend(friendId).subscribe({
       next: () => {
         this.isLoading = false; // Ajout
-        this.notification.show("Ami retiré avec succès.", 'valid');
+        this.notification.show("Ami retiré avec succès.", 'success');
         this.loadFriends();
       },
       error: (err) => {
@@ -201,7 +202,7 @@ export class AmisComponent implements OnInit { // Implémente OnInit
     this.amisService.acceptFriendRequest(requestId).subscribe({
       next: () => {
         this.isLoading = false; // Ajout
-        this.notification.show("Demande acceptée.", 'valid');
+        this.notification.show("Demande acceptée.", 'success');
         this.loadFriends();
         this.loadReceivedRequests();
       },
@@ -218,7 +219,7 @@ export class AmisComponent implements OnInit { // Implémente OnInit
     this.amisService.rejectFriendRequest(requestId).subscribe({
       next: () => {
         this.isLoading = false; // Ajout
-        this.notification.show("Demande refusée.", 'valid'); // 'success' est peut-être étrange ici, 'valid' ou rien ?
+        this.notification.show("Demande refusée.", 'success'); // 'success' est peut-être étrange ici, 'success' ou rien ?
         this.loadReceivedRequests();
       },
       error: (err) => {
@@ -234,7 +235,7 @@ export class AmisComponent implements OnInit { // Implémente OnInit
     this.amisService.cancelSentFriendRequest(requestId).subscribe({
       next: () => {
         this.isLoading = false; // Ajout
-        this.notification.show("Demande annulée.", 'valid'); // 'valid' ou 'success'
+        this.notification.show("Demande annulée.", 'success'); // 'success' ou 'success'
         this.loadSentRequests();
       },
       error: (err) => {

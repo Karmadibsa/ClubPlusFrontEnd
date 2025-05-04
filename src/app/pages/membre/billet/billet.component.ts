@@ -11,6 +11,7 @@ import {SafeUrl} from '@angular/platform-browser';
 import {Reservation} from '../../../model/reservation';
 import {ReservationService} from '../../../service/model/reservation.service';
 import {NotificationService} from '../../../service/model/notification.service';
+import {SweetAlertService} from '../../../service/sweet-alert.service';
 
 
 @Component({
@@ -21,8 +22,10 @@ import {NotificationService} from '../../../service/model/notification.service';
   styleUrl: './billet.component.scss'
 })
 export class BilletComponent {
+  private swalSimpleService = inject(SweetAlertService);
+
   private reservationService = inject(ReservationService)
-  private notification = inject(NotificationService)
+  private notification = inject(SweetAlertService)
   selectedTicket: Reservation | undefined;
   isModalOpen: boolean = false;
   reservations: Reservation[] = [];
@@ -65,7 +68,6 @@ export class BilletComponent {
 
   generatePDF(reservation: Reservation): void {
     this.selectedTicket = reservation;
-    console.log("Début génération PDF pour:", reservation.id);
 
     // Créer un nouveau document PDF
     const doc = new jspdf('p', 'mm', 'a4');
@@ -164,7 +166,6 @@ export class BilletComponent {
 
 
   onChangeURL(url: SafeUrl, reservation: Reservation): void {
-    console.log(`QR code généré pour la réservation ${reservation.id}:`, url);
     const index = this.reservations.findIndex(r => r.id === reservation.id);
     if (index !== -1) {
       if (typeof url === "string") {
@@ -178,42 +179,47 @@ export class BilletComponent {
   onCancelReservation(reservation: any): void {
     if (!reservation || !reservation.id) {
       console.error("Impossible d'annuler : ID de réservation manquant.");
+      this.swalSimpleService.show("Impossible d'annuler : ID de réservation manquant.", 'error');
       return;
     }
 
-    // Confirmation utilisateur (recommandé)
-    if (!confirm(`Êtes-vous sûr de vouloir annuler la réservation pour ${reservation.event?.nom || 'cet événement'} ?`)) {
-      return;
-    }
+    // --- Utilisation de confirmAction ---
+    this.swalSimpleService.confirmAction(
+      'Êtes-vous sûr ?', // Titre
+      `Voulez-vous vraiment annuler la réservation pour ${reservation.event?.nom || 'cet événement'} ?`, // Texte
+      // ---- Début de la fonction callback (ce qui se passe si confirmé) ----
+      () => {
+        console.log('Confirmation reçue, annulation de', reservation.id);
+        this.isLoading = true;
+        this.errorMessage = null;
+        // Note: Appeler cdr.detectChanges() ici si vous utilisez OnPush
 
-    this.isLoading = true; // Optionnel: indiquer un chargement
-    this.errorMessage = null;
+        this.reservationService.cancelReservation(reservation.id)
+          .subscribe({
+            next: () => {
+              this.isLoading = false;
+              this.errorMessage = null;
+              this.reservations = this.reservations.filter(r => r.id !== reservation.id);
+              this.swalSimpleService.show('Réservation annulée.', 'success'); // Utilise la méthode show du même service
+              // Note: Appeler cdr.detectChanges() ici si vous utilisez OnPush
+            },
+            error: (error) => {
+              this.isLoading = false;
+              console.error(`Erreur lors de l'annulation de la réservation ID: ${reservation.id}`, error);
+              this.errorMessage = `Échec de l'annulation : ${error.message || 'Erreur inconnue du serveur'}`;
+              this.swalSimpleService.show(this.errorMessage, 'error'); // Utilise la méthode show du même service
+              // Note: Appeler cdr.detectChanges() ici si vous utilisez OnPush
+            }
+          });
+      }
+      // ---- Fin de la fonction callback ----
+      // Options pour les textes des boutons (optionnel)
+      // 'Oui, annuler !', // Texte confirmer
+      // 'Non' // Texte annuler
+    );
+    // --- Fin de l'appel à confirmAction ---
 
-    console.log(`Composant: Tentative d'annulation de la réservation ID: ${reservation.id}`);
-
-    // Appeler la méthode du service
-    this.reservationService.cancelReservation(reservation.id)
-      .subscribe({
-        next: () => {
-          this.isLoading = false;
-          console.log(`Réservation ID: ${reservation.id} annulée avec succès.`);
-          this.errorMessage = null;
-
-          // Mettre à jour la liste localement pour refléter le changement immédiatement
-          this.reservations = this.reservations.filter(r => r.id !== reservation.id);
-
-          // Afficher une notification de succès (optionnel)
-          this.notification.show('Réservation annulée.', 'valid');
-        },
-        error: (error) => {
-          this.isLoading = false;
-          console.error(`Erreur lors de l'annulation de la réservation ID: ${reservation.id}`, error);
-          // Afficher l'erreur à l'utilisateur
-          this.errorMessage = `Échec de l'annulation : ${error.message || 'Erreur inconnue du serveur'}`;
-          // Afficher une notification d'erreur (optionnel)
-          this.notification.show(this.errorMessage, 'error');
-        }
-      });
+    // Le code ici s'exécute immédiatement après l'appel à confirmAction,
+    // l'affichage de la modale est asynchrone.
   }
 }
-

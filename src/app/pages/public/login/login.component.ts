@@ -4,7 +4,9 @@ import {LucideAngularModule} from 'lucide-angular';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 import {NotificationService} from '../../../service/model/notification.service';
-import {AuthService} from '../../../service/security/auth.service'; // Pour relancer les erreurs RxJS
+import {AuthService} from '../../../service/security/auth.service';
+import {Subscription} from 'rxjs';
+import {SweetAlertService} from '../../../service/sweet-alert.service'; // Pour relancer les erreurs RxJS
 
 @Component({
   selector: 'app-login',
@@ -18,93 +20,102 @@ import {AuthService} from '../../../service/security/auth.service'; // Pour rela
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  protected isLoading = false
+  protected isLoading = false;
+  private loginSubscription: Subscription | null = null; // Pour se désabonner
+
   // --- Injections ---
   private fb = inject(FormBuilder);
   private router = inject(Router);
-  private http = inject(HttpClient); // Injection de HttpClient
-  auth = inject(AuthService)
-  notification = inject(NotificationService)
+  // HttpClient est retiré, AuthService est utilisé à la place
+  private authService = inject(AuthService); // Renommé de 'auth' à 'authService' pour clarté
+  private notification = inject(SweetAlertService); // Renommé de 'notification' pour clarté
+
   // --- Propriétés ---
   passwordFieldType: string = 'password';
 
   loginForm = this.fb.group({
+    // Garde tes validateurs
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required]
+    // Décommente si tu veux pré-remplir pour tester
+    // email: ['alice.admin@club.fr', [Validators.required, Validators.email]],
+    // password: ['password', Validators.required]
   });
 
-  // loginForm = this.fb.group({
-  //   email: ['alice.admin@club.fr', [Validators.required, Validators.email]],
-  //   password: ['password', Validators.required]
-  // });
-
-  // --- Identifiants de test (basés sur votre SQL [1]) ---
-  // IMPORTANT: Assurez-vous que ces utilisateurs existent et sont actifs dans votre BDD
-  // Le mot de passe 'password' correspond au hash $2y$10$A7.AsjGP0ptMeaRHIivES.8YyMXBSuCYy0T6F6.7Id1Ih5p/3hihG
+  // --- Identifiants de test (Conservés pour les boutons de simulation) ---
   private readonly ADMIN_EMAIL = 'alice.admin@club.fr';
-  private readonly MEMBER_EMAIL = 'bob.membre@email.com'; // Ou david.autre@email.com, eva.multi@email.com
+  private readonly MEMBER_EMAIL = 'bob.membre@email.com';
   private readonly RESA_EMAIL = 'charlie.resa@club.fr';
-  private readonly COMMON_PASSWORD = 'password'; // Le mot de passe en clair avant hashage
+  private readonly COMMON_PASSWORD = 'password';
 
-  // --- Méthode de soumission ---
+  // --- Méthode de soumission refactorisée ---
   onConnexion(): void {
-    this.isLoading = true
-    if (this.loginForm.valid) {
-      this.http.post(
-        "http://localhost:8080/api/auth/connexion",
-        this.loginForm.value,
-        {responseType: "text"})
-        .subscribe({
-          next: jwt => {
-            this.auth.decodeJwt(jwt)
-            const userRole = this.auth.role;
-            if (!userRole) {
-              console.error("Impossible de déterminer le rôle utilisateur après connexion (this.auth.role est null).");
-              this.notification.show("Erreur de rôle après connexion.", "error");
-              this.router.navigateByUrl('/');
-              return;
-            }
-            if (userRole === 'ROLE_ADMIN' || userRole === 'ROLE_RESERVATION') {
-              this.router.navigateByUrl("/app/dashboard");
-              this.notification.show(`Connexion réussie (${userRole}). Accès au tableau de bord.`, "valid");
-            } else if (userRole === 'ROLE_MEMBRE') {
-              this.router.navigateByUrl("/app/event"); // Assurez-vous que cette route existe
-              this.notification.show("Connexion réussie (MEMBRE). Accès aux événements.", "valid");
-            } else {
-              console.warn("Rôle utilisateur non géré pour la redirection:", userRole);
-              this.notification.show(`Connexion réussie (${userRole}), redirection par défaut.`, "info");
-              this.router.navigateByUrl("/");
-            }
-          },
-          error: erreur => {
-            if (erreur.status === 401) {
-              this.notification.show("L'e-mail et/ou le mot de passe n'est pas correct", "error")
-            }
-          }
-        })
+    // 1. Vérification initiale de validité
+    if (this.loginForm.invalid) {
+      this.notification.show("Veuillez remplir correctement l'e-mail et le mot de passe.", "warning");
+      this.loginForm.markAllAsTouched(); // Marque tous les champs comme touchés pour afficher les erreurs
+      return; // Arrête l'exécution si le formulaire n'est pas valide
     }
+
+    // 2. Démarrer le chargement et préparer les données
+    this.isLoading = true;
+    const credentials = this.loginForm.getRawValue() as { email: string, password: any };
+    // Annule la souscription précédente si elle existe
+    this.loginSubscription?.unsubscribe();
+
+    // 3. Appel au service d'authentification
+    this.loginSubscription = this.authService.login(credentials).subscribe({
+      next: () => {
+        // Succès ! Le service a déjà traité le JWT et mis à jour son état.
+        this.isLoading = false;
+        const userRole = this.authService.getRole(); // Récupère le rôle depuis le service
+
+        console.log(`Connexion réussie. Rôle détecté: ${userRole}`);
+
+        // Logique de redirection basée sur le rôle (inchangée)
+        if (!userRole) {
+          console.error("Impossible de déterminer le rôle utilisateur après connexion.");
+          this.notification.show("Erreur de rôle après connexion.", "error");
+          this.router.navigateByUrl('/');
+          return;
+        }
+
+        if (userRole === 'ROLE_ADMIN' || userRole === 'ROLE_RESERVATION') {
+          this.router.navigateByUrl("/app/dashboard");
+          this.notification.show(`Connexion réussie (${userRole}). Accès au tableau de bord.`, "success");
+        } else if (userRole === 'ROLE_MEMBRE') {
+          this.router.navigateByUrl("/app/event"); // Vérifie que cette route est correcte
+          this.notification.show("Connexion réussie (MEMBRE). Accès aux événements.", "success");
+        } else {
+          console.warn("Rôle utilisateur non géré pour la redirection:", userRole);
+          this.notification.show(`Connexion réussie (${userRole}), redirection par défaut.`, "info");
+          this.router.navigateByUrl("/");
+        }
+      },
+      error: (error: Error) => { // Type Error car handleError renvoie `throwError(() => new Error(errorMessage))`
+        // Échec de la connexion (géré par le service, l'erreur est retransmise ici)
+        this.isLoading = false;
+        console.error('Erreur reçue dans LoginComponent:', error);
+
+        // Affiche le message d'erreur préparé par le service
+        // Ou une vérification spécifique si nécessaire (bien que le service puisse déjà le faire)
+        if (error.message.includes('401')) { // Vérification basique si le status est dans le message
+          this.notification.show("L'e-mail et/ou le mot de passe n'est pas correct.", "error");
+        } else {
+          this.notification.show(error.message || "Une erreur est survenue lors de la connexion.", "error");
+        }
+      }
+    });
   }
 
-// --- Méthode générique de simulation ---
+  // --- Méthodes de simulation (utilisent maintenant le flux refactorisé via onConnexion) ---
   private simulateLoginWithCredentials(email: string, password: string, roleName: string): void {
     console.warn(`Simulation de connexion en tant que ${roleName} via formulaire...`);
-
-    // 1. Pré-remplir le formulaire
-    this.loginForm.patchValue({
-      email: email,
-      password: password
-    });
-
-    // 2. Marquer les contrôles comme 'touched' pour la validation (optionnel mais bonne pratique)
+    this.loginForm.patchValue({ email, password });
     this.loginForm.markAllAsTouched();
-
-    // 3. Appeler directement la méthode de soumission
-    // Comme nous avons rempli le formulaire avec des données valides (on suppose),
-    // la vérification this.loginForm.valid dans onConnexion devrait passer.
-    this.onConnexion();
+    this.onConnexion(); // Appelle la méthode refactorisée
   }
 
-  // --- Méthodes appelées par les boutons de simulation ---
   simulateLoginAsMember(): void {
     this.simulateLoginWithCredentials(this.MEMBER_EMAIL, this.COMMON_PASSWORD, 'MEMBRE');
   }
@@ -117,8 +128,14 @@ export class LoginComponent {
     this.simulateLoginWithCredentials(this.RESA_EMAIL, this.COMMON_PASSWORD, 'RESERVATION');
   }
 
-  // --- Méthode pour basculer l'affichage du mot de passe ---
+  // --- Méthode utilitaire (inchangée) ---
   togglePasswordVisibility(): void {
     this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
+  }
+
+  // --- Nettoyage ---
+  ngOnDestroy(): void {
+    // Se désabonner lors de la destruction du composant pour éviter les fuites mémoire
+    this.loginSubscription?.unsubscribe();
   }
 }

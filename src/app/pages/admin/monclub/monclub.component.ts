@@ -1,7 +1,7 @@
 // ----- IMPORTATIONS -----
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common'; // Nécessaire pour les imports standalone si utilisé dans le template
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 
@@ -15,6 +15,8 @@ import {NotificationService} from '../../../service/model/notification.service';
 import {Club} from '../../../model/club'; // L'interface Club
 // Autres
 import {LucideAngularModule} from 'lucide-angular';
+import {Router} from '@angular/router';
+import {SweetAlertService} from '../../../service/sweet-alert.service';
 
 @Component({
   selector: 'app-monclub',
@@ -22,7 +24,8 @@ import {LucideAngularModule} from 'lucide-angular';
   imports: [
     CommonModule, // Fournit @if, etc.
     ReactiveFormsModule, // Indispensable pour [formGroup]
-    LucideAngularModule
+    LucideAngularModule,
+    FormsModule
   ],
   templateUrl: './monclub.component.html',
   styleUrls: ['./monclub.component.scss'], // Correction: styleUrls au pluriel
@@ -36,13 +39,21 @@ export class MonclubComponent implements OnInit, OnDestroy { // Implémente OnIn
   private clubId: number | null = null; // ID du club géré, récupéré dynamiquement
   private clubDataSubscription: Subscription | null = null;
   private clubUpdateSubscription: Subscription | null = null;
+  private clubDeleteSubscription: Subscription | null = null; // Ajouter pour la suppression
+
+
+  showDeleteConfirmation: boolean = false;
+  requiredConfirmationPhrase: string = 'supprimer mon club'; // Phrase à taper
+  deleteConfirmationInput: string = '';
+  isDeletingClub: boolean = false;
 
   // --- Injection des Services via inject() ---
   private fb = inject(FormBuilder);
   private clubService = inject(ClubService); // Utilise ClubService
   private authService = inject(AuthService);
-  private notification = inject(NotificationService);
-  private cdr = inject(ChangeDetectorRef); // Pour déclencher la détection de changement avec OnPush
+  private notification = inject(SweetAlertService);
+  protected cdr = inject(ChangeDetectorRef); // Pour déclencher la détection de changement avec OnPush
+  private router = inject(Router); // Injecter Router
 
   ngOnInit(): void {
 
@@ -61,10 +72,11 @@ export class MonclubComponent implements OnInit, OnDestroy { // Implémente OnIn
     }
   }
 
+  // N'oublie pas de te désabonner dans ngOnDestroy
   ngOnDestroy(): void {
-    // Très important: Se désabonner pour éviter les fuites mémoire
     this.clubDataSubscription?.unsubscribe();
     this.clubUpdateSubscription?.unsubscribe();
+    this.clubDeleteSubscription?.unsubscribe(); // Ajouter ceci
   }
 
   // Initialisation de la structure du formulaire (vide au début)
@@ -113,7 +125,7 @@ export class MonclubComponent implements OnInit, OnDestroy { // Implémente OnIn
     const codeClub = this.clubForm.getRawValue().codeClub;
     if (codeClub) {
       navigator.clipboard.writeText(codeClub).then(
-        () => this.notification.show('Code Club copié !', 'valid'), // Utilise NotificationService
+        () => this.notification.show('Code Club copié !', 'success'), // Utilise NotificationService
         (err) => {
           console.error('Erreur copie clipboard:', err);
           this.notification.show('Erreur copie Code Club.', 'error');
@@ -153,7 +165,7 @@ export class MonclubComponent implements OnInit, OnDestroy { // Implémente OnIn
     // 3. Appel au service
     this.clubUpdateSubscription = this.clubService.updateClub(this.clubId, updatedClubData).subscribe({
       next: (updatedClub: Club) => {
-        this.notification.show('Informations du club mises à jour avec succès.', 'valid');
+        this.notification.show('Informations du club mises à jour avec succès.', 'success');
         this.isSaving = false;
         // Réactive le formulaire après succès
         this.clubForm.enable();
@@ -188,4 +200,69 @@ export class MonclubComponent implements OnInit, OnDestroy { // Implémente OnIn
       this.notification.show("Impossible de réinitialiser: données initiales non chargées.", "warning");
     }
   }
+
+  // ... après les méthodes existantes (onSubmit, onReset, etc.) ...
+
+  initiateClubDeletion(): void {
+    // 1. Générer la date du jour au format local français (DD/MM/YYYY)
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }); // ex: 04/05/2025
+
+    // 2. Construire la phrase de confirmation dynamique
+    this.requiredConfirmationPhrase = `Supprimer mon club le ${formattedDate}`;
+
+    // 3. Afficher la section de confirmation et réinitialiser le champ
+    this.showDeleteConfirmation = true;
+    this.deleteConfirmationInput = ''; // Réinitialise le champ de saisie
+    this.cdr.detectChanges(); // Met à jour l'affichage pour montrer la nouvelle phrase et la section
+  }
+
+  cancelClubDeletion(): void {
+    this.showDeleteConfirmation = false;
+    this.isDeletingClub = false; // Assure que l'état de chargement est réinitialisé
+    this.cdr.detectChanges(); // Met à jour l'affichage
+  }
+
+  confirmClubDeletion(): void {
+    if (this.clubId === null || this.deleteConfirmationInput !== this.requiredConfirmationPhrase || this.isDeletingClub) {
+      // Sécurité : Ne rien faire si conditions non remplies ou déjà en cours
+      return;
+    }
+
+    this.isDeletingClub = true;
+    this.cdr.detectChanges(); // Montre l'état "Suppression en cours..."
+
+    // IMPORTANT: Assure-toi d'avoir une méthode deleteClub dans ton ClubService
+    this.clubDeleteSubscription = this.clubService.deleteClub(this.clubId).subscribe({
+      next: () => {
+        this.notification.show('Club supprimé avec succès.', 'success');
+        this.isDeletingClub = false;
+        // Rediriger l'utilisateur après la suppression (par exemple vers un tableau de bord)
+        this.router.navigate(['/dashboard']); // Adapte '/dashboard' à ta route cible
+        // Pas besoin de detectChanges ici car la navigation change la vue
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Erreur lors de la suppression du club', err);
+        this.isDeletingClub = false;
+
+        // Gestion spécifique de l'erreur "événements futurs actifs"
+        // NOTE: Adapte la condition ci-dessous au message/code d'erreur EXACT renvoyé par ton API
+        if (err.status === 409 || err.error?.message?.includes('evenements actifs futurs')) {
+          this.notification.show('Impossible de supprimer le club : des événements futurs sont encore planifiés.', 'error');
+        } else {
+          // Erreur générique
+          this.notification.show(err.message || 'Erreur lors de la suppression du club.', 'error');
+        }
+
+        this.showDeleteConfirmation = false; // Cache la confirmation en cas d'erreur pour éviter confusion
+        this.cdr.detectChanges(); // Met à jour l'affichage (bouton réactivé, message erreur)
+      }
+    });
+  }
+
+
 }

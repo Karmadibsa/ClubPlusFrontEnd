@@ -3,9 +3,12 @@ import {Component, inject} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Router, RouterLink} from '@angular/router';
 import {NotificationService} from '../../../service/model/notification.service';
-import {Membre} from '../../../model/membre';
+import {Membre, MembrePayload} from '../../../model/membre';
 import {NgClass} from '@angular/common';
 import {PasswordValidators} from '../../../service/validator/password.validator';
+import {AuthService} from '../../../service/security/auth.service';
+import {Subscription} from 'rxjs';
+import {SweetAlertService} from '../../../service/sweet-alert.service';
 
 @Component({
   selector: 'app-inscription-membre',
@@ -19,22 +22,19 @@ import {PasswordValidators} from '../../../service/validator/password.validator'
 })
 export class InscriptionMembreComponent {
   // --- Injections et Propriétés ---
-  private http = inject(HttpClient);
+  private authService = inject(AuthService); // Injecter AuthService
   private fb = inject(FormBuilder);
   private router = inject(Router);
-  private notification = inject(NotificationService);
+  private notification = inject(SweetAlertService);
 
 
   memberRegistrationForm!: FormGroup;
   isLoading = false;
-  errorMessage: string | null = null;
-
-  readonly baseApiUrl = 'http://localhost:8080/api/auth';
+  private registrationSubscription: Subscription | null = null; // Pour se désabonner
 
   // --- Initialisation ---
   ngOnInit(): void {
     this.memberRegistrationForm = this.fb.group({
-      // Champs pour le corps JSON (payload)
       nom: ['', Validators.required],
       prenom: ['', Validators.required],
       date_naissance: ['', Validators.required],
@@ -44,43 +44,30 @@ export class InscriptionMembreComponent {
       ville: ['', Validators.required],
       telephone: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      // 2. UTILISER LE NOUVEAU VALIDATEUR pour le mot de passe
       password: ['', [
         Validators.required,
-        PasswordValidators.passwordComplexity() // Remplace minLength, maxLength, pattern
+        PasswordValidators.passwordComplexity()
       ]],
-      // 5. METTRE A JOUR valeur initiale de confirmPassword
-      confirmPassword: ['', [Validators.required]], // Initialisé à vide
-      // Champ séparé pour construire l'URL
-      codeClub: ['CLUB-', Validators.required]
+      confirmPassword: ['', [Validators.required]],
+      codeClub: ['CLUB-', Validators.required] // Garder 'CLUB-' comme valeur initiale si pertinent
     }, {
-      // 3. UTILISER LE NOUVEAU VALIDATEUR pour la correspondance
       validators: PasswordValidators.passwordMatch('password', 'confirmPassword')
     });
-    // this.memberRegistrationForm = this.fb.group({
-    //   // Champs pour le corps JSON (payload)
-    //   nom: ['TestNom', Validators.required],
-    //   prenom: ['TestPrenom', Validators.required],
-    //   date_naissance: ['2000-01-01', Validators.required],
-    //   numero_voie: ['123', Validators.required],
-    //   rue: ['Rue de Test', Validators.required],
-    //   codepostal: ['75001', Validators.required],
-    //   ville: ['Paris', Validators.required],
-    //   telephone: ['0601020304', Validators.required],
-    //   email: ['test.email@example.com', [Validators.required, Validators.email]],
-    //   // 2. UTILISER LE NOUVEAU VALIDATEUR pour le mot de passe
-    //   password: ['', [
-    //     Validators.required,
-    //     PasswordValidators.passwordComplexity() // Remplace minLength, maxLength, pattern
-    //   ]],
-    //   // 5. METTRE A JOUR valeur initiale de confirmPassword
-    //   confirmPassword: ['', [Validators.required]], // Initialisé à vide
-    //   // Champ séparé pour construire l'URL
-    //   codeClub: ['CLUB-0001', Validators.required]
-    // }, {
-    //   // 3. UTILISER LE NOUVEAU VALIDATEUR pour la correspondance
-    //   validators: PasswordValidators.passwordMatch('password', 'confirmPassword')
+    // Décommente cette partie pour les tests si besoin
+
+    // this.memberRegistrationForm.patchValue({
+    //   nom: 'TestNom', prenom: 'TestPrenom', date_naissance: '2000-01-01',
+    //   numero_voie: '123', rue: 'Rue de Test', codepostal: '75001', ville: 'Paris',
+    //   telephone: '0601020304', email: 'test.email@example.com',
+    //   password: 'Password1!', confirmPassword: 'Password1!',
+    //   codeClub: 'CLUB-0001'
     // });
+
+  }
+
+  ngOnDestroy(): void {
+    // Se désabonner lors de la destruction du composant
+    this.registrationSubscription?.unsubscribe();
   }
 
   // --- Getters (utiles pour le template) ---
@@ -93,23 +80,22 @@ export class InscriptionMembreComponent {
     return this.memberRegistrationForm.get('confirmPassword');
   }
 
-  // --- Logique de Soumission (pas de changement nécessaire ici) ---
   registerMember(): void {
     this.memberRegistrationForm.markAllAsTouched();
 
+    // 1. Validation du formulaire (INCHANGÉE)
     if (this.memberRegistrationForm.invalid) {
       let errorMsg = "Veuillez remplir correctement tous les champs requis.";
-      // La vérification de passwordMismatch reste valide car elle vient du validateur de groupe
       if (this.memberRegistrationForm.errors?.['passwordMismatch']) {
         errorMsg = "Les mots de passe ne correspondent pas.";
-      } else if (this.passwordControl?.invalid) {
-        // On pourrait affiner mais ce message générique couvre les erreurs de complexité
-        errorMsg = "Veuillez vérifier les informations saisies, notamment le mot de passe.";
+      } else if (this.passwordControl?.invalid || this.confirmPasswordControl?.invalid) {
+        errorMsg = "Veuillez vérifier les informations saisies, notamment le mot de passe et sa confirmation.";
       }
       this.notification.show(errorMsg, 'error');
       return;
     }
 
+    // 2. Préparation (INCHANGÉE, sauf la construction de l'URL)
     this.isLoading = true;
     const codeClubValue = this.memberRegistrationForm.get('codeClub')?.value;
     if (!codeClubValue) {
@@ -119,59 +105,48 @@ export class InscriptionMembreComponent {
     }
     console.log('Code Club extrait:', codeClubValue);
 
-    const fullApiUrl = `${this.baseApiUrl}/inscription?codeClub=${codeClubValue}`;
-    console.log('Appel API vers:', fullApiUrl);
-
-    const formValue = { ...this.memberRegistrationForm.value };
+    // Préparation du payload (INCHANGÉE)
+    const formValue = { ...this.memberRegistrationForm.getRawValue() }; // Use getRawValue pour inclure potentiellement des champs désactivés si besoin
     delete formValue.codeClub;
-    delete formValue.confirmPassword; // Assurez-vous que confirmPassword est bien supprimé aussi
-    const payload: MembrePayload = formValue;
-    console.log('Payload JSON envoyé:', JSON.stringify(payload, null, 2));
+    delete formValue.confirmPassword;
+    const payload: MembrePayload = formValue as MembrePayload; // Assertion de type car on a retiré les clés
+    console.log('Payload JSON préparé:', JSON.stringify(payload, null, 2));
 
-    this.http.post<Membre>(fullApiUrl, payload).subscribe({
-      next: (response) => {
+    // Annule la souscription précédente si elle existe
+    this.registrationSubscription?.unsubscribe();
+
+    // 3. Appel au Service (MODIFIÉ)
+    this.registrationSubscription = this.authService.register(payload, codeClubValue).subscribe({
+      next: (response: Membre) => {
+        // 4. Gestion du succès (INCHANGÉE)
         this.isLoading = false;
         console.log('Inscription réussie ! Réponse:', response);
-        this.notification.show('Membre inscrit avec succès ! Vous pouvez maintenant vous connecter.', 'valid');
-        this.router.navigate(['/connexion']);
+        this.notification.show('Membre inscrit avec succès ! Vous pouvez maintenant vous connecter.', 'success');
+        this.router.navigate(['/connexion']); // Redirection vers la page de connexion
       },
-      error: (error: HttpErrorResponse) => {
+      error: (error: Error) => { // Type Error car handleError renvoie `throwError(() => new Error(errorMessage))`
+        // 5. Gestion de l'erreur (PRESQUE INCHANGÉE, utilise error.message)
         this.isLoading = false;
-        console.error('Erreur lors de l\'inscription:', error);
-        let errorMsg = `Une erreur serveur est survenue (${error.status}). Veuillez réessayer plus tard.`;
+        console.error('Erreur reçue dans InscriptionMembreComponent:', error);
+        let errorMsg = error.message || `Une erreur serveur est survenue. Veuillez réessayer plus tard.`; // Message par défaut
 
-        if (error.status === 404) {
+        // Tentative d'affiner le message basé sur le contenu de l'erreur renvoyée par le service
+        // (peut nécessiter ajustement selon la structure exacte de l'erreur backend après handleError)
+        if (error.message.includes('404')) {
           errorMsg = "Le club spécifié est introuvable ou l'URL d'inscription est incorrecte.";
-        } else if (error.status === 409) {
-          errorMsg = error.error?.message || error.error || "Cet email est peut-être déjà utilisé.";
-        } else if (error.status === 400) {
-          // Le backend devrait renvoyer les erreurs de validation (ex: format email, complexité mdp non respectée APRES soumission)
-          errorMsg = error.error?.message || error.error?.errors || error.error || "Données invalides. Vérifiez les informations saisies.";
-          // Si le backend renvoie un tableau d'erreurs, vous pourriez l'afficher
-          if (Array.isArray(error.error?.errors)) {
-            errorMsg += " Détails: " + error.error.errors.join(', ');
-          }
-        } else if (error.error && typeof error.error === 'string') {
-          errorMsg = `Erreur ${error.status}: ${error.error}`;
-        } else if (error.error && error.error.message) {
-          errorMsg = `Erreur ${error.status}: ${error.error.message}`;
+        } else if (error.message.includes('409')) {
+          errorMsg = "Cet email est peut-être déjà utilisé.";
+          // Tu pourrais essayer de parser error.message si le backend met le message dedans, mais c'est fragile.
+          // Exemple: if (error.message.includes('Email already exists')) errorMsg = ...
+        } else if (error.message.includes('400')) {
+          errorMsg = "Données invalides. Vérifiez les informations saisies (format email, complexité mot de passe...).";
         }
+        // else {
+        //   Utilise errorMsg déjà défini avec error.message
+        // }
+
         this.notification.show(errorMsg, 'error');
       }
     });
   }
-}
-
-// --- Interface Payload (inchangée) ---
-interface MembrePayload {
-  nom: string;
-  prenom: string;
-  date_naissance: string;
-  numero_voie: string;
-  rue: string;
-  codepostal: string;
-  ville: string;
-  telephone: string;
-  email: string;
-  password?: string;
 }

@@ -15,3 +15,17 @@ export interface Membre {
   role: RoleType;
   codeAmi?: string;
 }
+
+
+export interface MembrePayload {
+  nom: string;
+  prenom: string;
+  date_naissance: string;
+  numero_voie: string;
+  rue: string;
+  codepostal: string;
+  ville: string;
+  telephone: string;
+  email: string;
+  password?: string;
+}

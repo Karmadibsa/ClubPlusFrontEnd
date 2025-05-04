@@ -24,7 +24,8 @@ import {ChartData, ChartOptions} from 'chart.js'; // Types pour configurer les g
 import {BaseChartDirective} from 'ng2-charts';
 import {CreateEventButtonComponent} from '../../../component/event/create-event-button/create-event-button.component';
 import {EditEventModalComponent} from '../../../component/event/edit-event/edit-event.component';
-import {LucideAngularModule} from 'lucide-angular'; // La directive pour afficher un graphique dans le HTML
+import {LucideAngularModule} from 'lucide-angular';
+import {SweetAlertService} from '../../../service/sweet-alert.service'; // La directive pour afficher un graphique dans le HTML
 
 // -------------------------
 
@@ -56,7 +57,7 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
   // 'inject()' est la façon moderne de le faire.
   private http = inject(HttpClient); // Pour les appels directs (ici utilisé pour les stats, pourrait être dans un service)
   private authService = inject(AuthService); // Pour obtenir l'ID du club géré
-  private notification = inject(NotificationService); // Pour afficher les popups de message
+  private notification = inject(SweetAlertService); // Pour afficher les popups de message
   private router = inject(Router); // Pour changer de page (pas utilisé ici, mais souvent utile)
   private cdr = inject(ChangeDetectorRef); // Outil pour dire à Angular "rafraîchis l'affichage" (nécessaire avec OnPush)
   private membreService = inject(MembreService); // Service pour les opérations sur les membres
@@ -86,7 +87,7 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
   private dataSubscription: Subscription | null = null;
 
   // URL de base de l'API (souvent mieux dans les fichiers environment.ts)
-  private readonly baseApiUrl = 'http://localhost:8080/api';
+  private readonly baseApiUrl = 'http://localhost:8080';
 
   // --- Configuration des Graphiques ---
   // Options de base partagées par les deux graphiques
@@ -373,7 +374,7 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
     // Appel au service pour effectuer la modification via l'API
     this.membreService.changeMemberRole(data.membreId, clubId, data.newRole).subscribe({
       next: (updatedMember) => { // API a répondu avec succès
-        this.notification.show("Rôle du membre mis à jour.", "valid");
+        this.notification.show("Rôle du membre mis à jour.", "success");
 
         // Mise à jour de la liste locale lastFiveMembers
         const index = this.lastFiveMembers.findIndex(m => m.id === data.membreId);
@@ -416,7 +417,7 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
     this.eventService.softDeleteEvent(eventToDelete.id).subscribe({
       // 3. Traitement du succès
       next: () => {
-        this.notification.show(`L'événement "${eventToDelete.nom}" a été désactivé.`, 'valid');
+        this.notification.show(`L'événement "${eventToDelete.nom}" a été désactivé.`, 'success');
 
         // 4. Mise à jour de la liste locale (création d'un NOUVEAU tableau sans l'élément supprimé)
         this.nextFiveEvents = this.nextFiveEvents.filter(event => event.id !== eventToDelete.id);
@@ -501,7 +502,7 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
     //    - N'oublie pas this.cdr.detectChanges() si tu choisis cette option et utilises OnPush.
 
     // 3. Afficher une notification de succès
-    this.notification.show(`Événement "${savedEvent.nom}" sauvegardé avec succès.`, 'valid');
+    this.notification.show(`Événement "${savedEvent.nom}" sauvegardé avec succès.`, 'success');
   }
 
   // --- Gestion des Erreurs (Simplifiée) ---

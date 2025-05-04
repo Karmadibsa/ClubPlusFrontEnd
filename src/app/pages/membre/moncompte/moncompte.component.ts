@@ -24,6 +24,7 @@ import {Membre} from '../../../model/membre'; // L'interface Membre
 import {LucideAngularModule} from 'lucide-angular';
 import {Router, RouterLink} from '@angular/router';
 import {AuthService} from '../../../service/security/auth.service';
+import {SweetAlertService} from '../../../service/sweet-alert.service';
 
 @Component({
   selector: 'app-moncompte',
@@ -61,7 +62,7 @@ export class MonCompteComponent implements OnInit, OnDestroy {
   // --- Injection des Services ---
   private fb = inject(FormBuilder);
   private membreService = inject(MembreService);
-  private notification = inject(NotificationService);
+  private notification = inject(SweetAlertService);
   private cdr = inject(ChangeDetectorRef);
   // private authService = inject(AuthService); // Pas besoin si on ne gère pas le MDP ici
   requiredConfirmationPhrase = ''; // Plus de readonly, sera défini dynamiquement
@@ -178,7 +179,7 @@ export class MonCompteComponent implements OnInit, OnDestroy {
 
     this.updateInfoSubscription = this.membreService.updateCurrentUserProfile(updatedInfo).subscribe({
       next: (updatedMembre: Membre) => {
-        this.notification.show('Informations personnelles mises à jour.', 'valid');
+        this.notification.show('Informations personnelles mises à jour.', 'success');
         this.isSavingInfo = false;
         this.infoForm.enable();
         // Repatcher au cas où l'API aurait modifié/formaté des données
@@ -232,7 +233,7 @@ export class MonCompteComponent implements OnInit, OnDestroy {
     this.deleteSubscription = this.membreService.deleteCurrentUserProfile().subscribe({
       next: () => {
         this.isDeletingAccount = false;
-        this.notification.show('Votre compte a été supprimé avec succès.', 'valid');
+        this.notification.show('Votre compte a été supprimé avec succès.', 'success');
         this.auth.deconnexion();
         this.router.navigate(['/login']); // Ou autre page d'accueil post-connexion
         this.cdr.detectChanges();
@@ -250,6 +251,6 @@ export class MonCompteComponent implements OnInit, OnDestroy {
   // // Change le mot de passe (IGNORÉ POUR L'INSTANT)
   // changePassword(): void { /* ... */ }
   changePassword() {
-    this.notification.show('Mot de passe changé faut encore le gerer bg', 'valid')
+    this.notification.show('Mot de passe changé faut encore le gerer bg', 'success')
   }
 }

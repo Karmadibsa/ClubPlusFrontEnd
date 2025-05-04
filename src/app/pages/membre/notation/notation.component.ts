@@ -7,6 +7,7 @@ import {EventRatingPayload, Notation} from '../../../model/notation';
 import {LucideAngularModule} from 'lucide-angular';
 import {DatePipe} from '@angular/common';
 import {ItemnotationComponent} from '../../../component/notation/itemnotation/itemnotation.component';
+import {SweetAlertService} from '../../../service/sweet-alert.service';
 
 @Component({
   selector: 'app-notation',
@@ -21,7 +22,7 @@ import {ItemnotationComponent} from '../../../component/notation/itemnotation/it
 })
 export class NotationComponent {
   private eventService = inject(EventService);
-  private notification = inject(NotificationService);
+  private notification = inject(SweetAlertService);
 
   unratedEvents: Evenement[] = [];
   selectedEventId: number | null = null;
@@ -91,7 +92,7 @@ export class NotationComponent {
       // Le type de 'response' est maintenant Notation si le service est mis à jour
       next: (response: Notation) => {
         this.isSubmitting = false;
-        this.notification.show(`Notation pour "${this.selectedEvent?.nom}" enregistrée !`, 'valid');
+        this.notification.show(`Notation pour "${this.selectedEvent?.nom}" enregistrée !`, 'success');
         this.loadUnratedEvents(); // Recharger
       },
       error: (err) => {

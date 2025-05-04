@@ -29,7 +29,6 @@ export class EventCardComponent {
 
   openReservationModal(): void {
     if (!this.event) return; // Ne rien faire si event n'est pas défini
-    console.log("Ouverture modale pour event:", this.event.nom);
     this.isReservationModalVisible = true;
   }
 
@@ -38,7 +37,6 @@ export class EventCardComponent {
   }
 
   handleReserveSuccess(response: any): void {
-    console.log('Réservation réussie reçue par la carte:', response);
     // Mettre à jour l'affichage de la carte si nécessaire
     // Exemple: incrémenter placeReserve (si l'API ne renvoie pas l'état à jour)
     // ou idéalement, émettre un événement au parent pour rafraîchir la liste complète

@@ -215,6 +215,75 @@
 
   </form>
 
+  <!-- ZONE DANGEREUSE - Suppression du Club -->
+  <!-- Placé DANS .main-section mais APRES le formulaire -->
+  <section class="card-section danger-zone" aria-labelledby="danger-zone-club-title">
+    <!-- Header de la zone dangereuse (DIV car parent = section) -->
+    <div class="section-header"> <!-- Style global .danger-zone .section-header appliqué via SCSS [1] -->
+      <h2 id="danger-zone-club-title">
+        <lucide-icon name="triangle-alert" aria-hidden="true"></lucide-icon>
+        Zone Dangereuse
+      </h2>
+    </div>
+    <div class="card-content"> <!-- Classe globale .card-content [1] -->
+      <p>Supprimer ce club est une action <strong>irréversible</strong>. Tous les membres seront retirés, les événements passés et futurs associés seront supprimés, et toutes les informations du club seront définitivement perdues.</p>
+
+      @if (!showDeleteConfirmation) {
+        <button type="button" class="btn btn-danger" (click)="initiateClubDeletion()">
+          <!-- Utilise classes globales .btn .btn-danger [1] -->
+          Supprimer ce Club
+        </button>
+      } @else {
+        <!-- Section de confirmation de suppression du club -->
+          <!-- Utilisation des classes globales pour la structure et les champs -->
+        <div class="confirmation-section" role="alertdialog" aria-labelledby="confirm-delete-club-title"
+             aria-describedby="confirm-delete-club-desc">
+          <h3 id="confirm-delete-club-title" class="visually-hidden">Confirmation de suppression du club</h3>
+          <p id="confirm-delete-club-desc" class="confirmation-prompt">Pour confirmer la suppression définitive de ce
+            club, veuillez taper la phrase suivante exactement comme indiqué :</p>
+          <!-- Phrase à recopier, utilise la classe .non-selectable [1] -->
+          <p class="confirmation-phrase non-selectable" aria-hidden="true">
+            <strong>{{ requiredConfirmationPhrase }}</strong>
+          </p>
+
+          <div class="form-group"> <!-- Classe globale .form-group [1] -->
+            <label for="delete-club-confirm-input">Tapez la phrase ici :</label>
+            <input type="text"
+                   id="delete-club-confirm-input"
+                   class="form-control"
+                   [(ngModel)]="deleteConfirmationInput"
+                   placeholder="Recopiez la phrase de confirmation"
+                   autocomplete="off"
+                   aria-required="true"
+                   aria-describedby="delete-club-confirm-error"
+                   (input)="cdr.detectChanges()"
+            />
+            <!-- Feedback d'erreur si besoin (ex: si on voulait valider la saisie avant confirmation) -->
+            <div id="delete-club-confirm-error" class="invalid-feedback" role="alert" aria-live="assertive"></div>
+          </div>
+
+          <!-- Actions de confirmation, utilise .form-actions pour le layout -->
+          <div class="form-actions"> <!-- Réutilisation de .form-actions pour le layout des boutons [1] -->
+            <button type="button" class="btn btn-secondary" (click)="cancelClubDeletion()"
+                    [disabled]="isDeletingClub"> <!-- Utilise classes globales [1] -->
+              Annuler
+            </button>
+            <button type="button" class="btn btn-danger" (click)="confirmClubDeletion()"
+                    [disabled]="isDeletingClub || deleteConfirmationInput !== requiredConfirmationPhrase">
+              <!-- Utilise classes globales [1] -->
+              @if (!isDeletingClub) {
+                <lucide-icon name="trash-2" aria-hidden="true"></lucide-icon> Confirmer la suppression
+              } @else {
+                <!-- Utilise classe globale .animate-spin [1] -->
+                <lucide-icon name="loader" class="animate-spin" aria-hidden="true"></lucide-icon> Suppression en cours...
+              }
+            </button>
+          </div>
+        </div> <!-- Fin .confirmation-section -->
+      } <!-- Fin du @else (confirmation visible) -->
+    </div> <!-- Fin card-content danger-zone -->
+  </section> <!-- Fin danger-zone -->
+
 </section> <!-- Fin .main-section -->
 
 <!-- Section Pagination non utilisée ici -->

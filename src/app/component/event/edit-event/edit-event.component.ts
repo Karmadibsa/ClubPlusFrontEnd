@@ -19,7 +19,8 @@ import {EventService} from '../../../service/model/event.service'; // Service po
 // Importez les interfaces définissant la structure des données événement/catégorie
 import {CreateEventPayload, Evenement, UpdateEventPayload} from '../../../model/evenement';
 import {CategorieCreatePayload} from '../../../model/categorie';
-import {AuthService} from '../../../service/security/auth.service'; // On importe aussi les types spécifiques aux payloads API
+import {AuthService} from '../../../service/security/auth.service';
+import {SweetAlertService} from '../../../service/sweet-alert.service'; // On importe aussi les types spécifiques aux payloads API
 
 @Component({
   selector: 'app-edit-event',     // Nom de la balise HTML pour utiliser ce composant: <app-edit-event>
@@ -74,7 +75,7 @@ export class EditEventModalComponent implements OnInit, OnChanges {
   // inject() est une manière moderne d'obtenir des instances de services/outils définis ailleurs
   private fb = inject(FormBuilder);                   // Outil Angular pour construire des formulaires complexes facilement
   private eventService = inject(EventService);         // Notre service pour communiquer avec l'API backend des événements
-  private notificationService = inject(NotificationService); // Notre service pour afficher des messages (succès, erreur)
+  private notificationService = inject(SweetAlertService); // Notre service pour afficher des messages (succès, erreur)
   private datePipe = inject(DatePipe);                 // Outil Angular pour formater les dates (ex: pour l'input datetime-local)
   private cdr = inject(ChangeDetectorRef);             // Outil pour déclencher manuellement la détection de changements d'Angular
   private authService = inject(AuthService)
@@ -345,7 +346,7 @@ export class EditEventModalComponent implements OnInit, OnChanges {
       this.eventService.updateEventWithCategories(this.event.id, updatePayload)
         .subscribe({
           next: (updatedEvent) => {
-            this.notificationService.show('Événement mis à jour avec succès!', 'valid');
+            this.notificationService.show('Événement mis à jour avec succès!', 'success');
             this.isSaving = false;
             this.saveSuccess.emit(updatedEvent); // Émettre l'événement mis à jour au parent.
             // La fermeture peut être gérée par le parent ou ici
@@ -398,7 +399,7 @@ export class EditEventModalComponent implements OnInit, OnChanges {
       this.eventService.createEventWithCategories(clubId, createPayload)
         .subscribe({
           next: (createdEvent) => {
-            this.notificationService.show('Événement créé avec succès!', 'valid');
+            this.notificationService.show('Événement créé avec succès!', 'success');
             this.isSaving = false;
             this.saveSuccess.emit(createdEvent); // Émettre l'événement NOUVELLEMENT créé au parent.
             // La fermeture peut être gérée par le parent ou ici

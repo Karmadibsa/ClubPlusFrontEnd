@@ -5,6 +5,7 @@ import {environment} from '../../../environments/environments';
 import {RoleType} from '../../model/role';
 import {catchError, tap} from 'rxjs/operators';
 import {Membre} from '../../model/membre';
+import {Club} from '../../model/club';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class MembreService {
    * @returns Un Observable contenant un tableau de Membre.
    */
   getLatestMembers(): Observable<Membre[]> {
-    const url = `${this.apiUrl}/derniers-inscrits-mon-club`;
+    const url = `${this.apiUrl}/managed-club/latest`;
     console.log('Appel API Membres:', url); // Pour le débogage
     // Le backend détermine le club via l'utilisateur authentifié (pas besoin de passer d'ID ici)
     return this.http.get<Membre[]>(url);
@@ -119,6 +120,55 @@ export class MembreService {
     }
     console.error('MembreService API Error:', errorMessage, error);
     return throwError(() => new Error(errorMessage));
+  }
+
+  /**
+   * Récupère la liste des clubs auxquels l'utilisateur connecté est membre.
+   * GET /membres/profile/clubs
+   * @returns Observable<Club[]> - Un tableau des clubs de l'utilisateur.
+   */
+  getUserClubs(): Observable<Club[]> {
+    const url = `${this.apiUrl}/profile/clubs`;
+    console.log(`ClubService: Appel GET vers ${url}`);
+    return this.http.get<Club[]>(url).pipe(
+      tap(clubs => console.log('ClubService: Clubs utilisateur reçus', clubs)), // Log optionnel
+      catchError(this.handleError) // Gestion des erreurs
+    );
+  }
+
+
+  /**
+   * Permet à l'utilisateur connecté de rejoindre un club via son code.
+   * POST /membres/profile/join?codeClub={codeClub}
+   * @param codeClub - Le code unique du club à rejoindre.
+   * @returns Observable<Club> ou Observable<void> ou Observable<any> - Dépend de ce que l'API retourne.
+   *          Si l'API retourne le club rejoint, utilise <Club>. Si elle ne retourne rien (204), utilise <void>.
+   *          Utilise <any> si la réponse est variable ou inconnue. Prenons <Club> pour l'instant.
+   */
+  joinClubByCode(codeClub: string): Observable<Club> { // Adapter le type de retour si besoin
+    const url = `${this.apiUrl}/profile/join`;
+    const params = new HttpParams().set('codeClub', codeClub);
+    console.log(`ClubService: Appel POST vers ${url} avec codeClub=${codeClub}`);
+    // Le corps de la requête POST est vide (null) car l'info est dans le paramètre et l'auth
+    return this.http.post<Club>(url, null, { params }).pipe( // Adapter le type <Club> si besoin
+      tap(joinedClub => console.log('ClubService: Club rejoint', joinedClub)), // Log optionnel
+      catchError(this.handleError) // Gestion des erreurs
+    );
+  }
+
+  /**
+   * Permet à l'utilisateur connecté de quitter un club spécifique.
+   * DELETE /membres/profile/leave/{clubId}
+   * @param clubId - L'ID du club à quitter.
+   * @returns Observable<void> - Généralement, DELETE ne renvoie pas de contenu (204).
+   */
+  leaveClub(clubId: number): Observable<void> {
+    const url = `${this.apiUrl}/profile/leave/${clubId}`;
+    console.log(`ClubService: Appel DELETE vers ${url}`);
+    return this.http.delete<void>(url).pipe(
+      tap(() => console.log(`ClubService: Club ${clubId} quitté avec succès`)), // Log optionnel
+      catchError(this.handleError) // Gestion des erreurs
+    );
   }
 }
 

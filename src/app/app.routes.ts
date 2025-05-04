@@ -20,6 +20,7 @@ import {ForgotpasswordComponent} from './pages/public/forgotpassword/forgotpassw
 import {ChangepasswordComponent} from './pages/public/changepassword/changepassword.component';
 import {AboutComponent} from './pages/public/about/about.component';
 import {ContactComponent} from './pages/public/contact/contact.component';
+import {MesclubsComponent} from './pages/membre/mesclubs/mesclubs.component';
 
 
 export const routes: Routes = [
@@ -67,6 +68,7 @@ export const routes: Routes = [
       {path: "billet", component: BilletComponent},
       {path: "amis", component: AmisComponent},
       {path: "notation", component: NotationComponent},
+      {path: "mesclubs", component: MesclubsComponent},
       {
         path: "dashboard",
         component: DashboardComponent,

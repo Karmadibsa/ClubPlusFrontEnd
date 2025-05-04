@@ -21,7 +21,7 @@ export class EventService {
    * @returns Un Observable contenant un tableau d'Event.
    */
   getNextEvents(): Observable<Evenement[]> {
-    const url = `${this.apiUrl}/clubs/next-event`;
+    const url = `${this.apiUrl}/managed-club/next`;
     console.log('Appel API Events:', url); // Pour le débogage
     // Le backend détermine le club via l'utilisateur authentifié
     return this.http.get<Evenement[]>(url);

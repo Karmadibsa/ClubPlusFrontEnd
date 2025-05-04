@@ -81,7 +81,6 @@ export class ParticipationEventModalComponent implements OnInit, OnChanges {
         this.reservationService.getReservationsByEvent(this.eventId, status).pipe(
             tap(data => {
                 this.allReservationsForStatus = data; // Stocke la liste brute pour ce statut
-                console.log(`Réservations brutes chargées pour event ${this.eventId} / statut ${status}:`, data.length);
                 this.applyClientSideFilters(); // Applique le filtre de recherche sur cette liste brute
             }),
             catchError(err => {
@@ -123,7 +122,6 @@ export class ParticipationEventModalComponent implements OnInit, OnChanges {
                     resa.membre?.prenom?.toLowerCase().includes(searchTermLower))
             );
         }
-        console.log(`Filtrage client appliqué. Terme: "${searchTermLower}". Résultat:`, this.filteredReservations.length);
         this.cdr.markForCheck(); // Notifie Angular de la mise à jour de la liste filtrée
     }
 

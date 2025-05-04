@@ -9,6 +9,7 @@ import {NotificationService} from '../../../service/model/notification.service';
 import {Subscription} from 'rxjs';
 import {FilterEventComponent} from '../../../component/event/filter-event/filter-event.component';
 import {PaginationComponent} from '../../../component/navigation/pagination/pagination.component';
+import {SweetAlertService} from '../../../service/sweet-alert.service';
 
 @Component({
   selector: 'app-event',
@@ -25,7 +26,7 @@ import {PaginationComponent} from '../../../component/navigation/pagination/pagi
 export class EventComponent {
   // --- Injections ---
   private eventService = inject(EventService);
-  private notification = inject(NotificationService);
+  private notification = inject(SweetAlertService);
   private cdr = inject(ChangeDetectorRef);
 
   // --- États pour les listes d'événements ---
@@ -64,12 +65,17 @@ export class EventComponent {
 
     this.eventsSubscription = this.eventService.getAllEventsWithFriend().subscribe({
       next: (listeevents: Evenement[]) => {
-        this.allEvents = listeevents;
-        this.filteredEvents = [...this.allEvents]; // Initialise la liste filtrée
-        this.updatePaginatedEvents(); // Calcule et affiche la première page
+        // *** 1. Mettre isLoading à false AVANT detectChanges ***
         this.isLoading = false;
-        console.log('Événements membre chargés:', this.allEvents.length);
-        // cdr.detectChanges() est appelé dans updatePaginatedEvents
+        // *** 2. Forcer la détection pour ENLEVER l'état de chargement ***
+        this.cdr.detectChanges();
+        // **********************************************************
+
+        this.allEvents = listeevents;
+        // Pas besoin d'un autre detectChanges ici si le précédent a bien tourné
+
+        this.filteredEvents = [...this.allEvents]; // Initialiser après que l'UI soit sortie du chargement
+        this.updatePaginatedEvents(); // Calcule et affiche la première page (qui a son propre detectChanges)
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading = false;
@@ -89,7 +95,6 @@ export class EventComponent {
    * @param filteredList La liste des événements filtrée/triée.
    */
   handleFilteredEventsChange(filteredList: Evenement[]): void {
-    console.log("EventComponent: Liste filtrée/triée reçue:", filteredList.length);
     this.filteredEvents = filteredList;
     this.currentPage = 1; // Revenir à la première page après un filtre/tri
     this.updatePaginatedEvents(); // Mettre à jour les cartes affichées
@@ -102,7 +107,6 @@ export class EventComponent {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     this.paginatedEvents = this.filteredEvents.slice(startIndex, endIndex);
-    console.log(`Événements: Affichage page ${this.currentPage}, index ${startIndex} à ${endIndex - 1} sur ${this.filteredEvents.length} filtrés`);
     this.cdr.detectChanges(); // Mettre à jour l'affichage
   }
 
@@ -112,7 +116,6 @@ export class EventComponent {
    */
   onPageChange(newPage: number): void {
     if (newPage >= 1 && newPage !== this.currentPage) {
-      console.log("Événements: Changement de page vers:", newPage);
       this.currentPage = newPage;
       this.updatePaginatedEvents(); // Mettre à jour les cartes pour la nouvelle page
     }

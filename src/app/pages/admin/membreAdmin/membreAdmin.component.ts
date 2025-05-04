@@ -17,6 +17,7 @@ import {Membre} from '../../../model/membre'; // Assure-toi que ce type est corr
 import {RoleType} from '../../../model/role';
 import {FilterMembreComponent} from '../../../component/membre/filter-membre/filter-membre.component';
 import {PaginationComponent} from '../../../component/navigation/pagination/pagination.component';
+import {SweetAlertService} from '../../../service/sweet-alert.service';
 
 // Autres (si besoin)
 // import { LucideAngularModule } from 'lucide-angular';
@@ -45,7 +46,7 @@ export class MembreAdminComponent implements OnInit, OnDestroy { // Implémente 
   // --- Injection des Services ---
   // Pas besoin d'injecter HttpClient, Router, EventService si non utilisés ici
   private authService = inject(AuthService);
-  private notification = inject(NotificationService);
+  private notification = inject(SweetAlertService);
   private cdr = inject(ChangeDetectorRef);
   private membreService = inject(MembreService);
 
@@ -163,7 +164,7 @@ export class MembreAdminComponent implements OnInit, OnDestroy { // Implémente 
     // Appel au service pour effectuer la modification via l'API
     this.membreService.changeMemberRole(data.membreId, clubId, data.newRole).subscribe({
       next: (updatedMember) => { // API a répondu avec succès
-        this.notification.show("Rôle du membre mis à jour.", "valid");
+        this.notification.show("Rôle du membre mis à jour.", "success");
 
         // Mise à jour de la liste locale 'membres'
         const index = this.membres.findIndex(m => m.id === data.membreId);

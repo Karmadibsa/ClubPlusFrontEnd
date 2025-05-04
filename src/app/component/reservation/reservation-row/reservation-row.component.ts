@@ -30,8 +30,6 @@ export class ReservationRowComponent {
   // Méthode appelée par le clic sur le bouton QR Code
   openQrCodeModalHandler(): void {
     if (!this.reservation) return; // Sécurité
-    console.log("Ouverture QR Modal pour résa:", this.reservation.id);
-
     this.isQrModalOpen = true;
   }
 

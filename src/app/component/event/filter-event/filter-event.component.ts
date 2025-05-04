@@ -37,7 +37,6 @@ export class FilterEventComponent implements OnChanges { // Implémenter OnChang
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['events']) {
-      console.log('FilterEventComponent: Input events a changé, réapplication des filtres.');
       // Quand la liste source change, on réapplique les filtres courants
       this.applyFilters();
     }
@@ -49,14 +48,6 @@ export class FilterEventComponent implements OnChanges { // Implémenter OnChang
    * Émet le résultat via 'filteredEventsChange'.
    */
   applyFilters(): void {
-    console.log('FilterEventComponent: Application des filtres avec state:', {
-      search: this.searchQuery,
-      start: this.startDateTimeLocal,
-      end: this.endDateTimeLocal,
-      available: this.filterAvailablePlaces,
-      friends: this.filterWithFriends,
-      sort: this.sortDirection
-    });
 
     // 1. Conversion des dates/heures locales en objets Date pour la comparaison
     // new Date() interprète correctement le format "YYYY-MM-DDTHH:MM"
@@ -114,7 +105,6 @@ export class FilterEventComponent implements OnChanges { // Implémenter OnChang
     });
 
     // 4. Émission du résultat vers le parent (EventAdminComponent)
-    console.log('FilterEventComponent: Émission de', filtered.length, 'événements filtrés/triés.');
     this.filteredEventsChange.emit(filtered);
   }
 
@@ -137,7 +127,6 @@ export class FilterEventComponent implements OnChanges { // Implémenter OnChang
     this.filterAvailablePlaces = false;
     this.filterWithFriends = false;
     this.sortDirection = 'asc';
-    console.log('FilterEventComponent: Réinitialisation des filtres.');
     this.applyFilters(); // Appliquer le reset
   }
 }

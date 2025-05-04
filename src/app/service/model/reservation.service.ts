@@ -40,7 +40,6 @@ export class ReservationService {
       .set('eventId', eventId.toString())
       .set('categorieId', categorieId.toString());
 
-    console.log(`Service: Appel API POST vers ${this.apiUrl} avec params: ${params.toString()}`);
 
     // Effectuer la requête POST avec les paramètres dans l'URL et un corps vide {} [3][6][from previous answer]
     return this.http.post<any>(this.apiUrl, {}, {params: params})
@@ -90,9 +89,6 @@ export class ReservationService {
    */
   cancelReservation(reservationId: number): Observable<any> {
     const cancelUrl = `${this.apiUrl}/${reservationId}/cancel`; // Exemple: http://localhost:8080/api/reservations/22/cancel
-
-    // Log mis à jour pour indiquer PUT
-    console.log(`Service: Appel API PUT vers ${cancelUrl}`);
 
     return this.http.put<any>(cancelUrl, {})
       .pipe(
