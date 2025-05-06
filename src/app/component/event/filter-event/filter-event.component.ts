@@ -25,8 +25,8 @@ export class FilterEventComponent implements OnChanges { // Implémenter OnChang
 
   // --- État interne pour les filtres et le tri ---
   searchQuery = '';
-  startDateTimeLocal: string | null = null;
-  endDateTimeLocal: string | null = null;
+  startDateLocal: string | null = null;
+  endDateLocal: string | null = null;
   filterAvailablePlaces = false; // Ou true si c'est le défaut souhaité
   filterWithFriends = false;     // Ce filtre est complexe côté client, voir note
   sortDirection: 'asc' | 'desc' = 'asc'; // Direction de tri par défaut
@@ -51,8 +51,20 @@ export class FilterEventComponent implements OnChanges { // Implémenter OnChang
 
     // 1. Conversion des dates/heures locales en objets Date pour la comparaison
     // new Date() interprète correctement le format "YYYY-MM-DDTHH:MM"
-    const startFilterDate = this.startDateTimeLocal ? new Date(this.startDateTimeLocal) : null;
-    const endFilterDate = this.endDateTimeLocal ? new Date(this.endDateTimeLocal) : null;
+    let startFilterDate: Date | null = null;
+    if (this.startDateLocal) {
+      // La chaîne de type="date" est YYYY-MM-DD. new Date() l'interprète comme heure locale 00:00:00.
+      const tempDate = new Date(this.startDateLocal);
+      // Assurer que c'est bien le début de la journée (fuseau horaire local)
+      startFilterDate = new Date(tempDate.getFullYear(), tempDate.getMonth(), tempDate.getDate(), 0, 0, 0, 0);
+    }
+
+    let endFilterDate: Date | null = null;
+    if (this.endDateLocal) {
+      const tempDate = new Date(this.endDateLocal);
+      // Pour inclure toute la journée de fin, mettre l'heure à la fin de cette journée.
+      endFilterDate = new Date(tempDate.getFullYear(), tempDate.getMonth(), tempDate.getDate(), 23, 59, 59, 999);
+    }
 
     // 2. Filtrage de la liste source 'this.events'
     let filtered = this.events.filter(event => {
@@ -122,8 +134,8 @@ export class FilterEventComponent implements OnChanges { // Implémenter OnChang
    */
   resetFilters(): void {
     this.searchQuery = '';
-    this.startDateTimeLocal = null;
-    this.endDateTimeLocal = null;
+    this.startDateLocal = null;
+    this.endDateLocal = null;
     this.filterAvailablePlaces = false;
     this.filterWithFriends = false;
     this.sortDirection = 'asc';

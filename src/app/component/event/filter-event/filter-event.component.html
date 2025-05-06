@@ -13,8 +13,8 @@
     <label>Début :</label>
     <input
       class="date"
-      type="datetime-local"
-      [(ngModel)]="startDateTimeLocal"
+      type="date"
+      [(ngModel)]="startDateLocal"
       (change)="applyFilters()"
     />
   </div>
@@ -24,8 +24,8 @@
     <label>Fin :</label>
     <input
       class="date"
-      type="datetime-local"
-      [(ngModel)]="endDateTimeLocal"
+      type="date"
+      [(ngModel)]="endDateLocal"
       (change)="applyFilters()"
     />
   </div>

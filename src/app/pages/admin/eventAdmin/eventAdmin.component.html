@@ -2,8 +2,7 @@
 <div class="page-header">
   <!-- Icône appropriée pour la gestion des événements -->
   <h1 class="page-title">Liste des Événements</h1>
-  <app-create-event-button
-    (createClicked)="ouvrirModalCreation()">
+  <app-create-event-button>
   </app-create-event-button>
 </div>
 
@@ -41,7 +40,7 @@
         @for (event of paginatedEvenements; track event.id) {
           <tr app-event-row
               [evenement]="event"
-              (modifier)="handleOpenEditModal($event)"
+              (eventUpdated)="handleEventRowUpdated($event)"
               (deleteRequest)="handleDeleteEventRequest($event)"
           ></tr>
         } @empty {
@@ -65,11 +64,3 @@
   </app-pagination>
 </nav>
 
-@if (isEditEventModalVisible) {
-  <app-edit-event
-    [isVisible]="isEditEventModalVisible"
-    [event]="selectedEventForEditModal"
-    (saveSuccess)="handleSaveEventSuccess($event)"
-    (close)="handleCloseEditModal()">
-  </app-edit-event>
-}

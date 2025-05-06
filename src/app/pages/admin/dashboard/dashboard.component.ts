@@ -8,7 +8,6 @@ import {forkJoin, Observable, of, Subscription} from 'rxjs'; // Outils pour gér
 import {catchError} from 'rxjs/operators'; // Outil pour gérer les erreurs API (catchError)
 // Services de votre application
 import {AuthService} from '../../../service/security/auth.service'; // Pour savoir qui est connecté et quel club il gère
-import {NotificationService} from '../../../service/model/notification.service'; // Pour afficher des messages (succès, erreur)
 import {MembreService} from '../../../service/model/membre.service'; // Pour les opérations liées aux membres
 import {EventService} from '../../../service/model/event.service'; // Pour les opérations liées aux événements
 // Composants utilisés dans le template HTML
@@ -41,7 +40,6 @@ import {SweetAlertService} from '../../../service/sweet-alert.service'; // La di
     EventRowComponent,
     MembreRowComponent,
     CreateEventButtonComponent,
-    EditEventModalComponent,
     LucideAngularModule,
   ],
   templateUrl: './dashboard.component.html', // Fichier HTML de ce composant
@@ -246,12 +244,14 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
         // car les données ont changé suite à un événement asynchrone (réponse API).
         this.cdr.detectChanges();
         console.log("Données Dashboard mises à jour et affichage rafraîchi.");
+        this.cdr.detectChanges(); // Aussi important ici
       },
       // 'error' ne devrait pas être appelé ici si on utilise `catchError(.. of(null))`
       // mais c'est une sécurité au cas où.
       error: (error: HttpErrorResponse) => {
         console.error("Erreur inattendue dans forkJoin (ne devrait pas arriver):", error);
         this.handleApiError(error, 'global dashboard'); // Gestion d'erreur générique
+        this.cdr.detectChanges(); // Aussi important ici
       }
     });
   }
@@ -376,29 +376,38 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
       next: (updatedMember) => { // API a répondu avec succès
         this.notification.show("Rôle du membre mis à jour.", "success");
 
-        // Mise à jour de la liste locale lastFiveMembers
-        const index = this.lastFiveMembers.findIndex(m => m.id === data.membreId);
-        if (index !== -1) {
-
-          this.lastFiveMembers = [
-            ...this.lastFiveMembers.slice(0, index), // partie avant
-            {...this.lastFiveMembers[index], role: data.newRole}, // membre mis à jour (juste le rôle ici)
-            ...this.lastFiveMembers.slice(index + 1) // partie après
-          ];
-          console.log("Dashboard: Liste locale des membres mise à jour.");
-          this.cdr.detectChanges(); // Rafraîchir l'affichage du tableau
+        // RECHARGEMENT COMPLET DES DONNÉES au lieu de la mise à jour locale
+        // 'clubId' est déjà défini dans la portée de cette fonction.
+        if (clubId !== null) { // Double vérification, bien que déjà faite au début
+          console.log("Dashboard: Rechargement complet des données suite à la mise à jour du rôle.");
+          this.loadAllDashboardData(clubId);
+          // L'appel à this.cdr.detectChanges() est géré à l'intérieur de loadAllDashboardData
         } else {
-          console.warn(`Dashboard: Membre ID ${data.membreId} non trouvé dans lastFiveMembers après mise à jour.`);
-
+          // Ce cas ne devrait pas arriver si la première vérification de clubId est passée
+          this.notification.show("Erreur critique: ID du club perdu avant le rechargement.", "error");
+          // Envisager une mise à jour locale en fallback si le rechargement est impossible
+          const index = this.lastFiveMembers.findIndex(m => m.id === data.membreId);
+          if (index !== -1) {
+            this.lastFiveMembers = [
+              ...this.lastFiveMembers.slice(0, index),
+              {...this.lastFiveMembers[index], role: data.newRole},
+              ...this.lastFiveMembers.slice(index + 1)
+            ];
+            this.cdr.detectChanges();
+          }
         }
-
       },
       error: (error) => {
         console.error("Dashboard: Erreur lors de la mise à jour du rôle:", error);
-        this.notification.show(error.message || "Erreur inconnue lors de la mise à jour.", "error");
+        // Essayer d'extraire un message plus précis de l'erreur si possible
+        const message = (error.error && typeof error.error.message === 'string')
+          ? error.error.message
+          : (typeof error.message === 'string' ? error.message : "Erreur inconnue lors de la mise à jour.");
+        this.notification.show(message, "error");
       }
     });
   }
+
 
   /**
    * Gère la demande de suppression émise par une ligne d'événement.
@@ -418,13 +427,20 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
       // 3. Traitement du succès
       next: () => {
         this.notification.show(`L'événement "${eventToDelete.nom}" a été désactivé.`, 'success');
+// Recharger toutes les données du dashboard
+        const clubId = this.authService.getManagedClubId();
+        if (clubId !== null) {
+          this.loadAllDashboardData(clubId);
+        } else {
+          this.notification.show("Erreur: ID du club non trouvé pour recharger les données.", "error");
+          // Optionnel: faire une mise à jour locale a minima si le rechargement global échoue
+          // 4. Mise à jour de la liste locale (création d'un NOUVEAU tableau sans l'élément supprimé)
+          this.nextFiveEvents = this.nextFiveEvents.filter(event => event.id !== eventToDelete.id);
 
-        // 4. Mise à jour de la liste locale (création d'un NOUVEAU tableau sans l'élément supprimé)
-        this.nextFiveEvents = this.nextFiveEvents.filter(event => event.id !== eventToDelete.id);
-
-        // 5. Rafraîchissement de l'affichage (important avec OnPush)
-        this.cdr.detectChanges();
-        console.log("Événement retiré de la liste locale et affichage mis à jour.");
+          // 5. Rafraîchissement de l'affichage (important avec OnPush)
+          this.cdr.detectChanges();
+          console.log("Événement retiré de la liste locale et affichage mis à jour.");
+        }
       },
       // 6. Traitement de l'erreur
       error: (error) => {
@@ -445,7 +461,6 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
 
   /** Ouvre la modale pour modifier un événement existant */
   handleOpenEditModal(eventToEdit: Evenement): void {
-    console.log("Ouverture modale d'édition demandée pour:", eventToEdit);
     this.selectedEventForEditModal = eventToEdit; // Mémorise l'événement
     this.isEditEventModalVisible = true; // Affiche la modale
     this.cdr.detectChanges(); // Nécessaire avec OnPush
@@ -453,56 +468,33 @@ export class DashboardComponent implements OnInit, OnDestroy { // Implémente On
 
   /** Ouvre la modale pour créer un nouvel événement */
   openCreateEventModal(): void {
-    console.log("Ouverture modale de création d'événement demandée.");
     this.selectedEventForEditModal = undefined; // Assure qu'aucun événement n'est passé (mode création)
     this.isEditEventModalVisible = true; // Affiche la modale
     this.cdr.detectChanges(); // Nécessaire avec OnPush
   }
 
-  /**
-   * Gère la fermeture de la modale d'édition/création d'événement.
-   * Appelée lorsque la modale émet l'événement (close).
-   */
-  handleCloseEditModal(): void {
-    console.log("Fermeture de la modale d'édition/création demandée.");
-    this.isEditEventModalVisible = false; // Cache la modale
-    this.selectedEventForEditModal = undefined; // Réinitialise l'événement sélectionné (bonne pratique)
+  // Méthode appelée lorsque EventRowComponent émet eventUpdatedInRow
+  handleEventUpdatedFromRow(updatedEvent: Evenement): void {
+    console.log('Dashboard: handleEventUpdatedFromRow, événement reçu:', updatedEvent);
+    // Optionnel: afficher une notification que la mise à jour est en cours de traitement
+    this.notification.show(`Mise à jour de l'événement "${updatedEvent.nom}" traitée. Rechargement des données...`, 'info');
 
-    // Si tu utilises ChangeDetectionStrategy.OnPush:
-    this.cdr.detectChanges();
-  }
-
-  /**
-   * Gère la sauvegarde réussie d'un événement depuis la modale.
-   * Appelée lorsque la modale émet l'événement (saveSuccess).
-   * @param savedEvent L'événement qui vient d'être créé ou mis à jour.
-   */
-  handleSaveEventSuccess(savedEvent: Evenement): void {
-    console.log('Sauvegarde réussie depuis la modale pour l\'événement:', savedEvent);
-
-    // 1. Fermer la modale
-    this.handleCloseEditModal(); // Réutilise la logique de fermeture
-
-    // 2. Mettre à jour la liste des événements affichée (nextFiveEvents)
-    // C'est l'étape la plus importante pour voir le résultat !
-    // Option A: Recharger simplement toute la liste (plus simple, mais peut causer un léger clignotement)
-    const clubId = this.authService.getManagedClubId();
+    const clubId = this.authService.getManagedClubId(); // Récupérer l'ID du club géré
     if (clubId !== null) {
-      console.log("Rechargement des données du dashboard après sauvegarde...");
-      // Tu pourrais vouloir une méthode plus ciblée juste pour recharger les événements
-      this.loadAllDashboardData(clubId);
+      this.loadAllDashboardData(clubId); // Lance le rechargement complet
     } else {
-      this.notification.show("Erreur: ID du club non trouvé pour recharger les données.", "error");
+      this.notification.show("Erreur: ID du club gestionnaire non trouvé. Le rechargement complet des données a échoué.", "error");
+      // Solution de repli (moins idéale) : tenter une mise à jour locale
+      const index = this.nextFiveEvents.findIndex(e => e.id === updatedEvent.id);
+      if (index !== -1) {
+        // Créer une nouvelle référence pour le tableau pour la détection de changement OnPush
+        const newNextFiveEvents = [...this.nextFiveEvents];
+        newNextFiveEvents[index] = updatedEvent; // Remplace l'ancien événement par le nouveau
+        this.nextFiveEvents = newNextFiveEvents;
+        this.cdr.detectChanges(); // Forcer la mise à jour de la liste des événements
+        this.notification.show("Affichage local mis à jour (rechargement global échoué).", "warning");
+      }
     }
-
-    // Option B: Mettre à jour la liste 'nextFiveEvents' manuellement (plus complexe)
-    //    - Si c'était une création, vérifier si le nouvel événement doit apparaître dans les 5 prochains.
-    //    - Si c'était une mise à jour, trouver l'événement dans la liste et le remplacer.
-    //    - Nécessiterait probablement un appel ciblé à this.eventService.getNextEvents() ou une logique de tri/filtrage.
-    //    - N'oublie pas this.cdr.detectChanges() si tu choisis cette option et utilises OnPush.
-
-    // 3. Afficher une notification de succès
-    this.notification.show(`Événement "${savedEvent.nom}" sauvegardé avec succès.`, 'success');
   }
 
   // --- Gestion des Erreurs (Simplifiée) ---

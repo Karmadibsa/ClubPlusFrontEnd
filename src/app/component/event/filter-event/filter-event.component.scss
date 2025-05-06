@@ -79,6 +79,11 @@
   font-weight: bold;
 }
 
+.date-picker label {
+  width: auto;
+  text-wrap: nowrap;
+}
+
 .search-bar {
   flex-grow: 1;
   padding: 10px;

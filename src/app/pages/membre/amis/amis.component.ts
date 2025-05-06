@@ -236,35 +236,55 @@ export class AmisComponent implements OnInit { // Implémente OnInit
   }
 
   rejectFriendRequest(requestId: number): void {
-    this.isLoading = true; // Ajout
-    this.amisService.rejectFriendRequest(requestId).subscribe({
-      next: () => {
-        this.isLoading = false; // Ajout
-        this.notification.show("Demande refusée.", 'success'); // 'success' est peut-être étrange ici, 'success' ou rien ?
-        this.loadReceivedRequests();
-      },
-      error: (err) => {
-        this.isLoading = false; // Ajout
-        console.error("Erreur lors du refus de la demande:", err);
-        this.notification.show(err.message || "Erreur lors du refus de la demande.", 'error'); // Message d'erreur plus précis
-      }
-    });
+    this.swalService.confirmAction(
+      "Refuser cette demande d'ami ?", // Titre de la modale
+      "Êtes-vous sûr de vouloir refuser cette demande d'ami ?", // Texte de la modale
+      () => { // --- Début de la fonction de rappel (Callback) si confirmé ---
+        this.isLoading = true;
+        this.amisService.rejectFriendRequest(requestId).subscribe({
+          next: () => {
+            this.isLoading = false;
+            // La notification 'success' peut sembler étrange pour un refus.
+            // 'info' pourrait être plus approprié, ou pas de type spécifique.
+            this.notification.show("Demande refusée.", 'info');
+            this.loadReceivedRequests(); // Recharger la liste des demandes reçues
+          },
+          error: (err) => {
+            this.isLoading = false;
+            console.error("Erreur lors du refus de la demande:", err);
+            this.notification.show(err.message || "Erreur lors du refus de la demande.", 'error');
+          }
+        });
+      }, // --- Fin de la fonction de rappel ---
+      'Oui, refuser', // Texte du bouton de confirmation
+      'Annuler'       // Texte du bouton d'annulation (optionnel)
+    );
   }
 
+
   cancelSentFriendRequest(requestId: number): void {
-    this.isLoading = true; // Ajout
-    this.amisService.cancelSentFriendRequest(requestId).subscribe({
-      next: () => {
-        this.isLoading = false; // Ajout
-        this.notification.show("Demande annulée.", 'success'); // 'success' ou 'success'
-        this.loadSentRequests();
-      },
-      error: (err) => {
-        this.isLoading = false; // Ajout
-        console.error("Erreur lors de l'annulation de la demande:", err);
-        this.notification.show(err.message || "Erreur lors de l'annulation de la demande.", 'error'); // Message d'erreur plus précis
-      }
-    });
+    this.swalService.confirmAction(
+      "Annuler votre demande d'ami ?", // Titre de la modale
+      "Êtes-vous sûr de vouloir annuler la demande d'ami que vous avez envoyée ?", // Texte de la modale
+      () => { // --- Début de la fonction de rappel (Callback) si confirmé ---
+        this.isLoading = true;
+        this.amisService.cancelSentFriendRequest(requestId).subscribe({
+          next: () => {
+            this.isLoading = false;
+            // 'info' pourrait être plus approprié que 'success' pour une annulation.
+            this.notification.show("Demande annulée.", 'info');
+            this.loadSentRequests(); // Recharger la liste des demandes envoyées
+          },
+          error: (err) => {
+            this.isLoading = false;
+            console.error("Erreur lors de l'annulation de la demande:", err);
+            this.notification.show(err.message || "Erreur lors de l'annulation de la demande.", 'error');
+          }
+        });
+      }, // --- Fin de la fonction de rappel ---
+      'Oui, annuler', // Texte du bouton de confirmation
+      'Non, laisser'    // Texte du bouton d'annulation (optionnel, ex: "Garder la demande")
+    );
   }
 }
 

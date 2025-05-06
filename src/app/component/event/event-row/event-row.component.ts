@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {LucideAngularModule} from 'lucide-angular';
 import {EditEventModalComponent} from '../edit-event/edit-event.component';
@@ -19,68 +19,59 @@ import {SweetAlertService} from '../../../service/sweet-alert.service';
   styleUrls: ['./event-row.component.scss']
 })
 export class EventRowComponent {
-
   private swalService = inject(SweetAlertService);
+  private cdr = inject(ChangeDetectorRef);
 
   @Input() evenement!: Evenement;
-  @Output() deleteRequest = new EventEmitter<Evenement>(); // RENOMMÉ de 'supprimer'. Utilisez Evenement.
-  @Output() modifier = new EventEmitter<any>();
+  @Output() deleteRequest = new EventEmitter<Evenement>(); // Pour la suppression
 
-  isModalEditVisible = false;
-  isParticipationModalVisible = false;
+  // Événement émis lorsque cet événement spécifique de la ligne a été modifié avec succès
+  @Output() eventUpdated = new EventEmitter<Evenement>();
 
-  ouvrirModalEdit(): void {
+  isModalEditVisible = false; // Contrôle la modale d'édition de CETTE ligne
+  isParticipationModalVisible = false; // Contrôle la modale de participation de CETTE ligne
+
+  // Ouvre la modale d'édition pour l'événement de cette ligne
+  ouvrirModalEditionDeLigne(): void {
     this.isModalEditVisible = true;
+    this.cdr.detectChanges();
   }
 
-  fermerModalEdit(): void {
+  // Ferme la modale d'édition de cette ligne
+  fermerModalEditionDeLigne(): void {
     this.isModalEditVisible = false;
+    this.cdr.detectChanges();
   }
 
-  sauvegarderEvenement(evenementModifie: any): void {
-    this.modifier.emit(evenementModifie);
-    this.fermerModalEdit();
+  // Appelée lorsque la modale d'édition (instanciée dans ce template) émet saveSuccess
+  handleSaveSuccessEditionDeLigne(evenementModifie: Evenement): void {
+    console.log('EventRow: Édition réussie pour', evenementModifie);
+    this.fermerModalEditionDeLigne(); // Fermer la modale de CETTE ligne
+    this.eventUpdated.emit(evenementModifie); // Notifier EventAdminComponent que l'événement a été mis à jour
   }
 
-  // --- Gestion Modale Participation ---
-  // Appelée par le clic sur le bouton "Voir Réservations"
+  // --- Gestion Modale Participation (inchangée) ---
   ouvrirModalParticipation(): void {
-    console.log('EventRow: ouverture Modale Participation pour event ID:', this.evenement?.id); // Log de débogage
-    if (this.evenement) { // Vérification ajoutée pour robustesse
+    if (this.evenement) {
       this.isParticipationModalVisible = true;
-    } else {
-      console.error("EventRow: Données 'evenement' non disponibles pour ouvrir la modale.");
+      this.cdr.detectChanges();
     }
   }
 
-  // Appelée par l'événement (closeModal) de app-participation-event-modal
   handleCloseParticipationModal(): void {
     this.isParticipationModalVisible = false;
+    this.cdr.detectChanges();
   }
 
-  /**
-   * Appelée lorsque l'utilisateur clique sur le bouton "Supprimer" de CETTE ligne.
-   * Émet un événement `deleteRequest` vers le composant parent avec l'événement à supprimer.
-   */
+  // --- Demande de suppression (inchangée) ---
   requestDelete(): void {
-    console.log("Initiation demande de suppression pour :", this.evenement);
-
-    // --- Remplacement de confirm() ---
     this.swalService.confirmAction(
-      'Désactiver cet événement ?', // Titre
-      `Êtes-vous sûr de vouloir désactiver l'événement "${this.evenement.nom}" ?`, // Texte
-
-      // --- Callback si confirmé ---
+      'Désactiver cet événement ?',
+      `Êtes-vous sûr de vouloir désactiver l'événement "${this.evenement.nom}" ?`,
       () => {
-        // --- Émettre l'événement seulement si confirmé ---
-        console.log('Confirmation reçue, émission de deleteRequest pour', this.evenement);
         this.deleteRequest.emit(this.evenement);
-        // -----------------------------------------------
-      }
-      // --- Fin Callback ---
-      , 'Oui, désactiver' // Texte bouton confirmer (optionnel)
-      // , 'Annuler' // Texte bouton annuler (optionnel)
+      },
+      'Oui, désactiver'
     );
-    // ------------------------------
   }
 }

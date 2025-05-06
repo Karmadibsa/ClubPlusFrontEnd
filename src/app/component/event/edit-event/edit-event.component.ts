@@ -4,7 +4,7 @@ import {
   Component,
   EventEmitter,
   inject,
-  Input,
+  Input, numberAttribute,
   OnChanges,
   OnInit,
   Output,
@@ -14,7 +14,6 @@ import {AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule,
 import {CommonModule, DatePipe} from '@angular/common'; // CommonModule (*ngIf...), DatePipe (formater les dates)
 import {LucideAngularModule} from 'lucide-angular'; // Pour utiliser les icônes Lucide
 // Importations de vos services et modèles (interfaces) - Adaptez les chemins si nécessaire
-import {NotificationService} from '../../../service/model/notification.service'; // Service pour afficher des notifications
 import {EventService} from '../../../service/model/event.service'; // Service pour interagir avec l'API des événements
 // Importez les interfaces définissant la structure des données événement/catégorie
 import {CreateEventPayload, Evenement, UpdateEventPayload} from '../../../model/evenement';
@@ -56,7 +55,7 @@ export class EditEventModalComponent implements OnInit, OnChanges {
    * L'ID du club auquel associer l'événement.
    * Nécessaire SEULEMENT en mode CRÉATION pour savoir où créer l'événement.
    */
-  @Input() clubId?: number;
+  @Input({transform: numberAttribute}) clubId?: number;
 
   // --- --------------------------------- ---
   // --- OUTPUTS (Événements vers le parent) ---
@@ -350,7 +349,6 @@ export class EditEventModalComponent implements OnInit, OnChanges {
             this.isSaving = false;
             this.saveSuccess.emit(updatedEvent); // Émettre l'événement mis à jour au parent.
             // La fermeture peut être gérée par le parent ou ici
-            // this.closeModal();
           },
           error: (err) => {
             console.error("Erreur MàJ Événement:", err);
@@ -403,7 +401,6 @@ export class EditEventModalComponent implements OnInit, OnChanges {
             this.isSaving = false;
             this.saveSuccess.emit(createdEvent); // Émettre l'événement NOUVELLEMENT créé au parent.
             // La fermeture peut être gérée par le parent ou ici
-            // this.closeModal();
           },
           error: (err) => {
             console.error("Erreur Création Événement:", err);

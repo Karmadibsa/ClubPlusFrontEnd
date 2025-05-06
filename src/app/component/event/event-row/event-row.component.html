@@ -16,7 +16,7 @@
     <button class="btn btn-secondary" title="Voir Réservations" (click)="ouvrirModalParticipation()">
       <lucide-icon name="eye" class="icon"></lucide-icon>
     </button>
-    <button class="btn btn-edit" title="Modifier" (click)="ouvrirModalEdit()">
+    <button class="btn btn-edit" title="Modifier" (click)="ouvrirModalEditionDeLigne()">
       <lucide-icon name="pen" class="icon"></lucide-icon>
     </button>
     <button class="btn btn-danger" title="Supprimer" (click)="requestDelete()">
@@ -30,8 +30,9 @@
   <app-edit-event
     [isVisible]="isModalEditVisible"
     [event]="evenement"
-    (saveSuccess)="sauvegarderEvenement($event)"
-    (close)="fermerModalEdit()">
+    [clubId]="evenement.organisateur.id"
+    (saveSuccess)="handleSaveSuccessEditionDeLigne($event)"
+    (close)="fermerModalEditionDeLigne()">
   </app-edit-event>
 }
 
