@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {FooterComponent} from '../../../component/navigation/footer/footer.component';
 import {NavbarComponent} from '../../../component/navigation/navbar/navbar.component';
 import {HomepageStats} from '../../../model/HomepageStats';
-import {PublicDataService} from '../../../service/model/public-data.service';
+import {PublicDataService} from '../../../service/crud/public-data.service';
 import {finalize} from 'rxjs/operators';
 import {LucideAngularModule} from 'lucide-angular';
 

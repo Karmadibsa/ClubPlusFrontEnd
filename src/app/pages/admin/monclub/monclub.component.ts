@@ -6,7 +6,7 @@ import {Subscription} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 
 // Services
-import {ClubService} from '../../../service/model/club.service'; // Le service dédié pour le club
+import {ClubService} from '../../../service/crud/club.service'; // Le service dédié pour le club
 import {AuthService} from '../../../service/security/auth.service'; // Pour obtenir l'ID du club
 // Composants
 // Modèles

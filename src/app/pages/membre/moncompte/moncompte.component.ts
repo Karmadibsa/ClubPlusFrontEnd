@@ -14,7 +14,7 @@ import {Subscription} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 
 // Services
-import {MembreService} from '../../../service/model/membre.service'; // Service pour les données du membre
+import {MembreService} from '../../../service/crud/membre.service'; // Service pour les données du membre
 // Composants
 // Modèles
 import {Membre} from '../../../model/membre'; // L'interface Membre

@@ -1,7 +1,7 @@
 import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {ReservationService} from '../../../service/model/reservation.service';
+import {ReservationService} from '../../../service/crud/reservation.service';
 import {LucideAngularModule} from 'lucide-angular';
 import {Evenement} from '../../../model/evenement';
 import {Categorie} from '../../../model/categorie';

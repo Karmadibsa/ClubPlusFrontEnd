@@ -9,7 +9,7 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import {ReservationService} from '../../../service/model/reservation.service';
+import {ReservationService} from '../../../service/crud/reservation.service';
 import {catchError, finalize, tap} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {DatePipe, LowerCasePipe} from '@angular/common';

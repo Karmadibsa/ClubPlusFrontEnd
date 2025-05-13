@@ -2,10 +2,10 @@ import {Component, inject, OnInit} from '@angular/core'; // Ajout OnInit
 import {CommonModule} from '@angular/common'; // Ajout pour standalone
 import {FormsModule} from '@angular/forms';
 import {Membre} from '../../../model/membre';
-import {AmisService} from '../../../service/model/amis.service';
+import {AmisService} from '../../../service/crud/amis.service';
 import {DemandeAmi} from '../../../model/demandeAmi';
 import {LucideAngularModule} from 'lucide-angular';
-import {MembreService} from '../../../service/model/membre.service';
+import {MembreService} from '../../../service/crud/membre.service';
 import {Clipboard} from '@angular/cdk/clipboard';
 import {SweetAlertService} from '../../../service/sweet-alert.service'; // Assurez que le chemin est correct
 

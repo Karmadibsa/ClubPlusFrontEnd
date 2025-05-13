@@ -5,7 +5,7 @@ import {Subscription} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 
 // Services
-import {EventService} from '../../../service/model/event.service'; // Service pour les événements
+import {EventService} from '../../../service/crud/event.service'; // Service pour les événements
 import {AuthService} from '../../../service/security/auth.service'; // Pour l'ID du club/user
 // Composants
 import {EventRowComponent} from '../../../component/event/event-row/event-row.component';

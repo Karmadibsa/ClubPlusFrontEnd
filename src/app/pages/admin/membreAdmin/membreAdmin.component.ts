@@ -6,7 +6,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 
 // Services
 import {AuthService} from '../../../service/security/auth.service';
-import {MembreService} from '../../../service/model/membre.service';
+import {MembreService} from '../../../service/crud/membre.service';
 
 // Composants
 import {MembreRowComponent} from '../../../component/membre/membre-row/membre-row.component';

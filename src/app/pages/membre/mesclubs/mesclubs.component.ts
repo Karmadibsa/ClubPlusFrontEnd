@@ -3,7 +3,7 @@ import {LucideAngularModule} from "lucide-angular";
 import {finalize, Subscription} from 'rxjs';
 import {Club} from '../../../model/club';
 import {FormsModule} from '@angular/forms';
-import {MembreService} from '../../../service/model/membre.service';
+import {MembreService} from '../../../service/crud/membre.service';
 import {SweetAlertService} from '../../../service/sweet-alert.service';
 
 @Component({
