@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { PublicDataService } from './public-data.service';
+import {PublicDataService} from './public-data.service';
 
 describe('PublicDataService', () => {
   let service: PublicDataService;

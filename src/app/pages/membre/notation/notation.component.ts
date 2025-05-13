@@ -1,7 +1,6 @@
 import {Component, inject} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {EventService} from '../../../service/model/event.service';
-import {NotificationService} from '../../../service/model/notification.service';
 import {Evenement} from '../../../model/evenement';
 import {EventRatingPayload, Notation} from '../../../model/notation';
 import {LucideAngularModule} from 'lucide-angular';

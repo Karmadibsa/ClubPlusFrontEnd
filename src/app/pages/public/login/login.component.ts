@@ -2,8 +2,6 @@ import {Component, inject} from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
 import {LucideAngularModule} from 'lucide-angular';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
-import {HttpClient} from '@angular/common/http';
-import {NotificationService} from '../../../service/model/notification.service';
 import {AuthService} from '../../../service/security/auth.service';
 import {Subscription} from 'rxjs';
 import {SweetAlertService} from '../../../service/sweet-alert.service'; // Pour relancer les erreurs RxJS

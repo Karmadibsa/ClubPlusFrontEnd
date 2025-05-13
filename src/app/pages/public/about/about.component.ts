@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {NavbarComponent} from "../../../component/navigation/navbar/navbar.component";
 import {LucideAngularModule} from 'lucide-angular';
 import {FooterComponent} from '../../../component/navigation/footer/footer.component';

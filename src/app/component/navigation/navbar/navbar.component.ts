@@ -1,7 +1,6 @@
 import {Component, inject} from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
 import {AuthService} from '../../../service/security/auth.service';
-import {NotificationService} from '../../../service/model/notification.service';
 import {LucideAngularModule} from 'lucide-angular';
 import {SweetAlertService} from '../../../service/sweet-alert.service';
 

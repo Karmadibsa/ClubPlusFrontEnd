@@ -7,7 +7,6 @@ import {HttpErrorResponse} from '@angular/common/http';
 // Services
 import {EventService} from '../../../service/model/event.service'; // Service pour les événements
 import {AuthService} from '../../../service/security/auth.service'; // Pour l'ID du club/user
-import {NotificationService} from '../../../service/model/notification.service'; // Pour les notifications
 // Composants
 import {EventRowComponent} from '../../../component/event/event-row/event-row.component';
 import {CreateEventButtonComponent} from '../../../component/event/create-event-button/create-event-button.component';
@@ -18,7 +17,6 @@ import {Evenement} from '../../../model/evenement'; // Assure-toi que ce modèle
 import {LucideAngularModule} from 'lucide-angular';
 import {FilterEventComponent} from '../../../component/event/filter-event/filter-event.component';
 import {PaginationComponent} from '../../../component/navigation/pagination/pagination.component';
-import {EditEventModalComponent} from '../../../component/event/edit-event/edit-event.component';
 import {SweetAlertService} from '../../../service/sweet-alert.service';
 
 

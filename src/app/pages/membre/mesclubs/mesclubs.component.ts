@@ -2,8 +2,6 @@ import {ChangeDetectorRef, Component, inject} from '@angular/core';
 import {LucideAngularModule} from "lucide-angular";
 import {finalize, Subscription} from 'rxjs';
 import {Club} from '../../../model/club';
-import {ClubService} from '../../../service/model/club.service';
-import {NotificationService} from '../../../service/model/notification.service';
 import {FormsModule} from '@angular/forms';
 import {MembreService} from '../../../service/model/membre.service';
 import {SweetAlertService} from '../../../service/sweet-alert.service';

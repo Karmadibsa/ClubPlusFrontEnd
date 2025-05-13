@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, inject, AfterViewInit } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {NgIf} from '@angular/common';

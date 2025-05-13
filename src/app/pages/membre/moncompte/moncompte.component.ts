@@ -15,9 +15,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 
 // Services
 import {MembreService} from '../../../service/model/membre.service'; // Service pour les données du membre
-import {NotificationService} from '../../../service/model/notification.service'; // Pour les messages
 // Composants
-
 // Modèles
 import {Membre} from '../../../model/membre'; // L'interface Membre
 // Autres

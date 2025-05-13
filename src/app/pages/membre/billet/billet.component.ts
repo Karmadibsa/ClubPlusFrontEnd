@@ -10,7 +10,6 @@ import {QRCodeComponent} from 'angularx-qrcode';
 import {SafeUrl} from '@angular/platform-browser';
 import {Reservation} from '../../../model/reservation';
 import {ReservationService} from '../../../service/model/reservation.service';
-import {NotificationService} from '../../../service/model/notification.service';
 import {SweetAlertService} from '../../../service/sweet-alert.service';
 
 

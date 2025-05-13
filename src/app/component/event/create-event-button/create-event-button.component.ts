@@ -1,6 +1,5 @@
 import {ChangeDetectorRef, Component, EventEmitter, inject, Output} from '@angular/core';
 import {LucideAngularModule} from 'lucide-angular';
-import {Dialog, DialogRef} from '@angular/cdk/dialog';
 import {Evenement} from '../../../model/evenement';
 import {EditEventModalComponent} from '../edit-event/edit-event.component';
 import {AuthService} from '../../../service/security/auth.service';

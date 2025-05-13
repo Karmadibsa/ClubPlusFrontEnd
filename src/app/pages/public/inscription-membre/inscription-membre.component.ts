@@ -1,8 +1,6 @@
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Component, inject} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Router, RouterLink} from '@angular/router';
-import {NotificationService} from '../../../service/model/notification.service';
 import {Membre, MembrePayload} from '../../../model/membre';
 import {NgClass} from '@angular/common';
 import {PasswordValidators} from '../../../service/validator/password.validator';

@@ -5,7 +5,6 @@ import {LucideAngularModule} from "lucide-angular";
 import {HttpErrorResponse} from '@angular/common/http';
 import {Evenement} from '../../../model/evenement';
 import {EventService} from '../../../service/model/event.service';
-import {NotificationService} from '../../../service/model/notification.service';
 import {Subscription} from 'rxjs';
 import {FilterEventComponent} from '../../../component/event/filter-event/filter-event.component';
 import {PaginationComponent} from '../../../component/navigation/pagination/pagination.component';

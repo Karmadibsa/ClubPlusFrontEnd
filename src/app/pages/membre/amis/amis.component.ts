@@ -4,7 +4,6 @@ import {FormsModule} from '@angular/forms';
 import {Membre} from '../../../model/membre';
 import {AmisService} from '../../../service/model/amis.service';
 import {DemandeAmi} from '../../../model/demandeAmi';
-import {NotificationService} from '../../../service/model/notification.service';
 import {LucideAngularModule} from 'lucide-angular';
 import {MembreService} from '../../../service/model/membre.service';
 import {Clipboard} from '@angular/cdk/clipboard';

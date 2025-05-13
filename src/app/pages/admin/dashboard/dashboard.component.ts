@@ -22,7 +22,6 @@ import {RoleType} from '../../../model/role'; // Type pour les rôles ('MEMBRE',
 import {ChartData, ChartOptions} from 'chart.js'; // Types pour configurer les graphiques
 import {BaseChartDirective} from 'ng2-charts';
 import {CreateEventButtonComponent} from '../../../component/event/create-event-button/create-event-button.component';
-import {EditEventModalComponent} from '../../../component/event/edit-event/edit-event.component';
 import {LucideAngularModule} from 'lucide-angular';
 import {SweetAlertService} from '../../../service/sweet-alert.service'; // La directive pour afficher un graphique dans le HTML
 
