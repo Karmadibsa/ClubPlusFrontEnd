@@ -1,32 +1,71 @@
 /**
- * Représente une Catégorie telle que reçue de l'API ou affichée.
- * Ne contient PAS de référence circulaire à l'événement complet ni la liste des réservations.
+ * @interface Categorie
+ * @description Représente une catégorie d'emplacement pour un événement, telle que définie
+ * et potentiellement retournée par l'API.
+ * Cette interface est typiquement utilisée pour afficher les détails d'une catégorie.
+ * Elle est conçue pour être une structure de données simple, évitant les références
+ * circulaires (par exemple, un lien direct vers l'événement parent complet ou la liste
+ * des réservations associées), ce qui simplifie la sérialisation et la gestion des données.
+ * Les champs optionnels comme `placeReserve` et `placeDisponible` peuvent être calculés
+ * et retournés par le backend.
  */
 export interface Categorie {
-  id: number; // L'ID est fourni par le backend pour les catégories existantes
+  /**
+   * @property {number} id
+   * @description Identifiant unique de la catégorie.
+   * Généralement assigné et fourni par le système backend lors de la création
+   * ou de la récupération d'une catégorie existante.
+   */
+  id: number;
+
+  /**
+   * @property {string} nom
+   * @description Nom descriptif de la catégorie (ex: "Tribune Nord", "VIP", "Pelouse").
+   */
   nom: string;
+
+  /**
+   * @property {number} capacite
+   * @description Nombre total de places disponibles dans cette catégorie pour un événement donné.
+   */
   capacite: number;
-  // Champs calculés potentiellement retournés par l'API (dépend de @JsonView)
+
+  /**
+   * @property {number} [placeReserve]
+   * @description Nombre de places actuellement réservées dans cette catégorie.
+   * Ce champ est optionnel (indiqué par `?`) car il peut ne pas toujours être fourni,
+   * notamment si l'information n'est pas requise ou calculée pour un contexte d'affichage donné.
+   */
   placeReserve?: number;
+
+  /**
+   * @property {number} [placeDisponible]
+   * @description Nombre de places encore disponibles à la réservation dans cette catégorie.
+   * Calculé typiquement comme `capacite - placeReserve`.
+   * Ce champ est également optionnel.
+   */
   placeDisponible?: number;
 }
 
 
 /**
- * Payload pour la création d'une catégorie (utilisé DANS CreateEventPayload).
- * Pas d'ID car elle est nouvelle.
+ * @interface CategorieCreatePayload
+ * @description Définit la structure des données requises pour créer une nouvelle catégorie.
+ * Cette interface est typiquement utilisée comme partie d'un payload plus large,
+ * par exemple, lors de la création d'un événement qui inclut la définition de ses catégories (`CreateEventPayload`) [1].
+ * Elle ne contient pas d'identifiant (`id`) car celui-ci sera généré par le backend
+ * lors de la création effective de la ressource.
  */
 export interface CategorieCreatePayload {
+  /**
+   * @property {string} nom
+   * @description Nom de la nouvelle catégorie à créer.
+   */
   nom: string;
-  capacite: number;
-}
 
-/**
- * Payload pour une catégorie lors de la mise à jour complète d'un événement.
- * L'ID est crucial pour la réconciliation backend (null = création).
- */
-export interface CategorieUpdatePayload {
-  id: number | null; // Null pour indiquer une nouvelle catégorie à créer
-  nom: string;
+  /**
+   * @property {number} capacite
+   * @description Capacité totale de la nouvelle catégorie.
+   */
   capacite: number;
 }
