@@ -65,20 +65,6 @@
             </div>
           </section>
 
-          <!-- Section Adresse -->
-          <section class="info-section">
-            <h3 class="info-section-title">
-              <lucide-icon name="map-pin" aria-hidden="true"></lucide-icon>
-              Adresse
-            </h3>
-            <div class="info-item full-width">
-              <span class="info-label">Adresse :</span>
-              <span class="read-only-value">
-                {{ membre.numero_voie }} {{ membre.rue }}, {{ membre.codepostal }} {{ membre.ville }}
-              </span>
-            </div>
-          </section>
-
           <!-- Section Gestion Rôle (visible uniquement pour Admin) -->
           @if (authService.role === 'ROLE_ADMIN') {
             <section class="info-section role-change-section">

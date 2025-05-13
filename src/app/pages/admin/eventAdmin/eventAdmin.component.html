@@ -40,7 +40,7 @@
         @for (event of paginatedEvenements; track event.id) {
           <tr app-event-row
               [evenement]="event"
-              (eventUpdated)="handleEventRowUpdated($event)"
+              (eventUpdated)="handleEventCreatedOrUpdated($event)"
               (deleteRequest)="handleDeleteEventRequest($event)"
           ></tr>
         } @empty {

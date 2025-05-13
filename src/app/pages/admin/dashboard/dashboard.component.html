@@ -95,7 +95,6 @@
             <tr>
               <th>Nom Prénom</th>
               <th>Naissance</th>
-              <th>Ville</th>
               <th>Téléphone</th>
               <th>Email</th>
               <th>Rôle</th>
@@ -140,7 +139,7 @@
             <tbody>
               @for (event of nextFiveEvents; track event.id) {
                 <!-- app-event-row doit générer des <td> avec [attr.data-label] pour le responsive -->
-                <tr app-event-row [evenement]="event" (eventUpdated)="handleEventUpdatedFromRow($event)"
+                <tr app-event-row [evenement]="event" (eventUpdated)="handleEventUpserted($event)"
                     (deleteRequest)="handleDeleteEventRequest($event)"></tr>
               } @empty {
                 <tr>

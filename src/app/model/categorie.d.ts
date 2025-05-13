@@ -69,3 +69,36 @@ export interface CategorieCreatePayload {
    */
   capacite: number;
 }
+
+/**
+ * @interface CategorieUpdatePayload
+ * @description Définit la structure des données pour une catégorie lors de la mise à jour
+ * d'une entité parente (par exemple, un événement).
+ * Cette interface est cruciale pour les opérations de mise à jour "complètes" ou "partielles"
+ * où des catégories existantes peuvent être modifiées, ou de nouvelles catégories ajoutées
+ * au sein de la même transaction.
+ */
+export interface CategorieUpdatePayload {
+  /**
+   * @property {number | null} id
+   * @description Identifiant de la catégorie.
+   * - Si `id` est un `number` (existant), il indique une catégorie existante à mettre à jour.
+   * - Si `id` est `null`, il signale au backend qu'une nouvelle catégorie doit être créée
+   *   dans le contexte de la mise à jour de l'entité parente. Ce pattern est courant
+   *   pour gérer des sous-entités imbriquées lors d'une mise à jour.
+   * Le backend utilise cet `id` pour la réconciliation des données.
+   */
+  id: number | null;
+
+  /**
+   * @property {string} nom
+   * @description Nouveau nom de la catégorie (si modifié) ou nom de la nouvelle catégorie.
+   */
+  nom: string;
+
+  /**
+   * @property {number} capacite
+   * @description Nouvelle capacité de la catégorie (si modifiée) ou capacité de la nouvelle catégorie.
+   */
+  capacite: number;
+}

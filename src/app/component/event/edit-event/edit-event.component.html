@@ -63,7 +63,7 @@
                         [class.is-invalid]="eventForm.get('description')?.invalid && eventForm.get('description')?.touched"
                         aria-required="true" aria-describedby="description-error"></textarea>
               <div id="description-error" class="invalid-feedback" role="alert">
-                @if (eventForm.get('description')?.hasError('required')) {
+                @if (eventForm.get("description")?.hasError("required")) {
                   La description est requise.
                 }
               </div>
@@ -85,13 +85,13 @@
               <div class="form-group">
                 <label for="end">Date et Heure de fin <span class="required-indicator">*</span></label>
                 <input id="end" type="datetime-local" formControlName="end" class="form-control"
-                       [class.is-invalid]="(eventForm.get('end')?.invalid && eventForm.get('end')?.touched) || eventForm.hasError('dateInvalid')"
+                       [class.is-invalid]="(eventForm.get('end')?.invalid && eventForm.get('end')?.touched) || eventForm.hasError('dateOrderInvalid')"
                        aria-required="true" aria-describedby="end-error"/>
                 <div id="end-error" class="invalid-feedback" role="alert">
                   @if (eventForm.get('end')?.hasError('required')) {
                     La date de fin est requise.
                   }
-                  @if (eventForm.hasError('dateInvalid')) {
+                  @if (eventForm.hasError('dateOrderInvalid')) {
                     La date de fin doit être après la date de début.
                   }
                 </div>
@@ -199,4 +199,3 @@
     </div>
   </div>
 }
-
