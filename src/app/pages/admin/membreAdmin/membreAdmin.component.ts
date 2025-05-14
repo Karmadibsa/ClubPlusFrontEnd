@@ -25,8 +25,6 @@ import { PaginationComponent } from '../../../component/navigation/pagination/pa
 import { Membre } from '../../../model/membre'; // Interface décrivant un membre.
 import { RoleType } from '../../../model/role'; // Type alias pour les rôles.
 
-// Autres (si besoin, par exemple pour des icônes dans le template de CETTE page)
-// import { LucideAngularModule } from 'lucide-angular';
 
 /**
  * @Component MembreAdminComponent

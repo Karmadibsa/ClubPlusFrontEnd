@@ -90,59 +90,6 @@
           </div>
         </div> <!-- Fin card-content infos perso -->
       </fieldset> <!-- Fin fieldset infos perso -->
-
-      <!-- Section Adresse (toujours DANS le même formulaire infoForm) -->
-      <fieldset class="card-section"> <!-- Utilise classe globale [5] -->
-        <legend class="section-header"> <!-- Utilise classe globale [5] -->
-          <h2>
-            <lucide-icon name='map-pin' aria-hidden="true"></lucide-icon>
-            Adresse
-          </h2>
-          <p class='section-description'>Votre adresse postale complète</p> <!-- Utilise classe globale [5] -->
-        </legend>
-        <div class="card-content"> <!-- Utilise classe globale [5] -->
-          <!-- Ligne numéro et rue -->
-          <div class='form-row'> <!-- Utilise classe globale [5] -->
-            <div class='form-group quarter'> <!-- Utilise classes globales [5] -->
-              <label for='street-number'>N°</label>
-              <input type='text' id='street-number' formControlName='numero_voie' class="form-control"
-                     aria-describedby="numero_voie-error"/> <!-- Utilise classe globale [5] -->
-              <div id="numero_voie-error" class="invalid-feedback" role="alert" aria-live="assertive"></div>
-              <!-- Utilise classe globale [5] -->
-            </div>
-            <div class='form-group three-quarters'> <!-- Utilise classes globales [5] -->
-              <label for='street'>Rue<span class="required-indicator">*</span></label>
-              <!-- Utilise classe globale [5] -->
-              <input type='text' id='street' formControlName='rue' class="form-control" aria-required="true"
-                     aria-describedby="rue-error"/> <!-- Utilise classe globale [5] -->
-              <div id="rue-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici</div>
-              <!-- Utilise classe globale [5] -->
-            </div>
-          </div>
-
-          <!-- Ligne code postal et ville -->
-          <div class='form-row'> <!-- Utilise classe globale [5] -->
-            <div class='form-group half'> <!-- Utilise classes globales [5] -->
-              <label for='postal-code'>Code postal<span class="required-indicator">*</span></label>
-              <!-- Utilise classe globale [5] -->
-              <input type='text' id='postal-code' formControlName='codepostal' class="form-control" aria-required="true"
-                     aria-describedby="codepostal-error postal-format-hint"/> <!-- Utilise classe globale [5] -->
-              <small id="postal-format-hint" class="form-text text-muted">Format: 5 chiffres</small>
-              <!-- Utilise classes globales [5] -->
-              <div id="codepostal-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur
-                ici
-              </div> <!-- Utilise classe globale [5] -->
-            </div>
-            <div class='form-group half'> <!-- Utilise classes globales [5] -->
-              <label for='city'>Ville<span class="required-indicator">*</span></label>
-              <!-- Utilise classe globale [5] -->
-              <input type='text' id='city' formControlName='ville' class="form-control" aria-required="true"
-                     aria-describedby="ville-error"/> <!-- Utilise classe globale [5] -->
-              <div id="ville-error" class="invalid-feedback" role="alert" aria-live="assertive">Message d'erreur ici
-              </div> <!-- Utilise classe globale [5] -->
-            </div>
-          </div>
-
           <!-- Bouton Mettre à jour pour infoForm (infos perso + adresse) -->
           <div class="form-actions"> <!-- Utilise classe globale [5] -->
             <button type="submit" class='btn btn-primary'
@@ -152,8 +99,8 @@
               Mettre à jour mes informations
             </button>
           </div>
-        </div><!-- Fin card-content adresse -->
-      </fieldset> <!-- Fin fieldset adresse -->
+
+
     </form> <!-- Fin form infoForm -->
 
       <!-- Formulaire Changer le mot de passe (COMMENTÉ, mais suit la structure si décommenté) -->

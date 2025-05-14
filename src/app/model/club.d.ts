@@ -119,30 +119,6 @@ interface ClubAdminPayload {
   date_naissance: string;
 
   /**
-   * @property {string} numero_voie
-   * @description Numéro dans la voie de l'adresse personnelle de l'administrateur.
-   */
-  numero_voie: string;
-
-  /**
-   * @property {string} rue
-   * @description Nom de la rue de l'adresse personnelle de l'administrateur.
-   */
-  rue: string;
-
-  /**
-   * @property {string} codepostal
-   * @description Code postal de l'adresse personnelle de l'administrateur.
-   */
-  codepostal: string;
-
-  /**
-   * @property {string} ville
-   * @description Ville de l'adresse personnelle de l'administrateur.
-   */
-  ville: string;
-
-  /**
    * @property {string} telephone
    * @description Numéro de téléphone personnel de l'administrateur.
    */

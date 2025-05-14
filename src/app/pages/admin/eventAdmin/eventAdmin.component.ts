@@ -1,4 +1,4 @@
-// ----- IMPORTATIONS -----
+ // ----- IMPORTATIONS -----
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,

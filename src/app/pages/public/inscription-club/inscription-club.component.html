@@ -136,46 +136,6 @@
         </div>
       </fieldset>
 
-      <!-- Adresse de l'Admin -->
-      <fieldset class="form-section">
-        <legend class="form-section__title">Adresse de l'Administrateur</legend>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="admin-numero-voie" class="form-label">Numéro de voie :</label>
-            <input type="text" id="admin-numero-voie" class="form-input" formControlName="numero_voie"
-                   placeholder="Numéro" required/>
-            @if (registrationForm.get('admin.numero_voie')?.invalid && registrationForm.get('admin.numero_voie')?.touched) {
-              <div class="validation-error">Requis.</div>
-            }
-          </div>
-          <div class="form-group">
-            <label for="admin-rue" class="form-label">Rue :</label>
-            <input type="text" id="admin-rue" class="form-input" formControlName="rue" placeholder="Nom de la rue"
-                   required/>
-            @if (registrationForm.get('admin.rue')?.invalid && registrationForm.get('admin.rue')?.touched) {
-              <div class="validation-error">Requis.</div>
-            }
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="admin-codepostal" class="form-label">Code postal :</label>
-            <input type="text" id="admin-codepostal" class="form-input" formControlName="codepostal"
-                   placeholder="Code postal" required/>
-            @if (registrationForm.get('admin.codepostal')?.invalid && registrationForm.get('admin.codepostal')?.touched) {
-              <div class="validation-error">Requis.</div>
-            }
-          </div>
-          <div class="form-group">
-            <label for="admin-ville" class="form-label">Ville :</label>
-            <input type="text" id="admin-ville" class="form-input" formControlName="ville" placeholder="Ville"
-                   required/>
-            @if (registrationForm.get('admin.ville')?.invalid && registrationForm.get('admin.ville')?.touched) {
-              <div class="validation-error">Requis.</div>
-            }
-          </div>
-        </div>
-      </fieldset>
 
       <!-- Contact de l'Admin -->
       <fieldset class="form-section">

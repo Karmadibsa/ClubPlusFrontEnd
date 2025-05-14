@@ -316,9 +316,6 @@ export class MonclubComponent implements OnInit, OnDestroy {
         this.isSaving = false;
         this.clubForm.enable(); // Réactive le formulaire.
         this.clubForm.get('codeClub')?.disable(); // 'codeClub' reste désactivé.
-        // Optionnel: si le backend retourne des données modifiées (ex: date de mise à jour), on peut les repatcher.
-        // this.clubForm.patchValue(updatedClub);
-        // this.clubForm.get('codeClub')?.disable();
         this.cdr.detectChanges();
       },
       error: (err: HttpErrorResponse) => {
@@ -411,7 +408,7 @@ export class MonclubComponent implements OnInit, OnDestroy {
         this.notification.show('Le club a été supprimé avec succès.', 'success');
         this.isDeletingClub = false;
         // Redirige l'utilisateur, par exemple vers une page d'accueil ou un tableau de bord différent.
-        this.router.navigate(['/']); // TODO: Adapter la route de redirection si nécessaire.
+        this.router.navigate(['/accueil']);
         // La navigation changera la vue, donc detectChanges n'est pas forcément nécessaire ici.
       },
       error: (err: HttpErrorResponse) => {
