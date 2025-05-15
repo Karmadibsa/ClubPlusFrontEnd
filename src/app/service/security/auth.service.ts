@@ -253,6 +253,25 @@ export class AuthService {
     );
   }
 
+  requestPasswordReset(email: string): Observable<string> { // Le backend renvoie une chaîne
+    // Le backend attend l'email comme @RequestParam, donc on l'ajoute aux paramètres de l'URL
+    const params = new HttpParams().set('email', email);
+    return this.http.post<string>(`${this.apiUrl}/mail-password-reset`, {}, { params, responseType: 'text' as 'json' }) // 'text' as 'json' est un workaround si le type attendu est string
+      .pipe(
+        tap(response => console.log('Password reset request successful', response)),
+        catchError(this.handleError)
+      );
+  }
+
+  resetPassword(token: string, newPassword: string): Observable<string> {
+    return this.http.post(`${this.apiUrl}/reset-password`, { token, newPassword }, { responseType: 'text' });
+  }
+
+  validateResetToken(token: string): Observable<void> {
+    return this.http.get<void>(`${this.apiUrl}/validate-reset-token`, { params: { token } });
+  }
+
+
   /**
    * @private handleError
    * Gestionnaire d'erreurs HTTP privé pour ce service.
@@ -284,5 +303,22 @@ export class AuthService {
     console.error('AuthService Error:', errorMessage, error); // Log complet pour le débogage.
     // Renvoie un Observable qui émet immédiatement l'erreur avec le message traité.
     return throwError(() => new Error(errorMessage));
+  }
+
+
+  /**
+   * @description Permet à un utilisateur connecté de changer son propre mot de passe.
+   * Envoie le mot de passe actuel et le nouveau mot de passe au backend.
+   * @param payload - Un objet contenant { currentPassword: string, newPassword: string }
+   * @returns Observable<void> ou Observable<any> si le backend renvoie un message.
+   */
+  changePasswordConnectedUser(payload: { currentPassword: string, newPassword: string }): Observable<any> { // Le backend pourrait renvoyer un message
+    // L'endpoint sera POST /auth/change-password (ou un nom similaire)
+    // Il est protégé et ne fonctionnera que si l'utilisateur est authentifié (le token JWT sera envoyé par l'intercepteur HTTP).
+    return this.http.post<string>(`${this.apiUrl}/change-password`, payload, { responseType: 'text' as 'json' }) // IMPORTANT : responseType
+      .pipe(
+        tap(response => console.log('AuthService: Changement de mot de passe réussi.', response)),
+        catchError(this.handleError) // votre méthode handleError existante
+      );
   }
 }

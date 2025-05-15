@@ -30,6 +30,7 @@ import { Membre } from '../../../model/membre'; // Interface décrivant un membr
 
 // Autres (Icônes)
 import { LucideAngularModule } from 'lucide-angular';
+import {PasswordValidators} from '../../../service/validator/password.validator';
 
 /**
  * @Component MonCompteComponent
@@ -92,6 +93,7 @@ export class MonCompteComponent implements OnInit, OnDestroy {
    * @description Service pour afficher des notifications et des boîtes de dialogue de confirmation.
    */
   private notification = inject(SweetAlertService);
+  private authService = inject(AuthService);
   /**
    * @private
    * @description Service Angular pour contrôler manuellement la détection de changements.
@@ -252,30 +254,12 @@ export class MonCompteComponent implements OnInit, OnDestroy {
       current_password: ['', Validators.required],
       new_password: ['', [
         Validators.required,
-        Validators.minLength(8), // Exemple : longueur minimale de 8 caractères.
-        // Vous pouvez ajouter un validateur de pattern pour la complexité ici si nécessaire.
-        // Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
+        PasswordValidators.passwordComplexity() // si vous avez ce validateur
       ]],
       confirm_password: ['', Validators.required]
-    }, { validators: this.passwordMatchValidator }); // Validateur au niveau du groupe.
-    console.log("MonCompteComponent: Formulaire de changement de mot de passe initialisé.");
+    }, { validators: PasswordValidators.passwordMatch('new_password', 'confirm_password') });
   }
 
-  /**
-   * @private
-   * @method passwordMatchValidator
-   * @description Validateur personnalisé pour `FormGroup` qui vérifie si les champs
-   * `new_password` et `confirm_password` ont la même valeur.
-   * @param {FormGroup} formGroup - Le groupe de formulaire à valider.
-   * @returns {{ passwordMismatch: boolean } | null} Un objet d'erreur si les mots de passe ne correspondent pas, sinon `null`.
-   */
-  private passwordMatchValidator(formGroup: FormGroup): { [key: string]: any } | null {
-    const newPassword = formGroup.get('new_password')?.value;
-    const confirmPassword = formGroup.get('confirm_password')?.value;
-    // Retourne un objet d'erreur si les mots de passe sont différents ET que les deux champs ont été remplis.
-    // (On ne veut pas afficher l'erreur si l'utilisateur n'a pas encore saisi la confirmation).
-    return newPassword && confirmPassword && newPassword !== confirmPassword ? { passwordMismatch: true } : null;
-  }
 
   // --- CHARGEMENT DES DONNÉES UTILISATEUR ---
   /**
@@ -391,51 +375,6 @@ export class MonCompteComponent implements OnInit, OnDestroy {
     });
   }
 
-  // /**
-  //  * @method changePassword
-  //  * @description Gère la soumission du formulaire `passwordForm` pour changer le mot de passe de l'utilisateur.
-  //  * Vérifie la validité du formulaire (y compris la correspondance des nouveaux mots de passe).
-  //  * Appelle `MembreService.changeCurrentUserPassword()` (ou un service d'authentification équivalent).
-  //  * Gère l'état `isChangingPassword` et les notifications.
-  //  * @returns {void}
-  //  */
-  // changePassword(): void {
-  //   if (this.passwordForm.invalid) {
-  //     this.notification.show('Veuillez corriger les erreurs dans le formulaire de changement de mot de passe.', 'warning');
-  //     this.passwordForm.markAllAsTouched();
-  //     return;
-  //   }
-  //   if (this.isChangingPassword) return;
-  //
-  //   this.isChangingPassword = true;
-  //   this.passwordForm.disable();
-  //   this.cdr.detectChanges();
-  //
-  //   const passwordData = { // Prépare les données pour l'API.
-  //     currentPassword: this.passwordForm.value.current_password,
-  //     newPassword: this.passwordForm.value.new_password
-  //     // La confirmation n'est généralement pas envoyée à l'API.
-  //   };
-  //
-  //   console.log("MonCompteComponent: Tentative de changement de mot de passe.");
-  //   // Supposons que MembreService a une méthode pour cela.
-  //   this.changePasswordSubscription = this.membreService.changeCurrentUserPassword(passwordData.currentPassword, passwordData.newPassword).subscribe({
-  //     next: () => {
-  //       this.notification.show('Votre mot de passe a été changé avec succès.', 'success');
-  //       this.isChangingPassword = false;
-  //       this.passwordForm.reset();  // Réinitialise le formulaire après succès.
-  //       this.passwordForm.enable();
-  //       this.cdr.detectChanges();
-  //     },
-  //     error: (err: HttpErrorResponse) => {
-  //       console.error("MonCompteComponent: Erreur lors du changement de mot de passe:", err);
-  //       this.notification.show(err.error?.message || err.message || 'Une erreur est survenue lors du changement de mot de passe.', 'error');
-  //       this.isChangingPassword = false;
-  //       this.passwordForm.enable(); // Réactive pour nouvelle tentative.
-  //       this.cdr.detectChanges();
-  //     }
-  //   });
-  // }
 
   // --- GESTION DE LA SUPPRESSION DE COMPTE ---
   /**
@@ -503,6 +442,54 @@ export class MonCompteComponent implements OnInit, OnDestroy {
         const message = err.error?.message || err.message || "Une erreur est survenue lors de la suppression de votre compte.";
         this.notification.show(message, 'error');
         console.error("MonCompteComponent: Erreur lors de la suppression du compte:", err);
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  /**
+   * @method changePassword
+   * @description Gère la soumission du formulaire `passwordForm` pour changer le mot de passe de l'utilisateur.
+   * Vérifie la validité du formulaire (y compris la correspondance des nouveaux mots de passe).
+   * Appelle le service approprié (ici, on utilisera `AuthService` pour cet appel).
+   * Gère l'état `isChangingPassword` et les notifications.
+   * @returns {void}
+   */
+  changePassword(): void {
+    if (this.passwordForm.invalid) {
+      this.notification.show('Veuillez corriger les erreurs dans le formulaire de changement de mot de passe.', 'warning');
+      this.passwordForm.markAllAsTouched(); // Affiche les messages d'erreur
+      return;
+    }
+    if (this.isChangingPassword) return; // Empêche la double soumission
+
+    this.isChangingPassword = true;
+    this.passwordForm.disable(); // Désactive le formulaire pendant l'opération
+    this.cdr.detectChanges();   // Met à jour l'UI
+
+    const passwordData = {
+      currentPassword: this.passwordForm.value.current_password,
+      newPassword: this.passwordForm.value.new_password
+      // La confirmation n'est généralement pas envoyée à l'API, la validation se fait côté client/groupe de formulaire.
+    };
+
+    console.log("MonCompteComponent: Tentative de changement de mot de passe.");
+    // Nous allons appeler une méthode dans AuthService pour cela.
+    this.changePasswordSubscription = this.authService.changePasswordConnectedUser(passwordData).subscribe({
+      next: () => {
+        this.notification.show('Votre mot de passe a été changé avec succès.', 'success');
+        this.isChangingPassword = false;
+        this.passwordForm.reset();  // Réinitialise le formulaire après succès.
+        this.passwordForm.enable(); // Réactive le formulaire.
+        this.cdr.detectChanges();
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error("MonCompteComponent: Erreur lors du changement de mot de passe:", err);
+        // Essayer d'afficher le message d'erreur du backend s'il existe
+        const errorMessage = err.error?.message || err.error || err.message || 'Une erreur est survenue lors du changement de mot de passe.';
+        this.notification.show(errorMessage, 'error');
+        this.isChangingPassword = false;
+        this.passwordForm.enable(); // Réactive pour permettre une nouvelle tentative.
         this.cdr.detectChanges();
       }
     });

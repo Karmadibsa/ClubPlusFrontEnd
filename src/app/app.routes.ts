@@ -16,8 +16,8 @@ import {managerGuard} from './service/security/manager.guard';
 import {AmisComponent} from './pages/membre/amis/amis.component';
 import {NotationComponent} from './pages/membre/notation/notation.component';
 import {UserLayoutComponent} from './component/navigation/user-layout/user-layout.component';
-import {ForgotpasswordComponent} from './pages/public/forgotpassword/forgotpassword.component';
-import {ChangepasswordComponent} from './pages/public/changepassword/changepassword.component';
+import {ForgotPasswordComponent} from './pages/public/forgot-password/forgot-password.component';
+import {ResetPasswordComponent} from './pages/public/reset-password/reset-password.component';
 import {AboutComponent} from './pages/public/about/about.component';
 import {ContactComponent} from './pages/public/contact/contact.component';
 import {MesclubsComponent} from './pages/membre/mesclubs/mesclubs.component';
@@ -41,12 +41,12 @@ export const routes: Routes = [
     component: LoginComponent,
   },
   {
-    path: "forgotpassword",
-    component: ForgotpasswordComponent,
+    path: "reset-password",
+    component: ResetPasswordComponent,
   },
   {
-    path: "changepassword",
-    component: ChangepasswordComponent,
+    path: "forgot-password",
+    component: ForgotPasswordComponent,
   },
   {
     path: "about",

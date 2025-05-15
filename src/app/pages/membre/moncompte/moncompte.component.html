@@ -104,43 +104,108 @@
     </form> <!-- Fin form infoForm -->
 
       <!-- Formulaire Changer le mot de passe (COMMENTÉ, mais suit la structure si décommenté) -->
-      <!--
-      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" novalidate>
-        <fieldset class="card-section"> <!-/- Utilise classe globale [5] ->
-          <legend class="section-header"> <!-/- Utilise classe globale [5] ->
-            <h2><lucide-icon name='lock' aria-hidden="true"></lucide-icon> Changer le mot de passe</h2>
-            <p class="section-description">Mettez à jour votre mot de passe pour sécuriser votre compte.</p> <!-/- Utilise classe globale [5] ->
-          </legend>
-          <div class="card-content"> <!-/- Utilise classe globale [5] ->
-            <div class="form-group"> <!-/- Utilise classe globale [5] ->
-              <label for="current-password">Mot de passe actuel<span class="required-indicator">*</span></label> <!-/- Utilise classe globale [5] ->
-              <input type="password" id="current-password" formControlName="current_password" class="form-control" aria-required="true" aria-describedby="current_password-error"/> <!-/- Utilise classe globale [5] ->
-              <div id="current_password-error" class="invalid-feedback" role="alert" aria-live="assertive"></div> <!-/- Utilise classe globale [5] ->
-            </div>
-            <div class="form-row"> <!-/- Utilise classe globale [5] ->
-              <div class="form-group half"> <!-/- Utilise classes globales [5] ->
-                <label for="new-password">Nouveau mot de passe<span class="required-indicator">*</span></label> <!-/- Utilise classe globale [5] ->
-                <input type="password" id="new-password" formControlName="new_password" class="form-control" aria-required="true" aria-describedby="new_password-error"/> <!-/- Utilise classe globale [5] ->
-                <div id="new_password-error" class="invalid-feedback" role="alert" aria-live="assertive"></div> <!-/- Utilise classe globale [5] ->
-              </div>
-              <div class="form-group half"> <!-/- Utilise classes globales [5] ->
-                <label for="confirm-password">Confirmer le nouveau mot de passe<span class="required-indicator">*</span></label> <!-/- Utilise classe globale [5] ->
-                <input type="password" id="confirm-password" formControlName="confirm_password" class="form-control" aria-required="true" aria-describedby="confirm_password-error"/> <!-/- Utilise classe globale [5] ->
-                <div id="confirm_password-error" class="invalid-feedback" role="alert" aria-live="assertive"></div> <!-/- Utilise classe globale [5] ->
-              </div>
-            </div>
-            <div class="form-actions"> <!-/- Utilise classe globale [5] ->
-              <button type="submit" class='btn btn-secondary' [disabled]="passwordForm.invalid || passwordForm.pending || !passwordForm.dirty"> <!-/- Utilise classes globales [5] ->
-                <lucide-icon name="key-round" aria-hidden="true"></lucide-icon>
-                Changer le mot de passe
-              </button>
-            </div>
-          </div>
-        </fieldset>
-      </form>
-      -->
+    <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" novalidate>
+      <fieldset class="card-section">
+        <legend class="section-header">
+          <h2><lucide-icon name='lock' aria-hidden="true"></lucide-icon> Changer le mot de passe</h2>
+          <p class="section-description">Mettez à jour votre mot de passe pour sécuriser votre compte.</p>
+        </legend>
+        <div class="card-content">
 
-      <!-- ZONE DANGEREUSE - Suppression de compte -->
+          <!-- Mot de passe actuel -->
+          <div class="form-group">
+            <label for="current_password">Mot de passe actuel<span class="required-indicator">*</span></label>
+            <input type="password" id="current_password" formControlName="current_password" class="form-control"
+                   [class.is-invalid]="passwordForm.get('current_password')?.invalid && (passwordForm.get('current_password')?.dirty || passwordForm.get('current_password')?.touched)"
+                   aria-describedby="current-password-error" required />
+            @if (passwordForm.get('current_password')?.invalid && (passwordForm.get('current_password')?.dirty || passwordForm.get('current_password')?.touched)) {
+              <div id="current-password-error" class="invalid-feedback">
+                @if (passwordForm.get('current_password')?.hasError('required')) {
+                  <span>Le mot de passe actuel est requis.</span>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Nouveau mot de passe -->
+          <div class="form-group">
+            <label for="new_password">Nouveau mot de passe<span class="required-indicator">*</span></label>
+            <input type="password" id="new_password" formControlName="new_password" class="form-control"
+                   [class.is-invalid]="passwordForm.get('new_password')?.invalid && (passwordForm.get('new_password')?.dirty || passwordForm.get('new_password')?.touched)"
+                   aria-describedby="new-password-error new-password-help" required />
+            @if (passwordForm.get('new_password')?.invalid && (passwordForm.get('new_password')?.dirty || passwordForm.get('new_password')?.touched)) {
+              <div id="new-password-error" class="invalid-feedback">
+                @if (passwordForm.get('new_password')?.hasError('required')) {
+                  <span>Le nouveau mot de passe est requis.</span>
+                }
+                @if (passwordForm.get('new_password')?.hasError('minlength')) {
+                  <span>Le mot de passe doit contenir au moins 8 caractères.</span>
+                }
+                @if (passwordForm.get('new_password')?.hasError('passwordComplexity')) {
+                  <!-- Affichage des erreurs spécifiques de complexité -->
+                  <ul>
+                    @if (passwordForm.get('new_password')?.errors?.['passwordComplexity'].requiresUppercase) {
+                      <li>Doit contenir au moins une majuscule.</li>
+                    }
+                    @if (passwordForm.get('new_password')?.errors?.['passwordComplexity'].requiresLowercase) {
+                      <li>Doit contenir au moins une minuscule.</li>
+                    }
+                    @if (passwordForm.get('new_password')?.errors?.['passwordComplexity'].requiresDigit) {
+                      <li>Doit contenir au moins un chiffre.</li>
+                    }
+                    @if (passwordForm.get('new_password')?.errors?.['passwordComplexity'].requiresSpecialChar) {
+                      <li>Doit contenir au moins un caractère spécial.</li>
+                    }
+                    <!-- Vous pouvez aussi ajouter une condition pour la longueur ici si passwordComplexity la retourne -->
+                    @if (passwordForm.get('new_password')?.errors?.['passwordComplexity'].minlength !== undefined && !passwordForm.get('new_password')?.errors?.['passwordComplexity'].minlength) {
+                      <li>Doit respecter la longueur minimale.</li>
+                    }
+                    @if (passwordForm.get('new_password')?.errors?.['passwordComplexity'].maxlength !== undefined && !passwordForm.get('new_password')?.errors?.['passwordComplexity'].maxlength) {
+                      <li>Ne doit pas dépasser la longueur maximale.</li>
+                    }
+                  </ul>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Confirmation du nouveau mot de passe -->
+          <div class="form-group">
+            <label for="confirm_password">Confirmer le nouveau mot de passe<span class="required-indicator">*</span></label>
+            <input type="password" id="confirm_password" formControlName="confirm_password" class="form-control"
+                   [class.is-invalid]="(passwordForm.get('confirm_password')?.invalid && (passwordForm.get('confirm_password')?.dirty || passwordForm.get('confirm_password')?.touched)) || (passwordForm.hasError('passwordMismatch') && (passwordForm.get('confirm_password')?.dirty || passwordForm.get('confirm_password')?.touched))"
+                   aria-describedby="confirm-password-error" required />
+            @if ((passwordForm.get('confirm_password')?.invalid && (passwordForm.get('confirm_password')?.dirty || passwordForm.get('confirm_password')?.touched)) || (passwordForm.hasError('passwordMismatch') && (passwordForm.get('confirm_password')?.dirty || passwordForm.get('confirm_password')?.touched))) {
+              <div id="confirm-password-error" class="invalid-feedback">
+                @if (passwordForm.get('confirm_password')?.hasError('required')) {
+                  <span>Veuillez confirmer le nouveau mot de passe.</span>
+                }
+                @if (passwordForm.hasError('passwordMismatch')) {
+                  <span>Les mots de passe ne correspondent pas.</span>
+                }
+              </div>
+            }
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-secondary" [disabled]="passwordForm.invalid || passwordForm.pending || !passwordForm.dirty || isChangingPassword">
+            @if (isChangingPassword) {
+              <span class="animate-spin" aria-hidden="true"><lucide-icon name="loader-circle"></lucide-icon></span>
+              <span>Changement en cours...</span>
+            } @else {
+              <lucide-icon name="key-round" aria-hidden="true"></lucide-icon>
+              <span>Changer le mot de passe</span>
+            }
+          </button>
+        </div>
+      </fieldset>
+    </form>
+
+
+
+    <!-- ZONE DANGEREUSE - Suppression de compte -->
       <!-- Placé DANS .main-section car c'est du contenu principal, mais après les formulaires -->
       <!-- Utilisation de <section> + classes globales .card-section .danger-zone [5] -->
     <section class="card-section danger-zone" aria-labelledby="danger-zone-title">

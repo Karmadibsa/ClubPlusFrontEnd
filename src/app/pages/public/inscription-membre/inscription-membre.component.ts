@@ -121,20 +121,20 @@ export class InscriptionMembreComponent implements OnInit, OnDestroy {
     console.log("InscriptionMembreComponent: Initialisation.");
     this.memberRegistrationForm = this.fb.group({
       // Informations personnelles (sans adresse)
-      nom: ['', Validators.required],
-      prenom: ['', Validators.required],
-      date_naissance: ['', Validators.required], // Type 'date' dans le HTML.
+      nom: ['Momper', Validators.required],
+      prenom: ['Axel', Validators.required],
+      date_naissance: ['1999-07-03', Validators.required], // Type 'date' dans le HTML.
       // Contact
-      telephone: ['', Validators.required], // Valideur de pattern plus spécifique peut être ajouté.
-      email: ['', [Validators.required, Validators.email]],
+      telephone: ['0782948279', Validators.required], // Valideur de pattern plus spécifique peut être ajouté.
+      email: ['momper.axel.99@gmail.com', [Validators.required, Validators.email]],
       // Identifiants
-      password: ['', [
+      password: ['Huluxa_57740!', [
         Validators.required,
         PasswordValidators.passwordComplexity() // Validateur personnalisé pour la complexité.
       ]],
-      confirmPassword: ['', [Validators.required]], // Requis pour la confirmation.
+      confirmPassword: ['Huluxa_57740!', [Validators.required]], // Requis pour la confirmation.
       // Affiliation au club
-      codeClub: ['CLUB-', [Validators.required, Validators.pattern(/^CLUB-\w+$/)]] // Commence par 'CLUB-' suivi de caractères.
+      codeClub: ['CLUB-0001', [Validators.required, Validators.pattern(/^CLUB-\w+$/)]] // Commence par 'CLUB-' suivi de caractères.
     }, {
       // Validateur de groupe pour s'assurer que les mots de passe correspondent.
       validators: PasswordValidators.passwordMatch('password', 'confirmPassword')
