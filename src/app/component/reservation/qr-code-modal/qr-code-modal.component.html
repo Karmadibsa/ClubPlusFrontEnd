@@ -36,7 +36,7 @@
           <div class="ticket-info">
             <p><strong>{{ ticketInfo.membre?.prenom }} {{ ticketInfo.membre?.nom }}</strong></p>
             <p>{{ ticketInfo.event?.nom }}</p> <!-- Changé de title à nom pour correspondre à Reservation -->
-            <p>{{ ticketInfo.event?.start | date:'dd/MM/yyyy HH:mm' }}</p>
+            <p>{{ ticketInfo.event?.startTime | date:'dd/MM/yyyy HH:mm' }}</p>
             <p>{{ ticketInfo.event?.location }}</p>
             <p>{{ ticketInfo.categorie?.nom }}</p>
           </div>

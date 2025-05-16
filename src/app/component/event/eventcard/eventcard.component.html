@@ -11,7 +11,7 @@
     <!-- Utiliser H3 si H2 est titre de section parent -->
     <div class="event-time">
       <lucide-icon name="calendar-clock" size="16" aria-hidden="true"></lucide-icon>
-      <span>{{ event.start | date:'dd/MM/yyyy HH:mm' }} - {{ event.end | date:'HH:mm' }}</span>
+      <span>{{ event.startTime | date:'dd/MM/yyyy HH:mm' }} - {{ event.endTime | date:'HH:mm' }}</span>
     </div>
   </header>
 
@@ -32,6 +32,13 @@
           </dt>
           <dd>{{ event.placeReserve ?? 0 }}/{{ event.placeTotal ?? 0 }}</dd>
         </div>
+        <div class="detail-item">
+        <dt class="section-title">
+          <lucide-icon name="users" size="16" aria-hidden="true"></lucide-icon>
+          Organisateur :
+        </dt>
+        <dd>{{ event.organisateur.nom }}</dd>
+    </div>
         @if ((event.amiParticipants?.length ?? 0) > 0) {
           <div class="detail-item amis-section">
             <dt class="section-title">

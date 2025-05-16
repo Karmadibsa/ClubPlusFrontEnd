@@ -1,7 +1,7 @@
 <!-- app-reservation-row.component.html -->
 
-<td [attr.data-label]="'Date'">{{ reservation.event.start | date:'dd/MM/yyyy' }}</td>
-<td [attr.data-label]="'Heure'">{{ reservation.event.start | date:'HH:mm' }}</td>
+<td [attr.data-label]="'Date'">{{ reservation.event.startTime | date:'dd/MM/yyyy' }}</td>
+<td [attr.data-label]="'Heure'">{{ reservation.event.startTime | date:'HH:mm' }}</td>
 <td [attr.data-label]="'Nom de l\'événement'">{{ reservation.event.nom }}</td>
 <td [attr.data-label]="'Catégorie'">{{ reservation.categorie.nom }}</td>
 

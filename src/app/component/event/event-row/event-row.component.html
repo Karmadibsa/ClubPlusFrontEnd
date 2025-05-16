@@ -1,7 +1,7 @@
 <!-- event-row.component.html -->
 <td data-label="Titre">{{ evenement.nom }}</td>
-<td data-label="Début - Fin">{{ evenement.start | date:'dd/MM/yyyy HH:mm' }}
-  - {{ evenement.end | date:'dd/MM HH:mm' }}
+<td data-label="Début - Fin">{{ evenement.startTime | date:'dd/MM/yyyy HH:mm' }}
+  - {{ evenement.endTime | date:'dd/MM HH:mm' }}
 </td>
 <td data-label="Description">{{ evenement.description }}</td>
 <td data-label="Participants">{{ evenement.placeReserve }} / {{ evenement.placeTotal }}</td>

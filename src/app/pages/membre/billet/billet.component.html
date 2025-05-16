@@ -78,7 +78,7 @@
         <div class="pdf-header"><h1>Votre billet</h1></div>
         <div class="pdf-ticket-info">
           <p><strong>Événement:</strong> {{ selectedTicket.event.nom }}</p>
-          <p><strong>Date:</strong> {{ selectedTicket.event.start | date:'dd/MM/yyyy' }}</p>
+          <p><strong>Date:</strong> {{ selectedTicket.event.startTime | date:'dd/MM/yyyy' }}</p>
           <p><strong>Lieu:</strong> {{ selectedTicket.event.location }}</p>
           <p><strong>Catégorie:</strong> {{ selectedTicket.categorie.nom }}</p>
           <p><strong>Nom:</strong> {{ selectedTicket.membre.prenom }} {{ selectedTicket.membre.nom }}</p>

@@ -38,7 +38,7 @@
             <option [ngValue]="null" disabled>-- Sélectionnez un événement --</option>
             @for (event of unratedEvents; track event.id) {
               <option [value]="event.id">
-                {{ event.nom }} ({{ event.start | date:'dd/MM/yyyy HH:mm' }})
+                {{ event.nom }} ({{ event.startTime | date:'dd/MM/yyyy HH:mm' }})
               </option>
             }
           </select>

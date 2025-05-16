@@ -232,7 +232,7 @@ export class BilletComponent implements OnInit, OnDestroy { // Implémente OnIni
     const blueRgb = hexToRgb(mainBlue);
     doc.setTextColor(blueRgb.r, blueRgb.g, blueRgb.b); // Texte bleu.
     doc.setFontSize(12);
-    const eventStartDate = reservation.event?.start ? new DatePipe('fr-FR').transform(reservation.event.start, 'dd/MM/yyyy HH:mm') : 'Non spécifiée';
+    const eventStartDate = reservation.event?.startTime ? new DatePipe('fr-FR').transform(reservation.event.startTime, 'dd/MM/yyyy HH:mm') : 'Non spécifiée';
     doc.text(`Date: ${eventStartDate}`, margin, 70);
     doc.text(`Lieu: ${reservation.event?.location || 'Non spécifié'}`, margin, 80);
 
@@ -270,7 +270,7 @@ export class BilletComponent implements OnInit, OnDestroy { // Implémente OnIni
         doc.setFontSize(10);
         doc.text('Merci de présenter ce billet à l\'entrée de l\'événement. Club Plus.', pageWidth / 2, pageHeight - 10, { align: 'center' });
 
-        doc.save(`Billet-${eventName.replace(/\s+/g, '_')}-${reservation.categorie.nom}-${ reservation.event.start}.pdf`); // Sauvegarde du PDF.
+        doc.save(`Billet-${eventName.replace(/\s+/g, '_')}-${reservation.categorie.nom}-${ reservation.event.startTime}.pdf`); // Sauvegarde du PDF.
         console.log("BilletComponent: PDF généré et sauvegardé.");
         document.head.removeChild(script); // Nettoie le script chargé.
       };

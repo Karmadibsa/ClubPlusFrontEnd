@@ -1,9 +1,3 @@
-/**
- * Importation des modèles Categorie et Club.
- * L'interface Evenement dépend de ces interfaces pour typer
- * ses propriétés 'categories' et 'organisateur'.
- * Il est essentiel que ces interfaces soient bien définies et importées correctement.
- */
 import { Categorie, CategorieCreatePayload, CategorieUpdatePayload } from './categorie'; // Assurez-vous que ce chemin est correct et que les interfaces de Categorie sont bien exportées.
 import { Club } from './club'; // Assurez-vous que ce chemin est correct et que Club est défini.
 
@@ -31,19 +25,20 @@ export interface Evenement {
   nom: string;
 
   /**
-   * @property {string} start
+   * @property {string} startTime
    * @description Date et heure de début de l'événement.
    * Doit être une chaîne de caractères au format ISO 8601 (ex: "2025-07-10T09:00:00Z" ou "2025-07-10T09:00:00").
    * L'utilisation de l'heure UTC (avec 'Z') est recommandée pour éviter les ambiguïtés de fuseau horaire.
    */
-  start: string;
+  startTime: string;
 
   /**
-   * @property {string} end
+   *
+   * @property {string} endTime
    * @description Date et heure de fin de l'événement.
    * Doit également être une chaîne de caractères au format ISO 8601.
    */
-  end: string;
+  endTime: string;
 
   /**
    * @property {string} description
@@ -121,13 +116,13 @@ export interface CreateEventPayload {
    * @property {string} start
    * @description Date et heure de début de l'événement (format ISO 8601).
    */
-  start: string;
+  startTime: string;
 
   /**
    * @property {string} end
    * @description Date et heure de fin de l'événement (format ISO 8601).
    */
-  end: string;
+  endTime: string;
 
   /**
    * @property {string} description
@@ -167,13 +162,13 @@ export interface UpdateEventPayload {
    * @property {string} start
    * @description Nouvelle date et heure de début (format ISO 8601).
    */
-  start: string;
+  startTime: string;
 
   /**
    * @property {string} end
    * @description Nouvelle date et heure de fin (format ISO 8601).
    */
-  end: string;
+  endTime: string;
 
   /**
    * @property {string} description

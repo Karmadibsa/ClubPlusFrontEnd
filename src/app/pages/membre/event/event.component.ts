@@ -177,12 +177,13 @@ export class EventComponent implements OnInit, OnDestroy { // Implémente OnInit
         this.cdr.detectChanges();     // Force la détection pour que l'UI (ex: spinner) disparaisse.
                                       // Ceci est fait avant d'assigner de grandes listes pour
                                       // améliorer la réactivité perçue de l'UI.
-
         this.allEvents = listeevents; // Stocke la liste source complète.
         // Initialement, la liste filtrée est une copie de la liste complète.
+        console.log('AVANT MAP - listeevents[0]:', listeevents.length > 0 ? listeevents[0] : 'Pas d\'événements');
         this.filteredEvents = [...this.allEvents];
         this.updatePaginatedEvents(); // Calcule et affiche la première page.
                                       // `updatePaginatedEvents` appelle aussi `detectChanges`.
+console.log(this.paginatedEvents);
         console.log(`EventComponent (page membre): ${this.allEvents.length} événements chargés.`);
       },
       error: (err: HttpErrorResponse) => {

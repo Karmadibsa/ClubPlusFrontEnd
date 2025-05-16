@@ -187,8 +187,8 @@ export class EditEventModalComponent implements OnInit, OnChanges {
   initForm(): void {
     this.eventForm = this.fb.group({
       nom: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(150)]],
-      start: ['', Validators.required], // La valeur sera une chaîne formatée pour datetime-local
-      end: ['', Validators.required],
+      startTime: ['', Validators.required], // La valeur sera une chaîne formatée pour datetime-local
+      endTime: ['', Validators.required],
       description: ['', [Validators.required, Validators.maxLength(2000)]],
       location: ['', Validators.maxLength(255)],
       // `categories` est un FormArray, car un événement peut avoir plusieurs catégories.
@@ -214,16 +214,16 @@ export class EditEventModalComponent implements OnInit, OnChanges {
     const formatForInput = 'yyyy-MM-ddTHH:mm';
     // Utilise DatePipe pour formater les dates (venant de l'API) au format attendu par l'input.
     // `?? ''` fournit une chaîne vide si `transform` retourne `null` (date invalide).
-    const formattedStart = this.datePipe.transform(eventData.start, formatForInput) ?? '';
-    const formattedEnd = this.datePipe.transform(eventData.end, formatForInput) ?? '';
+    const formattedStart = this.datePipe.transform(eventData.startTime, formatForInput) ?? '';
+    const formattedEnd = this.datePipe.transform(eventData.endTime, formatForInput) ?? '';
     console.log('[Modal populateForm] Dates formatées pour input (start, end):', formattedStart, formattedEnd);
     setTimeout(() => {
       // `patchValue` met à jour les valeurs des contrôles du formulaire.
       // Il ne met à jour que les champs présents dans l'objet fourni.
       this.eventForm.patchValue({
         nom: eventData.nom,
-        start: formattedStart,
-        end: formattedEnd,
+        startTime: formattedStart,
+        endTime: formattedEnd,
         description: eventData.description,
         location: eventData.location || '' // Utilise une chaîne vide si location est null/undefined.
       });
@@ -305,8 +305,8 @@ export class EditEventModalComponent implements OnInit, OnChanges {
    *          sinon `null` (validation réussie).
    */
   dateOrderValidator(control: AbstractControl): { [key: string]: boolean } | null {
-    const startValue = control.get('start')?.value;
-    const endValue = control.get('end')?.value;
+    const startValue = control.get('startTime')?.value;
+    const endValue = control.get('endTime')?.value;
 
     // Si les deux dates sont présentes et que la date de début est égale ou postérieure à la date de fin...
     if (startValue && endValue && new Date(startValue) >= new Date(endValue)) {
@@ -360,8 +360,8 @@ export class EditEventModalComponent implements OnInit, OnChanges {
       // Prépare le payload pour la mise à jour (UpdateEventPayload).
       const updatePayload: UpdateEventPayload = {
         nom: formValue.nom,
-        start: formatForBackend(formValue.start),
-        end: formatForBackend(formValue.end),
+        startTime: formatForBackend(formValue.startTime),
+        endTime: formatForBackend(formValue.endTime),
         description: formValue.description,
         location: formValue.location || undefined, // Envoie undefined si vide, pour que le backend puisse l'ignorer ou mettre à null.
         // Pour les catégories, on envoie la liste complète (avec ID pour les existantes, ID=null pour les nouvelles).
@@ -417,8 +417,8 @@ export class EditEventModalComponent implements OnInit, OnChanges {
 
       const createPayload: CreateEventPayload = {
         nom: formValue.nom,
-        start: formatForBackend(formValue.start),
-        end: formatForBackend(formValue.end),
+        startTime: formatForBackend(formValue.startTime),
+        endTime: formatForBackend(formValue.endTime),
         description: formValue.description,
         location: formValue.location || undefined,
         categories: createCategoriesPayload

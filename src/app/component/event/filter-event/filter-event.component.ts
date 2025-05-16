@@ -148,8 +148,8 @@ export class FilterEventComponent implements OnChanges {
     // 2. Filtrage de la liste source `this.events` en utilisant la méthode `filter` des tableaux.
     let filtered = this.events.filter(event => {
       // Conversion des dates de l'événement (qui sont des chaînes ISO) en objets Date pour la comparaison.
-      const eventStart = new Date(event.start);
-      const eventEnd = new Date(event.end);
+      const eventStart = new Date(event.startTime);
+      const eventEnd = new Date(event.endTime);
 
       // Condition de correspondance pour la recherche textuelle (insensible à la casse).
       const searchMatch = !this.searchQuery || // Si pas de recherche, tous correspondent.
@@ -197,8 +197,8 @@ export class FilterEventComponent implements OnChanges {
 
     // 3. Tri de la liste filtrée en utilisant la méthode `sort` des tableaux.
     filtered.sort((a, b) => {
-      const dateA = new Date(a.start).getTime(); // Convertit en timestamp pour une comparaison numérique facile.
-      const dateB = new Date(b.start).getTime();
+      const dateA = new Date(a.startTime).getTime(); // Convertit en timestamp pour une comparaison numérique facile.
+      const dateB = new Date(b.startTime).getTime();
       // Applique la direction de tri.
       return this.sortDirection === 'asc' ? dateA - dateB : dateB - dateA;
     });
