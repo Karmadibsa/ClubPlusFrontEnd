@@ -140,18 +140,18 @@ export class InscriptionClubComponent implements OnInit, OnDestroy {
 
       // Section Informations Administrateur (imbriquée)
       admin: this.fb.group({
-        nom: ['Dupont', Validators.required],
-        prenom: ['Alexandre', Validators.required],
-        date_naissance: ['1985-06-20', Validators.required],
-        telephone: ['0612345678', [Validators.required, Validators.pattern(/^(?:(?:\+|00)33|0)\s*[6-7](?:[\s.-]*\d{2}){4}$/)]], // Valide un mobile français.
-        email: ['momper.axel.99@gmail.com', [Validators.required, Validators.email]],
+        nom: ['', Validators.required],
+        prenom: ['', Validators.required],
+        date_naissance: ['', Validators.required],
+        telephone: ['', [Validators.required, Validators.pattern(/^(?:(?:\+|00)33|0)\s*[6-7](?:[\s.-]*\d{2}){4}$/)]], // Valide un mobile français.
+        email: ['', [Validators.required, Validators.email]],
         // Groupe de mots de passe imbriqué pour la validation de correspondance.
         passwordGroup: this.fb.group({
-          password: ['Huluxa_57740!', [
+          password: ['', [
             Validators.required,
             PasswordValidators.passwordComplexity() // Validateur personnalisé pour la complexité.
           ]],
-          confirmPassword: ['Huluxa_57740!', Validators.required] // Requis pour la confirmation.
+          confirmPassword: ['', Validators.required] // Requis pour la confirmation.
         }, { validators: PasswordValidators.passwordMatch('password', 'confirmPassword') }) // Validateur de groupe pour la correspondance.
       })
     });
