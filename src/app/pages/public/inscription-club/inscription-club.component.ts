@@ -239,7 +239,6 @@ export class InscriptionClubComponent implements OnInit, OnDestroy {
         password: formValue.admin.passwordGroup.password // Seul le champ 'password' est envoyé.
       }
     };
-    console.log('InscriptionClubComponent: Envoi du payload d\'inscription:', JSON.stringify(payload, null, 2));
 
     // Annule une souscription précédente si elle existait (sécurité).
     this.registrationSubscription?.unsubscribe();
