@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { environment } from '../../../environments/environments'; // Chemin vers votre fichier d'environnement
+import { environment } from '../../../environments/environment'; // Chemin vers votre fichier d'environnement
 import { Membre } from '../../model/membre';
 import { DemandeAmi } from '../../model/demandeAmi';
 

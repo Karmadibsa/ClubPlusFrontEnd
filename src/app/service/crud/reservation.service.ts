@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { environment } from '../../../environments/environments';
+import { environment } from '../../../environments/environment';
 import { Reservation } from '../../model/reservation'; // Modèle pour une réservation
 import { Observable, throwError } from 'rxjs';
 import { ReservationStatus } from '../../model/reservationstatus'; // Enum pour les statuts de réservation

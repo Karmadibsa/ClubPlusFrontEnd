@@ -4,7 +4,7 @@
 // Injectable: Décorateur pour marquer la classe comme un service injectable.
 import { Injectable } from '@angular/core';
 // environment: Fichier de configuration pour les variables d'environnement (ex: URL de l'API).
-import { environment } from '../../../environments/environments'; // Assurez-vous que le chemin est correct.
+import { environment } from '../../../environments/environment'; // Assurez-vous que le chemin est correct.
 // HttpClient: Service Angular pour effectuer des requêtes HTTP.
 import { HttpClient } from '@angular/common/http';
 // Observable: Type de RxJS représentant un flux de données asynchrones.

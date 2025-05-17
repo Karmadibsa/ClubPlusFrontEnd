@@ -6,7 +6,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { environment } from '../../../environments/environments'; // Pour l'URL de base de l'API
+import { environment } from '../../../environments/environment'; // Pour l'URL de base de l'API
 import { catchError, tap } from 'rxjs/operators'; // Opérateurs RxJS
 import { Membre, MembrePayload } from '../../model/membre'; // Modèles pour les membres
 import { Club, ClubRegistrationPayload } from '../../model/club';

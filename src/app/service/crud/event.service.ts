@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { environment } from '../../../environments/environments';
+import { environment } from '../../../environments/environment';
 import { catchError, tap } from 'rxjs/operators';
 import { CreateEventPayload, Evenement, UpdateEventPayload } from '../../model/evenement';
 import { EventRatingPayload, Notation } from '../../model/notation';

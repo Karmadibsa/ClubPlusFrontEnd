@@ -8,7 +8,7 @@ import { MembreService } from '../crud/membre.service';
 import { EventService } from '../crud/event.service';
 import { Membre } from '../../model/membre';
 import { Evenement } from '../../model/evenement';
-import {environment} from '../../../environments/environments';
+import {environment} from '../../../environments/environment';
 
 // Interface pour les données combinées retournées par le service
 export interface DashboardData {
