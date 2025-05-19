@@ -32,3 +32,6 @@ COPY --from=builder /app/dist/front-end-club-plus/browser/ /usr/share/nginx/html
 EXPOSE 80
 # Commande pour démarrer Nginx et le maintenir en premier plan
 CMD ["nginx", "-g", "daemon off;"]
+
+
+#windows-system32-drivers-etc-host-editer
