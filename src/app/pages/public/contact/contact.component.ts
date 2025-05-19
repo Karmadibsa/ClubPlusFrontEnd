@@ -133,7 +133,6 @@ export class ContactComponent implements OnInit, OnDestroy { // **AJOUT : Implé
   ngOnDestroy(): void {
     if (this.contactSubscription) {
       this.contactSubscription.unsubscribe();
-      console.log("ContactComponent: Désinscription de contactSubscription.");
     }
   }
 }
