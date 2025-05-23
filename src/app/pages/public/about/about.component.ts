@@ -1,13 +1,14 @@
 // ----- IMPORTATIONS -----
-import { Component } from '@angular/core'; // `inject` n'est pas nécessaire si pas utilisé.
+import {Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild} from '@angular/core'; // `inject` n'est pas nécessaire si pas utilisé.
 
 // Composants de Navigation/Layout
 import { NavbarComponent } from "../../../component/navigation/navbar/navbar.component"; // Barre de navigation principale.
 import { FooterComponent } from '../../../component/navigation/footer/footer.component'; // Pied de page de l'application.
 
 // Autres (Icônes, Modules Communs)
-import { LucideAngularModule } from 'lucide-angular'; // Pour les icônes Lucide.
-// import { CommonModule } from '@angular/common'; // À ajouter si @if, @for, etc. sont utilisés dans le template.
+import { LucideAngularModule } from 'lucide-angular';
+import {SwiperContainer} from 'swiper/element';
+import {CommonModule} from '@angular/common'; // Pour les icônes Lucide.
 
 /**
  * @Component AboutComponent
@@ -29,12 +30,12 @@ import { LucideAngularModule } from 'lucide-angular'; // Pour les icônes Lucide
     NavbarComponent,            // Affiche la barre de navigation.
     LucideAngularModule,        // Pour les icônes Lucide utilisées dans le template.
     FooterComponent,            // Affiche le pied de page.
-    // CommonModule,            // À ajouter si @if, @for, ou des pipes de CommonModule sont utilisés.
+    CommonModule
   ],
   templateUrl: './about.component.html', // Chemin vers le fichier HTML du composant.
-  styleUrl: './about.component.scss'    // Chemin vers le fichier SCSS/CSS du composant.
-  // changeDetection: ChangeDetectionStrategy.OnPush, // Pourrait être ajouté, bien que moins critique
-  // pour une page avec principalement du contenu statique.
+  styleUrl: './about.component.scss',  // Chemin vers le fichier SCSS/CSS du composant.
+  schemas: [CUSTOM_ELEMENTS_SCHEMA] // Ajoutez ceci
+
 })
 export class AboutComponent { // Pas de `OnInit` ou `OnDestroy` nécessaires pour ce composant simple.
 
@@ -109,6 +110,55 @@ export class AboutComponent { // Pas de `OnInit` ou `OnDestroy` nécessaires pou
     'Interface utilisateur responsive pour une utilisation sur mobile et bureau'
   ];
 
-  // Pas de logique métier complexe dans ce composant, il affiche principalement des données statiques.
-  // Le constructeur est implicitement fourni par Angular.
+  @ViewChild('swiperContainer') swiperContainerRef?: ElementRef<SwiperContainer>;
+  private swiperInstance: SwiperContainer['swiper'] | null = null;
+
+  ngAfterViewInit() {
+    if (this.swiperContainerRef?.nativeElement) {
+      const swiperEl = this.swiperContainerRef.nativeElement;
+
+      const swiperParams = {
+        slidesPerView: 3,
+        spaceBetween: 16,
+        loop: true,
+        autoplay: {
+          delay: 2000, // <<< AUGMENTÉ LE DÉLAI
+          disableOnInteraction: false, // Important: l'autoplay reprendra après interaction utilisateur
+        },
+        pagination: {
+          clickable: true,
+        },
+        slidesPerGroup: 1,
+      };
+
+      Object.assign(swiperEl, swiperParams);
+      swiperEl.initialize();
+      this.swiperInstance = swiperEl.swiper;
+
+      if (this.swiperInstance) {
+        // Si l'autoplay est configuré dans les paramètres, essayez de le démarrer.
+        // Swiper Element devrait normalement le faire automatiquement, mais cela peut aider.
+        if (this.swiperInstance.params.autoplay && (this.swiperInstance.params.autoplay as any).delay) {
+          this.swiperInstance.autoplay.start(); // <<< ESSAYEZ DE DÉMARRER L'AUTOPLAY
+        }
+
+        // Écouteurs pour la pagination (comme avant)
+        this.swiperInstance.on('slideChange', () => {
+          if (this.swiperInstance?.pagination && this.swiperInstance.pagination.el) {
+            this.swiperInstance.pagination.update();
+          }
+        });
+
+        this.swiperInstance.on('init', () => {
+          if (this.swiperInstance?.pagination && this.swiperInstance.pagination.el) {
+            this.swiperInstance.pagination.update();
+          }
+        });
+
+        if (this.swiperInstance.params.loop && this.swiperInstance.pagination && this.swiperInstance.pagination.el) {
+          this.swiperInstance.pagination.update();
+        }
+      }
+    }
+  }
 }

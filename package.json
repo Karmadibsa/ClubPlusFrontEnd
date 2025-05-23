@@ -27,8 +27,10 @@
     "jspdf-html2canvas": "^1.5.2",
     "lucide-angular": "^0.487.0",
     "ng2-charts": "^8.0.0",
+    "ngx-carousel-ease": "^0.1.9",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.20.0",
+    "swiper": "^11.2.7",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },

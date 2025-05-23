@@ -1,4 +1,6 @@
 // Utilisation exclusive des variables globales de :root
+@import 'swiper/scss'; // Styles de base
+@import 'swiper/scss/pagination'; // Si vous utilisez la pagination (points)
 
 :host {
   display: block;
@@ -135,6 +137,7 @@
   flex-direction: column; // Icône au-dessus du texte
   align-items: center;
   gap: var(--spacing-sm, 8px);
+  min-height:  125px;
   transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 
   lucide-icon {
@@ -176,6 +179,31 @@
     transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   }
 }
+// Style pour le conteneur de pagination de Swiper
+:host ::ng-deep .swiper-pagination {
+  position: relative; // Change de 'absolute' à 'relative' ou 'static' pour qu'il prenne de la place dans le flux normal
+  bottom: auto;       // Annule le positionnement 'bottom' par défaut
+  left: auto;         // Annule le positionnement 'left' par défaut
+  transform: none;    // Annule la transformation par défaut
+  width: 100%;
+  text-align: center;
+  margin-top: var(--spacing-lg, 24px); // Crée un espace entre le carrousel et les points
+  // Ajustez cette valeur selon vos besoins.
+  // var(--spacing-lg) vient de vos variables globales.
+}
+
+// Optionnel: Style pour les points individuels (si vous voulez changer leur apparence)
+:host ::ng-deep .swiper-pagination-bullet {
+  background-color: var(--text-light, #999999); // Couleur par défaut des points
+  opacity: 0.7;
+  margin: 0 var(--spacing-xs, 4px); // Espace entre les points
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+:host ::ng-deep .swiper-pagination-bullet-active {
+  background-color: var(--main-orange, #f26115); // Couleur du point actif (utilise votre variable)
+  opacity: 1;
+}
 
 /* --- Responsive (Similaire à l'accueil) --- */
 @media (max-width: 768px) {
@@ -197,7 +225,7 @@
     font-size: 1.6rem;
   }
 
-  // La grille s'adapte automatiquement grâce à `repeat(auto-fit, ...)`
+
 }
 
 

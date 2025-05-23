@@ -3,12 +3,13 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../service/security/auth.service';
-import { SweetAlertService } from '../../../service/sweet-alert.service'; // Importez votre service d'alerte
+import { SweetAlertService } from '../../../service/sweet-alert.service';
+import {LucideAngularModule} from 'lucide-angular'; // Importez votre service d'alerte
 
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, LucideAngularModule],
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.scss'] // Adaptez ou supprimez le fichier si pas de styles spécifiques
 })

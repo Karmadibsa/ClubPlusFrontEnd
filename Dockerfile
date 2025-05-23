@@ -15,7 +15,7 @@ RUN npm run build --prod
 
 # Étape 2: Phase de service (serve)
 # Utiliser une image Nginx légère pour servir les fichiers statiques
-FROM nginx:alpine
+FROM nginx:1.27-alpine
 
 # Supprimer la configuration Nginx par défaut si elle existe
 RUN rm -f /etc/nginx/conf.d/default.conf

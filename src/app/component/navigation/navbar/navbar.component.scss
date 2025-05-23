@@ -103,6 +103,7 @@
 
       // Modificateur : Style du bouton primaire.
       &.btn-primary {
+        border: 2px solid var(--main-blue);
         background-color: var(--main-blue);
         color: var(--main-white);
 
@@ -115,6 +116,7 @@
 
       // Modificateur : Style du bouton secondaire.
       &.btn-secondary {
+        border: 2px solid var(--main-orange);
         background-color: var(--main-orange);
         color: var(--main-white);
 
