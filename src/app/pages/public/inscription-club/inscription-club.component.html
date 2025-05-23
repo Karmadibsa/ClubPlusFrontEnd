@@ -41,15 +41,15 @@
           <input type="text" id="club-numero-voie" class="form-input" formControlName="numero_voie" placeholder="Numéro"
                  required/>
           @if (registrationForm.get('numero_voie')?.invalid && registrationForm.get('numero_voie')?.touched) {
-            <div class="validation-error">Requis.</div>
+            <div class="validation-error">Le numéro de voie est requis.</div>
           }
-        </div>
+        </div>lE
         <div class="form-group">
           <label for="club-rue" class="form-label">Rue :</label>
           <input type="text" id="club-rue" class="form-input" formControlName="rue" placeholder="Nom de la rue"
                  required/>
           @if (registrationForm.get('rue')?.invalid && registrationForm.get('rue')?.touched) {
-            <div class="validation-error">Requis.</div>
+            <div class="validation-error">Le numéro de rue est requis.</div>
           }
         </div>
       </div>
@@ -59,14 +59,14 @@
           <input type="text" id="club-codepostal" class="form-input" formControlName="codepostal"
                  placeholder="Code postal" required/>
           @if (registrationForm.get('codepostal')?.invalid && registrationForm.get('codepostal')?.touched) {
-            <div class="validation-error">Requis.</div>
+            <div class="validation-error">Le code postal est requis.</div>
           }
         </div>
         <div class="form-group">
           <label for="club-ville" class="form-label">Ville :</label>
           <input type="text" id="club-ville" class="form-input" formControlName="ville" placeholder="Ville" required/>
           @if (registrationForm.get('ville')?.invalid && registrationForm.get('ville')?.touched) {
-            <div class="validation-error">Requis.</div>
+            <div class="validation-error">La ville est requise.</div>
           }
         </div>
       </div>
@@ -81,7 +81,7 @@
           <input type="tel" id="club-telephone" class="form-input" formControlName="telephone"
                  placeholder="Téléphone principal" required/>
           @if (registrationForm.get('telephone')?.invalid && registrationForm.get('telephone')?.touched) {
-            <div class="validation-error">Requis.</div>
+            <div class="validation-error">Le numéro de téléphone est requis.</div>
           }
         </div>
         <div class="form-group">
@@ -146,7 +146,7 @@
             <input type="tel" id="admin-telephone" class="form-input" formControlName="telephone"
                    placeholder="Téléphone personnel" required/>
             @if (registrationForm.get('admin.telephone')?.invalid && registrationForm.get('admin.telephone')?.touched) {
-              <div class="validation-error">Requis.</div>
+              <div class="validation-error">Le numéro de téléphone est requis.</div>
             }
           </div>
           <div class="form-group">
@@ -175,7 +175,7 @@
               <label for="admin-password" class="form-label">Mot de passe :</label>
               <input type="password" id="admin-password" class="form-input" formControlName="password"
                      placeholder="Créez un mot de passe" required
-              [ngClass]="{'is-invalid': getAdminPasswordControl('password')?.invalid && (getAdminPasswordControl('password')?.touched || getAdminPasswordControl('password')?.dirty)}" />
+                     [ngClass]="{'is-invalid': getAdminPasswordControl('password')?.invalid && (getAdminPasswordControl('password')?.touched || getAdminPasswordControl('password')?.dirty)}" />
 
               <!-- !! SECTION MISE À JOUR POUR LES ERREURS DYNAMIQUES !! -->
               <!-- Affiche la liste des critères manquants UNIQUEMENT -->
