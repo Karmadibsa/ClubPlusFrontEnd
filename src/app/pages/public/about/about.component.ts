@@ -118,17 +118,40 @@ export class AboutComponent { // Pas de `OnInit` ou `OnDestroy` nécessaires pou
       const swiperEl = this.swiperContainerRef.nativeElement;
 
       const swiperParams = {
+        // Paramètres par défaut (pour les écrans les plus larges ou si aucun breakpoint ne correspond avant)
         slidesPerView: 3,
         spaceBetween: 16,
         loop: true,
         autoplay: {
-          delay: 2000, // <<< AUGMENTÉ LE DÉLAI
-          disableOnInteraction: false, // Important: l'autoplay reprendra après interaction utilisateur
+          delay: 2500,
+          disableOnInteraction: false,
         },
         pagination: {
           clickable: true,
         },
-        slidesPerGroup: 1,
+        slidesPerGroup: 1, // Important pour la navigation et l'autoplay
+
+        // Configuration des breakpoints pour le responsive [2, 4]
+        breakpoints: {
+          // Quand la largeur de la fenêtre est >= 0px (mobile-first)
+          0: {
+            slidesPerView: 1,
+            spaceBetween: 10, // Moins d'espace sur mobile
+            slidesPerGroup: 1, // Défile d'un slide sur mobile
+          },
+          // Quand la largeur de la fenêtre est >= 640px (tablettes et plus)
+          640: {
+            slidesPerView: 2,
+            spaceBetween: 15,
+            slidesPerGroup: 1, // Peut rester à 1 ou passer à 2 si vous le souhaitez
+          },
+          // Quand la largeur de la fenêtre est >= 1024px (grands écrans)
+          1024: {
+            slidesPerView: 3,
+            spaceBetween: 16,
+            slidesPerGroup: 1, // Peut rester à 1 ou passer à 3
+          }
+        }
       };
 
       Object.assign(swiperEl, swiperParams);
@@ -136,13 +159,10 @@ export class AboutComponent { // Pas de `OnInit` ou `OnDestroy` nécessaires pou
       this.swiperInstance = swiperEl.swiper;
 
       if (this.swiperInstance) {
-        // Si l'autoplay est configuré dans les paramètres, essayez de le démarrer.
-        // Swiper Element devrait normalement le faire automatiquement, mais cela peut aider.
         if (this.swiperInstance.params.autoplay && (this.swiperInstance.params.autoplay as any).delay) {
-          this.swiperInstance.autoplay.start(); // <<< ESSAYEZ DE DÉMARRER L'AUTOPLAY
+          this.swiperInstance.autoplay.start();
         }
 
-        // Écouteurs pour la pagination (comme avant)
         this.swiperInstance.on('slideChange', () => {
           if (this.swiperInstance?.pagination && this.swiperInstance.pagination.el) {
             this.swiperInstance.pagination.update();

@@ -77,7 +77,7 @@
 .features-section {
   // Mise en page flexible pour aligner les éléments horizontalement sur desktop.
   display: flex;
-  justify-content: space-around; // Répartit l'espace autour des éléments.
+  justify-content: center;
   padding: var(--spacing-lg) var(--spacing-md); // Marges internes verticales et horizontales réduites.
   background-color: var(--bg-light-gray); // Couleur de fond légère.
   text-align: center; // Centre le texte dans chaque item.

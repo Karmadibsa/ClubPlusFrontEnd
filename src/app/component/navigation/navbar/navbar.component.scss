@@ -9,8 +9,12 @@
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); // Ombre subtile pour la profondeur.
   font-family: var(--font-family);
   padding: var(--spacing-md) var(--spacing-lg); // Marges internes verticales et horizontales.
-  position: relative; // Établit un contexte de positionnement pour les enfants absolus (menu mobile).
-
+  //position: relative; // Établit un contexte de positionnement pour les enfants absolus (menu mobile).
+  position: sticky; // Rend la navbar collante
+  top: 0;           // Se colle en haut de la fenêtre de visualisation
+  z-index: 1020;    // Assure qu'elle reste au-dessus des autres contenus
+  // Choisissez une valeur de z-index appropriée (ex: Bootstrap utilise 1030 pour les navbars fixes)
+  width: 100%;
   /*------------------------------------*\
     #CONTENEUR NAVBAR
     Enveloppe interne pour contraindre la largeur du contenu et gérer la mise en page.

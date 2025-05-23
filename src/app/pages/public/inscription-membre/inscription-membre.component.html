@@ -50,7 +50,7 @@
           <input type="tel" id="membre-telephone" class="form-input" formControlName="telephone" placeholder="Téléphone"
                  required/>
           @if (memberRegistrationForm.get('telephone')?.invalid && memberRegistrationForm.get('telephone')?.touched) {
-            <div class="validation-error">Requis.</div>
+            <div class="validation-error">Le numéro de téléphone est requis.</div>
           }
         </div>
         <div class="form-group">
