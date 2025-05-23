@@ -1,6 +1,4 @@
 
-@import 'swiper/scss'; // Styles de base
-@import 'swiper/scss/pagination'; // Si vous utilisez la pagination (points)
 
 // Custom Theming for Angular Material
 
@@ -18,6 +16,9 @@ html {
     density: 0,
   ));
 }
+
+@import 'swiper/scss'; // Styles de base
+@import 'swiper/scss/pagination'; // Si vous utilisez la pagination (points)
 
 /* ---- Définitions Raffinées pour le Mode Sombre ---- */
 html[data-theme="dark"] {
