@@ -123,6 +123,7 @@ export class InscriptionClubComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+    const telephonePattern = /^(?:(?:(?:\+|00)33\s*(?:0)?|0)?\s*[1-9])(?:[\s.-]*\d{2}){4}$/;
     console.log("InscriptionClubComponent: Initialisation.");
     // Initialisation du formulaire réactif.
     this.registrationForm = this.fb.group({
@@ -132,19 +133,27 @@ export class InscriptionClubComponent implements OnInit, OnDestroy {
       // Section Adresse Club (CONSERVÉE car présente dans le HTML fourni)
       numero_voie: ['10', Validators.required],
       rue: ['Avenue des Champions', Validators.required],
-      codepostal: ['75000', [Validators.required, Validators.pattern(/^\d{5}$/)]], // Valide un code postal français.
+      codepostal: ['75000', [
+        Validators.required,
+        Validators.pattern(/^(?:\d{5}|2[ABab]\d{3})$/)
+      ]],
       ville: ['Paris', Validators.required],
       // Section Contact Club
-      telephone: ['0123456789', [Validators.required, Validators.pattern(/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/)]], // Valide un numéro de téléphone français.
-      email: ['club.alpha@example.com', [Validators.required, Validators.email]],
-
+      telephone: ['', [Validators.required, Validators.pattern(telephonePattern)]],
+      email: ['', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+      ]],
       // Section Informations Administrateur (imbriquée)
       admin: this.fb.group({
         nom: ['', Validators.required],
         prenom: ['', Validators.required],
         date_naissance: ['', Validators.required],
-        telephone: ['', [Validators.required, Validators.pattern(/^(?:(?:\+|00)33|0)\s*[6-7](?:[\s.-]*\d{2}){4}$/)]], // Valide un mobile français.
-        email: ['', [Validators.required, Validators.email]],
+        telephone: ['', [Validators.required, Validators.pattern(telephonePattern)]],
+        email: ['', [
+          Validators.required,
+          Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+        ]],
         // Groupe de mots de passe imbriqué pour la validation de correspondance.
         passwordGroup: this.fb.group({
           password: ['', [

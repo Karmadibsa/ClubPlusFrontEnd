@@ -118,6 +118,7 @@ export class InscriptionMembreComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+    const telephonePattern = /^(?:(?:(?:\+|00)33\s*(?:0)?|0)?\s*[1-9])(?:[\s.-]*\d{2}){4}$/;
     console.log("InscriptionMembreComponent: Initialisation.");
     this.memberRegistrationForm = this.fb.group({
       // Informations personnelles (sans adresse)
@@ -125,9 +126,11 @@ export class InscriptionMembreComponent implements OnInit, OnDestroy {
       prenom: ['', Validators.required],
       date_naissance: ['', Validators.required], // Type 'date' dans le HTML.
       // Contact
-      telephone: ['', Validators.required], // Valideur de pattern plus spécifique peut être ajouté.
-      email: ['', [Validators.required, Validators.email]],
-      // Identifiants
+      telephone: ['', [Validators.required, Validators.pattern(telephonePattern)]],
+      email: ['', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+      ]],      // Identifiants
       password: ['', [
         Validators.required,
         PasswordValidators.passwordComplexity() // Validateur personnalisé pour la complexité.
