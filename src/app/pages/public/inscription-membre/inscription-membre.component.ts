@@ -24,7 +24,8 @@ import { Membre, MembrePayload } from '../../../model/membre'; // Interfaces dé
 // Services
 import { AuthService } from '../../../service/security/auth.service'; // Service pour les opérations d'authentification et d'inscription.
 import { PasswordValidators } from '../../../service/validator/password.validator'; // Validateurs personnalisés pour le mot de passe.
-import { SweetAlertService } from '../../../service/sweet-alert.service'; // Pour les notifications utilisateur.
+import { SweetAlertService } from '../../../service/sweet-alert.service';
+import {dateInPastValidator} from '../../../service/validator/dateInPast.validator'; // Pour les notifications utilisateur.
 
 // Autres (si besoin, par exemple pour des icônes dans le template de CETTE page)
 // import { LucideAngularModule } from 'lucide-angular';
@@ -118,16 +119,19 @@ export class InscriptionMembreComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+    const telephonePattern = /^(?:(?:(?:\+|00)33\s*(?:0)?|0)?\s*[1-9])(?:[\s.-]*\d{2}){4}$/;
     console.log("InscriptionMembreComponent: Initialisation.");
     this.memberRegistrationForm = this.fb.group({
       // Informations personnelles (sans adresse)
       nom: ['', Validators.required],
       prenom: ['', Validators.required],
-      date_naissance: ['', Validators.required], // Type 'date' dans le HTML.
+      date_naissance: ['', [Validators.required, dateInPastValidator()]], // Type 'date' dans le HTML.
       // Contact
-      telephone: ['', Validators.required], // Valideur de pattern plus spécifique peut être ajouté.
-      email: ['', [Validators.required, Validators.email]],
-      // Identifiants
+      telephone: ['', [Validators.required, Validators.pattern(telephonePattern)]],
+      email: ['', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+      ]],      // Identifiants
       password: ['', [
         Validators.required,
         PasswordValidators.passwordComplexity() // Validateur personnalisé pour la complexité.

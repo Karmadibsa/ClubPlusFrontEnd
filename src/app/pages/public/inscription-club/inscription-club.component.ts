@@ -25,7 +25,8 @@ import { PasswordValidators } from '../../../service/validator/password.validato
 import { SweetAlertService } from '../../../service/sweet-alert.service'; // Pour les notifications utilisateur.
 
 // Modèles (Interfaces de données)
-import { Club, ClubRegistrationPayload } from '../../../model/club'; // Interfaces décrivant un club et le payload d'inscription.
+import { Club, ClubRegistrationPayload } from '../../../model/club';
+import {dateInPastValidator} from '../../../service/validator/dateInPast.validator'; // Interfaces décrivant un club et le payload d'inscription.
 
 // Autres (si besoin, par exemple pour des icônes dans le template de CETTE page)
 // import { LucideAngularModule } from 'lucide-angular';
@@ -123,28 +124,36 @@ export class InscriptionClubComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+    const telephonePattern = /^(?:(?:(?:\+|00)33\s*(?:0)?|0)?\s*[1-9])(?:[\s.-]*\d{2}){4}$/;
     console.log("InscriptionClubComponent: Initialisation.");
     // Initialisation du formulaire réactif.
     this.registrationForm = this.fb.group({
       // Section Informations Club
       nom: ['Club de Test Alpha', Validators.required],
-      date_creation: ['2023-01-15', Validators.required], // Format YYYY-MM-DD pour <input type="date">
-      // Section Adresse Club (CONSERVÉE car présente dans le HTML fourni)
+      date_creation: ['2023-01-15', [Validators.required, dateInPastValidator()]],      // Section Adresse Club (CONSERVÉE car présente dans le HTML fourni)
       numero_voie: ['10', Validators.required],
       rue: ['Avenue des Champions', Validators.required],
-      codepostal: ['75000', [Validators.required, Validators.pattern(/^\d{5}$/)]], // Valide un code postal français.
+      codepostal: ['75000', [
+        Validators.required,
+        Validators.pattern(/^(?:\d{5}|2[ABab]\d{3})$/)
+      ]],
       ville: ['Paris', Validators.required],
       // Section Contact Club
-      telephone: ['0123456789', [Validators.required, Validators.pattern(/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/)]], // Valide un numéro de téléphone français.
-      email: ['club.alpha@example.com', [Validators.required, Validators.email]],
-
+      telephone: ['', [Validators.required, Validators.pattern(telephonePattern)]],
+      email: ['', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+      ]],
       // Section Informations Administrateur (imbriquée)
       admin: this.fb.group({
         nom: ['', Validators.required],
         prenom: ['', Validators.required],
         date_naissance: ['', Validators.required],
-        telephone: ['', [Validators.required, Validators.pattern(/^(?:(?:\+|00)33|0)\s*[6-7](?:[\s.-]*\d{2}){4}$/)]], // Valide un mobile français.
-        email: ['', [Validators.required, Validators.email]],
+        telephone: ['', [Validators.required, Validators.pattern(telephonePattern)]],
+        email: ['', [
+          Validators.required,
+          Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+        ]],
         // Groupe de mots de passe imbriqué pour la validation de correspondance.
         passwordGroup: this.fb.group({
           password: ['', [
