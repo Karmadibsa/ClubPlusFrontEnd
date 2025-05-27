@@ -302,6 +302,9 @@ textarea.form-control {
     justify-content: stretch; // Bouton pleine largeur sur mobile
     .btn { width: 100%; }
   }
+  .link-section{
+    flex-wrap: wrap;
+  }
 }
 
 .link-section {
