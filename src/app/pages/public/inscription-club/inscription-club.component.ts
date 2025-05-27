@@ -25,7 +25,8 @@ import { PasswordValidators } from '../../../service/validator/password.validato
 import { SweetAlertService } from '../../../service/sweet-alert.service'; // Pour les notifications utilisateur.
 
 // Modèles (Interfaces de données)
-import { Club, ClubRegistrationPayload } from '../../../model/club'; // Interfaces décrivant un club et le payload d'inscription.
+import { Club, ClubRegistrationPayload } from '../../../model/club';
+import {dateInPastValidator} from '../../../service/validator/dateInPast.validator'; // Interfaces décrivant un club et le payload d'inscription.
 
 // Autres (si besoin, par exemple pour des icônes dans le template de CETTE page)
 // import { LucideAngularModule } from 'lucide-angular';
@@ -129,8 +130,7 @@ export class InscriptionClubComponent implements OnInit, OnDestroy {
     this.registrationForm = this.fb.group({
       // Section Informations Club
       nom: ['Club de Test Alpha', Validators.required],
-      date_creation: ['2023-01-15', Validators.required], // Format YYYY-MM-DD pour <input type="date">
-      // Section Adresse Club (CONSERVÉE car présente dans le HTML fourni)
+      date_creation: ['2023-01-15', [Validators.required, dateInPastValidator()]],      // Section Adresse Club (CONSERVÉE car présente dans le HTML fourni)
       numero_voie: ['10', Validators.required],
       rue: ['Avenue des Champions', Validators.required],
       codepostal: ['75000', [

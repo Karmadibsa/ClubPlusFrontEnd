@@ -49,8 +49,12 @@
           <label for="membre-telephone" class="form-label">Numéro de téléphone :</label>
           <input type="tel" id="membre-telephone" class="form-input" formControlName="telephone" placeholder="Téléphone"
                  required/>
-          @if (memberRegistrationForm.get('telephone')?.invalid && memberRegistrationForm.get('telephone')?.touched) {
-            <div class="validation-error">Le numéro de téléphone est requis.</div>
+          @if (memberRegistrationForm.get('admin.telephone')?.invalid && memberRegistrationForm.get('admin.telephone')?.touched) {
+            @if (memberRegistrationForm.get('admin.telephone')?.errors?.['required']) {
+              <span>Le numéro de téléphone est requis.</span>
+            } @else if (memberRegistrationForm.get('admin.telephone')?.errors?.['pattern']) {
+              <span>Format du numéro invalide.</span>
+            }
           }
         </div>
         <div class="form-group">
@@ -61,7 +65,7 @@
             <div class="validation-error">
               @if (memberRegistrationForm.get('email')?.errors?.['required']) {
                 <span>L'email est requis.</span>
-              } @else if (memberRegistrationForm.get('email')?.errors?.['email']) {
+              } @else if (memberRegistrationForm.get('email')?.errors?.['pattern']) {
                 <span>Format d'email invalide.</span>
               }
             </div>
