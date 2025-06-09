@@ -1,9 +1,7 @@
-<!-- Utilisation des classes globales et de la variante blur -->
 <div class="modal-overlay modal-overlay-blur"
      [class.is-visible]="isVisible"
-     (click)="onClose()"> <!-- Utiliser onClose défini dans le TS -->
+     (click)="onClose()">
 
-  <!-- Contenu de la modale, utilise les classes globales -->
   <div class="modal-content" (click)="stopPropagation($event)">
 
     <!-- En-tête standard de la modale -->
@@ -21,7 +19,7 @@
     <!-- Corps de la modale -->
     <main class="modal-body">
 
-      <!-- Détails de l'événement (styles spécifiques conservés dans SCSS) -->
+      <!-- Détails de l'événement -->
       <div class="event-details">
         <div class="event-info">
           <div class="info-item">
@@ -58,12 +56,8 @@
             événement.</p>
         </div>
 
-        <!-- Formulaire pour la sélection (Template-driven avec ngModel ici) -->
-        <!-- #reservationNgForm="ngForm" n'est plus nécessaire si pas de validation complexe ou de soumission directe du form -->
         <form>
-          <!-- Conteneur des catégories (style spécifique conservé dans SCSS) -->
           <div class="categories">
-            <!-- Utilisation de @for pour itérer -->
             @for (category of event?.categories; track category.id; let i = $index) {
               <div class="category-item">
                 <input type="radio"
@@ -71,7 +65,7 @@
                        name="categorySelection"
                        [(ngModel)]="selectedCategory"
                        [value]="category"
-                       required/> <!-- Validation HTML simple -->
+                       required/>
                 <label [for]="'category-' + i" class="category-label">
                   <div class="category-name">{{ category.nom }}</div>
                   <div class="category-name">{{ category.placeDisponible }} places restantes</div>
@@ -81,23 +75,16 @@
               <p class="no-categories-available">Aucune catégorie disponible pour cet événement.</p>
             }
           </div>
-          <!-- Erreur si aucune sélection n'est faite (affichée conditionnellement près du bouton submit) -->
         </form>
       </div>
 
     </main>
 
-    <!-- Pied de page standard de la modale -->
     <footer class="modal-footer">
-      <!-- Message d'erreur pour sélection -->
       @if (!selectedCategory && isSubmitting) {
         <!-- Affiche si on tente de soumettre sans sélection -->
         <span class="selection-error invalid-feedback">Veuillez sélectionner une catégorie.</span>
       }
-
-      <!-- Bouton Annuler (optionnel, le X suffit) -->
-      <!-- <button type="button" class="btn btn-secondary" (click)="onClose()">Annuler</button> -->
-
       <!-- Bouton Réserver utilisant les classes globales -->
       <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="!selectedCategory || isSubmitting">
         @if (isSubmitting) {

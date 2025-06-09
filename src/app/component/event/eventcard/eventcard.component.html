@@ -1,14 +1,8 @@
-<!-- event-card.component.html -->
-
-<!-- Utilisation d'une div comme conteneur principal de la carte -->
-<!-- Les styles SCSS doivent définir .event-card pour ressembler à une carte -->
 <div class="event-card card" role="article" [attr.aria-labelledby]="'event-title-' + event.id">
-  <!-- Ajout classe .card globale -->
 
   <!-- En-tête de la carte -->
   <header class="event-card-header">
     <h3 class="event-title" [id]="'event-title-' + event.id">{{ event.nom }}</h3>
-    <!-- Utiliser H3 si H2 est titre de section parent -->
     <div class="event-time">
       <lucide-icon name="calendar-clock" size="16" aria-hidden="true"></lucide-icon>
       <span>{{ event.startTime | date:'dd/MM/yyyy HH:mm' }} - {{ event.endTime | date:'HH:mm' }}</span>
@@ -54,16 +48,15 @@
 
   <!-- Pied de carte / Actions -->
   <footer class="event-card-actions">
-    <!-- Utilise les classes .btn .btn-primary globales -->
     <button type="button" (click)="openReservationModal()" class="btn btn-primary reserve-button">
       <lucide-icon name="calendar-check" size="18" aria-hidden="true"></lucide-icon>
       Réserver
     </button>
   </footer>
 
-</div> <!-- Fin .event-card -->
+</div>
 
-<!-- Modale gérée par EventCardComponent -->
+
 @if (isReservationModalVisible) {
   <app-reservation-modal
     [isVisible]="isReservationModalVisible"
