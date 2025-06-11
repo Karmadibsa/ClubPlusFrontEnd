@@ -160,8 +160,10 @@ export class InscriptionClubComponent implements OnInit, OnDestroy {
             Validators.required,
             PasswordValidators.passwordComplexity() // Validateur personnalisé pour la complexité.
           ]],
-          confirmPassword: ['', Validators.required] // Requis pour la confirmation.
+          confirmPassword: ['', Validators.required], // Requis pour la confirmation.
+        acceptTerms: [false, Validators.requiredTrue] // Initialisé à false, doit être true pour être valide
         }, { validators: PasswordValidators.passwordMatch('password', 'confirmPassword') }) // Validateur de groupe pour la correspondance.
+
       })
     });
     console.log("InscriptionClubComponent: Formulaire d'inscription initialisé.");

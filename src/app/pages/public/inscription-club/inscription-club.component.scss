@@ -225,8 +225,23 @@ textarea { // Si ajoutés plus tard
     opacity: 0.7;
   }
 }
+.form-group--checkbox{
+  display:  flex;
+  flex-direction: row;
+}
+/* Style pour rendre le lien des CGU plus visible dans le formulaire */
+.form-label--checkbox a {
+  color: var(--main-blue); /* Utilise votre variable de couleur principale */
+  text-decoration: underline;
+  font-weight: 500; /* Un peu plus gras pour attirer l'œil */
+  transition: color 0.2s ease-in-out;
+}
 
-
+/* Effet au survol pour un retour visuel clair */
+.form-label--checkbox a:hover,
+.form-label--checkbox a:focus {
+  color: var(--main-orange); /* Changement de couleur au survol */
+}
 /*------------------------------------*\
   #MEDIA QUERIES: RESPONSIVE
 \*------------------------------------*/

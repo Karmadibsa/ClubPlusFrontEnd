@@ -152,7 +152,21 @@
       }
 
     </fieldset>
+    <fieldset class="form-section">
+      <legend class="form-section__title">Consentement</legend>
+      <div class="form-group form-group--checkbox"> <input type="checkbox" id="cgu-consent" class="form-input--checkbox" formControlName="acceptTerms" required/>
+        <label for="cgu-consent" class="form-label--checkbox">
+          J'ai lu et j'accepte les
+          <a routerLink="/cgu" target="_blank" rel="noopener noreferrer">Conditions Générales d'Utilisation</a>.
+        </label>
 
+        @if (memberRegistrationForm.get('acceptTerms')?.invalid && memberRegistrationForm.get('acceptTerms')?.touched) {
+          <div class="validation-error">
+            Vous devez accepter les conditions pour finaliser l'inscription.
+          </div>
+        }
+      </div>
+    </fieldset>
 
     <!-- Bouton de Soumission -->
     <div class="form-actions">

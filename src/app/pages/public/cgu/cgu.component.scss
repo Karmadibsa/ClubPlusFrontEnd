@@ -1,0 +1,149 @@
+/* Utilisation exclusive des variables globales de :root */
+:host {
+  display: block;
+  background-color: var(--bg-global, #f5f5f5); /* Fond global */
+  color: var(--text-dark); /* Couleur de texte par défaut */
+}
+
+/* --- Section Héros (Identique à la page "À propos") --- */
+.about-hero-section {
+  background: linear-gradient(135deg, var(--bg-light-gray) 0%, var(--main-white) 100%);
+  padding: var(--spacing-xl, 32px) var(--spacing-lg, 24px);
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 250px;
+  transition: background-color 0.3s ease;
+}
+
+.about-hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.about-hero-title {
+  font-size: 2.8rem;
+  color: var(--text-dark);
+  margin-bottom: var(--spacing-md, 16px);
+  transition: color 0.3s ease;
+}
+
+.about-hero-title strong {
+  color: var(--main-orange);
+  transition: color 0.3s ease;
+}
+
+.about-hero-description {
+  font-size: 1.1rem;
+  color: var(--text-medium);
+  line-height: 1.6;
+  transition: color 0.3s ease;
+}
+
+/* --- Conteneur principal pour les articles des CGU --- */
+.cgu-container {
+  padding-bottom: var(--spacing-xl, 32px); /* Espace en bas de la page */
+}
+
+/* --- Styles Communs aux Sections (Identiques à "À propos") --- */
+.about-section {
+  padding: var(--spacing-xl, 32px) var(--spacing-lg, 24px);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.about-section:first-child {
+  padding-top: var(--spacing-xl, 32px);
+}
+
+.bg-alternate {
+  background-color: var(--bg-light-gray);
+}
+
+.about-section-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.about-section-content h2 {
+  font-size: 1.8rem;
+  color: var(--main-blue);
+  margin-bottom: var(--spacing-lg, 24px);
+  text-align: left; /* Les titres d'articles sont alignés à gauche */
+  transition: color 0.3s ease;
+}
+
+.about-section-content p,
+.about-section-content li {
+  font-size: 1rem;
+  color: var(--text-medium);
+  line-height: 1.7; /* Ligne plus aérée pour la lisibilité juridique */
+  margin-bottom: var(--spacing-md, 16px);
+  text-align: left;
+  transition: color 0.3s ease;
+}
+
+.about-section-content p strong {
+  font-weight: 600;
+  color: var(--text-dark); /* Texte en gras plus sobre */
+  transition: color 0.3s ease;
+}
+
+/* --- Style spécifique pour la liste des fonctionnalités (Article 5) --- */
+.feature-list {
+  list-style-type: disc; /* Puces de liste classiques */
+  padding-left: var(--spacing-lg, 24px); /* Indentation de la liste */
+  margin-top: var(--spacing-md, 16px);
+}
+
+.feature-list li {
+  margin-bottom: var(--spacing-sm, 8px); /* Espace entre les items de la liste */
+}
+
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+  .about-hero-title {
+    font-size: 2rem;
+  }
+
+  .about-hero-description {
+    font-size: 1rem;
+  }
+
+  .about-section {
+    padding: var(--spacing-lg, 24px) var(--spacing-md, 16px);
+  }
+
+  .about-section-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .about-section-content p,
+  .about-section-content li {
+    font-size: 0.95rem;
+  }
+}
+/* --- Style pour le bouton de contact --- */
+.btn-contact {
+  display: inline-flex; /* Pour aligner icône et texte */
+  align-items: center;
+  gap: var(--spacing-xs, 4px);
+  margin-top: var(--spacing-md, 16px);
+  padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+  background-color: var(--main-orange);
+  color: var(--main-white);
+  text-decoration: none;
+  border: none;
+  border-radius: var(--border-radius, 8px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-contact:hover,
+.btn-contact:focus {
+  background-color: #d9530f; /* Orange plus foncé */
+  color: var(--main-white); /* Assure que la couleur du texte ne change pas */
+  transform: translateY(-2px);
+}

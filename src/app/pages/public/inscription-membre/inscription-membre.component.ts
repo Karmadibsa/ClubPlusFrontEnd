@@ -138,10 +138,12 @@ export class InscriptionMembreComponent implements OnInit, OnDestroy {
       ]],
       confirmPassword: ['', [Validators.required]], // Requis pour la confirmation.
       // Affiliation au club
-      codeClub: ['CLUB-0001', [Validators.required, Validators.pattern(/^CLUB-\w+$/)]] // Commence par 'CLUB-' suivi de caractères.
+      codeClub: ['CLUB-0001', [Validators.required, Validators.pattern(/^CLUB-\w+$/)]] ,// Commence par 'CLUB-' suivi de caractères.
+      acceptTerms: [false, Validators.requiredTrue] // Initialisé à false, doit être true pour être valide
     }, {
       // Validateur de groupe pour s'assurer que les mots de passe correspondent.
       validators: PasswordValidators.passwordMatch('password', 'confirmPassword')
+
     });
     console.log("InscriptionMembreComponent: Formulaire d'inscription membre initialisé.");
 
