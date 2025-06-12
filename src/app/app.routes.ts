@@ -21,6 +21,7 @@ import {ResetPasswordComponent} from './pages/public/reset-password/reset-passwo
 import {AboutComponent} from './pages/public/about/about.component';
 import {ContactComponent} from './pages/public/contact/contact.component';
 import {MesclubsComponent} from './pages/membre/mesclubs/mesclubs.component';
+import {CguComponent} from './pages/public/cgu/cgu.component';
 
 
 export const routes: Routes = [
@@ -56,7 +57,10 @@ export const routes: Routes = [
     path: "contact",
     component: ContactComponent,
   },
-
+  {
+    path: "cgu",
+    component: CguComponent,
+  },
   {
     path: 'app', // Ou un autre préfixe comme 'membre', ou même '' si c'est le défaut après login
     component: UserLayoutComponent, // Le composant parent qui contient la sidebar

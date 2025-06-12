@@ -1,0 +1,156 @@
+<!-- Intégration du composant Navbar -->
+<app-navbar></app-navbar>
+
+<!-- En-tête de la page (style "hero" repris de la page "À propos") -->
+<section class="about-hero-section">
+  <div class="about-hero-content">
+    <h1 class="about-hero-title">
+      <strong>Conditions Générales d'Utilisation</strong>
+    </h1>
+    <p class="about-hero-description">
+      Dernière mise à jour : 11 juin 2025
+    </p>
+  </div>
+</section>
+
+<!-- Contenu principal des CGU, article par article -->
+<div class="cgu-container">
+
+  <section class="about-section">
+    <div class="about-section-content">
+      <h2>AVERTISSEMENT</h2>
+      <p>
+        <strong>Club Plus</strong> est une application développée dans le cadre d'un projet d'étude par <strong>Axel MOMPER</strong>, étudiant à la <strong>Metz Numeric School</strong>. En tant que telle, elle est fournie "en l'état" à des fins de démonstration et ne saurait être considérée comme un service commercial professionnel. L'éditeur ne pourra être tenu responsable des éventuelles interruptions de service ou pertes de données.
+      </p>
+    </div>
+  </section>
+
+  <section class="about-section bg-alternate">
+    <div class="about-section-content">
+      <h2>Article 1 : Objet</h2>
+      <p>
+        Les présentes Conditions Générales d'Utilisation (ci-après "CGU") ont pour objet de définir les modalités et conditions dans lesquelles les utilisateurs peuvent accéder et utiliser les services proposés par la plateforme Club Plus (ci-après "le Service"). Le Service est une solution SaaS conçue pour simplifier la gestion d'événements, de réservations et de communautés pour divers clubs.
+      </p>
+    </div>
+  </section>
+
+  <section class="about-section">
+    <div class="about-section-content">
+      <h2>Article 2 : Mentions Légales</h2>
+      <p>
+        L'édition du site Club Plus est assurée par :<br>
+        <strong>Éditeur :</strong> Axel MOMPER<br>
+        <strong>Contexte :</strong> Projet de formation "Concepteur Développeur d'Applications" (CDA)<br>
+        <strong>École :</strong> Metz Numeric School<br>
+        <strong>Contact :</strong> momper.axel.99&#64;gmail.com
+      </p>
+      <!-- BOUTON AJOUTÉ ICI -->
+      <a routerLink="/contact" class="btn-contact">
+        Nous Contacter
+      </a>
+    </div>
+  </section>
+
+  <section class="about-section bg-alternate">
+    <div class="about-section-content">
+      <h2>Article 3 : Accès au Service</h2>
+      <p>
+        L'accès au Service est gratuit pour tout utilisateur disposant d'un accès à internet. Tous les coûts afférents à l'accès, que ce soient les frais matériels, logiciels ou d'accès à internet, sont exclusivement à la charge de l'utilisateur.
+      </p>
+      <p>
+        Certaines sections du site, notamment le tableau de bord de gestion, la réservation et les fonctionnalités sociales, ne sont accessibles qu'aux utilisateurs s'étant préalablement inscrits et identifiés (ci-après "Membre").
+      </p>
+    </div>
+  </section>
+
+  <section class="about-section">
+    <div class="about-section-content">
+      <h2>Article 4 : Inscription et Compte Utilisateur</h2>
+      <p>
+        Pour créer un compte, l'utilisateur doit remplir le formulaire d'inscription. En s'inscrivant, l'utilisateur garantit fournir des informations exactes, sincères et à jour. L'utilisateur est seul responsable de la confidentialité de son mot de passe et de l'utilisation de son compte.
+      </p>
+      <p>
+        Un Membre peut se voir attribuer des rôles spécifiques (par exemple, "Administrateur" ou "Gestionnaire Réservation") par le créateur d'un club, lui conférant des droits et des responsabilités supplémentaires. L'acceptation de ces rôles implique le respect des obligations qui y sont associées.
+      </p>
+      <p>
+        L'inscription au service est subordonnée à l'acceptation explicite des présentes CGU, matérialisée par une case à cocher dans le formulaire d'inscription.
+      </p>
+    </div>
+  </section>
+
+  <section class="about-section bg-alternate">
+    <div class="about-section-content">
+      <h2>Article 5 : Description des Services</h2>
+      <p>Club Plus fournit notamment les services suivants :</p>
+      <ul class="feature-list">
+        <li>Création et gestion de profils de clubs et de membres.</li>
+        <li>Gestion d'événements (création, modification, suppression).</li>
+        <li>Système de réservation de places pour les événements, limité à deux places par membre et par événement.</li>
+        <li>Système de notation des événements.</li>
+        <li>Fonctionnalités sociales telles que la gestion de listes d'amis.</li>
+        <li>Suivi des présences via un système de QR code pour les organisateurs.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="about-section">
+    <div class="about-section-content">
+      <h2>Article 6 : Propriété Intellectuelle</h2>
+      <p>
+        La structure générale du site Club Plus, ainsi que les textes, graphismes, images, sons et vidéos la composant, sont la propriété de l'éditeur ou de ses partenaires. Toute représentation et/ou reproduction et/ou exploitation partielle ou totale des contenus et services proposés par le site Club Plus, par quelque procédé que ce soit, sans l'autorisation préalable et par écrit de Axel MOMPER est strictement interdite et serait susceptible de constituer une contrefaçon.
+      </p>
+      <p>
+        Les contenus publiés par les clubs (informations, logos, images d'événements) restent leur entière propriété et sous leur seule responsabilité.
+      </p>
+    </div>
+  </section>
+
+  <section class="about-section bg-alternate">
+    <div class="about-section-content">
+      <h2>Article 7 : Données Personnelles</h2>
+      <p>
+        Le Service s'engage à respecter la vie privée de ses utilisateurs et la réglementation en vigueur sur la protection des données personnelles, notamment le Règlement Général sur la Protection des Données (RGPD).
+      </p>
+      <p>
+        Les données collectées (nom, prénom, email, date de naissance, etc.) sont nécessaires à la fourniture du service, notamment pour la gestion des comptes, des adhésions aux clubs et des réservations. Les données sensibles, comme les mots de passe, sont cryptées.
+      </p>
+      <p>
+        Conformément à la loi, vous disposez d'un droit d'accès, de rectification, de suppression et d'opposition de vos données personnelles. Vous pouvez exercer ce droit directement depuis votre espace "Mon Compte" ou en contactant l'éditeur à l'adresse fournie à l'Article 2.
+      </p>
+    </div>
+  </section>
+
+  <section class="about-section">
+    <div class="about-section-content">
+      <h2>Article 8 : Responsabilité</h2>
+      <p>
+        L'éditeur s'engage à faire ses meilleurs efforts pour assurer un accès et une utilisation sécurisés du Service. Il s'agit d'une obligation de moyens et non de résultat. La responsabilité de l'éditeur ne saurait être engagée en cas de force majeure ou de faits indépendants de sa volonté.
+      </p>
+      <p>
+        L'utilisateur est seul maître de la bonne utilisation, avec discernement et esprit, des services mis à sa disposition.
+      </p>
+    </div>
+  </section>
+
+  <section class="about-section bg-alternate">
+    <div class="about-section-content">
+      <h2>Article 9 : Modification des CGU</h2>
+      <p>
+        L'éditeur se réserve le droit de modifier, à tout moment et sans préavis, les présentes CGU afin de les adapter aux évolutions du Service et/ou de son exploitation. Les utilisateurs seront informés de toute modification par le moyen que l'éditeur jugera le plus approprié.
+      </p>
+    </div>
+  </section>
+
+  <section class="about-section">
+    <div class="about-section-content">
+      <h2>Article 10 : Droit Applicable</h2>
+      <p>
+        Les présentes CGU sont soumises au droit français. En cas de litige, et après une tentative de recherche d'une solution amiable, compétence exclusive est attribuée aux tribunaux compétents.
+      </p>
+    </div>
+  </section>
+
+</div>
+
+<!-- Intégration du composant Footer -->
+<app-footer></app-footer>

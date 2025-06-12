@@ -6,6 +6,7 @@ import { LucideAngularModule } from 'lucide-angular';
 import { Evenement } from '../../../model/evenement';
 import { Categorie } from '../../../model/categorie';
 import { SweetAlertService } from '../../../service/sweet-alert.service';
+import {finalize} from 'rxjs';
 
 /**
  * @Component décorateur qui configure le composant.
@@ -119,30 +120,26 @@ export class ReservationModalComponent {
     console.log(`ReservationModal: Tentative de réservation pour eventId ${eventId}, categorieId ${categorieId}`);
 
     // 4. Appel au service de réservation.
-    this.reservationService.createReservation(eventId, categorieId).subscribe({
-      // 4a. Gestion du succès.
-      next: (response) => {
-        console.log('ReservationModal: Réservation réussie, réponse API:', response);
-        this.notification.show('Réservation effectuée avec succès !', 'success');
-        this.reserveSuccess.emit(response); // Notifie le parent du succès avec la réponse.
-        this.onClose();                     // Ferme la modale après le succès.
-      },
-      // 4b. Gestion de l'erreur.
-      error: (error) => {
-        console.error('ReservationModal: Échec de la réservation', error);
-        // Tente d'extraire un message d'erreur significatif depuis la réponse d'erreur de l'API.
-        // La structure `error.error.message` est courante pour les erreurs JSON.
-        const message = error?.error?.message || "Erreur lors de la réservation. Vérifiez si vous avez déjà une réservation pour cet événement, s'il reste des places disponibles dans cette catégorie, ou si vous respectez les limitations de réservation (ex: pas plus de 2 places par membre).";
-        this.notification.show(message, 'error');
-        // Important: Ne pas fermer la modale en cas d'erreur pour permettre à l'utilisateur
-        // de corriger (si possible) ou de simplement prendre connaissance de l'erreur.
-      },
-      // 4c. Exécuté après `next` ou `error` (que la requête réussisse ou échoue).
-      complete: () => {
-        this.isSubmitting = false; // Réactive le bouton de soumission.
-        // this.cdr.markForCheck(); // Si OnPush et que l'état de isSubmitting doit être reflété.
-      }
-    });
+    this.reservationService.createReservation(eventId, categorieId)
+      .pipe(
+        // finalize() s'exécutera toujours, que ce soit un succès ou une erreur.
+        finalize(() => {
+          this.isSubmitting = false;
+        }))
+          .subscribe({
+            next: (response) => {
+              console.log('ReservationModal: Réservation réussie, réponse API:', response);
+              this.notification.show('Réservation effectuée avec succès !', 'success');
+              this.reserveSuccess.emit(response);
+              this.onClose();
+            },
+            error: (error) => {
+              console.error('ReservationModal: Échec de la réservation', error);
+              const message = error?.error?.message || "Une erreur est survenue.";
+              this.notification.show(message, 'error');
+            }
+            // Le bloc 'complete' n'est plus nécessaire ici pour gérer isSubmitting.
+          });
   }
 
   /**
