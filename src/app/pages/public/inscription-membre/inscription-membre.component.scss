@@ -216,9 +216,12 @@ textarea {
     opacity: 0.7;
   }
 }
-.form-group--checkbox{
+.row-consent{
   display:  flex;
   flex-direction: row;
+  input {
+    margin-right: 5px;
+  }
 }
 
 /* Style pour rendre le lien des CGU plus visible dans le formulaire */
