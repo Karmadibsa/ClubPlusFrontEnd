@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { catchError, tap } from 'rxjs/operators';
@@ -8,172 +8,151 @@ import { EventRatingPayload, Notation } from '../../model/notation';
 
 /**
  * @Injectable({ providedIn: 'root' })
- * Déclare que EventService est un service fourni au niveau racine de l'application.
- * Une seule instance sera créée et partagée dans toute l'application.
+ * Service 'EventService' qui gère les opérations liées aux événements.
+ * Fournit une instance unique dans toute l'application.
  */
 @Injectable({
   providedIn: 'root'
 })
 export class EventService {
-  /**
-   * Injection de HttpClient pour effectuer des requêtes HTTP.
-   */
   private http = inject(HttpClient);
-
-  /**
-   * URL de base pour les appels à l'API concernant les événements.
-   */
   private apiUrl = `${environment.apiUrl}/events`;
 
   /**
-   * Récupère les 5 prochains événements actifs pour le club géré par l'utilisateur connecté.
-   * Correspond à l'endpoint GET /api/events/managed-club/next.
-   * Le backend utilise les informations d'authentification pour déterminer le club géré.
-   * @returns Un Observable contenant un tableau d'objets `Evenement`.
+   * @method getNextEvents
+   * @description Récupère les 5 prochains événements actifs du club géré.
+   * La gestion des erreurs est déléguée au composant appelant.
+   * @returns Un `Observable` de tableau d'objets `Evenement`.
    */
   getNextEvents(): Observable<Evenement[]> {
-    const url = `${this.apiUrl}/managed-club/next`; // URL complète de l'API.
-    console.log('Appel API Events:', url); // Pour le débogage.
+    const url = `${this.apiUrl}/managed-club/next`;
+    console.log('Appel API Events:', url);
 
-    // Effectue la requête GET et spécifie le type de la réponse attendue (Evenement[]).
     return this.http.get<Evenement[]>(url);
-    // IMPORTANT: La gestion des erreurs (catchError) est intentionnellement omise ici.
-    // Ceci est un exemple où la gestion d'erreur est déléguée au composant qui appelle cette méthode.
-    // Cela donne au composant plus de contrôle sur la façon dont l'erreur est gérée et affichée.
-    // C'est un choix de conception; d'autres méthodes de ce service utilisent `handleError`.
   }
 
   /**
-   * Crée un nouvel événement avec ses catégories initiales.
-   * Correspond à l'endpoint POST /api/events?organisateurId={clubId}.
-   * @param clubId L'ID du club organisateur (transmis comme paramètre de requête).
-   * @param eventData Un objet de type `CreateEventPayload` contenant les détails de l'événement et de ses catégories.
-   * @returns Un Observable qui émettra l'objet `Evenement` créé par le backend.
+   * @method createEventWithCategories
+   * @description Crée un nouvel événement avec ses catégories initiales.
+   * @param clubId L'ID du club organisateur.
+   * @param eventData Les détails de l'événement et de ses catégories.
+   * @returns Un `Observable` de l'objet `Evenement` créé.
    */
   createEventWithCategories(clubId: number, eventData: CreateEventPayload): Observable<Evenement> {
-    const url = `${this.apiUrl}?organisateurId=${clubId}`; // Ajoute l'ID du club comme paramètre.
-
+    const url = `${this.apiUrl}?organisateurId=${clubId}`;
     console.log(`EventService: Appel POST à ${url} avec les données:`, eventData);
 
-    return this.http.post<Evenement>(url, eventData).pipe( // Envoie la requête POST avec les données
-      tap(createdEvent => console.log('EventService: Événement créé avec succès:', createdEvent)), // Log en cas de succès
-      catchError(this.handleError) // Gestion des erreurs avec la méthode privée handleError
+    return this.http.post<Evenement>(url, eventData).pipe(
+      tap(createdEvent => console.log('EventService: Événement créé avec succès:', createdEvent)),
+      catchError(this.handleError)
     );
-    // Note: le corps de la requête (eventData) sera automatiquement sérialisé en JSON par HttpClient.
   }
 
   /**
-   * Met à jour un événement existant et réconcilie ses catégories.
-   * Correspond à l'endpoint PUT /api/events/{eventId}/full.
-   * @param eventId L'ID de l'événement à mettre à jour (transmis dans l'URL).
-   * @param eventData Un objet de type `UpdateEventPayload` contenant les détails mis à jour de l'événement
-   *                  et la liste complète des catégories (avec les IDs pour les catégories existantes et `null` pour les nouvelles).
-   * @returns Un Observable qui émettra l'objet `Evenement` mis à jour par le backend.
+   * @method updateEventWithCategories
+   * @description Met à jour un événement existant et réconcilie ses catégories.
+   * @param eventId L'ID de l'événement à mettre à jour.
+   * @param eventData Les détails mis à jour de l'événement et la liste complète des catégories.
+   * @returns Un `Observable` de l'objet `Evenement` mis à jour.
    */
   updateEventWithCategories(eventId: number, eventData: UpdateEventPayload): Observable<Evenement> {
-    const url = `${this.apiUrl}/${eventId}/full`; // L'ID de l'événement est inclus dans l'URL
+    const url = `${this.apiUrl}/${eventId}/full`;
     console.log(`EventService: Appel PUT à ${url} avec les données:`, eventData);
 
-    return this.http.put<Evenement>(url, eventData).pipe( // Envoie la requête PUT avec les données
-      tap(updatedEvent => console.log('EventService: Événement mis à jour avec succès:', updatedEvent)), // Log en cas de succès
-      catchError(this.handleError) // Gestion des erreurs avec la méthode privée handleError
+    return this.http.put<Evenement>(url, eventData).pipe(
+      tap(updatedEvent => console.log('EventService: Événement mis à jour avec succès:', updatedEvent)),
+      catchError(this.handleError)
     );
   }
 
   /**
-   * Effectue une suppression logique (soft delete) d'un événement.
-   * Correspond à l'endpoint DELETE /api/events/{eventId}.
-   * Marque l'événement comme inactif au lieu de le supprimer physiquement de la base de données.
+   * @method softDeleteEvent
+   * @description Effectue une suppression logique (désactivation) d'un événement.
    * @param eventId L'ID de l'événement à désactiver.
-   * @returns Un Observable<void> car l'API ne renvoie généralement rien en cas de succès (204 No Content).
+   * @returns Un `Observable<void>`.
    */
   softDeleteEvent(eventId: number): Observable<void> {
-    const url = `${this.apiUrl}/${eventId}`; // Construit l'URL ex: http://localhost:8080/api/events/11
+    const url = `${this.apiUrl}/${eventId}`;
     console.log(`Appel API Soft Delete: DELETE ${url}`);
 
-    return this.http.delete<void>(url).pipe( // Envoie la requête DELETE
-      tap(() => console.log(`EventService: Événement avec ID ${eventId} supprimé logiquement.`)), // Log en cas de succès
-      catchError(this.handleError) // Gestion des erreurs
+    return this.http.delete<void>(url).pipe(
+      tap(() => console.log(`EventService: Événement avec ID ${eventId} supprimé logiquement.`)),
+      catchError(this.handleError)
     );
   }
 
   /**
-   * Récupère tous les événements (actifs et inactifs).
-   * Appelle l'endpoint GET /api/events.
-   * @returns Un Observable contenant un tableau d'objets `Evenement`.
+   * @method getAllEvents
+   * @description Récupère tous les événements (actifs et inactifs).
+   * @returns Un `Observable` de tableau d'objets `Evenement`.
    */
   getAllEvents(): Observable<Evenement[]> {
     console.log('EventService: Appel GET pour tous les événements (getAllEvents)');
     return this.http.get<Evenement[]>(this.apiUrl).pipe(
-      catchError(this.handleError) // Gestion d'erreur générique du service
+      catchError(this.handleError)
     );
   }
 
   /**
-   * Récupère tous les événements actifs et inclut les informations d'amitié.
-   * Appelle l'endpoint GET /api/events/withfriend?status=active.
-   * @returns Un Observable contenant un tableau d'objets `Evenement`.
+   * @method getAllEventsWithFriend
+   * @description Récupère tous les événements actifs avec les informations d'amitié.
+   * @returns Un `Observable` de tableau d'objets `Evenement`.
    */
   getAllEventsWithFriend(): Observable<Evenement[]> {
-    const url = `${this.apiUrl}/withfriend?status=active`; // Ajout du paramètre de requête "status"
+    const url = `${this.apiUrl}/withfriend?status=active`;
     console.log(`EventService: Appel GET pour tous les événements avec friend (getAllEventsWithFriend) à l'URL : ${url}`);
 
     return this.http.get<Evenement[]>(url).pipe(
-      catchError(this.handleError) // Gestion d'erreur générique du service
+      catchError(this.handleError)
     );
   }
 
   /**
-   * Récupère les événements auxquels l'utilisateur a participé (statut UTILISE)
-   * et pour lesquels il n'a pas encore soumis de notation.
-   * Correspond à l'endpoint GET /api/events/notations/me/participated-events-unrated.
-   * @returns Un Observable contenant un tableau d'objets `Evenement`.
+   * @method getUnratedParticipatedEvents
+   * @description Récupère les événements auxquels l'utilisateur a participé mais n'a pas encore notés.
+   * @returns Un `Observable` de tableau d'objets `Evenement`.
    */
   getUnratedParticipatedEvents(): Observable<Evenement[]> {
-    const url = `${this.apiUrl}/notations/me/participated-events-unrated`; // Utilise l'URL backend finale confirmée
+    const url = `${this.apiUrl}/notations/me/participated-events-unrated`;
     console.log(`EventService: Appel GET ${url}`);
 
     return this.http.get<Evenement[]>(url).pipe(
-      tap(events => console.log('EventService: Événements non notés reçus', events)), // Log les événements reçus
-      catchError(this.handleError) // Gère les erreurs éventuelles
+      tap(events => console.log('EventService: Événements non notés reçus', events)),
+      catchError(this.handleError)
     );
   }
 
   /**
-   * Soumet la notation pour un événement spécifique.
-   * Correspond à l'endpoint POST /api/events/{eventId}/notations.
-   * @param eventId L'ID de l'événement pour lequel la notation est soumise.
-   * @param rating Un objet de type `EventRatingPayload` contenant les notes pour les différents critères.
-   * @returns Un Observable qui émettra l'objet `Notation` créé par le backend.
+   * @method submitEventRating
+   * @description Soumet la notation pour un événement spécifique.
+   * @param eventId L'ID de l'événement.
+   * @param rating L'objet de notation.
+   * @returns Un `Observable` de l'objet `Notation` créé.
    */
   submitEventRating(eventId: number, rating: EventRatingPayload): Observable<Notation> {
-    const url = `${this.apiUrl}/${eventId}/notations`; // Ajoute l'ID de l'événement à l'URL
+    const url = `${this.apiUrl}/${eventId}/notations`;
     console.log(`EventService: Appel POST ${url} avec notation`, rating);
 
-    return this.http.post<Notation>(url, rating).pipe( // Envoie la requête POST
-      tap(response => console.log('EventService: Notation créée reçue', response)), // Log la réponse reçue
-      catchError(this.handleError) // Gère les erreurs
+    return this.http.post<Notation>(url, rating).pipe(
+      tap(response => console.log('EventService: Notation créée reçue', response)),
+      catchError(this.handleError)
     );
   }
 
   /**
    * @private handleError
-   * Méthode privée pour la gestion centralisée des erreurs HTTP dans ce service.
-   * Standardise le traitement des erreurs pour une meilleure maintenabilité.
-   * @param error L'objet `HttpErrorResponse` contenant les détails de l'erreur.
-   * @returns Un Observable qui émet une erreur, permettant au composant appelant de gérer l'échec.
+   * @description Gestion centralisée des erreurs HTTP pour ce service.
+   * @param error L'objet `HttpErrorResponse` de l'erreur.
+   * @returns Un `Observable` qui émet une erreur formatée.
    */
   private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'Une erreur inconnue est survenue lors de l\'opération sur l\'événement.'; // Message par défaut
+    let errorMessage = 'Une erreur inconnue est survenue lors de l\'opération sur l\'événement.';
     if (error.error instanceof ErrorEvent) {
-      // Erreur côté client ou réseau
-      errorMessage = `Erreur: ${error.error.message}`; // Message spécifique pour ce type d'erreur
+      errorMessage = `Erreur: ${error.error.message}`;
     } else {
-      // Le backend a retourné un code d'échec.
-      errorMessage = `Erreur serveur ${error.status}: ${error.error?.message || error.message}`; // Tente de récupérer le message du backend
+      errorMessage = `Erreur serveur ${error.status}: ${error.error?.message || error.message}`;
     }
-    console.error(errorMessage, error); // Log l'erreur dans la console pour le débogage
-    // Retourne une erreur observable pour que le composant puisse réagir
+    console.error(errorMessage, error);
     return throwError(() => new Error(errorMessage));
   }
 }

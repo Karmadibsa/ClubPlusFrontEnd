@@ -1,42 +1,30 @@
-// src/app/services/contact.service.ts
-
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import {environment} from '../../environments/environment';
+import {ContactFormData, ContactResponse} from '../model/contact';
 
-// Interface pour les données du formulaire (optionnel mais bonne pratique)
-export interface ContactFormData {
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-}
-
-// Interface pour la réponse attendue du backend (optionnel)
-export interface ContactResponse {
-  message: string; // Ou tout autre structure que votre backend retourne
-}
-
+/**
+ * @Injectable({ providedIn: 'root' })
+ * Service 'ContactService' pour l'envoi de messages via le formulaire de contact.
+ * Fournit une instance unique (singleton) dans toute l'application.
+ */
 @Injectable({
-  providedIn: 'root' // Service disponible globalement
+  providedIn: 'root'
 })
 export class ContactService {
 
   private http = inject(HttpClient);
-  // Définissez l'URL de base de votre API, par exemple depuis un fichier d'environnement
-  // Pour l'instant, nous utilisons un chemin relatif ou une URL complète.
-  private contactApiUrl = `${environment.apiUrl}/contact`; // Ou l'URL complète de votre backend
-
-  constructor() { }
+  private contactApiUrl = `${environment.apiUrl}/contact`;
 
   /**
-   * Envoie les données du formulaire de contact au backend.
+   * @method sendContactMessage
+   * @description Envoie les données du formulaire de contact au backend.
    * @param formData Les données du formulaire.
-   * @returns Un Observable avec la réponse du serveur.
+   * @returns Un `Observable` de la réponse du serveur.
    */
-  sendContactMessage(formData: ContactFormData): Observable<ContactResponse | string> { // Accepte string pour les ResponseEntity<String>
+  sendContactMessage(formData: ContactFormData): Observable<ContactResponse | string> {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
@@ -54,18 +42,16 @@ export class ContactService {
   }
 
   /**
-   * Gère les erreurs HTTP.
-   * @param error L'erreur HTTP.
-   * @returns Un Observable qui émet une erreur.
+   * @private handleError
+   * @description Gère les erreurs HTTP de manière centralisée.
+   * @param error L'erreur HTTP (`HttpErrorResponse`).
+   * @returns Un `Observable` qui émet une erreur formatée.
    */
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Une erreur inconnue est survenue !';
     if (error.error instanceof ErrorEvent) {
-      // Erreur côté client ou réseau.
       errorMessage = `Erreur : ${error.error.message}`;
     } else {
-      // Le backend a retourné un code d'erreur.
-      // Le corps de la réponse peut contenir des indices sur ce qui a mal tourné.
       if (error.status === 0) {
         errorMessage = 'Impossible de contacter le serveur. Vérifiez votre connexion ou l\'URL du backend.';
       } else if (typeof error.error === 'string') {

@@ -1,3 +1,6 @@
+/**
+ * Définit la couche de superposition (overlay) de la modale.
+ */
 .event-modal {
   display: none;
   position: fixed;
@@ -9,11 +12,17 @@
   background-color: rgba(0, 0, 0, 0.7);
   overflow: auto;
 
+  /**
+   * Modificateur de classe pour contrôler la visibilité de la modale.
+   */
   &.show {
     display: block;
   }
 }
 
+/**
+ * Conteneur principal du contenu de la modale.
+ */
 .modal-content {
   background-color: var(--main-white);
   margin: 10% auto;
@@ -26,6 +35,9 @@
   animation: modalFadeIn 0.3s ease-out;
 }
 
+/**
+ * Style du titre de la modale.
+ */
 .modal-title {
   display: flex;
   align-items: center;
@@ -35,6 +47,9 @@
   font-size: 18px;
 }
 
+/**
+ * Bouton de fermeture de la modale.
+ */
 .close-modal {
   position: absolute;
   top: 15px;
@@ -51,12 +66,18 @@
   transition: background-color 0.2s;
 }
 
+/**
+ * Conteneur spécifique pour centrer et espacer le QR code.
+ */
 .zoomed-qr-container {
   display: flex;
   justify-content: center;
   padding: 20px 0;
 }
 
+/**
+ * Zone dédiée à l'affichage des informations textuelles sous le QR code.
+ */
 .modal-info {
   text-align: center;
   margin-top: 15px;
@@ -66,6 +87,9 @@
   }
 }
 
+/**
+ * Pied de page de la modale, souvent utilisé pour des notes ou des instructions.
+ */
 .modal-footer {
   text-align: center;
   margin-top: 20px;
@@ -73,6 +97,9 @@
   font-style: italic;
 }
 
+/**
+ * Définit l'animation d'apparition de la modale.
+ */
 @keyframes modalFadeIn {
   from {
     opacity: 0;

@@ -1,29 +1,32 @@
+/*
+  Styles pour le composant de pagination.
+*/
+
+// Conteneur principal pour les contrôles de pagination.
 .pagination-controls {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 5px; // Espace réduit pour les boutons de page
+  gap: 5px; // Espace réduit entre les boutons.
   margin-top: 20px;
-  flex-wrap: wrap; // Pour les petits écrans
+  flex-wrap: wrap; // Permet aux contrôles de passer à la ligne sur petits écrans.
 
+  // Style de base pour tous les boutons dans la pagination.
   .btn {
-    padding: 6px 12px; // Boutons plus petits
+    padding: 6px 12px;
     font-size: 0.9rem;
-    min-width: 40px; // Largeur minimale
-    border: 1px solid var(--border-color); // Ajout bordure légère
+    min-width: 40px;
+    border: 1px solid var(--border-color);
 
-    &.page-number { // Style spécifique pour numéros de page
-      // background-color: transparent;
-      // color: var(--main-blue);
-    }
-
-    &.btn-primary { // Style bouton page actuelle
+    // Style du bouton pour la page actuellement sélectionnée.
+    &.btn-primary {
       background-color: var(--main-blue);
       color: white;
       border-color: var(--main-blue);
     }
 
-    &.btn-secondary { // Style bouton page non actuelle
+    // Style pour les boutons de page non actifs.
+    &.btn-secondary {
       background-color: white;
       color: var(--main-blue);
 
@@ -32,6 +35,7 @@
       }
     }
 
+    // Style pour les boutons désactivés (ex: "Précédent" sur la première page).
     &:disabled {
       background-color: var(--bg-medium-gray);
       color: var(--text-light);
@@ -41,6 +45,7 @@
     }
   }
 
+  // Informations textuelles (ex: "Page 1 sur 5").
   .pagination-info {
     margin-left: 15px;
     font-size: 0.9rem;

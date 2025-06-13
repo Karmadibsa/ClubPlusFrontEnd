@@ -1,104 +1,97 @@
-/* membre-detail-modal.component.scss */
-
-// --- Utilisation des variables globales de styles.txt ---
-// @import 'path/to/variables'; // Généralement importé globalement dans angular.json
+/*
+  Styles spécifiques pour la modale affichant les détails d'un membre.
+  Ce fichier est responsable de la mise en page des informations en lecture seule
+  et du formulaire de gestion de rôle.
+*/
 
 :host {
-  display: block; // Assure que le composant prend sa place
+  display: block;
 }
 
 // --------------------------------------------------
-// Styles UNIQUEMENT SPÉCIFIQUES au contenu de MembreDetailModal
+// Styles du contenu de la modale
 // --------------------------------------------------
 
-// --- Styles pour l'affichage des informations ---
+/* --- Section d'informations --- */
 
 .info-section {
   margin-bottom: var(--spacing-lg);
-}
 
-.info-section:last-of-type {
-  margin-bottom: 0;
+  &:last-of-type {
+    margin-bottom: 0;
+  }
 }
 
 .info-section-title {
-  font-size: 1.1rem; // Taille titre de section
+  font-size: 1.1rem;
   font-weight: 600;
   color: var(--main-blue);
   margin-top: 0;
   margin-bottom: var(--spacing-md);
   padding-bottom: var(--spacing-sm);
-  border-bottom: 1px solid var(--border-color-light, #eee); // Séparateur léger
-  display: inline-flex; // Pour icône
+  border-bottom: 1px solid var(--border-color-light, #eee);
+  display: inline-flex;
   align-items: center;
   gap: var(--spacing-sm);
 
   lucide-icon {
     width: 18px;
-    height: 18px; // Taille icône titre section
+    height: 18px;
   }
 }
 
-// Grille pour aligner les paires label/valeur
+// Grille pour l'affichage des informations personnelles.
 .info-grid {
   display: grid;
-  // 2 colonnes par défaut, s'adapte
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: var(--spacing-sm) var(--spacing-lg); // Espace vertical plus petit, horizontal plus grand
+  gap: var(--spacing-sm) var(--spacing-lg);
 }
 
-.info-item {
-  // Chaque item est un bloc simple dans la grille
-}
-
-.info-item label, // Si on utilise <label> au lieu de <span>
 .info-item .info-label {
-  display: block; // Label au-dessus de la valeur
+  display: block;
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--text-medium);
   margin-bottom: var(--spacing-xs);
 }
 
-// Style de la valeur affichée
+// Style pour les champs d'information en lecture seule.
 .read-only-value {
   background-color: var(--bg-light-gray);
-  padding: 8px 12px; // Padding légèrement réduit
-  border-radius: var(--border-radius-sm); // Rayon standard input
-  border: 1px solid var(--border-color-light, #eee); // Bordure très légère
+  padding: 8px 12px;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-color-light, #eee);
   color: var(--text-dark);
   font-size: 0.95rem;
-  min-height: 38px; // Hauteur minimale cohérente avec inputs
+  min-height: 38px;
   display: flex;
   align-items: center;
-  word-break: break-word; // Permet retour à la ligne
+  word-break: break-word;
 }
 
-// Badge spécifique pour le rôle
 .role-badge {
   font-weight: 600;
-  // Optionnel: ajouter des couleurs selon le rôle
-  // &.role-admin { background-color: var(--danger); color: white; }
 }
 
+/* --- Section de gestion du rôle --- */
 
-// --- Section Changement de Rôle (Radio façon Boutons) ---
 .role-change-section {
   background-color: rgba(var(--main-blue-rgb, 26, 95, 122), 0.03);
   padding: var(--spacing-md);
   border-radius: var(--border-radius);
   border: 1px solid rgba(var(--main-blue-rgb, 26, 95, 122), 0.1);
-  margin-top: var(--spacing-lg); // Espace après la section précédente
+  margin-top: var(--spacing-lg);
 }
 
+// Conteneur pour les boutons radio stylisés.
 .radio-inputs {
   display: flex;
-  flex-wrap: wrap; // Permet retour à la ligne si manque de place
+  flex-wrap: wrap;
   gap: var(--spacing-md);
   margin-top: var(--spacing-sm);
 }
 
-// Masquer la vraie radio
+// Masquage du bouton radio natif.
 .radio-inputs .radio-input {
   position: absolute;
   opacity: 0;
@@ -107,15 +100,15 @@
   pointer-events: none;
 }
 
-// Style du SPAN qui suit l'input DANS le label
 .radio-inputs label {
-  flex: 1; // Prend l'espace disponible
-  min-width: 100px; // Largeur minimale
+  flex: 1;
+  min-width: 100px;
   display: block;
   position: relative;
   cursor: pointer;
 }
 
+// Le span est utilisé comme bouton radio personnalisé.
 .radio-inputs label span {
   display: block;
   padding: 0.75rem 1rem;
@@ -128,14 +121,13 @@
   transition: var(--transition-standard);
 }
 
-// État survol
+// Styles pour l'interaction utilisateur.
 .radio-inputs label:hover span {
   border-color: var(--main-blue);
   background-color: var(--bg-light-gray);
   color: var(--main-blue);
 }
 
-// État sélectionné
 .radio-inputs .radio-input:checked + span {
   border-color: var(--main-orange);
   background-color: rgba(var(--main-orange-rgb, 242, 97, 34), 0.1);
@@ -144,7 +136,7 @@
   box-shadow: 0 0 0 1px var(--main-orange);
 }
 
-// État focus
+// Styles pour l'accessibilité au clavier.
 .radio-inputs .radio-input:focus-visible + span {
   outline: 2px solid var(--main-blue);
   outline-offset: 2px;
@@ -154,28 +146,25 @@
   outline-color: var(--main-orange);
 }
 
-// --- Fin Styles Radio ---
+/* --- Indicateur de chargement --- */
 
-// Style si modale en chargement
 .loading-content {
-  // Styles pour un conteneur simple centré
   padding: var(--spacing-xl);
   text-align: center;
-  min-height: 200px; // Hauteur minimale pendant chargement
+  min-height: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-// Responsive
+/* --- Styles responsives --- */
+
 @media screen and (max-width: 576px) {
   .info-grid {
-    grid-template-columns: 1fr; // Une seule colonne sur mobile
-    gap: var(--spacing-sm);
+    grid-template-columns: 1fr; // Une seule colonne sur petits écrans.
   }
+
   .radio-inputs {
-    flex-direction: column; // Empile les options de rôle
-    gap: var(--spacing-sm);
+    flex-direction: column;
   }
 }
-

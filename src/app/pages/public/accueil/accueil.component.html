@@ -1,5 +1,6 @@
 <app-navbar></app-navbar>
 
+<!-- Section principale "Héros" de la page d'accueil. -->
 <section class="hero-section">
   <div class="hero-content">
     <h1 class="hero-title">
@@ -9,31 +10,35 @@
       Une solution moderne pour simplifier la gestion de votre club.
     </p>
     <p class="hero-description">
-      <strong>Un instant s'il vous plaît :</strong> Si le chargement initial semble long, c'est que notre serveur se réveille (cela peut prendre ~3 minutes après une inactivité). Après inscription, l'e-mail de validation arrive rapidement, mais parfois dans les spams.  </div>
+      <strong>Un instant s'il vous plaît :</strong> Si le chargement initial semble long, c'est que notre serveur se réveille (cela peut prendre ~3 minutes après une inactivité). Après inscription, l'e-mail de validation arrive rapidement, mais parfois dans les spams.
+    </p>
+  </div>
 </section>
 
+<!-- Section des fonctionnalités avec des statistiques clés. -->
 <section class="features-section">
   @if (!isLoading && stats) {
-  <div class="feature-item">
-    <h3>{{ formatNumber(stats.clubCount) }}</h3>
-    <p>Clubs utilisent notre solution</p>
-  </div>
-  <div class="feature-item">
-    <h3>{{ formatNumber(stats.eventCount) }}</h3>
-    <p>Événements organisés</p>
-  </div>
-  <div class="feature-item">
-    <h3>{{ formatNumber(stats.memberCount) }}</h3>
-    <p>Membres actifs</p>
-  </div>
+    <div class="feature-item">
+      <h3>{{ formatNumber(stats.clubCount) }}</h3>
+      <p>Clubs utilisent notre solution</p>
+    </div>
+    <div class="feature-item">
+      <h3>{{ formatNumber(stats.eventCount) }}</h3>
+      <p>Événements organisés</p>
+    </div>
+    <div class="feature-item">
+      <h3>{{ formatNumber(stats.memberCount) }}</h3>
+      <p>Membres actifs</p>
+    </div>
   } @else {
     <div class="feature-item">
       <h3>Chargement....</h3>
-      <lucide-icon name="loader" class="animate-spin" ></lucide-icon>
+      <lucide-icon name="loader" class="animate-spin"></lucide-icon>
     </div>
   }
 </section>
 
+<!-- Section de téléchargement de l'application. -->
 <section class="app-download">
   <div class="download-content">
     <h2>Téléchargez l'application</h2>

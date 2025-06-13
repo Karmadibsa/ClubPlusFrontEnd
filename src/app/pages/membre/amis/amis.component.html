@@ -1,9 +1,6 @@
-<!-- Utilise la structure .page-header standard -->
 <div class="page-header">
-  <!-- Titre principal avec classe standard -->
   <h1 class="page-title">Gestion des Amis</h1>
 
-  <!-- Le code ami reste dans l'en-tête, car spécifique à cette page -->
   @if (currentUser && currentUser.codeAmi) {
     <div class="current-user-friend-code"
          (click)="copyCode(currentUser.codeAmi)"
@@ -16,35 +13,27 @@
   }
 </div>
 
-<!-- Contenu principal enveloppé dans .main-section -->
 <section class="main-section" aria-labelledby="main-friends-title">
-  <!-- Titre masqué pour l'accessibilité de la section principale -->
+  <!-- Titre visuellement caché pour l'accessibilité. -->
   <h2 id="main-friends-title" class="visually-hidden">Gestion des amis et demandes</h2>
 
-  <!-- Zone d'Ajout par Code - Peut être vue comme une action préliminaire -->
   <div class="add-by-code-container">
-    <!-- Utilisation d'un H3 pour la sous-section ou garder H2 si sémantiquement fort -->
     <h3>Ajouter un ami par code</h3>
-    <!-- Input avec classe .form-control globale -->
     <input type="text" class="form-control" [(ngModel)]="friendCodeToAdd" placeholder="Entrez le code ami..."
            (keyup.enter)="addFriendByCode()" [disabled]="isLoading">
-    <!-- Bouton Ajouter utilisant les classes .btn .btn-primary globales -->
     <button class="btn btn-primary" (click)="addFriendByCode()" [disabled]="isLoading">
-      <lucide-icon name="user-plus" size="16"></lucide-icon> <!-- icône sans classe spécifique si gérée par .btn -->
+      <lucide-icon name="user-plus" size="16"></lucide-icon>
       <span>Ajouter</span>
     </button>
   </div>
 
-  <!-- Indicateur de chargement global (si actif pendant l'ajout) -->
   @if (isLoading && activeTab !== 'friends' && activeTab !== 'received' && activeTab !== 'sent') {
-    // Condition ajustée si besoin
     <div class="loading-indicator">
       <lucide-icon name="loader" class="animate-spin"></lucide-icon>
       <span>Traitement en cours...</span>
     </div>
   }
 
-  <!-- Onglets de navigation - Utilise la classe globale .tabs -->
   <div class="tabs">
     <button (click)="setActiveTab('friends')" [class.active]="activeTab === 'friends'" [disabled]="isLoading">
       <lucide-icon name="users" size="16"></lucide-icon>
@@ -60,15 +49,9 @@
     </button>
   </div>
 
-  <!-- Contenu dynamique basé sur l'onglet actif -->
-
-  <!-- Onglet Mes Amis -->
   @if (activeTab === 'friends') {
-    <!-- Conteneur spécifique pour cette section -->
     <div class="friends-list-section">
-      <!-- Titre de la sous-section -->
       <h3>Mes Amis</h3>
-      <!-- Barre de recherche spécifique aux amis -->
       <div class="friend-search-container">
         <lucide-icon name="search" size="18" class="search-icon"></lucide-icon>
         <input type="text"
@@ -78,16 +61,13 @@
                placeholder="Rechercher un ami par nom ou prénom...">
       </div>
 
-      <!-- Indicateur de chargement pour CET onglet -->
       @if (isLoading && !friends.length) {
         <div class="loading-indicator">
           <lucide-icon name="loader" class="animate-spin"></lucide-icon>
           <span>Chargement des amis...</span>
         </div>
       } @else {
-        <!-- Wrapper pour le tableau (pour scroll responsive global) -->
         <div class="table-wrapper">
-          <!-- Tableau utilisant la classe globale .data-table -->
           <table class="data-table">
             <thead>
             <tr>
@@ -99,23 +79,18 @@
             <tbody>
               @for (friend of filteredFriends; track friend.id) {
                 <tr>
-                  <!-- Ajout de data-label pour le responsive -->
                   <td [attr.data-label]="'Nom'"> {{ friend.nom }}</td>
                   <td [attr.data-label]="'Prénom'">{{ friend.prenom }}</td>
-                  <td [attr.data-label]="'Actions'" class="actions-cell"> <!-- Classe globale pour cellule actions -->
-                    <div class="btn-actions"> <!-- Wrapper global pour boutons actions -->
-                      <!-- Bouton Retirer utilisant .btn .btn-danger -->
+                  <td [attr.data-label]="'Actions'" class="actions-cell">
+                    <div class="btn-actions">
                       <button class="btn btn-danger" (click)="removeFriend(friend.id)" [disabled]="isLoading"
                               title="Retirer cet ami">
                         <lucide-icon name="user-minus" size="16"></lucide-icon>
-                        <!-- Span optionnel pour lecteurs d'écran si bouton icône seule -->
-                        <!-- <span class="visually-hidden">Retirer</span> -->
                       </button>
                     </div>
                   </td>
                 </tr>
               } @empty {
-                <!-- Message vide utilisant la structure globale -->
                 @if (!isLoading) {
                   <tr class="empty-table-message">
                     <td colspan="3">Vous n'avez pas encore d'amis.</td>
@@ -124,12 +99,11 @@
               }
             </tbody>
           </table>
-        </div> <!-- Fin .table-wrapper -->
+        </div>
       }
-    </div> <!-- Fin .friends-list-section -->
+    </div>
   }
 
-  <!-- Onglet Demandes Reçues -->
   @if (activeTab === 'received') {
     <div class="received-requests-section">
       <h3>Demandes d'ami Reçues</h3>
@@ -154,12 +128,10 @@
                   </td>
                   <td [attr.data-label]="'Actions'" class="actions-cell">
                     <div class="btn-actions">
-                      <!-- Bouton Accepter utilisant .btn .btn-accept (ou .btn-success) -->
                       <button class="btn btn-accept" (click)="acceptFriendRequest(request.id)" [disabled]="isLoading"
                               title="Accepter la demande">
                         <lucide-icon name="user-check" size="16"></lucide-icon>
                       </button>
-                      <!-- Bouton Refuser utilisant .btn .btn-danger -->
                       <button class="btn btn-danger" (click)="rejectFriendRequest(request.id)" [disabled]="isLoading"
                               title="Refuser la demande">
                         <lucide-icon name="user-x" size="16"></lucide-icon>
@@ -176,12 +148,11 @@
               }
             </tbody>
           </table>
-        </div> <!-- Fin .table-wrapper -->
+        </div>
       }
-    </div> <!-- Fin .received-requests-section -->
+    </div>
   }
 
-  <!-- Onglet Demandes Envoyées -->
   @if (activeTab === 'sent') {
     <div class="sent-requests-section">
       <h3>Demandes d'ami Envoyées</h3>
@@ -207,7 +178,6 @@
                   <td [attr.data-label]="'Statut'">{{ request.statut }}</td>
                   <td [attr.data-label]="'Action'" class="actions-cell">
                     <div class="btn-actions">
-                      <!-- Bouton Annuler utilisant .btn .btn-secondary ou .btn-warning -->
                       <button class="btn btn-danger" (click)="cancelSentFriendRequest(request.id)"
                               [disabled]="isLoading" title="Annuler la demande">
                         <lucide-icon name="ban" size="16"></lucide-icon>
@@ -224,10 +194,9 @@
               }
             </tbody>
           </table>
-        </div> <!-- Fin .table-wrapper -->
+        </div>
       }
-    </div> <!-- Fin .sent-requests-section -->
+    </div>
   }
 
-</section> <!-- Fin .main-section -->
-
+</section>

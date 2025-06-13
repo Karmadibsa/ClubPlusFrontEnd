@@ -1,5 +1,11 @@
+<!--
+  Ce template contient un ensemble de contrôles de formulaire permettant à l'utilisateur
+  de filtrer et de trier une liste d'événements.
+  Il utilise l'approche "Template-Driven Forms" avec `[(ngModel)]`.
+-->
 <div class="filters">
-  <!-- Champ de recherche -->
+
+  <!-- Champ de recherche par texte -->
   <input
     type="text"
     placeholder="Rechercher un événement..."
@@ -8,7 +14,7 @@
     class="search-bar"
   />
 
-  <!-- Filtres date/heure de début -->
+  <!-- Sélecteur pour la date de début -->
   <div class="date-picker picker">
     <label>Début :</label>
     <input
@@ -19,7 +25,7 @@
     />
   </div>
 
-  <!-- Filtres date/heure de fin -->
+  <!-- Sélecteur pour la date de fin -->
   <div class="date-picker picker">
     <label>Fin :</label>
     <input
@@ -30,7 +36,7 @@
     />
   </div>
 
-  <!-- Checkboxes -->
+  <!-- Filtre pour les places disponibles -->
   <div class="checkbox-container">
     <input
       type="checkbox"
@@ -41,7 +47,7 @@
     <label for="available-places-checkbox">Places disponibles uniquement</label>
   </div>
 
-
+  <!-- Filtre conditionnel "Avec amis", visible uniquement pour les membres. -->
   @if (auth.role == "ROLE_MEMBRE") {
     <div class="checkbox-container">
       <input
@@ -54,10 +60,11 @@
     </div>
   }
 
-  <!-- Bouton de tri -->
+  <!-- Contrôle pour le tri par date -->
   <div class="sort-controls">
     <button (click)="toggleSortDirection()" class="sort-button">
       Trier par date
+      <!-- L'icône change dynamiquement pour refléter la direction du tri. -->
       <lucide-icon
         [name]="sortDirection === 'asc' ? 'chevron-up' : 'chevron-down'"
         class="sort-icon">

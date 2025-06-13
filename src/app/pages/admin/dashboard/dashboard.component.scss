@@ -1,6 +1,5 @@
-// :host est utilisé par Angular pour le scope
 :host {
-  display: block; // Assure que le composant prend sa place
+  display: block; /* S'assure que le composant prend sa place */
 }
 
 /*------------------------------------*\
@@ -8,10 +7,9 @@
 \*------------------------------------*/
 .stats-grid {
   display: grid;
-  // 5 colonnes sur grand écran, s'adapte ensuite
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: var(--spacing-md, 16px); // Utilisation variable globale
-  margin-bottom: var(--spacing-lg, 24px); // Utilisation variable globale
+  gap: var(--spacing-md, 16px);
+  margin-bottom: var(--spacing-lg, 24px);
 }
 
 /*------------------------------------*\
@@ -19,9 +17,8 @@
 \*------------------------------------*/
 .charts-grid {
   display: grid;
-  // 2 colonnes par défaut
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: var(--spacing-lg, 24px); // Espace plus grand pour les graphiques
+  gap: var(--spacing-lg, 24px);
   margin-bottom: var(--spacing-lg, 24px);
 }
 
@@ -29,42 +26,34 @@
   #CONTENEUR GRAPHIQUE
 \*------------------------------------*/
 .chart-container {
-  // Utilise la classe .card de styles.txt pour le fond/ombre/bordure
-  padding: var(--spacing-lg, 24px); // Padding interne
+  padding: var(--spacing-lg, 24px);
   display: flex;
   flex-direction: column;
-  position: relative; // Nécessaire pour le canvas
-  // Hauteur fixe pour contraindre le graphique et éviter les débordements
-  height: var(--chart-height, 400px); // Utiliser une variable CSS pour la hauteur
-  box-sizing: border-box; // Le padding est inclus dans la hauteur
+  position: relative; /* Nécessaire pour le canvas */
+  height: var(--chart-height, 400px);
+  box-sizing: border-box;
 
   h3 {
     margin: 0 0 var(--spacing-md, 16px) 0;
     font-size: 1.2rem;
     color: var(--main-blue);
     text-align: center;
-    flex-shrink: 0; // Empêche le titre de rétrécir
+    flex-shrink: 0;
   }
 
-  // Wrapper optionnel autour du canvas pour aider Chart.js
   .chart-wrapper {
-    flex-grow: 1; // Prend l'espace restant en hauteur
-    position: relative; // Contexte pour le positionnement du canvas
-    min-height: 0; // Empêche le flex item de déborder
+    flex-grow: 1; /* Prend l'espace restant en hauteur */
+    position: relative;
+    min-height: 0;
   }
 
   canvas {
     display: block;
     max-width: 100%;
-    // Chart.js gère la hauteur via les options maintainAspectRatio
-    // Le wrapper avec flex-grow et position relative suffit généralement
   }
 
-  // Styles spécifiques pour le placeholder DANS un chart-container
-  // Il hérite de .no-data-message mais on peut ajuster
   .chart-placeholder {
-    flex-grow: 1; // Prend la place du chart-wrapper
-    // Les styles de base (flex, align, justify, color, etc.) viennent de .no-data-message
+    flex-grow: 1; /* Prend la place du chart-wrapper */
   }
 }
 
@@ -73,55 +62,39 @@
 \*------------------------------------*/
 .tables-grid {
   display: flex;
-  flex-direction: column; // Empile les cartes de tableau
-  gap: var(--spacing-lg, 24px); // Espace entre les tableaux
+  flex-direction: column;
+  gap: var(--spacing-lg, 24px);
 }
 
 /*------------------------------------*\
   #CONTENEUR TABLEAU
 \*------------------------------------*/
 .table-container {
-  // Utilise la classe .card pour le style de base
-  padding: var(--spacing-lg, 24px); // Padding standard de .card-content
+  padding: var(--spacing-lg, 24px);
 
-  // En-tête spécifique avec titre + bouton dans la carte tableau
   .header-table {
     display: flex;
-    flex-wrap: wrap; // Permet au bouton de passer dessous sur petit écran
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     margin-bottom: var(--spacing-md, 16px);
     gap: var(--spacing-sm, 8px);
 
     h3 {
-      font-size: 1.3rem; // Taille titre de section dans carte
+      font-size: 1.3rem;
       color: var(--main-blue);
-      margin: 0; // Pas de marge par défaut pour h3 dans ce contexte
+      margin: 0;
     }
 
-    // Style pour app-create-event-button si besoin (ex: alignement)
     app-create-event-button {
-      flex-shrink: 0; // Empêche le bouton de rétrécir
+      flex-shrink: 0;
     }
   }
 }
 
-/* Styles pour .table-wrapper et table.data-table (globalement définis dans styles.txt) */
-/* Ajouts/Overrides spécifiques si nécessaires : */
-table.data-table {
-  tbody td {
-    // Peut-être ajuster le max-width ou le style d'ellipsis si besoin
-    // max-width: 250px; // Exemple
-    &.actions-cell {
-      // Les styles pour .btn-actions et .btn sont globaux
-    }
-  }
-}
-
-/* Styles responsives spécifiques au dashboard (complètent ceux de styles.txt) */
+/* Styles responsives spécifiques au dashboard */
 @media screen and (max-width: 768px) {
   .stats-grid {
-    // S'assurer que auto-fit fonctionne bien sur mobile
     grid-template-columns: repeat(1, 1fr);
     gap: var(--spacing-sm, 8px);
   }
@@ -131,7 +104,7 @@ table.data-table {
   }
 
   .chart-container {
-    height: var(--chart-height-mobile, 350px); // Hauteur réduite sur mobile
+    height: var(--chart-height-mobile, 350px);
     padding: var(--spacing-md, 16px);
 
     h3 {
@@ -146,6 +119,4 @@ table.data-table {
       font-size: 1.15rem;
     }
   }
-
 }
-

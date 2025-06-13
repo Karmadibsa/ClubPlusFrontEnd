@@ -1,208 +1,104 @@
 /**
  * @interface Club
- * @description Représente les informations détaillées d'un club sportif enregistré dans l'application.
- * Cette interface est typiquement utilisée pour afficher les données d'un club,
- * que ce soit dans une liste, une page de détail, ou dans des sections administratives.
+ * @description Représente les informations détaillées d'un club sportif.
+ * Utilisée pour l'affichage (listes, pages de détail, sections administratives).
  */
 export interface Club {
-  /**
-   * @property {number} id
-   * @description Identifiant unique du club, généré par le backend lors de sa création.
-   */
+  /** Identifiant unique du club, généré par le backend. */
   id: number;
 
-  /**
-   * @property {string} nom
-   * @description Nom officiel du club sportif.
-   */
+  /** Nom officiel du club sportif. */
   nom: string;
 
-  /**
-   * @property {string} date_creation
-   * @description Date de création officielle du club.
-   * Il est recommandé de stocker les dates au format ISO 8601 (ex: "AAAA-MM-JJ").
-   */
+  /** Date de création officielle du club (format ISO 8601 recommandé). */
   date_creation: string;
 
-  /**
-   * @property {string} date_inscription
-   * @description Date à laquelle le club a été enregistré dans l'application "Club Plus".
-   */
+  /** Date d'enregistrement du club dans l'application. */
   date_inscription: string;
 
-  /**
-   * @property {string} numero_voie
-   * @description Numéro dans la voie (ex: "10bis", "25").
-   */
+  /** Numéro de voie de l'adresse (ex: "10bis"). */
   numero_voie: string;
 
-  /**
-   * @property {string} rue
-   * @description Nom de la rue, avenue, boulevard, etc. de l'adresse du club.
-   */
+  /** Nom de la rue de l'adresse du club. */
   rue: string;
 
-  /**
-   * @property {string} codepostal
-   * @description Code postal de la ville où se situe le club.
-   */
+  /** Code postal de l'adresse du club. */
   codepostal: string;
 
-  /**
-   * @property {string} ville
-   * @description Ville où se situe le club.
-   */
+  /** Ville de l'adresse du club. */
   ville: string;
 
-  /**
-   * @property {string} telephone
-   * @description Numéro de téléphone principal du club.
-   * Il peut être pertinent de valider/formater ce numéro.
-   */
+  /** Numéro de téléphone principal du club. */
   telephone: string;
 
-  /**
-   * @property {string} email
-   * @description Adresse e-mail de contact principale du club.
-   * Doit être une adresse e-mail valide.
-   */
+  /** Adresse e-mail de contact principale du club. */
   email: string;
 
-  /**
-   * @property {string} [codeClub]
-   * @description Code unique optionnel attribué au club après son inscription.
-   * Ce code peut être utilisé par les membres pour s'associer à leur club [1].
-   * Optionnel (indiqué par `?`) car il pourrait ne pas être immédiatement disponible ou applicable.
-   */
+  /** Code unique optionnel attribué au club (pour association des membres). Optionnel. */
   codeClub?: string;
 
-  /**
-   * @property {boolean} actif
-   * @description Indique si le club est actuellement actif dans le système.
-   * Un club inactif pourrait ne plus pouvoir créer d'événements ou accepter de nouveaux membres.
-   */
+  /** Indique si le club est actif dans le système. */
   actif: boolean;
 
-  /**
-   * @property {string | null} [desactivationDate]
-   * @description Date à laquelle le club a été désactivé, si applicable.
-   * Optionnel (indiqué par `?`) et peut être `null` si le club est actif ou n'a jamais été désactivé.
-   */
+  /** Date de désactivation du club (si applicable). Optionnel et peut être `null`. */
   desactivationDate?: string | null;
 }
 
 /**
  * @interface ClubAdminPayload
- * @description Définit la structure des données pour les informations personnelles
- * de l'administrateur initial lors de l'enregistrement d'un nouveau club.
- * Ces informations sont utilisées pour créer le premier compte utilisateur administrateur
- * associé au club.
- * Cette interface est conçue pour être imbriquée dans `ClubRegistrationPayload`.
+ * @description Définit la structure des données de l'administrateur initial lors de l'enregistrement d'un club.
+ * Utilisée pour créer le premier compte admin. Imbriquée dans `ClubRegistrationPayload`.
  */
 interface ClubAdminPayload {
-  /**
-   * @property {string} nom
-   * @description Nom de famille de l'administrateur du club.
-   */
+  /** Nom de famille de l'administrateur. */
   nom: string;
 
-  /**
-   * @property {string} prenom
-   * @description Prénom de l'administrateur du club.
-   */
+  /** Prénom de l'administrateur. */
   prenom: string;
 
-  /**
-   * @property {string} date_naissance
-   * @description Date de naissance de l'administrateur.
-   */
+  /** Date de naissance de l'administrateur. */
   date_naissance: string;
 
-  /**
-   * @property {string} telephone
-   * @description Numéro de téléphone personnel de l'administrateur.
-   */
+  /** Numéro de téléphone personnel de l'administrateur. */
   telephone: string;
 
-  /**
-   * @property {string} email
-   * @description Adresse e-mail personnelle de l'administrateur.
-   * Utilisée pour la connexion et les communications. Doit être unique.
-   */
+  /** Adresse e-mail personnelle de l'administrateur (pour connexion, unique). */
   email: string;
 
-  /**
-   * @property {string} [password]
-   * @description Mot de passe choisi par l'administrateur pour son compte.
-   * Ce champ est optionnel (`?`) ici car, selon le flux d'inscription,
-   * Il sera haché avant d'être stocké en base de données.
-   */
+  /** Mot de passe de l'administrateur. Optionnel (sera haché par le backend). */
   password?: string;
 }
 
 /**
  * @interface ClubRegistrationPayload
- * @description Définit la structure des données requises pour enregistrer un nouveau club
- * dans l'application "Club Plus".
- * Ce payload combine les informations du club lui-même et les informations
- * de son premier administrateur.
- * Il est envoyé au backend pour créer à la fois l'entité Club et l'utilisateur Admin associé.
+ * @description Définit la structure des données pour enregistrer un nouveau club.
+ * Combine les informations du club et de son administrateur. Envoyé au backend pour créer le Club et l'utilisateur Admin.
  */
 export interface ClubRegistrationPayload {
-  /**
-   * @property {string} nom
-   * @description Nom du nouveau club à enregistrer.
-   */
+  /** Nom du nouveau club. */
   nom: string;
 
-  /**
-   * @property {string} date_creation
-   * @description Date de création officielle du club.
-   */
+  /** Date de création officielle du club. */
   date_creation: string;
 
-  /**
-   * @property {string} numero_voie
-   * @description Numéro dans la voie de l'adresse du club.
-   */
+  /** Numéro de voie de l'adresse du club. */
   numero_voie: string;
 
-  /**
-   * @property {string} rue
-   * @description Nom de la rue de l'adresse du club.
-   */
+  /** Nom de la rue de l'adresse du club. */
   rue: string;
 
-  /**
-   * @property {string} codepostal
-   * @description Code postal de l'adresse du club.
-   */
+  /** Code postal de l'adresse du club. */
   codepostal: string;
 
-  /**
-   * @property {string} ville
-   * @description Ville de l'adresse du club.
-   */
+  /** Ville de l'adresse du club. */
   ville: string;
 
-  /**
-   * @property {string} telephone
-   * @description Numéro de téléphone principal du club.
-   */
+  /** Numéro de téléphone principal du club. */
   telephone: string;
 
-  /**
-   * @property {string} email
-   * @description Adresse e-mail de contact principale du club.
-   * Cette adresse e-mail est spécifique au club, et distincte de celle de l'administrateur.
-   */
+  /** Adresse e-mail de contact principale du club (distincte de celle de l'admin). */
   email: string;
 
-  /**
-   * @property {ClubAdminPayload} admin
-   * @description Objet contenant les informations du premier administrateur du club.
-   * Ces informations seront utilisées pour créer un compte utilisateur avec le rôle d'administrateur
-   * pour ce club.
-   */
+  /** Informations du premier administrateur du club (pour création de compte admin). */
   admin: ClubAdminPayload;
 }

@@ -12,137 +12,81 @@ import {
 import { ReservationService } from '../../../service/crud/reservation.service';
 import { catchError, finalize, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { DatePipe, LowerCasePipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
 import { Reservation } from '../../../model/reservation';
 import { ReservationStatus } from '../../../model/reservationstatus';
 import { FormsModule } from '@angular/forms';
 
 /**
- * @Component décorateur qui configure le composant.
+ * Modale affichant la liste des participations pour un événement spécifique.
+ *
+ * Ce composant récupère les réservations via un service, permet de les filtrer
+ * par statut (côté serveur) et par nom/prénom (côté client).
+ *
+ * @example
+ * <app-participation-event-modal
+ * [isVisible]="isModalOpen"
+ * [eventId]="selectedEventId"
+ * [eventTitle]="selectedEventTitle"
+ * (closeModal)="closeModal()">
+ * </app-participation-event-modal>
  */
 @Component({
-  selector: 'app-participation-event-modal', // Sélecteur pour utiliser ce composant.
-  standalone: true,                          // Indique que c'est un composant autonome.
+  selector: 'app-participation-event-modal',
+  standalone: true,
   imports: [
-    CommonModule,                             // Pour *ngIf, *ngFor, et les pipes DatePipe, LowerCasePipe.
-    LucideAngularModule,                      // Pour les icônes.
-    FormsModule                               // Pour [(ngModel)] sur le champ de recherche.
-    // DatePipe et LowerCasePipe n'ont pas besoin d'être listés ici explicitement
-    // s'ils sont exportés par CommonModule, ce qui est le cas.
+    CommonModule,
+    LucideAngularModule,
+    FormsModule
   ],
-  templateUrl: './participation-event-modal.component.html', // Template HTML de la modale.
-  styleUrl: './participation-event-modal.component.scss'    // Styles SCSS spécifiques.
-  // changeDetection: ChangeDetectionStrategy.OnPush, // Pourrait être ajouté pour optimiser.
+  templateUrl: './participation-event-modal.component.html',
+  styleUrl: './participation-event-modal.component.scss'
 })
-// Implémente OnInit (pour le chargement initial) et OnChanges (pour réagir aux changements d'Inputs).
 export class ParticipationEventModalComponent implements OnInit, OnChanges {
-  // --- INPUTS & OUTPUTS ---
 
-  /**
-   * @Input() isVisible
-   * @description Contrôle la visibilité de la modale depuis le composant parent.
-   */
+  /** Contrôle la visibilité de la modale. */
   @Input() isVisible = false;
 
-  /**
-   * @Input() eventId
-   * @description L'ID de l'événement pour lequel afficher les réservations.
-   *              `null` si aucun événement n'est spécifié.
-   */
+  /** L'ID de l'événement pour lequel afficher les réservations. */
   @Input() eventId: number | null = null;
 
-  /**
-   * @Input() eventTitle
-   * @description Le titre de l'événement, affiché dans l'en-tête de la modale.
-   *              Initialisé à "Réservations" par défaut.
-   */
-  @Input() eventTitle: string = 'Réservations'; // Valeur par défaut.
+  /** Le titre de l'événement affiché dans l'en-tête. */
+  @Input() eventTitle: string = 'Réservations';
 
-  /**
-   * @Output() closeModal
-   * @description Événement émis vers le parent lorsque la modale demande à être fermée.
-   */
+  /** Émis lorsque la fermeture de la modale est demandée. */
   @Output() closeModal = new EventEmitter<void>();
 
-  // --- PROPRIÉTÉS INTERNES ---
+  /** Expose l'énumération `ReservationStatus` au template. */
+  public readonly reservationStatus = ReservationStatus;
 
-  /**
-   * @property readonly reservationStatus
-   * @description Expose l'énumération `ReservationStatus` au template HTML pour pouvoir
-   *              l'utiliser (ex: dans des boutons de filtre, avec `reservationStatus.CONFIRME`).
-   */
-  readonly reservationStatus = ReservationStatus;
+  /** La liste des réservations effectivement affichée dans le template. */
+  public filteredReservations: Reservation[] = [];
+  /** Le terme de recherche lié au champ de saisie. */
+  public searchTerm: string = '';
+  /** Indique si un chargement de données est en cours. */
+  public isLoading = false;
+  /** Stocke un message d'erreur en cas d'échec du chargement. */
+  public error: string | null = null;
+  /** Le filtre de statut actuellement appliqué. */
+  public currentFilter: ReservationStatus | null = null;
 
-  // Injection des services.
-  private reservationService = inject(ReservationService);
-  private cdr = inject(ChangeDetectorRef); // Pour notifier Angular des changements (utile avec OnPush ou opérations asynchrones).
-
-  /**
-   * @property allReservationsForStatus
-   * @description Stocke la liste *complète* des réservations récupérées de l'API pour le `currentFilter` (statut) actif.
-   *              Cette liste sert de source de vérité pour le filtrage de recherche côté client.
-   */
+  /** La liste complète des réservations pour le statut actuel, servant de source pour le filtre de recherche. */
   private allReservationsForStatus: Reservation[] = [];
 
-  /**
-   * @property filteredReservations
-   * @description La liste des réservations qui est *effectivement affichée* dans le template.
-   *              Elle est le résultat du filtrage par `currentFilter` (via API) PUIS par `searchTerm` (côté client).
-   */
-  filteredReservations: Reservation[] = [];
+  private readonly reservationService = inject(ReservationService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   /**
-   * @property searchTerm
-   * @description Le terme de recherche saisi par l'utilisateur dans le champ de recherche.
-   *              Lié via `[(ngModel)]` dans le template.
-   */
-  searchTerm: string = '';
-
-  /**
-   * @property isLoading
-   * @description Booléen pour indiquer si un chargement de données est en cours (appel API).
-   *              Permet d'afficher un indicateur de chargement dans l'UI.
-   */
-  isLoading = false;
-
-  /**
-   * @property error
-   * @description Stocke un message d'erreur si le chargement des réservations échoue.
-   *              Permet d'afficher une notification d'erreur dans l'UI.
-   */
-  error: string | null = null;
-
-  /**
-   * @property currentFilter
-   * @description Le statut de réservation (`ReservationStatus`) actuellement appliqué comme filtre principal.
-   *              `null` signifie "tous les statuts" (ou le comportement par défaut de l'API).
-   */
-  currentFilter: ReservationStatus | null = null;
-
-  /**
-   * @method ngOnChanges
-   * @description Réagit aux changements des propriétés @Input.
-   *              Si `eventId` change pendant que la modale est visible, recharge les réservations.
-   *              Si la modale devient visible (`isVisible` passe à `true`), charge les réservations.
+   * Détecte les changements sur les `Input` pour charger ou recharger les données.
    */
   ngOnChanges(changes: SimpleChanges): void {
-    // Scénario 1: L'ID de l'événement change alors que la modale est déjà ouverte.
-    if (changes['eventId'] && this.isVisible && this.eventId !== null) {
-      console.log('ParticipationModal: eventId a changé, rechargement des réservations.');
-      this.searchTerm = ''; // Réinitialise la recherche textuelle.
-      this.loadReservations(this.currentFilter); // Recharge avec le filtre de statut actuel.
-    }
+    const isNowVisible = changes['isVisible']?.currentValue === true && !changes['isVisible']?.previousValue;
 
-    // Scénario 2: La modale devient visible.
-    // `changes['isVisible'].currentValue === true` : la nouvelle valeur est true.
-    // `!changes['isVisible'].previousValue` : la valeur précédente n'était pas true (donc false, undefined, ou premier changement).
-    if (changes['isVisible'] && changes['isVisible'].currentValue === true && !changes['isVisible'].previousValue) {
-      console.log('ParticipationModal: Modale devient visible, chargement des réservations.');
+    if (isNowVisible) {
       if (this.eventId !== null) {
-        this.loadReservations(this.currentFilter); // Charge avec le filtre de statut actuel.
+        this.loadReservations();
       } else {
-        console.warn('ParticipationModal: Tentative d\'ouverture sans eventId.');
         this.error = "Aucun événement n'est spécifié pour afficher les participations.";
         this.allReservationsForStatus = [];
         this.filteredReservations = [];
@@ -150,150 +94,103 @@ export class ParticipationEventModalComponent implements OnInit, OnChanges {
     }
   }
 
-  /**
-   * @method ngOnInit
-   * @description Crochet de cycle de vie appelé une fois après l'initialisation des @Input.
-   *              Charge les réservations si un `eventId` est déjà fourni et si la modale est visible (bien que
-   *              ngOnChanges gère déjà le cas où isVisible devient true). Il est plus sûr ici de
-   *              charger si `eventId` est présent, ngOnChanges gérera la visibilité.
-   */
   ngOnInit(): void {
-    console.log('ParticipationModal: ngOnInit - eventId:', this.eventId);
+    // La logique de chargement est principalement gérée dans ngOnChanges
+    // pour s'assurer qu'elle se déclenche lorsque la modale devient visible.
   }
 
   /**
-   * @method loadReservations
-   * @description Charge les réservations pour l'`eventId` actuel depuis le `ReservationService`.
-   *              Applique le filtre de statut (`status`) fourni lors de l'appel API.
-   * @param status Le `ReservationStatus` à utiliser pour filtrer les réservations côté serveur.
-   *               Si `null`, l'API peut retourner tous les statuts ou avoir un défaut.
+   * Charge les réservations depuis le service en fonction de l'ID de l'événement
+   * et du filtre de statut actuel.
+   * @param status - Le statut à utiliser pour le filtre. Utilise `currentFilter` par défaut.
    */
-  loadReservations(status: ReservationStatus | null = this.currentFilter): void {
+  public loadReservations(status: ReservationStatus | null = this.currentFilter): void {
     if (this.eventId === null) {
-      console.warn('ParticipationModal: loadReservations appelé sans eventId.');
-      this.error = "ID de l'événement manquant pour charger les réservations.";
+      this.error = "ID de l'événement manquant.";
       return;
     }
 
-    this.isLoading = true;    // Active l'indicateur de chargement.
-    this.error = null;        // Réinitialise les erreurs précédentes.
-    this.currentFilter = status; // Met à jour le filtre de statut actif.
-
-    console.log(`ParticipationModal: Chargement des réservations pour eventId ${this.eventId} avec statut ${status || 'TOUS'}.`);
+    this.isLoading = true;
+    this.error = null;
+    this.currentFilter = status;
 
     this.reservationService.getReservationsByEvent(this.eventId, status).pipe(
       tap(data => {
-        console.log('ParticipationModal: Données de réservation reçues de lAPI:', data);
-        this.allReservationsForStatus = data; // Stocke la liste brute pour ce statut.
-        this.applyClientSideFilters();      // Applique ensuite le filtre de recherche textuelle.
+        this.allReservationsForStatus = data;
+        this.applyClientSideFilters();
       }),
       catchError(err => {
-        console.error("ParticipationModal: Erreur lors du chargement des réservations:", err);
         this.error = "Impossible de charger la liste des participations.";
-        this.allReservationsForStatus = []; // Vide les listes en cas d'erreur.
+        this.allReservationsForStatus = [];
         this.filteredReservations = [];
-        return of([]); // Retourne un Observable vide pour que la chaîne ne se brise pas.
+        return of([]);
       }),
-      finalize(() => { // Exécuté que la requête réussisse ou échoue.
-        this.isLoading = false; // Désactive l'indicateur de chargement.
-        // `markForCheck()` est important si ce composant ou ses parents utilisent
-        // la stratégie de détection de changements `OnPush`. Il notifie Angular
-        // que l'état interne du composant a changé et qu'il doit être vérifié.
+      finalize(() => {
+        this.isLoading = false;
         this.cdr.markForCheck();
       })
-    ).subscribe(); // S'abonne pour déclencher la requête HTTP.
+    ).subscribe();
   }
 
   /**
-   * @method applyFilter
-   * @description Applique un filtre de statut (ex: 'CONFIRME', 'ANNULE') en rechargeant les données
-   *              depuis le serveur avec ce nouveau filtre de statut.
-   *              Réinitialise également le filtre de recherche textuelle.
-   * @param status Le `ReservationStatus` à appliquer, ou `null` pour tous les statuts.
+   * Applique un filtre par statut en rechargeant les données.
+   * @param status - Le statut à appliquer, ou `null` pour tous.
    */
-  applyFilter(status: ReservationStatus | null): void {
-    console.log('ParticipationModal: Application du filtre de statut:', status);
-    this.searchTerm = ''; // Réinitialise la recherche textuelle lors du changement de filtre de statut.
-    this.loadReservations(status); // Recharge les données avec le nouveau filtre de statut.
+  public applyFilter(status: ReservationStatus | null): void {
+    this.searchTerm = '';
+    this.loadReservations(status);
   }
 
   /**
-   * @method onSearchTermChange
-   * @description Appelée lorsque la valeur du champ de recherche (`searchTerm`) change
-   *              (généralement via `(ngModelChange)` ou `(input)` dans le template).
-   *              Réapplique le filtre de recherche textuelle côté client sur la liste
-   *              `allReservationsForStatus` déjà chargée.
+   * Déclenchée lors de la saisie dans le champ de recherche.
    */
-  onSearchTermChange(): void {
-    console.log('ParticipationModal: Terme de recherche a changé:', this.searchTerm);
+  public onSearchTermChange(): void {
     this.applyClientSideFilters();
   }
 
   /**
-   * @method applyClientSideFilters
-   * @description Filtre la liste `this.allReservationsForStatus` (qui contient les réservations
-   *              pour le `currentFilter` de statut) en fonction du `this.searchTerm` actuel.
-   *              Met à jour `this.filteredReservations` qui est la liste affichée.
-   *              Ce filtrage est purement côté client.
+   * Filtre la liste des réservations en fonction du `searchTerm` côté client.
    */
-  applyClientSideFilters(): void {
-    const searchTermLower = this.searchTerm.trim().toLowerCase(); // Prépare le terme de recherche.
+  private applyClientSideFilters(): void {
+    const searchTermLower = this.searchTerm.trim().toLowerCase();
 
     if (!searchTermLower) {
-      // Si le terme de recherche est vide, la liste filtrée est une copie de la liste brute pour le statut.
       this.filteredReservations = [...this.allReservationsForStatus];
     } else {
-      // Sinon, filtre `allReservationsForStatus` pour trouver les correspondances.
-      // Recherche dans le nom ou le prénom du membre associé à la réservation.
-      // L'utilisation de `?.` (optional chaining) est cruciale car `membre`, `nom`, ou `prenom`
-      // pourraient être `null` ou `undefined`.
       this.filteredReservations = this.allReservationsForStatus.filter(resa =>
         (resa.membre?.nom?.toLowerCase().includes(searchTermLower) ||
           resa.membre?.prenom?.toLowerCase().includes(searchTermLower))
       );
     }
-    console.log('ParticipationModal: Liste après filtre client:', this.filteredReservations);
-    // Notifie Angular de la mise à jour de `filteredReservations` pour rafraîchir la vue.
     this.cdr.markForCheck();
   }
 
   /**
-   * @method onClose
-   * @description Gère la demande de fermeture de la modale.
-   *              Réinitialise l'état interne (filtres, listes) et émet l'événement `closeModal`.
+   * Gère la demande de fermeture de la modale.
    */
-  onClose(): void {
-    console.log('ParticipationModal: Demande de fermeture.');
-    // Réinitialisation optionnelle de l'état pour une "propreté" lors de la prochaine ouverture.
+  public onClose(): void {
     this.searchTerm = '';
     this.currentFilter = null;
     this.allReservationsForStatus = [];
     this.filteredReservations = [];
     this.error = null;
-    this.isLoading = false; // S'assurer que le chargement est arrêté.
-
-    this.closeModal.emit(); // Émet l'événement pour que le parent ferme la modale.
+    this.isLoading = false;
+    this.closeModal.emit();
   }
 
   /**
-   * @method stopPropagation
-   * @description Empêche la propagation d'un événement (typiquement un clic) vers les éléments parents.
-   *              Utilisé sur le contenu de la modale pour éviter qu'un clic à l'intérieur
-   *              ne ferme la modale si le parent a une logique de "clic à l'extérieur pour fermer".
-   * @param event L'objet événement DOM.
+   * Empêche un clic à l'intérieur de la modale de la fermer.
+   * @param event - L'événement de clic.
    */
-  stopPropagation(event: Event): void {
+  public stopPropagation(event: Event): void {
     event.stopPropagation();
   }
 
   /**
-   * @method isFilterActive
-   * @description Fonction d'aide pour le template, permettant de savoir si un bouton de filtre de statut
-   *              correspond au `currentFilter` actif (pour appliquer un style visuel, par exemple).
-   * @param status Le statut à vérifier.
-   * @returns `true` si `status` est le filtre de statut actuellement appliqué.
+   * Vérifie si un filtre de statut est actuellement actif pour le style des boutons.
+   * @param status - Le statut à vérifier.
    */
-  isFilterActive(status: ReservationStatus | null): boolean {
+  public isFilterActive(status: ReservationStatus | null): boolean {
     return this.currentFilter === status;
   }
 }

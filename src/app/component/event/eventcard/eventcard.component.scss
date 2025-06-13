@@ -1,44 +1,48 @@
 :host {
-  display: block; // Permet à la carte de prendre la hauteur/largeur dans une grille
-  height: 100%; // Si les cartes doivent avoir la même hauteur dans une grille parente
+  display: block;
+  height: 100%;
 }
 
-.event-card {
-  display: flex; // Structure verticale principale
-  flex-direction: column;
-  height: 100%; // S'assure que flex fonctionne pour répartir l'espace
-  background-color: var(--main-white, #fff); // Fond blanc standard
-  border-radius: var(--border-radius-lg, 12px); // Coins plus arrondis ?
-  box-shadow: var(--shadow-md, 0 4px 10px rgba(0, 0, 0, 0.1)); // Ombre standard
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  overflow: hidden; // Empêche le contenu (comme le header) de déborder
+// --------------------------------------------------
+// Styles principaux de la carte événement
+// --------------------------------------------------
 
+.event-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--main-white, #fff);
+  border-radius: var(--border-radius-lg, 12px);
+  box-shadow: var(--shadow-md, 0 4px 10px rgba(0, 0, 0, 0.1));
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+
+  // Effet au survol.
   &:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-lg, 0 8px 20px rgba(0, 0, 0, 0.15));
   }
 }
 
-// En-tête de la carte
+/* --- En-tête --- */
+
 .event-card-header {
   background-color: var(--main-blue);
   color: white;
   padding: var(--spacing-md, 16px);
-  // border-radius: ...; // Géré par overflow:hidden du parent
-  position: relative; // Pour positionner des éléments absolus si besoin plus tard
 
   .event-title {
-    font-size: 1.25rem; // Taille ajustée
+    font-size: 1.25rem;
     font-weight: 600;
-    margin: 0 0 var(--spacing-sm, 8px) 0; // Espace sous le titre
+    margin: 0 0 var(--spacing-sm, 8px) 0;
     line-height: 1.3;
-    // Troncature de titre si nécessaire (exemple sur 2 lignes max)
+    // Troncature du titre sur 2 lignes.
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    min-height: calc(1.3em * 2); // Réserve la place pour 2 lignes
+    min-height: calc(1.3em * 2);
   }
 
   .event-time {
@@ -46,125 +50,117 @@
     align-items: center;
     gap: var(--spacing-xs, 4px);
     font-size: 0.9rem;
-    opacity: 0.9; // Légèrement moins proéminent
-    // font-style: italic; // Optionnel
+    opacity: 0.9;
   }
 }
 
-// Contenu Principal
+/* --- Contenu principal --- */
+
 .event-card-content {
   padding: var(--spacing-md, 16px);
-  flex-grow: 1; // Prend l'espace disponible entre header et footer
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md, 16px); // Espace entre les sections description et détails
+  gap: var(--spacing-md, 16px);
 
-  // Style commun pour les sections de contenu
-  .event-section {
-    // Pas besoin de margin-top si on utilise gap sur le parent
-    dl {
-      margin: 0;
-      padding: 0;
-    }
-
-    // Reset styles dl
+  dl {
+    margin: 0;
+    padding: 0;
   }
 }
 
-// Section Description
+/* --- Section Description --- */
+
 .event-description {
   .description-text {
     font-size: 0.95rem;
     line-height: 1.5;
     color: var(--text-medium, #555);
-    margin: 0; // Reset margin dd
-    // Troncature plus contrôlée si besoin, ou pas de troncature ?
-    // Exemple avec 3 lignes max :
+    margin: 0;
+    // Troncature de la description sur 3 lignes.
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    // min-height: calc(1.5em * 3); // Réserve la place pour éviter saut
   }
 }
 
-// Section Détails (Places, Amis)
+/* --- Section Détails --- */
+
 .event-details {
   dl {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm, 8px); // Espace entre Place et Amis
+    gap: var(--spacing-sm, 8px);
   }
 
   .detail-item {
     display: flex;
-    align-items: center; // Aligne icône/titre et valeur
-    gap: var(--spacing-sm, 8px); // Espace entre titre et valeur
+    align-items: center;
+    gap: var(--spacing-sm, 8px);
     font-size: 0.9rem;
   }
 
-  dt.section-title { // Titre (ex: "Places disponibles :")
+  dt.section-title {
     font-weight: 500;
     color: var(--text-dark, #333);
     margin: 0;
-    display: inline-flex; // Pour aligner icône et texte
+    display: inline-flex;
     align-items: center;
     gap: var(--spacing-xs, 4px);
-    white-space: nowrap; // Empêche le titre de passer à la ligne
+    white-space: nowrap;
   }
 
-  dd { // Valeur (ex: "15/20")
+  dd {
     margin: 0;
-    font-weight: 600; // Met la valeur en évidence
-    color: var(--main-blue); // Couleur distinctive pour la valeur
+    font-weight: 600;
+    color: var(--main-blue);
   }
 
-  .amis-list { // Style spécifique liste amis
-    font-weight: 400; // Moins en évidence que le nombre de places
+  .amis-list {
+    font-weight: 400;
     color: var(--text-medium);
-    // Peut-être troncature si la liste est longue
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    flex-grow: 1; // Prend l'espace restant si besoin
+    flex-grow: 1;
   }
 }
 
-// Pied de carte / Actions
+/* --- Pied de carte et Actions --- */
+
 .event-card-actions {
-  margin-top: auto; // Pousse le footer en bas
+  margin-top: auto;
   padding: var(--spacing-md, 16px);
-  text-align: center; // Centre le bouton
-  border-top: 1px solid var(--border-color-light, #eee); // Séparateur léger
+  text-align: center;
+  border-top: 1px solid var(--border-color-light, #eee);
 }
 
-// Bouton Réserver
 .reserve-button {
-  // Utilise les styles .btn et .btn-primary globaux si définis
-  // Sinon, styles spécifiques ici :
-  display: inline-flex; // Assure alignement icône/texte
+  display: inline-flex;
   align-items: center;
   gap: var(--spacing-sm, 8px);
-  padding: 8px 16px; // Padding ajusté
-  border-radius: 20px; // Coins très arrondis
+  padding: 8px 16px;
+  border-radius: 20px;
   background-color: var(--main-orange);
   color: white;
-  font-weight: 600; // Moins gras que 'bold' ?
+  font-weight: 600;
   font-size: 0.9rem;
   border: none;
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 
+  // Styles pour l'interaction utilisateur.
   &:hover:not(:disabled) {
     background-color: var(--main-orange-dark, #d9541e);
-    transform: scale(1.03); // Effet subtil
+    transform: scale(1.03);
     box-shadow: 0 2px 5px rgba(var(--main-orange-rgb), 0.2);
   }
 
+  // Style pour l'accessibilité au clavier.
   &:focus-visible {
     outline: none;
     box-shadow: 0 0 0 3px rgba(var(--main-orange-rgb), 0.4);
   }
 }
-

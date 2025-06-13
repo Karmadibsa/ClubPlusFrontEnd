@@ -1,35 +1,16 @@
 /**
  * @enum ReservationStatus
- * @description Définit un ensemble de constantes nommées pour représenter les différents états
- * possibles d'une réservation au sein de l'application "Club Plus".
- * L'utilisation d'une énumération TypeScript améliore la lisibilité du code,
- * la maintenabilité et la sécurité de type en évitant les erreurs potentielles
- * liées à l'utilisation de chaînes de caractères littérales ("magic strings") pour les statuts [1].
- *
- * Cette énumération TypeScript est conçue pour correspondre (approximativement, comme noté)
- * à une énumération similaire qui pourrait exister dans le backend Java, assurant ainsi
- * une cohérence dans la sémantique des statuts entre le frontend et le backend.
+ * @description Définit les états possibles d'une réservation.
+ * Améliore la lisibilité et la sécurité de type.
+ * Conçue pour correspondre à l'énumération du backend.
  */
 export enum ReservationStatus {
-  /**
-   * @value CONFIRME
-   * @description La réservation a été confirmée et la place est réservée pour le membre.
-   * Le membre est attendu à l'événement.
-   */
+  /** La réservation est confirmée et la place est réservée. */
   CONFIRME = 'CONFIRME',
 
-  /**
-   * @value UTILISE
-   * @description La réservation a été utilisée; le membre s'est présenté à l'événement
-   * et son QR code (ou autre moyen de suivi) a été validé/scanné [1].
-   * Ce statut est important pour le suivi des présences effectives.
-   */
+  /** La réservation a été utilisée (membre présent à l'événement). */
   UTILISE = 'UTILISE',
 
-  /**
-   * @value ANNULE
-   * @description La réservation a été annulée, soit par le membre, soit par un administrateur.
-   * La place correspondante est de nouveau disponible (selon les règles de gestion).
-   */
+  /** La réservation a été annulée (place potentiellement disponible de nouveau). */
   ANNULE = 'ANNULE'
 }

@@ -1,15 +1,23 @@
 /* billet.component.scss - Nettoyé */
 
-// --- Styles spécifiques à la page Billets ---
+/*------------------------------------*\
+  #Styles spécifiques à la page Billets
+\*------------------------------------*/
 
-// SEULEMENT les styles non gérés globalement restent ici.
+:host {
+  display: block; /* Assure que le composant prend l'espace nécessaire */
+}
 
-// --- Styles pour Zones Fonctionnelles Cachées ---
+/*------------------------------------*\
+  #Styles pour Zones Fonctionnelles Cachées
+\*------------------------------------*/
 .hidden-functional {
   display: none;
 }
 
-// --- Styles de Base pour le Template PDF ---
+/*------------------------------------*\
+  #Styles de Base pour le Template PDF
+\*------------------------------------*/
 .pdf-template {
   font-family: Arial, sans-serif;
   color: #333;

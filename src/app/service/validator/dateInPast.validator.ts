@@ -1,26 +1,25 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 /**
- * Validateur personnalisé pour vérifier si la date est dans le passé.
- * La date d'aujourd'hui n'est pas considérée comme étant dans le passé.
+ * @function dateInPastValidator
+ * @description Validateur personnalisé: vérifie si une date est strictement dans le passé.
+ * Aujourd'hui n'est pas considéré comme étant dans le passé.
+ * @returns Un objet `ValidationErrors` avec `dateNotInPast: true` si la date est aujourd'hui ou dans le futur, sinon `null`.
  */
 export function dateInPastValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     if (!control.value) {
-      // Si le champ est vide, ne pas lever cette erreur spécifique (la validation 'required' s'en chargera)
       return null;
     }
 
     const inputDate = new Date(control.value);
-    // Pour une comparaison juste avec un input type="date", on met l'heure à minuit pour "aujourd'hui"
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Important pour s'assurer qu'une date d'aujourd'hui n'est pas considérée comme passée
+    today.setHours(0, 0, 0, 0); // Réinitialise l'heure pour une comparaison stricte au jour.
 
     if (inputDate >= today) {
-      // Si la date saisie est aujourd'hui ou dans le futur
-      return { 'dateNotInPast': true }; // Retourne un objet d'erreur
+      return { 'dateNotInPast': true };
     }
 
-    return null; // La date est valide (dans le passé)
+    return null;
   };
 }

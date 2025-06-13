@@ -1,3 +1,7 @@
+<!--
+  Ce template définit la structure de la modale permettant à un utilisateur
+  de réserver une place pour un événement spécifique.
+-->
 <div class="modal-overlay modal-overlay-blur"
      [class.is-visible]="isVisible"
      (click)="onClose()">
@@ -10,7 +14,6 @@
         <lucide-icon name="calendar-plus" aria-hidden="true"></lucide-icon>
         Réserver pour : {{ event?.nom }}
       </h2>
-      <!-- Bouton de fermeture standard -->
       <button class="modal-close-button" type="button" (click)="onClose()" title="Fermer">
         <lucide-icon name="x"></lucide-icon>
       </button>
@@ -19,7 +22,7 @@
     <!-- Corps de la modale -->
     <main class="modal-body">
 
-      <!-- Détails de l'événement -->
+      <!-- Section affichant les détails clés de l'événement pour confirmation. -->
       <div class="event-details">
         <div class="event-info">
           <div class="info-item">
@@ -28,8 +31,7 @@
           </div>
           <div class="info-item">
             <span class="info-label">Date:</span>
-            <span class="info-value">{{ event?.startTime | date:'dd/MM/yyyy HH:mm' }}
-              - {{ event?.endTime | date:'HH:mm' }}</span>
+            <span class="info-value">{{ event?.startTime | date:'dd/MM/yyyy HH:mm' }} - {{ event?.endTime | date:'HH:mm' }}</span>
           </div>
           <div class="info-item">
             <span class="info-label">Description:</span>
@@ -46,11 +48,11 @@
         </div>
       </div>
 
-      <!-- Section formulaire de réservation -->
+      <!-- Section contenant le formulaire de réservation. -->
       <div class="reservation-form">
         <h4 class="category-selection-title">Sélectionnez votre catégorie</h4>
 
-        <!-- Notice (style spécifique conservé dans SCSS) -->
+        <!-- Message d'information pour l'utilisateur. -->
         <div class="reservation-notice">
           <p>Attention : une seule réservation est possible à la fois par adhérent et maximum deux places par
             événement.</p>
@@ -58,8 +60,10 @@
 
         <form>
           <div class="categories">
+            <!-- Itération sur les catégories de l'événement pour créer les options de réservation. -->
             @for (category of event?.categories; track category.id; let i = $index) {
               <div class="category-item">
+                <!-- Le ngModel lie la sélection à la propriété `selectedCategory` du composant. -->
                 <input type="radio"
                        [id]="'category-' + i"
                        name="categorySelection"
@@ -72,6 +76,7 @@
                 </label>
               </div>
             } @empty {
+              <!-- Message affiché si aucune catégorie n'est disponible. -->
               <p class="no-categories-available">Aucune catégorie disponible pour cet événement.</p>
             }
           </div>
@@ -80,12 +85,13 @@
 
     </main>
 
+    <!-- Pied de page avec les actions de la modale. -->
     <footer class="modal-footer">
+      <!-- Message d'erreur conditionnel si la soumission échoue sans sélection. -->
       @if (!selectedCategory && isSubmitting) {
-        <!-- Affiche si on tente de soumettre sans sélection -->
         <span class="selection-error invalid-feedback">Veuillez sélectionner une catégorie.</span>
       }
-      <!-- Bouton Réserver utilisant les classes globales -->
+      <!-- Le bouton de soumission est désactivé jusqu'à ce qu'une catégorie soit sélectionnée. -->
       <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="!selectedCategory || isSubmitting">
         @if (isSubmitting) {
           <lucide-icon name="loader" class="animate-spin"></lucide-icon> Sauvegarde...
@@ -97,4 +103,3 @@
 
   </div>
 </div>
-

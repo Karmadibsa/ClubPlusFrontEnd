@@ -1,31 +1,50 @@
-<!-- event-row.component.html -->
+<!--
+  Ce template représente une seule ligne (<tr>) dans un tableau listant les événements.
+  Chaque ligne affiche les détails d'un événement et fournit des actions
+  (voir les réservations, modifier, supprimer).
+  Elle contient également la logique pour instancier ses propres modales d'édition et de participation.
+-->
+
+<!-- Cellules de données pour l'événement -->
 <td data-label="Titre">{{ evenement.nom }}</td>
-<td data-label="Début - Fin">{{ evenement.startTime | date:'dd/MM/yyyy HH:mm' }}
-  - {{ evenement.endTime | date:'dd/MM HH:mm' }}
-</td>
+<td data-label="Début - Fin">{{ evenement.startTime | date:'dd/MM/yyyy HH:mm' }} - {{ evenement.endTime | date:'dd/MM HH:mm' }}</td>
 <td data-label="Description">{{ evenement.description }}</td>
 <td data-label="Participants">{{ evenement.placeReserve }} / {{ evenement.placeTotal }}</td>
 <td data-label="Lieu">{{ evenement.location }}</td>
+
+<!-- Affiche la liste des catégories associées à l'événement, séparées par une virgule. -->
 <td data-label="Catégories">
   @for (categorie of evenement.categories; track categorie.id; let last = $last) {
     <span>{{ categorie.nom }}{{ !last ? ', ' : '' }}</span>
   }
 </td>
-<td data-label="Actions"> <!-- Label pour la cellule actions -->
+
+<!-- Cellule contenant les boutons d'action pour la ligne. -->
+<td data-label="Actions">
   <div class="btn-actions">
+    <!-- Action pour ouvrir la modale de visualisation des participations. -->
     <button class="btn btn-secondary" title="Voir Réservations" (click)="ouvrirModalParticipation()">
       <lucide-icon name="eye" class="icon"></lucide-icon>
     </button>
+    <!-- Action pour ouvrir la modale d'édition de l'événement. -->
     <button class="btn btn-edit" title="Modifier" (click)="ouvrirModalEditionDeLigne()">
       <lucide-icon name="pen" class="icon"></lucide-icon>
     </button>
+    <!-- Action pour demander la suppression de l'événement. -->
     <button class="btn btn-danger" title="Supprimer" (click)="requestDelete()">
       <lucide-icon name="trash" class="icon"></lucide-icon>
     </button>
   </div>
 </td>
 
-<!-- Modal d'édition -->
+
+<!--
+  SECTION DES MODALES
+  Chaque modale est instanciée ici, au niveau de la ligne, et sa visibilité est
+  contrôlée par une variable du composant (`isModalEditVisible`, `isParticipationModalVisible`).
+-->
+
+<!-- Modale d'édition, liée au composant `app-edit-event` que nous avons revu. -->
 @if (isModalEditVisible) {
   <app-edit-event
     [isVisible]="isModalEditVisible"
@@ -37,7 +56,7 @@
 }
 
 
-<!-- Modale de participation -->
+<!-- Modale de participation pour afficher/gérer les inscrits à cet événement. -->
 @if (isParticipationModalVisible) {
   <app-participation-event-modal
     [isVisible]="isParticipationModalVisible"
@@ -46,4 +65,3 @@
     (closeModal)="handleCloseParticipationModal()">
   </app-participation-event-modal>
 }
-

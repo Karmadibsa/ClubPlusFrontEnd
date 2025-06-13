@@ -1,40 +1,32 @@
-// Importation des variables globales si nécessaire (souvent fait globalement dans angular.json)
-// @import 'path/to/variables';
+/*------------------------------------*\
+  #Styles spécifiques à la page de notation
+\*------------------------------------*/
 
-// Styles spécifiques pour la page de notation
-// Ces styles s'appliquent aux classes utilisées dans notation.component.html
-// Ils s'ajoutent ou surchargent si besoin les styles globaux de styles.txt
-
-// :host est utilisé par Angular pour le scope, pas besoin de .user-layout-container .main-content ici
 :host {
-  display: block; // Assure que le composant prend sa place
+  display: block;
 }
 
-// Style additionnel pour le sous-titre s'il est conservé
 .page-subtitle-info {
   font-size: 1.1em;
   color: var(--text-medium, #666);
   font-style: italic;
-  margin-bottom: var(--spacing-lg, 24px); // Espace avant le contenu principal
-  text-align: center; // Centrer comme dans l'exemple initial
+  margin-bottom: var(--spacing-lg, 24px);
+  text-align: center;
 }
 
-// Wrapper pour le sélecteur d'événement
+/*------------------------------------*\
+  #Sélecteur d'événement
+\*------------------------------------*/
 .event-selector-wrapper {
-  // Utilise la classe .card de styles.txt pour le fond/ombre/bordure
-  // Ajout de padding spécifique si différent du .card standard
   padding: var(--spacing-lg, 24px);
 
-  // Ajustement marge interne du .form-group si besoin
   .form-group {
-    margin-bottom: 0; // Pas de marge en bas si c'est le seul élément dans la card
+    margin-bottom: 0;
   }
 }
 
-// Style spécifique pour le select si besoin d'override .form-control
 .event-select {
-  // Hérite de .form-control de styles.txt
-  // Ajout d'une flèche custom si .form-control ne le fait pas déjà
+  /* Ajout d'une flèche SVG personnalisée pour le select. */
   appearance: none;
   background-image: url("data:image/svg+xml;utf8,<svg fill='%23495057' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
   background-repeat: no-repeat;
@@ -43,20 +35,18 @@
   cursor: pointer;
 }
 
-// Section spécifique à la notation (le fieldset)
+/*------------------------------------*\
+  #Section de notation
+\*------------------------------------*/
 .rating-section {
-  // Utilise fieldset.card-section de styles.txt pour la structure
-  margin-top: var(--spacing-lg, 24px); // Espace après le sélecteur ou message
+  margin-top: var(--spacing-lg, 24px);
 
-  // Style pour la liste des critères (le div .card-content)
   .rating-criteria-list {
-    // Utilise .card-content pour le padding
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md, 16px); // Espace entre chaque app-itemnotation
+    gap: var(--spacing-md, 16px);
   }
 
-  // Style pour le message si aucun critère
   .empty-criteria-message {
     color: var(--text-medium, #666);
     font-style: italic;
@@ -65,51 +55,17 @@
   }
 }
 
-// Styles pour le composant app-itemnotation
-// !!! IMPORTANT: Ces styles DOIVENT être dans itemnotation.component.scss !!!
-// Ils sont ici à titre INDICATIF et ne seront PAS appliqués depuis ce fichier.
-/*
-app-itemnotation {
-  display: block;
-  // Appliquer un style de carte ou similaire
-  background-color: var(--main-white, #fff);
-  border: 1px solid var(--border-color, #dee2e6);
-  border-radius: var(--border-radius-sm, 4px); // Rayon plus petit pour item interne?
-  padding: var(--spacing-md, 16px);
-  box-shadow: var(--shadow-xs, 0 1px 2px rgba(0,0,0,0.04)); // Ombre très légère
-
-  .rating-container { // Supposons que le composant ait ce conteneur
-    // ... styles internes au composant enfant ...
-  }
-
-  .rating-title {
-     font-weight: 600;
-     margin-bottom: var(--spacing-sm, 8px);
-     color: var(--main-blue, #1a5f7a);
-     font-size: 1.1rem;
-   }
-
-  .stars-wrapper { ... }
-  .star { ... }
-  .star.filled { color: var(--main-orange); }
-  .rating-value { ... }
-}
-*/
-
-// Ajustements pour les actions de notation si nécessaire
+/*------------------------------------*\
+  #Actions de notation
+\*------------------------------------*/
 .rating-actions {
-  // Utilise .form-actions de styles.txt pour layout (flex-end par défaut)
-  margin-top: var(--spacing-lg, 24px); // Espace au-dessus des boutons
+  margin-top: var(--spacing-lg, 24px);
 
   .btn {
-    // Le bouton utilise .btn et .btn-primary de styles.txt
-    // On peut forcer la largeur si besoin
-    width: 100%; // Prend toute la largeur dans ce contexte
+    width: 100%;
 
     @media screen and (min-width: 768px) {
-      width: auto; // Retour à la largeur auto sur écrans plus larges si .form-actions le gère
+      width: auto;
     }
   }
 }
-
-// L'animation .animate-spin est définie globalement dans styles.txt

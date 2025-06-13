@@ -1,29 +1,18 @@
-<!-- Utilise la structure .page-header standard -->
 <div class="page-header">
-  <!-- Titre principal avec classe standard et icône optionnelle -->
-  <h1 class="page-title">
-    Mes Clubs
-  </h1>
-  <!-- Pas d'élément spécifique au header pour cette page -->
+  <h1 class="page-title">Mes Clubs</h1>
 </div>
 
-<!-- Section principale contenant la gestion des clubs -->
 <section class="main-section" aria-labelledby="main-clubs-title">
-  <!-- Titre masqué pour l'accessibilité de la section -->
+  <!-- Titre visuellement caché pour l'accessibilité. -->
   <h2 id="main-clubs-title" class="visually-hidden">Gestion des adhésions et recherche de clubs</h2>
 
-  <!-- ========================================= -->
-  <!-- == Barre d'Actions : Rejoindre + Recherche == -->
-  <!-- ========================================= -->
+  <!-- Barre d'actions: Rejoindre un club et Rechercher dans les clubs. -->
   <div class="club-actions-bar">
 
-    <!-- == Partie 1 : Rejoindre un Club == -->
-    <!-- Formulaire pour gérer la soumission -->
+    <!-- Formulaire pour rejoindre un club par code. -->
     <form class="join-form" (ngSubmit)="joinClub()" aria-label="Rejoindre un club par code">
-
-      <!-- Groupe Input + Bouton pour l'alignement -->
       <div class="join-input-group">
-        <label for="join-code" class="form-label visually-hidden">Code du Club :</label> <!-- Masqué visuellement mais utile pour a11y -->
+        <label for="join-code" class="form-label visually-hidden">Code du Club :</label>
         <input type="text"
                id="join-code"
                class="form-control"
@@ -35,8 +24,6 @@
                [attr.aria-invalid]="errorJoiningClub ? 'true' : null"
                [disabled]="isJoiningClub"
                required>
-
-        <!-- Bouton de type submit DANS le groupe, utilisant classes globales -->
         <button type="submit"
                 class="btn btn-primary"
                 [disabled]="isJoiningClub || !joinClubCode.trim()"
@@ -49,41 +36,33 @@
             <span>Rejoindre</span>
           }
         </button>
-      </div> <!-- Fin join-input-group -->
+      </div>
+    </form>
 
-    </form> <!-- Fin join-form -->
-
-    <!-- == Partie 2 : Recherche dans Mes Clubs == -->
-    <!-- Structure similaire à .friend-search-container -->
+    <!-- Champ de recherche pour filtrer la liste des clubs de l'utilisateur. -->
     <div class="club-search-container">
       <label for="club-search" class="visually-hidden">Rechercher dans mes clubs</label>
       <lucide-icon name="search" size="18" class="search-icon" aria-hidden="true"></lucide-icon>
       <input type="search"
-      id="club-search"
-      class="form-control club-search-input"
-      [(ngModel)]="clubSearchTerm"
-      (input)="filterClubsList()"
-      placeholder="Rechercher dans mes clubs..."
-      [disabled]="isLoadingClubs">
+             id="club-search"
+             class="form-control club-search-input"
+             [(ngModel)]="clubSearchTerm"
+             (input)="filterClubsList()"
+             placeholder="Rechercher dans mes clubs..."
+             [disabled]="isLoadingClubs">
     </div>
 
-  </div> <!-- Fin club-actions-bar -->
+  </div>
 
-  <!-- ========================================= -->
-  <!-- == Section : Liste des Clubs Adjoints == -->
-  <!-- ========================================= -->
-  <!-- Utilisation de div.card-section car ce n'est plus un fieldset autonome -->
+  <!-- Section de la liste des clubs auxquels l'utilisateur est adhérent. -->
   <div class="card-section" role="region" aria-labelledby="current-clubs-title">
-    <!-- Toujours utiliser un header pour la carte/section -->
     <div class="section-header">
       <h2 id="current-clubs-title">Mes Adhésions Actuelles</h2>
-      <!-- Description optionnelle -->
-      <!-- <p class="section-description">Liste des clubs dont vous êtes membre.</p> -->
     </div>
 
     <div class="card-content">
 
-      <!-- État de chargement de la liste (utilise .loading-indicator global) -->
+      <!-- Indicateur de chargement pour la liste des clubs. -->
       @if (isLoadingClubs) {
         <div class="loading-indicator">
           <lucide-icon name="loader" class="animate-spin" aria-hidden="true"></lucide-icon>
@@ -91,16 +70,15 @@
         </div>
       }
 
-      <!-- Erreur de chargement de la liste (utilise .alert global) -->
+      <!-- Message d'erreur de chargement de la liste. -->
       @if (errorLoadingClubs && !isLoadingClubs) {
         <div class="alert alert-danger" role="alert">{{ errorLoadingClubs }}</div>
       }
 
-      <!-- Contenu de la liste (si chargement terminé et pas d'erreur) -->
       @if (!isLoadingClubs && !errorLoadingClubs) {
-        <!-- Wrapper pour le tableau (requis par styles globaux pour scroll responsive) -->
+        <!-- Wrapper pour le défilement horizontal du tableau. -->
         <div class="table-wrapper">
-          <!-- Tableau utilisant la classe globale .data-table -->
+          <!-- Tableau affichant les clubs de l'utilisateur. -->
           <table class="data-table" aria-label="Liste de vos clubs">
             <thead>
             <tr>
@@ -112,10 +90,9 @@
             </tr>
             </thead>
             <tbody>
-            <!-- Utiliser filteredClubs ici au lieu de userClubs si la recherche est implémentée -->
               @for (club of filteredClubs; track club.id) {
                 <tr>
-                  <!-- **Important: Ajout de [attr.data-label] pour la vue mobile des styles globaux** -->
+                  <!-- Ajout de data-label pour la vue mobile. -->
                   <td [attr.data-label]="'Nom du Club'">{{ club.nom }}</td>
 
                   <td [attr.data-label]="'Adresse'">
@@ -159,9 +136,9 @@
                     }
                   </td>
 
-                  <td [attr.data-label]="'Actions'" class="actions-cell"> <!-- Classe globale pour cellule actions -->
-                    <div class="btn-actions"> <!-- Wrapper global pour boutons actions -->
-                      <!-- Bouton Quitter utilisant classes globales -->
+                  <td [attr.data-label]="'Actions'" class="actions-cell">
+                    <div class="btn-actions">
+                      <!-- Bouton pour quitter le club. -->
                       <button type="button"
                               class="btn btn-danger btn-sm"
                               (click)="leaveClub(club)"
@@ -173,20 +150,19 @@
                           <span>Départ...</span>
                         } @else {
                           <lucide-icon name="log-out" aria-hidden="true"></lucide-icon>
-                          <!-- <span class="visually-hidden">Quitter</span> -->
                         }
                       </button>
-                      <!-- Indicateur d'erreur (optionnel) -->
+                      <!-- Indicateur d'erreur si la tentative de départ échoue. -->
                       @if (hasLeaveError(club.id)) {
                         <lucide-icon name="alert-circle" class="text-danger icon-error"
                                      title="Erreur lors de la tentative de départ"
                                      aria-hidden="true"></lucide-icon>
                       }
-                    </div> <!-- Fin .btn-actions -->
+                    </div>
                   </td>
                 </tr>
               } @empty {
-                <!-- Message vide utilisant la classe globale .empty-table-message -->
+                <!-- Message si aucun club ne correspond à la recherche ou n'est trouvé. -->
                 <tr class="empty-table-message">
                   <td colspan="5">
                     @if (clubSearchTerm) {
@@ -199,9 +175,8 @@
               }
             </tbody>
           </table>
-        </div> <!-- Fin .table-wrapper -->
-      } <!-- Fin condition !isLoadingClubs && !errorLoadingClubs -->
-
-    </div> <!-- Fin card-content liste -->
-  </div> <!-- Fin card-section liste -->
-</section> <!-- Fin main-section -->
+        </div>
+      }
+    </div>
+  </div>
+</section>

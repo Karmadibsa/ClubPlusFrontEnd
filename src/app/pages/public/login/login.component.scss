@@ -1,108 +1,98 @@
 /*------------------------------------*\
   #PAGE: CONNEXION
-  Styles pour la page et le formulaire de connexion,
-  utilisant les variables CSS globales définies dans :root.
 \*------------------------------------*/
 
-// --- Conteneur Principal & Login ---
-
-// Conteneur global pour centrer la boîte de connexion
+/*------------------------------------*\
+  #Conteneur Principal & Login
+\*------------------------------------*/
 .container {
   width: 100%;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  // Utilise une variable globale pour le fond de la page
-  background-color: var(--bg-medium-gray, #e9ecef); // Fallback gris clair
-  padding: var(--spacing-md, 16px); // Espace sur les bords
+  background-color: var(--bg-medium-gray, #e9ecef);
+  padding: var(--spacing-md, 16px);
   box-sizing: border-box;
 }
 
-// Conteneur spécifique du formulaire de connexion
 .login-container {
-  background: var(--main-white, white); // Fond blanc via variable globale
-  padding: var(--spacing-xl, 32px) var(--spacing-xl, 40px); // Espacement interne (ajusté à 32px pour variable)
-  border-radius: var(--border-radius, 8px); // Coins arrondis via variable globale
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); // Ombre portée (peut être mise en variable si besoin)
+  background: var(--main-white, white);
+  padding: var(--spacing-xl, 32px) var(--spacing-xl, 40px);
+  border-radius: var(--border-radius, 8px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 450px; // Limite la largeur
+  max-width: 450px;
   text-align: center;
 
   h1 {
-    // Titre principal "Connexion"
-    color: var(--main-blue, #1a5f7a); // Titre bleu via variable globale
-    margin-bottom: var(--spacing-lg, 24px); // Marge inférieure via variable
+    color: var(--main-blue, #1a5f7a);
+    margin-bottom: var(--spacing-lg, 24px);
     font-size: 2rem;
     font-weight: 600;
   }
 }
 
-// --- Formulaire ---
+/*------------------------------------*\
+  #Formulaire
+\*------------------------------------*/
 form {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md, 16px); // Espace entre les groupes via variable (ajusté à 16px)
-  text-align: left; // Labels/inputs alignés à gauche
+  gap: var(--spacing-md, 16px);
+  text-align: left;
 }
 
-// Groupe label + input + erreur
 .form-group {
   display: flex;
   flex-direction: column;
   width: 100%;
 
   label {
-    margin-bottom: var(--spacing-xs, 4px); // Espace sous le label via variable (ajusté à 4px)
-    color: var(--text-dark, #333333); // Couleur label via variable globale
+    margin-bottom: var(--spacing-xs, 4px);
+    color: var(--text-dark, #333333);
     font-size: 0.9rem;
     font-weight: 500;
   }
 
-  // Styles communs inputs
   input[type="email"],
   input[type="password"],
-  input[type="text"] { // Inclut type="text" pour mot de passe visible
+  input[type="text"] {
     padding: 12px 15px;
-    border: 1px solid var(--border-color, #dee2e6); // Bordure via variable globale
-    border-radius: var(--spacing-xs, 4px); // Coins arrondis via variable (ajusté à 4px)
+    border: 1px solid var(--border-color, #dee2e6);
+    border-radius: var(--spacing-xs, 4px);
     font-size: 1rem;
     width: 100%;
     box-sizing: border-box;
-    transition: var(--transition-standard, all 0.3s ease); // Transition via variable
+    transition: var(--transition-standard, all 0.3s ease);
 
     &:focus {
-      // Style au focus
-      border-color: var(--main-blue, #1a5f7a); // Bordure bleue au focus (variable globale)
+      border-color: var(--main-blue, #1a5f7a);
       outline: none;
-      box-shadow: 0 0 0 3px var(--input-focus-shadow, rgba(26, 95, 122, 0.25)); // Ombre focus via variable globale
+      box-shadow: 0 0 0 3px var(--input-focus-shadow, rgba(26, 95, 122, 0.25));
     }
 
-    // Style Angular pour inputs invalides après interaction
     &.ng-invalid.ng-touched {
-      border-color: var(--danger, #dc3545); // Bordure rouge erreur via variable globale
+      border-color: var(--danger, #dc3545);
       &:focus {
-        // Ajuste l'ombre de focus en cas d'erreur si nécessaire (basé sur --danger-rgb si défini)
-        // box-shadow: 0 0 0 3px rgba(var(--danger-rgb, 220, 53, 69), 0.25);
-        // Sinon, on garde l'ombre bleue par défaut ou on l'enlève
-        box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25); // Fallback ombre rouge
+        box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25);
       }
     }
   }
 }
 
-// --- Champ Mot de Passe avec Bouton Toggle ---
+/*------------------------------------*\
+  #Champ Mot de Passe (Toggle)
+\*------------------------------------*/
 .password-input {
   position: relative;
   display: flex;
   align-items: center;
 
-  // L'input dans ce conteneur
   input {
-    padding-right: 45px; // Espace pour le bouton toggle
+    padding-right: 45px;
   }
 
-  // Bouton afficher/masquer
   .toggle-password {
     position: absolute;
     right: 0;
@@ -110,33 +100,31 @@ form {
     bottom: 0;
     background: none;
     border: none;
-    padding: 0 12px; // Zone cliquable
+    padding: 0 12px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text-medium, #666666); // Couleur icône via variable
-    transition: var(--transition-standard, all 0.3s ease); // Transition via variable
+    color: var(--text-medium, #666666);
+    transition: var(--transition-standard, all 0.3s ease);
 
-    // Icône Lucide
     lucide-icon {
       width: 18px;
       height: 18px;
       display: block;
-      stroke-width: 2px; // Assure l'épaisseur standard de Lucide
+      stroke-width: 2px;
     }
 
     &:hover {
-      color: var(--main-blue, #1a5f7a); // Couleur principale au survol via variable
+      color: var(--main-blue, #1a5f7a);
     }
 
     &:focus {
-      // Style de focus pour accessibilité
       outline: 1px dotted var(--main-blue, #1a5f7a);
       outline-offset: 2px;
       color: var(--main-blue, #1a5f7a);
     }
-    &:focus-visible { // Style de focus clavier plus moderne
+    &:focus-visible {
       outline: 2px solid var(--main-blue, #1a5f7a);
       outline-offset: 2px;
       color: var(--main-blue, #1a5f7a);
@@ -144,28 +132,28 @@ form {
   }
 }
 
-// --- Bouton de Connexion ---
+/*------------------------------------*\
+  #Bouton de Connexion
+\*------------------------------------*/
 .login-btn {
-  margin-top: var(--spacing-md, 16px); // Espace au-dessus via variable
-  // Utilise la couleur d'action principale orange
-  background-color: var(--main-orange, #f26115); // Fond orange via variable globale
-  color: var(--main-white, white); // Texte blanc via variable
+  margin-top: var(--spacing-md, 16px);
+  background-color: var(--main-orange, #f26115);
+  color: var(--main-white, white);
   border: none;
-  border-radius: var(--spacing-xs, 4px); // Coins arrondis via variable
+  border-radius: var(--spacing-xs, 4px);
   padding: 12px 15px;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: var(--transition-standard, all 0.3s ease); // Transition via variable
+  transition: var(--transition-standard, all 0.3s ease);
   width: 100%;
 
   &:hover:not(:disabled) {
-    // Utilise la version foncée de l'orange pour le survol
-    background-color: var(--main-orange-dark, #d9541e); // Orange foncé au survol via variable
+    background-color: var(--main-orange-dark, #d9541e);
   }
 
   &:disabled {
-    background-color: #ccc; // Fond gris simple pour désactivé
+    background-color: #ccc;
     cursor: not-allowed;
     opacity: 0.7;
   }
@@ -175,148 +163,150 @@ form {
   }
 }
 
-// --- Liens supplémentaires (Mot de passe oublié, Inscription) ---
+/*------------------------------------*\
+  #Liens Supplémentaires
+\*------------------------------------*/
 .extra-links {
-  margin-top: var(--spacing-lg, 24px); // Espace au-dessus via variable
+  margin-top: var(--spacing-lg, 24px);
   display: flex;
-  flex-direction: column; // Liens l'un sous l'autre
-  align-items: center; // Centrés
-  gap: var(--spacing-sm, 8px); // Espace entre les liens via variable
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
 
   .extra-link {
-    color: var(--main-blue, #1a5f7a); // Couleur bleue lien via variable
+    color: var(--main-blue, #1a5f7a);
     font-size: 0.9rem;
     text-decoration: none;
     transition: var(--transition-standard, all 0.3s ease);
 
     &:hover {
       text-decoration: underline;
-      color: var(--main-blue-dark, #134b63); // Bleu foncé au survol via variable
+      color: var(--main-blue-dark, #134b63);
     }
   }
 }
 
-
-// --- Lien Retour à l'accueil ---
+/*------------------------------------*\
+  #Lien Retour
+\*------------------------------------*/
 .home-link {
-  margin-top: var(--spacing-lg, 24px); // Espace au-dessus via variable
+  margin-top: var(--spacing-lg, 24px);
 
   .home-btn {
     display: inline-flex;
     align-items: center;
-    gap: var(--spacing-sm, 8px); // Espace icône/texte via variable
-    color: var(--text-medium, #666666); // Couleur discrète via variable
+    gap: var(--spacing-sm, 8px);
+    color: var(--text-medium, #666666);
     text-decoration: none;
     font-size: 0.9rem;
-    transition: var(--transition-standard, all 0.3s ease); // Transition via variable
+    transition: var(--transition-standard, all 0.3s ease);
 
-    // Style pour l'icône Lucide
     lucide-icon {
       width: 16px;
       height: 16px;
       display: block;
-      stroke: currentColor; // Hérite la couleur du lien
+      stroke: currentColor;
       stroke-width: 2px;
     }
 
     &:hover {
-      color: var(--main-blue, #1a5f7a); // Couleur bleue au survol via variable
+      color: var(--main-blue, #1a5f7a);
       text-decoration: underline;
     }
   }
 }
 
-// --- Messages d'Erreur ---
-// Message d'erreur sous un champ spécifique
+/*------------------------------------*\
+  #Messages d'Erreur
+\*------------------------------------*/
 .validation-error {
-  color: var(--danger, #dc3545); // Couleur texte erreur via variable globale
+  color: var(--danger, #dc3545);
   font-size: 0.8rem;
-  margin-top: var(--spacing-xs, 4px); // Espace au-dessus via variable
-  min-height: 1em; // Évite les sauts de layout
-  text-align: left; // Alignement gauche
+  margin-top: var(--spacing-xs, 4px);
+  min-height: 1em;
+  text-align: left;
 }
 
-// --- Section Simulation (Styles DEV ONLY) ---
+/*------------------------------------*\
+  #Section Simulation (DEV ONLY)
+\*------------------------------------*/
 .dev-simulation-section {
-  margin-top: var(--spacing-lg, 24px); // Ajusté pour variable
-  border-top: 1px dashed #ccc; // Style simple gardé
-  padding-top: var(--spacing-md, 16px); // Ajusté pour variable
+  margin-top: var(--spacing-lg, 24px);
+  border-top: 1px dashed #ccc;
+  padding-top: var(--spacing-md, 16px);
   text-align: center;
 
   h4 {
-    margin-bottom: var(--spacing-sm, 8px); // Ajusté pour variable
-    color: var(--text-medium, #666666); // Couleur via variable
+    margin-bottom: var(--spacing-sm, 8px);
+    color: var(--text-medium, #666666);
   }
 
-  // Conteneur flex pour les boutons
   div {
     display: flex;
     justify-content: center;
-    gap: var(--spacing-sm, 8px); // Espace entre boutons via variable
+    gap: var(--spacing-sm, 8px);
     flex-wrap: wrap;
   }
 
   .dev-sim-btn {
-    // Styles simples pour boutons de simulation
-    padding: var(--spacing-xs, 4px) var(--spacing-sm, 8px); // Padding via variables
+    padding: var(--spacing-xs, 4px) var(--spacing-sm, 8px);
     font-size: 0.85rem;
-    background-color: var(--text-medium, #6c757d); // Fond gris via variable (fallback ajusté)
-    color: var(--main-white, white); // Texte blanc via variable
+    background-color: var(--text-medium, #6c757d);
+    color: var(--main-white, white);
     border: none;
-    border-radius: var(--spacing-xs, 4px); // Coins arrondis via variable
+    border-radius: var(--spacing-xs, 4px);
     cursor: pointer;
-    transition: var(--transition-standard, all 0.2s ease); // Transition via variable
+    transition: var(--transition-standard, all 0.2s ease);
 
     &:hover {
-      background-color: var(--text-dark, #5a6268); // Fond plus foncé au survol via variable (fallback ajusté)
+      background-color: var(--text-dark, #5a6268);
     }
   }
   p {
     font-size: 0.8em;
-    color: var(--text-light, #777); // Couleur via variable (fallback ajusté)
-    margin-top: var(--spacing-xs, 5px); // Espace via variable (fallback ajusté)
+    color: var(--text-light, #777);
+    margin-top: var(--spacing-xs, 5px);
   }
 }
 
 /*------------------------------------*\
-  #MEDIA QUERIES: RESPONSIVE
+  #Responsive
 \*------------------------------------*/
 @media (max-width: 500px) {
   .login-container {
-    padding: var(--spacing-lg, 24px) var(--spacing-md, 16px); // Padding réduit via variables
+    padding: var(--spacing-lg, 24px) var(--spacing-md, 16px);
   }
 
   h1 {
-    font-size: 1.8rem; // Taille titre réduite
+    font-size: 1.8rem;
   }
 
   .form-group input[type="email"],
   .form-group input[type="password"],
   .form-group input[type="text"] {
-    padding: 10px 12px; // Padding inputs réduit
+    padding: 10px 12px;
 
-    // Assurer espace pour toggle password
-    .password-input & { // Cible input dans .password-input
-      padding-right: 40px; // Ajuster si besoin
+    .password-input & {
+      padding-right: 40px;
     }
   }
 
   .toggle-password {
-    padding: 0 10px; // Padding bouton toggle ajusté
+    padding: 0 10px;
   }
 
   .login-btn {
-    font-size: 1rem; // Taille texte bouton réduite
+    font-size: 1rem;
     padding: 10px 15px;
   }
 
   .home-link {
-    margin-top: var(--spacing-md, 16px); // Espace réduit via variable
+    margin-top: var(--spacing-md, 16px);
   }
 
   .dev-simulation-section {
     .dev-sim-btn {
-      padding: 6px 10px; // Réduit taille boutons dev.
+      padding: 6px 10px;
       font-size: 0.8rem;
     }
   }

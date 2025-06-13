@@ -1,6 +1,10 @@
+<!--
+  Ce template définit la structure d'une carte (card) pour afficher un seul événement.
+  Il est conçu pour être sémantique et accessible, utilisant `role="article"`.
+-->
 <div class="event-card card" role="article" [attr.aria-labelledby]="'event-title-' + event.id">
 
-  <!-- En-tête de la carte -->
+  <!-- En-tête de la carte avec le titre et les dates. -->
   <header class="event-card-header">
     <h3 class="event-title" [id]="'event-title-' + event.id">{{ event.nom }}</h3>
     <div class="event-time">
@@ -9,10 +13,12 @@
     </div>
   </header>
 
-  <!-- Contenu principal de la carte -->
+  <!-- Section principale contenant la description et les détails de l'événement. -->
   <div class="event-card-content">
     <div class="event-section event-description">
+      <!-- La sémantique <dl> (liste de description) est utilisée pour associer des termes et leurs descriptions. -->
       <dl>
+        <!-- Le titre de section est masqué visuellement mais reste lisible pour les lecteurs d'écran. -->
         <dt class="section-title visually-hidden">Description</dt>
         <dd class="description-text">{{ event.description }}</dd>
       </dl>
@@ -27,12 +33,13 @@
           <dd>{{ event.placeReserve ?? 0 }}/{{ event.placeTotal ?? 0 }}</dd>
         </div>
         <div class="detail-item">
-        <dt class="section-title">
-          <lucide-icon name="users" size="16" aria-hidden="true"></lucide-icon>
-          Organisateur :
-        </dt>
-        <dd>{{ event.organisateur.nom }}</dd>
-    </div>
+          <dt class="section-title">
+            <lucide-icon name="users" size="16" aria-hidden="true"></lucide-icon>
+            Organisateur :
+          </dt>
+          <dd>{{ event.organisateur.nom }}</dd>
+        </div>
+        <!-- Affiche la liste des amis participant uniquement si elle n'est pas vide. -->
         @if ((event.amiParticipants?.length ?? 0) > 0) {
           <div class="detail-item amis-section">
             <dt class="section-title">
@@ -46,7 +53,7 @@
     </div>
   </div>
 
-  <!-- Pied de carte / Actions -->
+  <!-- Pied de page de la carte contenant les actions principales, comme le bouton de réservation. -->
   <footer class="event-card-actions">
     <button type="button" (click)="openReservationModal()" class="btn btn-primary reserve-button">
       <lucide-icon name="calendar-check" size="18" aria-hidden="true"></lucide-icon>
@@ -56,7 +63,11 @@
 
 </div>
 
-
+<!--
+  Instanciation de la modale de réservation.
+  Sa visibilité est contrôlée par une variable du composant TypeScript.
+  Note : Cette approche instancie une modale pour CHAQUE carte affichée.
+-->
 @if (isReservationModalVisible) {
   <app-reservation-modal
     [isVisible]="isReservationModalVisible"
@@ -65,4 +76,3 @@
     (reserveSuccess)="handleReserveSuccess($event)">
   </app-reservation-modal>
 }
-

@@ -1,29 +1,28 @@
-<!-- billet.component.html - Refactorisé -->
-
-<!-- En-tête standard de la page -->
+<!-- En-tête standard de la page. -->
 <div class="page-header">
-  <h1 class="page-title">Vos billets</h1> <!-- Classe standard -->
-  <!-- Icône optionnelle: <lucide-icon name="ticket" aria-hidden="true"></lucide-icon> -->
+  <h1 class="page-title">Vos billets</h1>
 </div>
 
-<!-- Section principale standardisée -->
+<!-- Section principale de la page des billets. -->
 <section class="main-section" aria-labelledby="main-billets-title">
+  <!-- Titre visuellement caché pour l'accessibilité. -->
   <h2 id="main-billets-title" class="visually-hidden">Liste de vos réservations et billets</h2>
 
   @if (isLoading) {
-    <!-- Indicateur de chargement standardisé -->
+    <!-- Indicateur de chargement affiché pendant le chargement des billets. -->
     <div class="loading-indicator">
       <lucide-icon name="loader" class="animate-spin"></lucide-icon>
       <span>Chargement de vos billets...</span>
     </div>
   } @else {
-    <!-- Utilisation d'une carte pour contenir le tableau -->
+    <!-- Conteneur principal du tableau. -->
     <div class="card">
-      <!-- Wrapper pour le défilement horizontal -->
+      <!-- Wrapper pour le défilement horizontal du tableau sur petits écrans. -->
       <div class="table-wrapper">
-        <!-- Tableau avec classes globales et accessibilité -->
+        <!-- Tableau des réservations. -->
         <table class="data-table ticket-table" aria-labelledby="main-billets-title"
                aria-describedby="reservations-caption">
+          <!-- Légende du tableau, cachée visuellement pour l'accessibilité. -->
           <caption id="reservations-caption" class="visually-hidden">Tableau listant vos réservations avec options pour
             afficher, télécharger ou annuler.
           </caption>
@@ -34,10 +33,10 @@
             <th scope="col">Nom de l'événement</th>
             <th scope="col">Catégorie</th>
             <th scope="col" class="actions-header">Actions</th>
-            <!-- Classe optionnelle si centrage spécifique nécessaire au-delà du global -->
           </tr>
           </thead>
           <tbody>
+          <!-- Itération sur les réservations pour afficher chaque ligne. -->
             @for (reservation of reservations; track reservation.id) {
               <tr app-reservation-row
                   [reservation]="reservation"
@@ -45,23 +44,21 @@
                   (deleteReservation)="onCancelReservation($event)">
               </tr>
             } @empty {
-              <!-- Message tableau vide standardisé -->
+              <!-- Message affiché si aucune réservation n'est trouvée. -->
               <tr class="empty-table-message">
                 <td colspan="5">Vous n'avez aucune réservation pour le moment.</td>
               </tr>
             }
           </tbody>
         </table>
-      </div> <!-- Fin .table-wrapper -->
-    </div> <!-- Fin .card -->
+      </div>
+    </div>
   }
+</section>
 
-</section> <!-- Fin .main-section -->
-
-
-<!-- Zone fonctionnelle cachée (reste en dehors du flux principal) -->
+<!-- Zone fonctionnelle cachée, contenant les éléments non visibles directement dans l'UI mais nécessaires. -->
 <div class="hidden-functional">
-  <!-- Zone QR codes (inchangée) -->
+  <!-- Zone de génération des QR codes, un par réservation si des données QR sont présentes. -->
   <div class="qr-code-generation-area">
     @for (reservation of reservations; track reservation.id) {
       @if (reservation?.qrcodeData) {
@@ -71,7 +68,7 @@
     }
   </div>
 
-  <!-- Template PDF (inchangé mais utilise classes pour styles) -->
+  <!-- Structure du template PDF pour l'impression des billets. -->
   <div id="pdf-content" class="pdf-template">
     @if (selectedTicket) {
       <div class="pdf-page">
@@ -93,7 +90,3 @@
     }
   </div>
 </div>
-
-
-
-

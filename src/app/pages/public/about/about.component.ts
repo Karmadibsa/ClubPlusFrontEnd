@@ -1,78 +1,47 @@
-// ----- IMPORTATIONS -----
-import {Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild} from '@angular/core'; // `inject` n'est pas nécessaire si pas utilisé.
+import {Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild} from '@angular/core';
 
-// Composants de Navigation/Layout
-import { NavbarComponent } from "../../../component/navigation/navbar/navbar.component"; // Barre de navigation principale.
-import { FooterComponent } from '../../../component/navigation/footer/footer.component'; // Pied de page de l'application.
+import { NavbarComponent } from "../../../component/navigation/navbar/navbar.component";
+import { FooterComponent } from '../../../component/navigation/footer/footer.component';
 
-// Autres (Icônes, Modules Communs)
 import { LucideAngularModule } from 'lucide-angular';
 import {SwiperContainer} from 'swiper/element';
-import {CommonModule} from '@angular/common'; // Pour les icônes Lucide.
+import {CommonModule} from '@angular/common';
 
 /**
  * @Component AboutComponent
- * @description
- * Page "À Propos" de l'application. Elle présente des informations générales
- * sur l'application, son nom, le développeur, le contexte du projet (formation),
- * l'école, ainsi que les technologies utilisées et les principales fonctionnalités.
- *
- * Cette page est principalement informative et contient du contenu statique.
- * Elle intègre les composants `NavbarComponent` et `FooterComponent` pour une mise en page cohérente.
- *
- * @example
- * <app-about></app-about> <!-- Typiquement utilisé comme composant de route, ex: '/a-propos' -->
+ * @description Page "À Propos" de l'application.
+ * Présente des informations générales sur l'application, son développeur,
+ * le contexte du projet, les technologies et les fonctionnalités clés.
  */
 @Component({
-  selector: 'app-about',         // Sélecteur CSS (nom de la balise) du composant.
-  standalone: true,             // Indique que c'est un composant autonome.
-  imports: [                    // Dépendances nécessaires pour le template.
-    NavbarComponent,            // Affiche la barre de navigation.
-    LucideAngularModule,        // Pour les icônes Lucide utilisées dans le template.
-    FooterComponent,            // Affiche le pied de page.
+  selector: 'app-about',
+  standalone: true,
+  imports: [
+    NavbarComponent,
+    LucideAngularModule,
+    FooterComponent,
     CommonModule
   ],
-  templateUrl: './about.component.html', // Chemin vers le fichier HTML du composant.
-  styleUrl: './about.component.scss',  // Chemin vers le fichier SCSS/CSS du composant.
-  schemas: [CUSTOM_ELEMENTS_SCHEMA] // Ajoutez ceci
-
+  templateUrl: './about.component.html',
+  styleUrl: './about.component.scss',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AboutComponent { // Pas de `OnInit` ou `OnDestroy` nécessaires pour ce composant simple.
+export class AboutComponent {
 
-  // --- PROPRIÉTÉS DU COMPOSANT (Données pour l'affichage) ---
-  /**
-   * @property {string} appName
-   * @description Le nom de l'application.
-   * @default 'Club Plus'
-   */
+  // --- PROPRIÉTÉS DU COMPOSANT ---
+  /** Nom de l'application. */
   appName: string = 'Club Plus';
 
-  /**
-   * @property {string} developerName
-   * @description Le nom du développeur de l'application.
-   * @default 'Axel MOMPER'
-   */
+  /** Nom du développeur. */
   developerName: string = 'Axel MOMPER';
 
-  /**
-   * @property {string} projectContext
-   * @description Le contexte dans lequel le projet a été réalisé.
-   * @default 'Projet réalisé dans le cadre du titre professionnel CDA-JAVA 2024-2025'
-   */
+  /** Contexte du projet (formation). */
   projectContext: string = 'Projet réalisé dans le cadre du titre professionnel CDA-JAVA 2024-2025';
 
-  /**
-   * @property {string} schoolName
-   * @description Le nom de l'école ou de l'institution de formation.
-   * @default 'Metz Numeric School'
-   */
+  /** Nom de l'école de formation. */
   schoolName: string = 'Metz Numeric School';
 
-  /**
-   * @property {string[]} technologies
-   * @description Un tableau listant les principales technologies et outils utilisés pour développer l'application.
-   * Utilisé pour générer une liste dans le template.
-   */
+  /** Technologies et outils utilisés. */
   technologies: string[] = [
     'Angular',
     'TypeScript',
@@ -91,11 +60,7 @@ export class AboutComponent { // Pas de `OnInit` ou `OnDestroy` nécessaires pou
     'Chart.js'
   ];
 
-  /**
-   * @property {string[]} features
-   * @description Un tableau listant les principales fonctionnalités de l'application.
-   * Utilisé pour générer une liste dans le template.
-   */
+  /** Principales fonctionnalités de l'application. */
   features: string[] = [
     'Gestion complète des utilisateurs (inscription, connexion, profil, rôles)',
     'Système de réservation d\'événements par catégories de places',
@@ -118,7 +83,6 @@ export class AboutComponent { // Pas de `OnInit` ou `OnDestroy` nécessaires pou
       const swiperEl = this.swiperContainerRef.nativeElement;
 
       const swiperParams = {
-        // Paramètres par défaut (pour les écrans les plus larges ou si aucun breakpoint ne correspond avant)
         slidesPerView: 3,
         spaceBetween: 16,
         loop: true,
@@ -129,27 +93,23 @@ export class AboutComponent { // Pas de `OnInit` ou `OnDestroy` nécessaires pou
         pagination: {
           clickable: true,
         },
-        slidesPerGroup: 1, // Important pour la navigation et l'autoplay
+        slidesPerGroup: 1,
 
-        // Configuration des breakpoints pour le responsive [2, 4]
         breakpoints: {
-          // Quand la largeur de la fenêtre est >= 0px (mobile-first)
           0: {
             slidesPerView: 1,
-            spaceBetween: 10, // Moins d'espace sur mobile
-            slidesPerGroup: 1, // Défile d'un slide sur mobile
+            spaceBetween: 10,
+            slidesPerGroup: 1,
           },
-          // Quand la largeur de la fenêtre est >= 640px (tablettes et plus)
           640: {
             slidesPerView: 2,
             spaceBetween: 15,
-            slidesPerGroup: 1, // Peut rester à 1 ou passer à 2 si vous le souhaitez
+            slidesPerGroup: 1,
           },
-          // Quand la largeur de la fenêtre est >= 1024px (grands écrans)
           1024: {
             slidesPerView: 3,
             spaceBetween: 16,
-            slidesPerGroup: 1, // Peut rester à 1 ou passer à 3
+            slidesPerGroup: 1,
           }
         }
       };

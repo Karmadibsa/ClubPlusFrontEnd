@@ -1,72 +1,68 @@
-/* participation-event-modal.component.scss */
-
-// --- Utilisation des variables globales de styles.txt ---
-// @import 'path/to/variables';
+/*
+  Styles spécifiques pour la modale de participation.
+  Ce fichier complète les styles globaux (ex: .modal-content, .btn).
+*/
 
 :host {
   display: block;
 }
 
 // --------------------------------------------------
-// Styles SPÉCIFIQUES au contenu
+// Styles du contenu de la modale
 // --------------------------------------------------
 
-// --- Section Filtres (Layout amélioré) ---
+/* --- Section des Filtres --- */
+
 .filter-section {
   margin-bottom: var(--spacing-md);
   padding-bottom: var(--spacing-md);
   border-bottom: 1px solid var(--border-color);
   display: flex;
-  align-items: center; // Centre verticalement filtres statut et recherche
-  flex-wrap: wrap; // Permet au champ de recherche de passer en dessous
-  gap: var(--spacing-md); // Espace entre groupe statut et groupe recherche
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
 
-  // Groupe pour les filtres de statut
+  // Conteneur pour les boutons de filtre par statut.
   .status-filters {
     display: flex;
     align-items: center;
-    flex-wrap: wrap; // Permet aux boutons de passer à la ligne
+    flex-wrap: wrap;
     gap: var(--spacing-sm);
-    flex-grow: 1; // Prend l'espace disponible
+    flex-grow: 1;
 
-    span { // Label "Filtrer par statut :"
+    span {
       margin-right: var(--spacing-sm);
       font-weight: 600;
       color: var(--text-dark);
-      flex-shrink: 0; // Empêche de rétrécir
+      flex-shrink: 0;
     }
   }
 
-  // Groupe pour le champ de recherche (utilise .form-group global)
+  // Conteneur pour le champ de recherche.
   .search-filter-group {
-    flex-grow: 1; // Permet au champ de prendre de la place
-    flex-basis: 250px; // Largeur de base avant de grandir/rétrécir
-    min-width: 200px; // Largeur minimale
-    margin-bottom: 0; // Annule marge par défaut de .form-group ici
+    flex-grow: 1;
+    flex-basis: 250px;
+    min-width: 200px;
+    margin-bottom: 0;
   }
 }
 
-// Style spécifique pour les boutons de filtre
+// Style spécifique pour les boutons de filtre.
 .btn-filter {
-  // Hérite de .btn global (padding, border-radius, transition, display:inline-flex, etc.)
-  // Surcharges/ajustements spécifiques pour les filtres :
-  font-size: 0.85rem; // Plus petit
+  font-size: 0.85rem;
   font-weight: 500;
-  padding: var(--spacing-xs) var(--spacing-sm); // Padding réduit
+  padding: var(--spacing-xs) var(--spacing-sm);
   background-color: var(--bg-light-gray);
   border: 1px solid var(--border-color);
   color: var(--text-medium);
-  // Le gap pour icône éventuelle est hérité de .btn
 
-  // Pas besoin de redéfinir :hover car le :hover global de .btn est souvent suffisant
-  // Si un style spécifique est voulu pour le survol des filtres inactifs:
   &:hover:not(.active) {
     background-color: var(--bg-medium-gray);
     border-color: var(--text-light);
     color: var(--text-dark);
   }
 
-  // État actif spécifique aux filtres
+  // Style du bouton lorsque le filtre est actif.
   &.active {
     background-color: var(--main-blue);
     color: var(--main-white);
@@ -75,10 +71,10 @@
   }
 }
 
-// Style optionnel pour l'icône dans le champ de recherche
+// Style pour l'input avec une icône à l'intérieur.
 .input-with-icon {
   position: relative;
-  display: flex; // Pour aligner icône et input si besoin (pas strict nécessaire ici)
+  display: flex;
   align-items: center;
 
   lucide-icon {
@@ -89,50 +85,40 @@
     width: 16px;
     height: 16px;
     color: var(--text-light);
-    pointer-events: none; // N'interfère pas avec le clic sur l'input
+    pointer-events: none;
   }
 
-  // L'input utilise .form-control global
   input.form-control {
-    padding-left: 35px; // Espace pour l'icône
+    padding-left: 35px;
   }
 }
 
 
-// --- Style spécifique Table Participations (inchangé) ---
+/* --- Styles de la table des participations --- */
+
 .participation-table-wrapper {
   margin-top: var(--spacing-md);
 }
 
 .participation-table {
-  // Surcharges spécifiques pour la table DANS CETTE MODALE :
-
+  // Surcharges spécifiques pour la table dans cette modale.
   th, td {
-    // Padding global est --spacing-md (~16px)
-    // On réduit pour plus de densité :
-    padding: var(--spacing-sm); // Padding réduit (~8px)
-
-    // Bordure globale est juste border-bottom
-    // On met une bordure complète pour un look plus "grille":
+    padding: var(--spacing-sm);
     border: 1px solid var(--border-color-light, #eee);
   }
 
-  thead th { // Surcharge du thead global (qui est bleu)
-    background-color: var(--bg-light-gray); // Fond plus léger
-    color: var(--text-dark); // Texte sombre sur fond clair
-    font-weight: 600; // Hérité mais confirmation
-    position: sticky; // Fige l'en-tête lors du scroll du .modal-body
-    top: -1px;        // Compense le padding du .modal-body si > 0
-    z-index: 1;       // Assure qu'il est au-dessus du contenu tbody
+  thead th {
+    background-color: var(--bg-light-gray);
+    color: var(--text-dark);
+    font-weight: 600;
+    // Assure que l'en-tête reste visible lors du défilement vertical.
+    position: sticky;
+    top: -1px;
+    z-index: 1;
   }
-
-  // tbody tr:hover { // Style de survol hérité du global .data-table }
 }
 
-
-// --- Messages spécifiques (si différents du global) ---
-// .loading-indicator { /* Style global suffit */ }
-// .no-data-message { /* Style global suffit */ }
+/* --- Messages et indicateurs --- */
 
 .error-message {
   padding: var(--spacing-md);
@@ -144,42 +130,41 @@
   border-radius: var(--border-radius-sm);
 }
 
+/* --- Badge de Statut --- */
 
-// --- Badge de Statut ---
 .status-badge {
   padding: 3px var(--spacing-sm);
-  border-radius: 12px; // Forme pilule
+  border-radius: 12px;
   font-size: 0.85em;
   font-weight: 600;
   color: var(--main-white);
   text-transform: capitalize;
   display: inline-block;
   line-height: 1.4;
-  text-align: center; // Centre le texte dans le badge
-  min-width: 70px; // Donne une largeur minimale pour l'alignement visuel
+  text-align: center;
+  min-width: 70px;
 
-  // Classes spécifiques basées sur le statut (variables globales)
+  // Classes de couleur basées sur le statut.
   &.status-confirme { background-color: var(--success); }
   &.status-utilise { background-color: var(--info); }
   &.status-annule { background-color: var(--danger); }
-  // &.status-pending { background-color: var(--warning); color: var(--text-dark); } // Exemple
 }
 
-// --- Responsive pour la section filtre ---
+/* --- Styles responsives --- */
+
 @media screen and (max-width: 768px) {
   .filter-section {
-    flex-direction: column; // Empile groupe statut et recherche
-    align-items: stretch; // Étire les éléments
+    flex-direction: column;
+    align-items: stretch;
 
     .status-filters {
-      justify-content: center; // Centre les boutons statut
-      margin-bottom: var(--spacing-md); // Espace sous les boutons statut
+      justify-content: center;
+      margin-bottom: var(--spacing-md);
     }
 
     .search-filter-group {
-      width: 100%; // Prend toute la largeur
+      width: 100%;
       flex-basis: auto;
     }
   }
 }
-

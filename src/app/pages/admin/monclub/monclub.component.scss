@@ -1,67 +1,62 @@
-// --- Styles spécifiques à la page Mon Club ---
-
 :host {
-  display: block; // Assure que le composant prend l'espace nécessaire
+  display: block; /* Assure que le composant prend l'espace nécessaire */
 }
 
-// --- Style spécifique pour le bouton "Copier Code Club" ---
+/*------------------------------------*\
+  #Bouton Copier Code Club
+\*------------------------------------*/
 .btn-copy-code {
-  // Hérite des styles .btn et .btn-secondary définis globalement dans styles.txt
-  position: relative; // Pour le positionnement du feedback
-  overflow: hidden; // Cache le feedback qui sort
+  position: relative; /* Pour le positionnement du feedback */
+  overflow: hidden;
 
   .icon {
-    // Hérite taille et gap de .btn global
     transition: transform 0.2s ease;
   }
 
   .copy-feedback {
-    display: none; // Caché par défaut
+    display: none; /* Caché par défaut */
     margin-left: var(--spacing-sm, 8px);
-    font-weight: 600; // Un peu plus gras
-    color: var(--success, #28a745); // Utilise la variable de succès
-    position: absolute; // Positionné par rapport au bouton
-    left: 50%; // Centré horizontalement
-    top: 50%; // Centré verticalement
-    transform: translate(-50%, -50%); // Ajustement précis du centrage
-    white-space: nowrap; // Empêche retour à la ligne
+    font-weight: 600;
+    color: var(--success, #28a745);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
   }
 
-  // État visuel lorsque le code est copié
+  /* État visuel lorsque le code est copié */
   &.is-copied {
-    background-color: var(--success-light, #d4edda); // Fond succès léger (définir si besoin)
-    color: var(--success-dark, #155724); // Texte succès foncé (définir si besoin)
-    border-color: var(--success, #28a745); // Bordure couleur succès
-    cursor: default; // Curseur par défaut
+    background-color: var(--success-light, #d4edda);
+    color: var(--success-dark, #155724);
+    border-color: var(--success, #28a745);
+    cursor: default;
 
     .copy-button-text {
-      // Masque le texte original avec une animation
       opacity: 0;
       transition: opacity 0.1s ease-out;
     }
 
     .copy-feedback {
-      display: inline-block; // Affiche le feedback
-      // Animation d'apparition si désiré (ex: fade-in)
+      display: inline-block; /* Affiche le feedback */
       animation: fadeIn 0.3s ease-in;
     }
 
     .icon {
-      transform: scale(1.1); // Légère animation sur l'icône
+      transform: scale(1.1);
     }
 
     &:hover, &:active, &:focus-visible {
-      // Empêche les changements de style au survol/focus/clic quand copié
       background-color: var(--success-light, #d4edda);
       color: var(--success-dark, #155724);
       border-color: var(--success, #28a745);
-      box-shadow: none; // Annule l'ombre focus
-      transform: none; // Annule transform: translateY
+      box-shadow: none;
+      transform: none;
     }
   }
 }
 
-// Animation optionnelle pour le feedback "Copié!"
+/* Animation pour le feedback "Copié!" */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -74,16 +69,16 @@
 }
 
 .confirmation-phrase {
-  user-select: none; // Style utilitaire, peut être globalisé
-  background-color: var(--bg-medium-gray); // Utilise variable globale [5]
+  user-select: none;
+  background-color: var(--bg-medium-gray);
   padding: 10px;
-  border-radius: var(--border-radius-sm, 4px); // Utilise variable globale [5]
+  border-radius: var(--border-radius-sm, 4px);
   font-family: monospace;
-  margin-bottom: var(--spacing-md); // Utilise variable globale [5]
+  margin-bottom: var(--spacing-md);
   word-break: break-all;
   text-align: center;
 
   strong {
-    color: var(--text-dark); // Utilise variable globale [5]
+    color: var(--text-dark);
   }
 }
