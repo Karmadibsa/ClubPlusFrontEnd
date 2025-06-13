@@ -1,6 +1,7 @@
-<app-navbar></app-navbar> <!-- Suppose que la navbar est hors layout utilisateur -->
+<!-- Inclusion du composant de la barre de navigation. -->
+<app-navbar></app-navbar>
 
-<!-- Section Introduction (Style "Hero" adapté) -->
+<!-- Section "héros" de la page, présentant le titre principal. -->
 <section class="contact-hero-section">
   <div class="contact-hero-content">
     <h1 class="contact-hero-title">
@@ -13,90 +14,119 @@
   </div>
 </section>
 
-<!-- Section Formulaire de Contact -->
+<!-- Section principale contenant le formulaire de contact. -->
 <section class="contact-section">
   <div class="contact-form-container">
     <h2 class="section-title">Envoyer un message</h2>
 
-    <!-- Formulaire Réactif Angular -->
+    <!--
+      Formulaire réactif Angular.
+      - `[formGroup]` lie le template au `FormGroup` dans le composant TypeScript.
+      - `(ngSubmit)` déclenche la méthode `onSubmit` lors de la soumission.
+      - `novalidate` empêche la validation native du navigateur pour laisser Angular la gérer.
+    -->
     <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" novalidate>
 
-      <!-- Affichage Messages Succès/Erreur Globaux -->
-      <div *ngIf="successMessage" class="alert alert-success" role="alert">
-        {{ successMessage }}
-      </div>
-      <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
-        {{ errorMessage }}
-      </div>
+      <!-- Affiche un message de succès si la variable `successMessage` est définie. -->
+      @if (successMessage) {
+        <div class="alert alert-success" role="alert">
+          {{ successMessage }}
+        </div>
+      }
+      <!-- Affiche un message d'erreur si la variable `errorMessage` est définie. -->
+      @if (errorMessage) {
+        <div class="alert alert-danger" role="alert">
+          {{ errorMessage }}
+        </div>
+      }
 
-      <!-- Champ Nom -->
+      <!-- Groupe de champ pour le nom. -->
       <div class="form-group">
         <label for="contact-name">Votre Nom<span class="required-indicator">*</span></label>
         <input type="text" id="contact-name" class="form-control" formControlName="name"
                [class.is-invalid]="name?.invalid && name?.dirty"
                required aria-describedby="name-error">
-        <div id="name-error" *ngIf="name?.invalid && name?.dirty">
-          <small *ngIf="name?.errors?.['required']" class="invalid-feedback">
-            Votre nom est requis.
-          </small>
-        </div>
+        <!--
+          Bloc d'erreur qui s'affiche conditionnellement si le champ est invalide ET a été touché.
+          Utilise la nouvelle syntaxe `@if` pour une meilleure lisibilité.
+        -->
+        @if (name?.invalid && name?.dirty) {
+          <div id="name-error">
+            @if (name?.errors?.['required']) {
+              <small class="invalid-feedback">Votre nom est requis.</small>
+            }
+          </div>
+        }
       </div>
 
-      <!-- Champ Email -->
+      <!-- Groupe de champ pour l'email. -->
       <div class="form-group">
         <label for="contact-email">Votre Email<span class="required-indicator">*</span></label>
         <input type="email" id="contact-email" class="form-control" formControlName="email"
                [class.is-invalid]="email?.invalid && email?.dirty"
                required aria-describedby="email-error">
-        <div id="email-error" *ngIf="email?.invalid &&  email?.dirty">
-          <small *ngIf="email?.errors?.['required']" class="invalid-feedback">
-            Votre adresse e-mail est requise.
-          </small>
-          <small *ngIf="email?.errors?.['email']" class="invalid-feedback">
-            Veuillez entrer une adresse e-mail valide.
-          </small>
-        </div>
+        <!-- Affiche les erreurs de validation spécifiques (champ requis ou format d'email invalide). -->
+        @if (email?.invalid && email?.dirty) {
+          <div id="email-error">
+            @if (email?.errors?.['required']) {
+              <small class="invalid-feedback">Votre adresse e-mail est requise.</small>
+            }
+            @if (email?.errors?.['email']) {
+              <small class="invalid-feedback">Veuillez entrer une adresse e-mail valide.</small>
+            }
+          </div>
+        }
       </div>
 
-      <!-- Champ Sujet -->
+      <!-- Groupe de champ pour le sujet. -->
       <div class="form-group">
         <label for="contact-subject">Sujet<span class="required-indicator">*</span></label>
         <input type="text" id="contact-subject" class="form-control" formControlName="subject"
                [class.is-invalid]="subject?.invalid &&  subject?.dirty"
                required aria-describedby="subject-error">
-        <div id="subject-error" *ngIf="subject?.invalid &&  subject?.dirty">
-          <small *ngIf="subject?.errors?.['required']" class="invalid-feedback">
-            Le sujet est requis.
-          </small>
-        </div>
+        @if (subject?.invalid && subject?.dirty) {
+          <div id="subject-error">
+            @if (subject?.errors?.['required']) {
+              <small class="invalid-feedback">Le sujet est requis.</small>
+            }
+          </div>
+        }
       </div>
 
-      <!-- Champ Message -->
+      <!-- Groupe de champ pour le message. -->
       <div class="form-group">
         <label for="contact-message">Message<span class="required-indicator">*</span></label>
         <textarea id="contact-message" class="form-control" formControlName="message" rows="6"
                   [class.is-invalid]="message?.invalid && message?.dirty"
                   required aria-describedby="message-error"></textarea>
-        <div id="message-error" *ngIf="message?.invalid && message?.dirty">
-          <small *ngIf="message?.errors?.['required']" class="invalid-feedback">
-            Votre message est requis.
-          </small>
-          <small *ngIf="message?.errors?.['minlength']" class="invalid-feedback">
-            Votre message doit contenir au moins 10 caractères.
-          </small>
-        </div>
+        <!-- Affiche les erreurs de validation (champ requis ou longueur minimale). -->
+        @if (message?.invalid && message?.dirty) {
+          <div id="message-error">
+            @if (message?.errors?.['required']) {
+              <small class="invalid-feedback">Votre message est requis.</small>
+            }
+            @if (message?.errors?.['minlength']) {
+              <small class="invalid-feedback">Votre message doit contenir au moins 10 caractères.</small>
+            }
+          </div>
+        }
       </div>
 
-      <!-- Bouton d'envoi -->
+      <!-- Actions du formulaire, contenant le bouton de soumission. -->
       <div class="form-actions">
         <button type="submit" class="btn btn-primary" [disabled]="isLoading || contactForm.invalid">
-          <span *ngIf="isLoading; else sendText" class="animate-spin" aria-hidden="true">
-             <lucide-icon name="loader-circle"></lucide-icon>
-          </span>
-          <ng-template #sendText>
+          <!--
+            Affiche conditionnellement une icône de chargement ou le texte du bouton.
+            Le bloc `@if / @else` remplace l'ancienne syntaxe `*ngIf; else ...` de manière plus claire [9].
+          -->
+          @if (isLoading) {
+            <span class="animate-spin" aria-hidden="true">
+               <lucide-icon name="loader-circle"></lucide-icon>
+            </span>
+          } @else {
             <lucide-icon name="send" aria-hidden="true"></lucide-icon>
             Envoyer le Message
-          </ng-template>
+          }
         </button>
       </div>
 
@@ -104,7 +134,7 @@
   </div>
 </section>
 
-<!-- Section Infos Additionnelles (Optionnel) -->
+<!-- Section affichant des informations de contact additionnelles. -->
 <section class="contact-section bg-alternate">
   <div class="contact-info-container centered-text">
     <h2>Informations</h2>
@@ -112,17 +142,16 @@
       Application <strong>{{ appName }}</strong> développée par <strong>{{ developerName }}</strong>.
     </p>
     <div class="link-section">
-
-    <!-- Ajoutez ici email/téléphone direct si pertinent -->
-     <p><lucide-icon name="mail"></lucide-icon> {{mail}}</p>
-    <p><lucide-icon name="phone"></lucide-icon>
-      {{telephone }}</p>
-    <p><lucide-icon name="linkedin"></lucide-icon>
-      {{ linkedin }}</p>
-    <p><lucide-icon name="github"></lucide-icon>
-      {{ github }}</p>
+      <p><lucide-icon name="mail"></lucide-icon> {{mail}}</p>
+      <p><lucide-icon name="phone"></lucide-icon>
+        {{telephone }}</p>
+      <p><lucide-icon name="linkedin"></lucide-icon>
+        {{ linkedin }}</p>
+      <p><lucide-icon name="github"></lucide-icon>
+        {{ github }}</p>
     </div>
   </div>
 </section>
 
-<app-footer></app-footer> <!-- Suppose que le footer est hors layout utilisateur -->
+<!-- Inclusion du composant de pied de page. -->
+<app-footer></app-footer>

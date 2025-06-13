@@ -1,39 +1,39 @@
-/* sidebar.component.scss */
-
 /* =================================== */
 /* == STYLES SIDEBAR DESKTOP (> 768px) == */
 /* =================================== */
+
 .sidebar {
   // --- Structure et Positionnement ---
-  width: 14%; // Ajuster si besoin (ex: 250px)
-  min-width: 220px; // Ajuster si besoin
+  width: 14%;
+  min-width: 220px;
   background-color: var(--main-blue);
   color: white;
   padding: var(--spacing-md) var(--spacing-sm);
-  display: flex; // Caché par défaut sur mobile (changé dans @media)
+  display: flex;
   flex-direction: column;
   height: 100vh;
-  position: fixed;
+  position: fixed; // La sidebar reste fixe lors du défilement de la page.
   left: 0;
   top: 0;
-  z-index: 1000; // S'assurer qu'elle est au-dessus du contenu principal
+  z-index: 1000;
   box-sizing: border-box;
   transition: all 0.3s ease;
+
   // --- Logo ---
   .logo-container {
     padding: var(--spacing-md) 0;
     text-align: center;
     margin-bottom: var(--spacing-lg);
-    min-height: 80px; // Hauteur minimale pour éviter saut vertical
+    min-height: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden; // Cache le débordement pendant la transition
+    overflow: hidden;
 
     .logo {
-      width: 75%; // Ajuster
+      width: 75%;
       height: auto;
-      max-width: 130px; // Limite max
+      max-width: 130px;
       display: block;
       transition: opacity 0.2s ease, transform 0.3s ease;
       opacity: 1;
@@ -41,37 +41,30 @@
     }
   }
 
-  // --- Menu Items ---
+  // --- Liens du Menu ---
   .menu-items {
     list-style-type: none;
     padding: 0;
     margin: 0;
-    flex-grow: 1; // Prend l'espace vertical
-    overflow-y: auto; // Scroll si nécessaire
-    overflow-x: hidden; // Pas de scroll horizontal
-    // Style de la scrollbar (optionnel, pour Firefox)
+    flex-grow: 1; // Permet à la liste de prendre tout l'espace vertical disponible.
+    overflow-y: auto; // Ajoute une barre de défilement si les liens dépassent la hauteur.
+    overflow-x: hidden;
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 
-    // Style de la scrollbar (optionnel, pour Chrome/Edge/Safari)
     &::-webkit-scrollbar {
       width: 6px;
     }
-
     &::-webkit-scrollbar-track {
       background: transparent;
     }
-
     &::-webkit-scrollbar-thumb {
       background-color: rgba(255, 255, 255, 0.3);
       border-radius: 3px;
     }
   }
 
-  ul.menu-items li {
-    margin-bottom: var(--spacing-sm);
-  }
-
+  // Style pour un seul item du menu.
   ul.menu-items li a {
     display: flex;
     align-items: center;
@@ -80,14 +73,14 @@
     color: white;
     text-decoration: none;
     border-radius: var(--border-radius);
-    transition: background-color 0.2s ease, color 0.2s ease; // Transition simplifiée
+    transition: background-color 0.2s ease, color 0.2s ease;
     white-space: nowrap;
-    overflow: hidden; // Empêche débordement texte
+    overflow: hidden;
 
     lucide-icon {
-      width: var(--icon-size); // Variable globale
+      width: var(--icon-size);
       height: var(--icon-size);
-      flex-shrink: 0; // Empêche l'icône de rétrécir
+      flex-shrink: 0; // Empêche l'icône de rétrécir.
       stroke: currentColor;
       stroke-width: 2px;
     }
@@ -96,41 +89,40 @@
       flex-grow: 1;
       overflow: hidden;
       text-overflow: ellipsis;
-      // Transition pour l'apparition/disparition
       transition: opacity 0.2s ease, max-width 0.3s ease;
       opacity: 1;
-      max-width: 200px; // Valeur arbitraire suffisante
+      max-width: 200px;
     }
 
-    // Effet survol
-    &:hover:not(.page_actuelle) { // Ne pas appliquer sur l'élément actif
+    &:hover:not(.page_actuelle) {
       background: rgba(255, 255, 255, 0.1);
     }
 
-    // Style item actif
+    // Style appliqué au lien de la page actuellement active.
     &.page_actuelle {
       background-color: var(--main-orange);
       color: white;
       font-weight: 600;
     }
 
-    // Style focus visible (Accessibilité)
+    // Style pour l'accessibilité au clavier.
     &:focus-visible {
       outline: 2px solid white;
-      outline-offset: -2px; // Outline intérieur
-      background: rgba(255, 255, 255, 0.1); // Similaire hover
+      outline-offset: -2px;
+      background: rgba(255, 255, 255, 0.1);
     }
   }
 
-  // --- Footer (Bouton Toggle) ---
+  // --- Pied de la Sidebar ---
   .sidebar-footer {
     padding: var(--spacing-sm) 0;
     margin-top: var(--spacing-md);
     display: flex;
-    justify-content: center; // Centre le bouton
+    justify-content: center;
     align-items: center;
     flex-direction: column;
 
+    // Bouton pour réduire/étendre la sidebar.
     .toggle-btn {
       background: none;
       border: none;
@@ -138,13 +130,13 @@
       padding: var(--spacing-sm);
       border-radius: 50%;
       cursor: pointer;
-      display: inline-flex; // Important pour centrer icône dans bouton rond
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       transition: background-color var(--transition-standard);
 
       lucide-icon {
-        width: calc(var(--icon-size) * 0.9); // Icône un peu plus petite
+        width: calc(var(--icon-size) * 0.9);
         height: calc(var(--icon-size) * 0.9);
         stroke: currentColor;
       }
@@ -154,7 +146,6 @@
       }
 
       &:focus-visible {
-        // Style focus cohérent avec les boutons globaux (simulé avec outline ici)
         outline: 2px solid rgba(var(--main-orange-rgb, 255, 107, 53), 0.5);
         outline-offset: 2px;
         background-color: rgba(255, 255, 255, 0.15);
@@ -162,89 +153,67 @@
     }
   }
 
-
   /* ======================================== */
-  /* == STYLES QUAND RÉDUIT (.is-collapsed) == */
+  /* == STYLES POUR LA SIDEBAR RÉDUITE == */
   /* ======================================== */
   &.is-collapsed {
     width: var(--sidebar-width-collapsed);
     min-width: var(--sidebar-width-collapsed);
 
-    .logo-container {
-      min-height: 80px; // Maintient hauteur
-      .logo {
-        opacity: 0;
-        transform: scale(0.5);
-        pointer-events: none;
-      }
-
-
-
-      // Si vous ajoutez une icône alternative pour le mode réduit, décommentez et stylez-la ici
-      // .logo-collapsed-icon { opacity: 1; transform: ...; }
+    .logo-container .logo {
+      opacity: 0;
+      transform: scale(0.5);
+      pointer-events: none;
     }
 
     ul.menu-items li a {
-      justify-content: center; // Centre l'icône
-      padding: 12px 0; // Padding vertical uniquement
-      gap: 0;
+      justify-content: center; // Centre l'icône horizontalement.
+      padding: 12px 0;
 
       .menu-item-text {
         opacity: 0;
-        max-width: 0; // Cache le texte
+        max-width: 0; // Cache le texte en le faisant disparaître.
         pointer-events: none;
-        // Visually hidden est mieux que display:none pour accessibilité si besoin
-        position: absolute; // Sort du flux pour ne pas prendre de place
-        left: -9999px; // Déplace hors écran
+        position: absolute;
+        left: -9999px; // Le déplace hors de l'écran pour l'accessibilité.
       }
 
-      // Ajustement pour l'état actif réduit (ex: juste une légère nuance)
       &.page_actuelle {
-        background-color: rgba(var(--main-orange-rgb, 255, 107, 53), 0.7); // Orange semi-transparent
+        background-color: rgba(var(--main-orange-rgb, 255, 107, 53), 0.7);
         &:hover {
-          background-color: rgba(var(--main-orange-rgb, 255, 107, 53), 0.75); // Légèrement plus opaque au survol
+          background-color: rgba(var(--main-orange-rgb, 255, 107, 53), 0.75);
         }
       }
     }
 
-  .theme-toggle-container {
-    .theme-icon {
+    .theme-toggle-container .theme-icon {
       display: none;
-    }}
-    // Footer reste centré
+    }
   }
-  // Fin &.is-collapsed
-
 }
 
-// Fin .sidebar desktop
-
-
 /* ====================================== */
-/* == STYLES MOBILE (<= 768px) - Barre EN BAS == */
+/* == STYLES MOBILE (BARRE INFÉRIEURE) == */
 /* ====================================== */
 @media screen and (max-width: 768px) {
-
-  // La sidebar latérale n'est plus utilisée, la barre du bas prend le relai
-  // On pourrait utiliser `display: none` sur .sidebar ici, mais transformer
-  // est aussi une approche valide si la structure HTML reste la même.
   .sidebar {
+    // Transformation complète de la sidebar en barre de navigation inférieure.
     width: 100%;
     min-width: unset;
     height: var(--bottom-nav-height-mobile);
     bottom: 0;
     top: auto;
     left: 0;
-    flex-direction: row;
+    flex-direction: row; // Les items sont maintenant en ligne.
     justify-content: center;
     padding: 0;
-    background-color: var(--main-white); // Fond blanc
-    color: var(--text-medium); // Texte/icônes gris par défaut
+    background-color: var(--main-white);
+    color: var(--text-medium);
     border-top: 1px solid var(--border-color);
     box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
-    transition: none; // Pas de transition de taille
+    transition: none;
 
-    // Cacher logo et footer (toggle)
+    // Le logo et le footer sont cachés sur mobile.
     .logo-container,
     .sidebar-footer {
       display: none;
@@ -252,12 +221,11 @@
 
     .menu-items {
       display: flex;
-      justify-content: space-around; // Répartit les items
-      align-items: stretch; // Étire les <li> sur toute la hauteur
-      flex-grow: 1; // Prend toute la largeur
+      justify-content: space-around; // Répartit les icônes équitablement.
+      flex-grow: 1;
       height: 100%;
       overflow: hidden;
-      scrollbar-width: none; // Cache scrollbar
+      scrollbar-width: none;
       &::-webkit-scrollbar {
         display: none;
       }
@@ -265,58 +233,45 @@
 
     ul.menu-items li {
       margin-bottom: 0;
-      flex: 1; // Chaque item prend une part égale
-      display: flex; // Pour centrer <a>
+      flex: 1;
+      display: flex;
     }
 
     ul.menu-items li a {
-      flex-direction: column; // Icône au-dessus (le texte sera caché)
-      justify-content: center; // Centre verticalement
-      align-items: center; // Centre horizontalement
-      padding: var(--spacing-xs) 0; // Padding vertical minime
-      gap: 0; // Pas d'espace car texte caché
-      color: var(--text-medium); // Couleur inactive
-      border-radius: 0; // Pas de coins arrondis
+      flex-direction: column; // Icône au-dessus du texte (qui est caché).
+      justify-content: center;
+      padding: var(--spacing-xs) 0;
+      gap: 0;
+      color: var(--text-medium);
+      border-radius: 0;
       width: 100%;
       height: 100%;
-      transition: none; // Pas de transition
+      transition: none;
 
       lucide-icon {
-        width: var(--icon-size-mobile); // Taille icône mobile
+        width: var(--icon-size-mobile);
         height: var(--icon-size-mobile);
-        // Pas besoin de marge car texte caché
       }
 
-      // --- CACHER LE TEXTE SUR MOBILE ---
       .menu-item-text {
-        display: none; // Cache complètement le texte
+        display: none; // Le texte est complètement caché sur mobile.
       }
 
-      // --------------------------------
-
-      // Annuler hover/focus desktop
-      &:hover {
+      &:hover, &:focus-visible {
         background: none;
       }
 
-      &:focus-visible {
-        outline: none;
-        background: none;
-      }
-
-      // État actif mobile (juste la couleur change)
+      // Seule la couleur de l'icône change pour l'item actif.
       &.page_actuelle {
-        background-color: transparent; // Pas de fond
-        color: var(--main-orange); // Couleur active
-        font-weight: normal; // Pas besoin de gras si texte caché
+        background-color: transparent;
+        color: var(--main-orange);
+        font-weight: normal;
       }
     }
   }
-  // Fin .sidebar @media mobile
-
 }
 
-// Fin @media screen and (max-width: 768px)
+/* --- Contrôle de Thème (Toggle Switch) --- */
 .theme-toggle-container {
   display: flex;
   align-items: center;
@@ -327,7 +282,7 @@
 
 .theme-icon {
   color: var(--text-light);
-  transition: color 0.3s ease; // Transition directe pour la couleur de l'icône
+  transition: color 0.3s ease;
   width: 20px;
   height: 20px;
   flex-shrink: 0;
@@ -336,13 +291,11 @@
     color: var(--main-orange);
   }
 
-  // Cacher en mode réduit
   .sidebar.is-collapsed & {
     display: none;
   }
 }
 
-/* Le conteneur du switch (le label) */
 .theme-switch {
   position: relative;
   display: inline-block;
@@ -352,23 +305,22 @@
   flex-shrink: 0;
 }
 
-/* Cache la checkbox native */
+// Le style `visually-hidden` cache l'input tout en le gardant accessible.
 input.visually-hidden {
   position: absolute !important; width: 1px !important; height: 1px !important;
   padding: 0 !important; margin: -1px !important; overflow: hidden !important;
   clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important;
 }
 
-/* Le fond (la glissière) */
+// La glissière de l'interrupteur.
 .slider {
   position: absolute;
   inset: 0;
   background-color: var(--bg-medium-gray);
   border-radius: 26px;
-  // Utilise la transition globale UNIQUEMENT pour la couleur du fond
   transition: background-color 0.3s ease;
 
-  /* Le cercle (le pouce) */
+  // Le cercle de l'interrupteur.
   &::before {
     content: "";
     position: absolute;
@@ -379,30 +331,24 @@ input.visually-hidden {
     background-color: var(--main-white);
     border-radius: 50%;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-
-    /* === TRANSITION POUR LE MOUVEMENT (directe) === */
-    /* On cible transform avec une durée standard de 0.3s */
     transition: transform 0.3s ease;
-    /* ============================================ */
   }
 }
 
-/* Styles quand la checkbox est cochée */
+// Style lorsque l'interrupteur est activé (coché).
 input:checked + .slider {
   background-color: var(--main-orange);
 }
 
 input:checked + .slider::before {
-  /* La transformation qui sera animée */
   transform: translateX(24px);
 }
 
-/* Style de Focus */
 input:focus-visible + .slider {
   box-shadow: 0 0 0 3px rgba(var(--main-orange-rgb, 255, 107, 53), 0.4);
 }
 
-/* Ajustements Dark Mode */
+// Styles spécifiques au thème sombre.
 html[data-theme="dark"] {
   .slider {
     background-color: var(--border-color);
@@ -411,4 +357,3 @@ html[data-theme="dark"] {
     background-color: var(--text-dark);
   }
 }
-/* --- FIN Styles Toggle Switch Corrigés --- */

@@ -1,10 +1,10 @@
-<!-- En-tête standard de la page -->
 <div class="page-header">
-  <h1 class="page-title" id="main-events-title">Les événements de mon club</h1>
+  <h1>Les événements de mon club</h1>
 </div>
 
-<!-- Section dédiée aux filtres -->
+<!-- Section des filtres pour affiner la liste des événements. -->
 <section class="filters-section" aria-labelledby="filters-title">
+  <!-- Titre visuellement caché pour l'accessibilité. -->
   <h2 id="filters-title" class="visually-hidden">Filtrer et trier les événements</h2>
   <app-filter-event
     [events]="allEvents"
@@ -12,17 +12,17 @@
   </app-filter-event>
 </section>
 
-<!-- Section principale standardisée -->
+<!-- Section principale affichant les événements. -->
 <section class="main-section" aria-labelledby="main-events-title">
 
-  <!-- Contenu principal : Chargement ou Grille/Message Vide -->
   @if (isLoading) {
+    <!-- Indicateur de chargement affiché pendant le chargement des événements. -->
     <div class="loading-indicator" role="status">
       <lucide-icon name="loader" class="animate-spin" aria-hidden="true"></lucide-icon>
       Chargement des événements...
     </div>
   } @else {
-    <!-- Grille des événements  -->
+    <!-- Grille des événements. -->
     <div class="event-grid">
       @for (event of paginatedEvents; track event.id) {
         <app-event-card [event]="event"></app-event-card>
@@ -35,7 +35,7 @@
   }
 </section>
 
-<!-- Section pagination standardisée -->
+<!-- Section de pagination pour naviguer entre les pages d'événements. -->
 @if (!isLoading && filteredEvents.length > itemsPerPage) {
   <nav class="pagination-section" aria-label="Pagination des événements">
     <app-pagination

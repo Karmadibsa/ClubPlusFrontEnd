@@ -1,3 +1,6 @@
+/**
+ * Définit le cadre global du composant.
+ */
 .rating-container {
   display: flex;
   flex-direction: column;
@@ -9,35 +12,53 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
+/**
+ * Mise en forme du titre pour lui donner une hiérarchie visuelle claire.
+ */
 .rating-title {
   font-size: 1.5rem;
   font-weight: bold;
   color: #333333;
 }
 
+/**
+ * Aligne les étoiles sur une ligne horizontale.
+ */
 .stars-wrapper {
   display: flex;
   gap: 5px;
 }
 
+/**
+ * Style de base et interactions pour chaque étoile.
+ */
 .star {
   font-size: 2rem;
-  color: #cccccc;
+  color: #cccccc; /* Couleur par défaut, état "non sélectionné" */
   cursor: pointer;
   transition: color 0.3s ease, transform 0.2s ease;
 
+  /**
+   * Fournit un retour visuel immédiat lorsque l'utilisateur pointe une étoile.
+   */
   &:hover {
     transform: scale(1.2);
-    color: var(--main-blue); /* Couleur d'accent */
+    color: var(--main-blue); /* Couleur d'accentuation au survol */
   }
 
+  /**
+   * Style appliqué à une étoile sélectionnée (et celles qui la précèdent).
+   */
   &.filled {
-    color: var(--main-orange); /* Couleur étoile remplie */
+    color: var(--main-orange); /* Couleur pour une étoile remplie/validée */
     transform: scale(1.1);
     transition: transform ease-in-out, color ease-in-out;
   }
 }
 
+/**
+ * Affiche la note numérique sous les étoiles (ex: 4/5).
+ */
 .rating-value {
   font-size: 1rem;
   color: #555555;

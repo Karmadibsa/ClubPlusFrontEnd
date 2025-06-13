@@ -1,28 +1,31 @@
+/*
+  Styles pour le composant du pied de page (footer) global.
+*/
+
 .footer {
-  background-color: var(--neutral-blue); // Couleur de fond du footer
-  color: var(--main-white); // Couleur de texte par défaut pour les enfants
-  padding: var(--spacing-lg) var(--spacing-md); // Padding vertical et horizontal
-  // Utilisation de Flexbox pour centrer le contenu interne
+  background-color: var(--neutral-blue);
+  color: var(--main-white);
+  padding: var(--spacing-lg) var(--spacing-md);
   display: flex;
-  justify-content: center; // Centre horizontalement le conteneur .footer-logo
-  align-items: center; // Centre verticalement le conteneur .footer-logo
+  justify-content: center;
+  align-items: center;
 
   .footer-logo {
-    // Conteneur pour l'image et le paragraphe
-    display: flex; // Utilise flex pour organiser ses enfants
-    flex-direction: column; // Empile l'image et le texte verticalement
-    align-items: center; // Centre l'image et le texte horizontalement
+    // Conteneur pour l'image et le paragraphe.
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
     img {
-      max-height: 50px; // Limite la hauteur du logo (ajustez si nécessaire)
-      margin-bottom: var(--spacing-sm); // Espace entre le logo et le texte
+      max-height: 50px;
+      margin-bottom: var(--spacing-sm);
     }
 
     p {
-      margin: 0; // Supprime la marge par défaut du paragraphe
-      font-size: 0.9rem; // Taille du texte du copyright
-      color: var(--text-light); // Couleur plus claire pour le copyright
-      text-align: center; // Assure que le texte est centré s'il passe à la ligne
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      text-align: center;
     }
   }
 }

@@ -1,85 +1,92 @@
-/* not-found.component.scss */
+/*------------------------------------*\
+  #PAGE: 404 NON TROUVÉE
+\*------------------------------------*/
 
-// --- Utilisation des variables globales de styles.scss ---
-// Pas besoin d'@import si les variables sont dans :root et que ce fichier est inclus globalement.
-// Sinon, importez votre fichier de variables : @import 'path/to/variables';
-
-// Styles pour le composant hôte (prend toute la page)
 :host {
   display: block;
-  min-height: 100vh; // Au moins la hauteur de la fenêtre
-  background-color: var(--bg-light-gray); // Fond gris clair global
-  color: var(--text-dark); // Couleur de texte sombre globale
-  font-family: var(--font-family); // Police globale
+  min-height: 100vh;
+  background-color: var(--bg-light-gray);
+  color: var(--text-dark);
+  font-family: var(--font-family);
 }
 
-// Conteneur principal pour centrer le contenu
+/*------------------------------------*\
+  #Conteneur Principal
+\*------------------------------------*/
 .not-found-container {
   display: flex;
   flex-direction: column;
-  justify-content: center; // Centre verticalement
-  align-items: center; // Centre horizontalement
-  min-height: 100vh; // Assure le remplissage vertical
-  padding: var(--spacing-xl); // Espace autour
-  text-align: center; // Centre le texte à l'intérieur
-  box-sizing: border-box; // Inclut padding dans la hauteur/largeur
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: var(--spacing-xl);
+  text-align: center;
+  box-sizing: border-box;
 }
 
-// Boîte de contenu pour limiter la largeur
+/*------------------------------------*\
+  #Contenu
+\*------------------------------------*/
 .not-found-content {
   max-width: 600px;
   width: 100%;
 }
 
-// Style de l'icône
+/*------------------------------------*\
+  #Icône
+\*------------------------------------*/
 .icon-container {
   margin-bottom: var(--spacing-lg);
 }
 
 .not-found-icon {
-  width: 80px; // Grande icône
+  width: 80px;
   height: 80px;
-  color: var(--main-orange); // Couleur d'accentuation orange
-  // Animation subtile de pulsation pour attirer l'attention
+  color: var(--main-orange);
   animation: pulse-404 2.5s infinite ease-in-out;
 }
 
-// Style du code d'erreur "404"
+/*------------------------------------*\
+  #Code d'Erreur
+\*------------------------------------*/
 .error-code {
-  font-size: 7rem; // Très grand
-  font-weight: 700; // Gras
-  color: var(--main-blue); // Couleur principale bleue
-  line-height: 1; // Rapproche de la ligne suivante
+  font-size: 7rem;
+  font-weight: 700;
+  color: var(--main-blue);
+  line-height: 1;
   margin-bottom: var(--spacing-sm);
-  text-shadow: 2px 2px 4px rgba(var(--main-black-rgb, 0, 0, 0), 0.1); // Légère ombre portée
+  text-shadow: 2px 2px 4px rgba(var(--main-black-rgb, 0, 0, 0), 0.1);
 }
 
-// Style du message "Page Hors-Jeu !"
+/*------------------------------------*\
+  #Messages d'Erreur
+\*------------------------------------*/
 .error-message {
-  font-size: 1.75rem; // Assez grand
-  font-weight: 500; // Semi-gras
-  color: var(--text-medium); // Couleur medium globale
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: var(--text-medium);
   margin-bottom: var(--spacing-md);
 }
 
-// Style de la description
 .error-description {
-  font-size: 1rem; // Taille standard
+  font-size: 1rem;
   color: var(--text-medium);
-  margin-bottom: var(--spacing-xl); // Espace avant le bouton
-  line-height: 1.6; // Bonne lisibilité
+  margin-bottom: var(--spacing-xl);
+  line-height: 1.6;
 }
 
-// Style du bouton de retour (utilise les classes globales .btn .btn-primary)
+/*------------------------------------*\
+  #Bouton Retour
+\*------------------------------------*/
 .back-home-link {
-  // Les styles de base (couleur, fond, padding, etc.) viennent des classes globales
-  margin-top: var(--spacing-lg); // Espace au-dessus
-  // On peut surcharger légèrement si besoin :
-  padding: 12px 28px; // Padding un peu plus grand
-  font-size: 1rem; // Taille standard
+  margin-top: var(--spacing-lg);
+  padding: 12px 28px;
+  font-size: 1rem;
 }
 
-// Animation pour l'icône
+/*------------------------------------*\
+  #Animation
+\*------------------------------------*/
 @keyframes pulse-404 {
   0%, 100% {
     transform: scale(1);
@@ -91,10 +98,12 @@
   }
 }
 
-// --- Responsive (Optionnel) ---
+/*------------------------------------*\
+  #Responsive
+\*------------------------------------*/
 @media screen and (max-width: 576px) {
   .error-code {
-    font-size: 5rem; // Réduire sur petits écrans
+    font-size: 5rem;
   }
   .error-message {
     font-size: 1.4rem;
@@ -104,6 +113,6 @@
     height: 60px;
   }
   .back-home-link {
-    width: 100%; // Bouton pleine largeur sur très petits écrans
+    width: 100%;
   }
 }

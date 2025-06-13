@@ -1,11 +1,9 @@
 <div class="user-layout-container" [class.sidebar-state-collapsed]="isSidebarCollapsed$ | async">
 
-  <!-- La sidebar est DANS le layout et est donc persistante -->
   <app-sidebar></app-sidebar>
 
-  <!-- Le contenu principal (des routes enfants) sera injecté ici -->
   <main class="main-content">
-    <router-outlet></router-outlet> <!-- Outlet PRIMAIRE pour les enfants -->
+    <router-outlet></router-outlet>
   </main>
 
 </div>

@@ -1,60 +1,60 @@
-/* reserve-event-modal.component.scss */
-
-// --- Utilisation des variables globales de styles.txt ---
-// @import 'path/to/variables'; // Généralement importé globalement dans angular.json
+/*
+  Styles spécifiques pour la modale de réservation.
+  Ce fichier se concentre sur le layout et l'apparence des détails de l'événement
+  et du formulaire de sélection de catégorie.
+*/
 
 :host {
-  display: block; // Assure que le composant prend sa place
+  display: block;
 }
 
 // --------------------------------------------------
-// Styles UNIQUEMENT SPÉCIFIQUES au contenu de cette modale
+// Styles du contenu de la modale
 // --------------------------------------------------
 
-// Styles pour le corps spécifique de la modale de réservation
+/* --- Section des détails de l'événement --- */
 
-// Détails de l'événement
 .event-details {
-  margin-bottom: var(--spacing-lg); // Espace avant le formulaire
+  margin-bottom: var(--spacing-lg);
 }
 
 .event-info {
-  background-color: var(--bg-light-gray); // Fond léger pour les informations
-  padding: var(--spacing-md); // Padding standard
-  border-radius: var(--border-radius-sm); // Rayon cohérent avec les formulaires
-  border: 1px solid var(--border-color-light, #eee); // Bordure légère
+  background-color: var(--bg-light-gray);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-color-light, #eee);
 }
 
 .info-item {
   display: flex;
-  align-items: flex-start; // Labels alignés en haut
-  margin-bottom: var(--spacing-sm); // Espace entre items
-  font-size: 0.95rem; // Taille standard
-}
+  align-items: flex-start;
+  margin-bottom: var(--spacing-sm);
+  font-size: 0.95rem;
 
-.info-item:last-child {
-  margin-bottom: 0;
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .info-label {
-  min-width: 100px; // Largeur minimale pour alignement
-  font-weight: 600; // Label en gras
-  color: var(--main-blue); // Label en bleu
+  min-width: 100px;
+  font-weight: 600;
+  color: var(--main-blue);
   margin-right: var(--spacing-sm);
   flex-shrink: 0;
 }
 
 .info-value {
   flex: 1;
-  color: var(--text-dark); // Texte sombre standard
+  color: var(--text-dark);
 }
 
-// Formulaire de réservation
+/* --- Section du formulaire de réservation --- */
+
 .reservation-form {
-  margin-top: var(--spacing-lg); // Espace après les détails
+  margin-top: var(--spacing-lg);
 }
 
-// Titre "Sélectionnez votre catégorie"
 .category-selection-title {
   font-size: 1.1rem;
   font-weight: 600;
@@ -62,14 +62,14 @@
   margin-bottom: var(--spacing-sm);
 }
 
-// Notice d'information
+// Style de la notice d'information.
 .reservation-notice {
-  background-color: rgba(var(--main-orange-rgb, 255, 107, 53), 0.1); // Fond orange très léger
-  border: 1px solid rgba(var(--main-orange-rgb, 255, 107, 53), 0.3); // Bordure orange légère
-  color: var(--main-orange-dark, #c8431b); // Texte orange foncé
+  background-color: rgba(var(--main-orange-rgb, 255, 107, 53), 0.1);
+  border: 1px solid rgba(var(--main-orange-rgb, 255, 107, 53), 0.3);
+  color: var(--main-orange-dark, #c8431b);
   padding: var(--spacing-md);
   border-radius: var(--border-radius-sm);
-  margin-bottom: var(--spacing-lg); // Espace avant les catégories
+  margin-bottom: var(--spacing-lg);
   font-size: 0.9rem;
 
   p {
@@ -77,46 +77,45 @@
   }
 }
 
-// Conteneur des catégories sélectionnables
+// Conteneur en grille pour les options de catégories.
 .categories {
-  display: grid; // Utilisation de Grid pour un meilleur contrôle
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); // Colonnes flexibles
-  gap: var(--spacing-md); // Espace entre les catégories
-  margin-bottom: var(--spacing-lg); // Espace avant le bouton (maintenant dans footer)
-  user-select: none; // Empêche la sélection de texte
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  user-select: none;
 }
 
-// Un item catégorie
+// Style pour une seule option de catégorie.
 .category-item {
-  border: 2px solid var(--border-color); // Bordure standard
-  border-radius: var(--border-radius); // Rayon standard
-  overflow: hidden; // Cache le radio button
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
   transition: all 0.2s ease-in-out;
-  cursor: pointer; // Indique qu'il est cliquable
-  position: relative; // Pour positionner le radio
+  cursor: pointer;
+  position: relative;
 
   &:hover {
-    border-color: var(--main-orange); // Change bordure au survol
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); // Légère ombre
+    border-color: var(--main-orange);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
 }
 
-// Label visible qui agit comme bouton radio stylé
 .category-label {
-  display: block; // Prend toute la place de .category-item
+  display: block;
   padding: var(--spacing-md);
   text-align: center;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .category-name {
-  font-size: 1.1rem; // Taille du nom
-  font-weight: 600; // Nom en gras
-  color: var(--text-dark); // Couleur standard
-  margin-bottom: var(--spacing-xs); // Petit espace si capacité affichée
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: var(--spacing-xs);
 }
 
-// Cacher le radio button réel
+// Le bouton radio natif est masqué et remplacé par le style du label.
 input[type="radio"] {
   position: absolute;
   opacity: 0;
@@ -124,48 +123,44 @@ input[type="radio"] {
   height: 0;
 }
 
-// Style quand le radio button est sélectionné (via le clic sur le label)
+// Style appliqué lorsque l'option est sélectionnée.
 input[type="radio"]:checked + .category-label {
   background-color: var(--main-orange);
-  border-color: var(--main-orange); // Assure cohérence bordure (même si hidden)
-  color: var(--main-white); // Texte blanc sur fond orange
+  border-color: var(--main-orange);
+  color: var(--main-white);
 
   .category-name {
-    color: var(--main-white); // Nom blanc aussi
+    color: var(--main-white);
   }
 }
 
-// Style pour focus visible sur l'item quand le radio caché a le focus
+// Style pour l'accessibilité au clavier.
 input[type="radio"]:focus-visible + .category-label {
   outline: 2px solid var(--main-blue);
   outline-offset: 2px;
 }
 
+/* --- Messages d'état --- */
 
-// Message si aucune catégorie disponible
 .no-categories-available {
-  grid-column: 1 / -1; // Prend toute la largeur de la grille
+  grid-column: 1 / -1;
   text-align: center;
   font-style: italic;
   color: var(--text-medium);
   padding: var(--spacing-md) 0;
 }
 
-// Erreur de sélection (utilise .invalid-feedback global)
 .selection-error.invalid-feedback {
-  display: block; // Force l'affichage si la condition est vraie
+  display: block;
   text-align: center;
-  margin-top: calc(-1 * var(--spacing-md)); // Remonte un peu l'erreur
-  margin-bottom: var(--spacing-lg); // Espace avant le footer
+  margin-top: calc(-1 * var(--spacing-md));
+  margin-bottom: var(--spacing-lg);
 }
 
-// Style du bouton "Réserver" (dans le footer, utilise .btn .btn-primary global)
-// Pas besoin de redéfinir .btn-primary ici.
+/* --- Styles responsives --- */
 
-// Responsive: ajuster la grille des catégories
 @media screen and (max-width: 576px) {
   .categories {
-    grid-template-columns: 1fr; // Une seule colonne sur très petit écran
+    grid-template-columns: 1fr; // Une seule colonne sur petits écrans.
   }
 }
-

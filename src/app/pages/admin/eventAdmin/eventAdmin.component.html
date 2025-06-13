@@ -1,13 +1,13 @@
-<!-- Structure basée sur template.txt -->
 <div class="page-header">
-  <!-- Icône appropriée pour la gestion des événements -->
+  <!-- Titre de la page de gestion des événements. -->
   <h1 class="page-title">Liste des Événements</h1>
-  <app-create-event-button>
-  </app-create-event-button>
+  <!-- Bouton pour créer un nouvel événement. -->
+  <app-create-event-button></app-create-event-button>
 </div>
 
-<!-- Section Filtres -->
+<!-- Section des filtres pour affiner la liste des événements. -->
 <section class="filters-section" aria-labelledby="filters-title">
+  <!-- Titre visuellement caché pour l'accessibilité. -->
   <h2 id="filters-title" class="visually-hidden">Options de filtrage des événements</h2>
   <app-filter-event
     [events]="allEvenements"
@@ -15,13 +15,13 @@
   </app-filter-event>
 </section>
 
-<!-- Section Principale contenant le tableau -->
+<!-- Section principale contenant le tableau des événements. -->
 <section class="main-section">
+  <!-- Titre visuellement caché pour l'accessibilité. -->
   <h2 id="main-title" class="visually-hidden">Tableau des événements</h2>
 
-  <!-- Wrapper pour le scroll horizontal du tableau -->
+  <!-- Wrapper permettant le défilement horizontal du tableau sur petits écrans. -->
   <div class="table-wrapper">
-    <!-- Utilisation de la classe globale .data-table -->
     <table class="data-table" aria-label="Liste des événements">
       <thead>
       <tr>
@@ -35,8 +35,7 @@
       </tr>
       </thead>
       <tbody>
-      <!-- Itération avec le composant enfant app-event-row -->
-      <!-- IMPORTANT: app-event-row DOIT générer des <td> avec [attr.data-label] pour le responsive -->
+      <!-- Itération sur les événements paginés pour afficher chaque ligne. -->
         @for (event of paginatedEvenements; track event.id) {
           <tr app-event-row
               [evenement]="event"
@@ -44,7 +43,7 @@
               (deleteRequest)="handleDeleteEventRequest($event)"
           ></tr>
         } @empty {
-          <!-- Message si tableau vide -->
+          <!-- Message affiché si aucun événement ne correspond aux filtres. -->
           <tr class="empty-table-message">
             <td colspan="8">Aucun événement ne correspond aux filtres actuels.</td>
           </tr>
@@ -52,9 +51,9 @@
       </tbody>
     </table>
   </div>
-</section> <!-- Fin .main-section -->
+</section>
 
-<!-- Section Pagination -->
+<!-- Section de pagination pour naviguer entre les pages d'événements. -->
 <nav class="pagination-section" aria-label="Pagination des événements">
   <app-pagination
     [currentPage]="currentPage"
@@ -63,4 +62,3 @@
     (pageChange)="onPageChange($event)">
   </app-pagination>
 </nav>
-

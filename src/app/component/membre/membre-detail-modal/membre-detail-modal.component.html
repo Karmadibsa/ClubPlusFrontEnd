@@ -1,39 +1,35 @@
-<!-- Utilisation de @if pour la visibilité globale -->
+<!--
+  Ce template définit la structure de la modale affichant les détails
+  d'un membre et permettant potentiellement la gestion de son rôle.
+-->
 @if (isVisible) {
-  <!-- Utilisation des classes globales .modal-overlay et [class.is-visible] -->
-  <div class="modal-overlay"
-       [class.is-visible]="isVisible"
-       (click)="closeModal()">
+  <div class="modal-overlay" [class.is-visible]="isVisible" (click)="closeModal()">
 
-    <!-- Vérification @if (membre) pour s'assurer que les données sont chargées -->
+    <!-- Le contenu de la modale s'affiche uniquement si les données du membre sont chargées. -->
     @if (membre) {
-      <!-- Utilisation des classes globales .modal-content -->
-        <!-- Ajout d'une classe locale .detail-modal pour styles spécifiques si besoin -->
       <div class="modal-content detail-modal" (click)="$event.stopPropagation()">
 
-        <!-- Utilisation des classes globales .modal-header (pas -primary) -->
+        <!-- En-tête standard de la modale -->
         <header class="modal-header">
           <h2>
             <lucide-icon name="user" aria-hidden="true"></lucide-icon>
             Détails du Membre
           </h2>
-          <!-- Utilisation de .modal-close-button global -->
           <button class="modal-close-button" type="button" (click)="closeModal()" title="Fermer">
             <lucide-icon name="x"></lucide-icon>
           </button>
         </header>
 
-        <!-- Utilisation de .modal-body global -->
+        <!-- Corps de la modale contenant les informations -->
         <main class="modal-body">
 
-          <!-- Section Informations personnelles -->
-          <!-- Utilisation de classes locales .info-section, .info-row, .info-group pour clarté -->
+          <!-- Section affichant les informations personnelles du membre. -->
           <section class="info-section">
             <h3 class="info-section-title">
               <lucide-icon name="contact" aria-hidden="true"></lucide-icon>
               Informations personnelles
             </h3>
-            <div class="info-grid"> <!-- Utilisation d'une grille pour l'alignement -->
+            <div class="info-grid">
               <div class="info-item">
                 <span class="info-label">Nom :</span>
                 <span class="read-only-value">{{ membre.nom }}</span>
@@ -58,21 +54,21 @@
                 <span class="info-label">Inscrit le :</span>
                 <span class="read-only-value">{{ membre.date_inscription | date:'dd/MM/yyyy' }}</span>
               </div>
-              <div class="info-item"> <!-- Rôle affiché ici -->
+              <div class="info-item">
                 <span class="info-label">Rôle Actuel :</span>
-                <span class="read-only-value role-badge">{{ membre.role }}</span> <!-- Ajout classe pour style -->
+                <span class="read-only-value role-badge">{{ membre.role }}</span>
               </div>
             </div>
           </section>
 
-          <!-- Section Gestion Rôle (visible uniquement pour Admin) -->
+          <!-- Section de gestion du rôle, visible uniquement pour les administrateurs. -->
           @if (authService.role === 'ROLE_ADMIN') {
             <section class="info-section role-change-section">
               <h3 class="info-section-title">
                 <lucide-icon name="user-cog" aria-hidden="true"></lucide-icon>
                 Gérer le Rôle
               </h3>
-              <!-- Utilisation des styles spécifiques pour les radios -->
+              <!-- La sélection du rôle est liée à la propriété `selectedRole` du composant. -->
               <div class="radio-inputs">
                 <label>
                   <input class="radio-input" type="radio" name="roleOption"
@@ -88,35 +84,32 @@
             </section>
           }
 
-        </main> <!-- Fin .modal-body -->
+        </main>
 
-        <!-- Utilisation de .modal-footer global -->
+        <!-- Pied de page avec les actions -->
         <footer class="modal-footer">
-          <!-- Bouton Enregistrer Rôle (conditionnel) -->
+          <!-- Le bouton de sauvegarde du rôle est conditionnel. -->
           @if (authService.role === "ROLE_ADMIN") {
-            <!-- Utilise .btn .btn-primary globaux -->
             <button type="button" class="btn btn-primary"
                     (click)="triggerSaveRole()"
-                    [disabled]="isSaveDisabled"> <!-- Attention: si isSaveDisabled est une méthode -->
+                    [disabled]="isSaveDisabled">
               <lucide-icon name="save" aria-hidden="true"></lucide-icon>
               Enregistrer Rôle
             </button>
           }
 
-          <!-- Bouton Fermer (toujours visible) -->
-          <!-- Utilise .btn .btn-secondary globaux -->
           <button type="button" class="btn btn-secondary" (click)="closeModal()">
             <lucide-icon name="x"></lucide-icon>
             Fermer
           </button>
         </footer>
 
-      </div> <!-- Fin .modal-content -->
+      </div>
     } @else {
-      <!-- Optionnel : Afficher un message si membre est null -->
+      <!-- Affiche un indicateur de chargement tant que les données du membre ne sont pas disponibles. -->
       <div class="modal-content loading-content" (click)="$event.stopPropagation()">
         <p class="loading-indicator">Chargement des détails...</p>
       </div>
     }
-  </div> <!-- Fin .modal-overlay -->
+  </div>
 }

@@ -1,18 +1,28 @@
+<!--
+  Ce template représente une seule ligne (<tr>) dans un tableau affichant les membres.
+  Chaque ligne affiche les informations d'un membre et contient une action pour voir les détails.
+-->
+
+<!-- Cellules de données pour un membre -->
 <td data-label="Nom">{{ membre.nom }} {{ membre.prenom }}</td>
 <td data-label="Naissance">{{ membre.date_naissance | date:'dd/MM/yyyy' }}</td>
 <td data-label="Téléphone">{{ membre.telephone || 'N/A' }}</td>
 <td data-label="Email">{{ membre.email }}</td>
 <td data-label="Rôle">{{ membre.role }}</td>
-<td data-label="Actions"> <!-- Label pour la cellule actions -->
+
+<!-- Cellule contenant le bouton d'action et la modale associée -->
+<td data-label="Actions">
   <div class="btn-actions">
+    <!-- Action pour ouvrir la modale de détails du membre -->
     <button class="btn btn-edit" title="Détails/Gérer rôle" (click)="openDetailsModal()">
       <lucide-icon name="user-cog" class="icon"></lucide-icon>
     </button>
   </div>
-  <!-- ================================ -->
 
-  <!-- === MODALE INTÉGRÉE DANS LA LIGNE === -->
-  <!-- Elle n'est rendue dans le DOM que si isModalVisible est vrai -->
+  <!--
+    Instanciation de la modale de détails directement à l'intérieur de la ligne.
+    La modale est rendue dans le DOM uniquement lorsque `isModalVisible` est vrai.
+  -->
   @if (isModalVisible) {
     <app-membre-detail-modal
       [isVisible]="isModalVisible"
@@ -21,5 +31,5 @@
       (saveRole)="handleSaveRoleFromModal($event)">
     </app-membre-detail-modal>
   }
-  <!-- ==================================== -->
+
 </td>

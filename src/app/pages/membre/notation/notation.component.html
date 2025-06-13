@@ -1,35 +1,26 @@
-<!-- Structure basée sur template.txt -->
 <div class="page-header">
-  <!-- Icône pour le titre (choisir une icône pertinente, ex: 'award' ou 'star') -->
   <h1 class="page-title">Évaluation de l'événement</h1>
-  <!-- Pas de sous-titre dans le template standard, on l'intègre dans main-section ou on l'omet -->
 </div>
 
-<!-- Section de filtres non utilisée ici, laissée vide ou omise -->
-<!-- <section class="filters-section" aria-labelledby="filters-title"> ... </section> -->
-
 <section class="main-section">
+  <!-- Titre visuellement caché pour l'accessibilité. -->
   <h2 id="main-title" class="visually-hidden">Contenu principal de l'évaluation</h2>
 
-  <!-- Sous-titre déplacé ici si nécessaire -->
-  <p class="page-subtitle-info"> <!-- Classe ajoutée pour style spécifique si besoin -->
+  <p class="page-subtitle-info">
     Votre avis compte pour améliorer nos prochains événements !
   </p>
 
-  <!-- Indicateur de chargement -->
   @if (isLoading) {
-    <div class="loading-indicator"> <!-- Classe de styles.txt -->
+    <!-- Indicateur de chargement. -->
+    <div class="loading-indicator">
       <lucide-icon name="loader" class="animate-spin"></lucide-icon>
       <span>Chargement des événements disponibles...</span>
     </div>
   } @else {
-    <!-- Contenu affiché après chargement -->
-
-      <!-- Sélecteur d'événement ou message si aucun événement -->
     @if (unratedEvents.length > 0) {
-      <!-- Utilisation de .form-group pour label + select, dans une div pour structure -->
-      <div class="event-selector-wrapper card"> <!-- Wrapper + card pour style optionnel -->
-        <div class="form-group"> <!-- Classe de styles.txt -->
+      <!-- Sélecteur d'événement à évaluer. -->
+      <div class="event-selector-wrapper card">
+        <div class="form-group">
           <label for="eventSelect">Choisissez l'événement à évaluer :</label>
           <select id="eventSelect"
                   class="form-control event-select"
@@ -42,44 +33,40 @@
               </option>
             }
           </select>
-          <!-- Pas de .invalid-feedback ou .form-text montré dans l'exemple initial -->
         </div>
       </div>
     } @else {
-      <div class="no-data-message"> <!-- Classe de styles.txt (remplace .no-events) -->
+      <!-- Message si tous les événements ont été notés ou aucun événement passé. -->
+      <div class="no-data-message">
         <lucide-icon name="info"></lucide-icon>
         <span>Vous avez noté tous les événements auxquels vous avez participé ou il n'y a pas d'événements passés à évaluer.</span>
       </div>
     }
 
-    <!-- Section de notation (Affichée seulement si un événement est sélectionné) -->
     @if (selectedEvent) {
-      <!-- Utilisation de fieldset.card-section pour structurer la partie notation -->
-      <fieldset class="card-section rating-section"> <!-- Classes de styles.txt + spécifique -->
-        <legend class="section-header"> <!-- Classe de styles.txt -->
+      <!-- Section de notation pour l'événement sélectionné. -->
+      <fieldset class="card-section rating-section">
+        <legend class="section-header">
           <h2>
             <lucide-icon name="book-open-check" aria-hidden="true"></lucide-icon>
             Détail de l'évaluation pour "{{ selectedEvent.nom }}"
           </h2>
-          <!-- <p class="section-description">Description si nécessaire</p> -->
         </legend>
 
-        <div class="card-content rating-criteria-list"> <!-- Classes de styles.txt + spécifique -->
-          <!-- Itération sur les critères -->
+        <div class="card-content rating-criteria-list">
+          <!-- Itération sur les critères de notation. -->
           @for (criterion of ratingCriteria; track criterion.key) {
-            <!-- Le composant enfant gère son propre style interne -->
-              <!-- Il sera stylé comme une 'card' ou similaire dans son propre SCSS -->
             <app-itemnotation
               [title]="criterion.label"
               (ratingChanged)="onRatingUpdate(criterion.key, $event)">
             </app-itemnotation>
           } @empty {
-            <!-- Message si ratingCriteria est vide -->
+            <!-- Message si aucun critère de notation n'est défini. -->
             <p class="empty-criteria-message">Aucun critère de notation défini pour cet événement.</p>
           }
 
-          <!-- Bouton de soumission dans .form-actions si c'est la fin du "formulaire" -->
-          <div class="form-actions rating-actions"> <!-- Classe de styles.txt + spécifique -->
+          <!-- Bouton de soumission de l'évaluation. -->
+          <div class="form-actions rating-actions">
             <button type="button"
                     (click)="submitRating()"
                     class="btn btn-primary"
@@ -97,12 +84,8 @@
               }
             </button>
           </div>
-        </div> <!-- Fin .card-content -->
-      </fieldset> <!-- Fin fieldset.card-section -->
+        </div>
+      </fieldset>
     }
-  } <!-- Fin du @else principal (après isLoading) -->
-
-</section> <!-- Fin .main-section -->
-
-<!-- Section de pagination non utilisée ici, laissée vide ou omise -->
-<!-- <nav class="pagination-section" aria-label="Pagination..."> ... </nav> -->
+  }
+</section>

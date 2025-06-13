@@ -1,10 +1,14 @@
-/* --- Styles spécifiques à la page Mon Compte --- */
+/*------------------------------------*\
+  #Styles spécifiques à la page Mon Compte
+\*------------------------------------*/
 
-/* Seuls les styles uniques à cette page, non couverts globalement,
-   sont conservés ici. */
+:host {
+  display: block;
+}
 
-/* --- Styles Spécifiques à la Section de Confirmation (Zone Dangereuse) --- */
-/* Ces styles sont conservés car ils sont uniques à l'interface de confirmation. */
+/*------------------------------------*\
+  #Confirmation de Suppression (Zone Dangereuse)
+\*------------------------------------*/
 .confirmation-section {
   margin-top: var(--spacing-lg);
   padding-top: var(--spacing-lg);
@@ -12,30 +16,28 @@
 
   .confirmation-prompt {
     font-style: italic;
-    color: var(--text-medium); // Utilise variable globale [5]
-    margin-bottom: var(--spacing-sm); // Utilise variable globale [5]
+    color: var(--text-medium);
+    margin-bottom: var(--spacing-sm);
   }
 
   .confirmation-phrase {
-    user-select: none; // Style utilitaire, peut être globalisé
-    background-color: var(--bg-medium-gray); // Utilise variable globale [5]
+    user-select: none;
+    background-color: var(--bg-medium-gray);
     padding: 10px;
-    border-radius: var(--border-radius-sm, 4px); // Utilise variable globale [5]
+    border-radius: var(--border-radius-sm, 4px);
     font-family: monospace;
-    margin-bottom: var(--spacing-md); // Utilise variable globale [5]
+    margin-bottom: var(--spacing-md);
     word-break: break-all;
     text-align: center;
 
     strong {
-      color: var(--text-dark); // Utilise variable globale [5]
+      color: var(--text-dark);
     }
   }
 
   .confirmation-actions {
     display: flex;
     justify-content: flex-end;
-    gap: var(--spacing-md, 16px); // Utilise variable globale [5]
-    /* Le responsive (.form-actions, .confirmation-actions) est géré globalement [5] */
+    gap: var(--spacing-md, 16px);
   }
 }
-

@@ -1,8 +1,6 @@
-
-
-// Custom Theming for Angular Material
-
-// For more information: https://material.angular.io/guide/theming
+/**
+ * Importation et configuration du thème pour les composants Angular Material.
+ */
 @use '@angular/material' as mat;
 
 html {
@@ -17,127 +15,133 @@ html {
   ));
 }
 
-@import 'swiper/scss'; // Styles de base
-@import 'swiper/scss/pagination'; // Si vous utilisez la pagination (points)
+/**
+ * Importation des styles nécessaires pour la bibliothèque de carousel Swiper.js.
+ */
+@import 'swiper/scss';
+@import 'swiper/scss/pagination';
 
-/* ---- Définitions Raffinées pour le Mode Sombre ---- */
+/**
+ * Définit les variables de couleur pour le mode sombre.
+ * Ce bloc est activé lorsque l'attribut `data-theme="dark"` est présent sur la balise <html>.
+ */
 html[data-theme="dark"] {
+  /* Inversion des couleurs d'accentuation pour le mode sombre. */
+  --main-orange: #5da4c7;
+  --main-orange-dark: #4a90ae;
+  --main-orange-rgb: 93, 164, 199;
+  --main-blue: #fa8241;
+  --main-blue-dark: #f26115;
+  --main-blue-rgb: 250, 130, 65;
 
-  /* --- Couleurs Primaires & Accents (SWAP Orange/Bleu comme demandé) --- */
-  /* Orange devient Bleu (Couleur principale d'action -> Bleu en dark) */
-  --main-orange: #5da4c7;       /* Un bleu plus clair et moins saturé que l'original, pour un meilleur contraste */
-  --main-orange-dark: #4a90ae;  /* Version légèrement plus foncée pour hover/active */
-  --main-orange-rgb: 93, 164, 199; /* RGB correspondant à #5da4c7 */
+  /* Couleurs de base inversées pour les fonds et textes. */
+  --main-white: #1e1e1e;
+  --main-black: #f0f0f0;
 
-  /* Bleu devient Orange (Couleur secondaire/liens -> Orange en dark) */
-  --main-blue: #fa8241;        /* Un orange légèrement ajusté, peut-être moins vif que l'original */
-  --main-blue-dark: #f26115;   /* L'orange original (plus foncé) pour hover/active */
-  /* Ajoutons une variable RGB pour le nouveau bleu (maintenant orange) */
-  --main-blue-rgb: 250, 130, 65; /* RGB correspondant à #fa8241 */
+  /* Couleurs de fond adaptées au mode sombre. */
+  --bg-global: #121212;
+  --bg-light-gray: #2a2a2a;
+  --bg-medium-gray: #383838;
 
-  /* --- Couleurs de Base Inversées --- */
-  --main-white: #1e1e1e;      // Fond des cartes/éléments principaux surélevés
-  --main-black: #f0f0f0;      // Couleur de texte la plus claire (pas blanc pur)
+  /* Couleurs de texte adaptées au mode sombre. */
+  --text-dark: #f0f0f0;
+  --text-medium: #b0b0b0;
+  --text-light: #757575;
 
-  /* --- Couleurs de Fond --- */
-  --bg-global: #121212;      // Fond global très sombre (standard Material Design)
-  --bg-light-gray: #2a2a2a;   // Équivalent sombre de light-gray
-  --bg-medium-gray: #383838;  // Équivalent sombre de medium-gray (pour fonds désactivés, etc.)
+  /* Couleurs d'état ajustées pour la lisibilité sur fond sombre. */
+  --success: #66bb6a;
+  --success-dark: #4caf50;
+  --warning: #ffa726;
+  --danger: #ef5350;
+  --danger-dark: #e53935;
+  --info: #42a5f5;
 
-  /* --- Couleurs de Texte --- */
-  --text-dark: #f0f0f0;       // Texte principal (clair)
-  --text-medium: #b0b0b0;     // Texte secondaire (moins clair)
-  --text-light: #757575;      // Texte tertiaire/placeholders (le plus sombre)
+  /* Couleurs de bordure pour le mode sombre. */
+  --border-color: #444444;
+  --border-color-light: #555555;
 
-  /* --- Couleurs d'État (Ajustées pour lisibilité sur fond sombre) --- */
-  --success: #66bb6a;         // Vert plus clair/doux
-  --success-dark: #4caf50;     // L'original clair comme version "foncée" en dark mode
-  --warning: #ffa726;         // Jaune/Orange plus clair
-  --danger: #ef5350;          // Rouge légèrement moins saturé
-  --danger-dark: #e53935;      // Version plus foncée du rouge dark
-  --info: #42a5f5;            // Bleu d'info plus clair
-
-  /* --- Couleurs de Bordure --- */
-  --border-color: #444444;      // Bordure principale, visible sur #1e1e1e
-  --border-color-light: #555555; // Bordure plus subtile (ex: séparateurs internes)
-
-  /* --- Variables de Contraste / Focus --- */
-  /* Le focus doit utiliser la couleur d'accentuation principale (qui est maintenant orange via --main-blue) */
-  --input-focus-shadow: rgba(var(--main-blue-rgb), 0.4); // Ombre de focus basée sur le nouvel orange (#fa8241)
+  /* Variable pour l'ombre du focus, basée sur la nouvelle couleur d'accent. */
+  --input-focus-shadow: rgba(var(--main-blue-rgb), 0.4);
 }
 
+/**
+ * Définit toutes les variables CSS globales (custom properties) pour le thème par défaut (light).
+ * Ces variables contrôlent les couleurs, espacements, polices, etc., de toute l'application.
+ */
 :root {
-  /* Couleurs principales */
+  /* Couleurs principales de la charte graphique. */
   --main-white: #ffffff;
   --main-black: #000000;
-  --main-orange: #f26115; /* Pour les boutons d'action, badges ou éléments d'accentuation */
-  --main-blue: #1a5f7a; /* Utilisé pour les boutons et liens */
+  --main-orange: #f26115;
+  --main-blue: #1a5f7a;
   --neutral-blue: #2c3e50;
   --secondary-blue: #3498db;
   --secondary-green: #47b3a3;
-  --main-orange-rgb: 255, 107, 53; /* Valeur RGB de votre orange */
-  --main-orange-dark: #d9541e;  /* Orange un peu plus foncé */
-  --main-blue-dark: #134b63;    /* Bleu un peu plus foncé */
-  --danger-dark: #c82333;       /* Rouge un peu plus foncé */
-  --success-dark: #218838;      /* Vert un peu plus foncé */
+  --main-orange-rgb: 255, 107, 53;
+  --main-orange-dark: #d9541e;
+  --main-blue-dark: #134b63;
+  --danger-dark: #c82333;
+  --success-dark: #218838;
 
-  /* Couleurs de fond */
-  --bg-light-gray: #f8f9fa; /* Légèrement plus foncé pour meilleur contraste */
-  --bg-medium-gray: #e9ecef; /* Légèrement plus foncé */
+  /* Couleurs de fond. */
+  --bg-light-gray: #f8f9fa;
+  --bg-medium-gray: #e9ecef;
 
-  /* Couleurs de texte */
-  --text-dark: #333333; /* Plus sombre pour meilleur contraste */
-  --text-medium: #666666; /* Plus sombre */
-  --text-light: #999999; /* Plus sombre */
+  /* Couleurs de texte. */
+  --text-dark: #333333;
+  --text-medium: #666666;
+  --text-light: #999999;
 
-  /* Couleurs d'état */
+  /* Couleurs sémantiques pour les états (succès, erreur, etc.). */
   --success: #28a745;
   --warning: #ffc107;
   --danger: #dc3545;
   --info: #17a2b8;
 
-  /* Espacements */
+  /* Grille d'espacement pour une mise en page cohérente. */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
   --spacing-lg: 24px;
   --spacing-xl: 32px;
 
-  /* Police */
+  /* Police de caractères par défaut. */
   --font-family: "Poppins", sans-serif;
 
-  /* Variables de contraste */
+  /* Variables diverses pour les bordures, ombres, et composants spécifiques. */
   --border-color: #dee2e6;
   --input-focus-shadow: rgba(26, 95, 122, 0.25);
-
-    --sidebar-padding: 1.5%;
-    --icon-size: 24px;
-    --border-radius: 8px;
-
-
-  --sidebar-width-collapsed: 70px; // Largeur en mode réduit (ajustable)
-  --bottom-nav-height-mobile: 60px; // Hauteur barre mobile
-  --icon-size-mobile: 24px; // Taille icône mobile (peut être = --icon-size)
+  --sidebar-padding: 1.5%;
+  --icon-size: 24px;
+  --border-radius: 8px;
+  --sidebar-width-collapsed: 70px;
+  --bottom-nav-height-mobile: 60px;
+  --icon-size-mobile: 24px;
   --transition-standard: all 0.3s ease;
-
-
 }
 
 
-/* --- Utilitaires --- */
+/* --- Section des classes utilitaires globales --- */
 
+/**
+ * Utilitaire d'accessibilité : masque un élément visuellement tout en le laissant lisible
+ * par les lecteurs d'écran.
+ */
 .visually-hidden {
   position: absolute !important;
   width: 1px !important;
   height: 1px !important;
   padding: 0 !important;
-  margin: -1px !important; // Pour éviter tout espace résiduel
+  margin: -1px !important;
   overflow: hidden !important;
   clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important; // Empêche le retour à la ligne
+  white-space: nowrap !important;
   border: 0 !important;
 }
 
+/**
+ * Empêche la sélection de texte par l'utilisateur.
+ */
 .non-selectable {
   user-select: none;
   -webkit-user-select: none;
@@ -145,10 +149,15 @@ html[data-theme="dark"] {
   -ms-user-select: none;
 }
 
+/**
+ * Applique une animation de rotation continue, utilisée pour les indicateurs de chargement.
+ */
 .animate-spin { animation: spin 1s linear infinite; }
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-/* Application globale de la police Poppins */
+/**
+ * Styles de base appliqués au corps de la page.
+ */
 html,
 body {
   height: 100%;
@@ -157,9 +166,12 @@ body {
   color: var(--text-dark);
   background-color: var(--bg-medium-gray);
   transition: var(--transition-standard);
-
 }
 
+/**
+ * Reset CSS de base pour supprimer les marges/paddings par défaut des navigateurs
+ * et assurer un modèle de boîte cohérent.
+ */
 * {
   margin: 0;
   padding: 0;
@@ -167,29 +179,24 @@ body {
   font-family: var(--font-family);
 }
 
+/**
+ * Style de base pour les liens.
+ */
 a {
   text-decoration: none;
   color: inherit;
 }
 
+/**
+ * Style spécifique pour le composant QR code.
+ */
 .qrcode {
   width: 50%;
 }
 
-html, body {
-  height: 100%;
-}
-
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-
-
-
-
-
-/* =================== COMPATIBILITÉ ICÔNES =================== */
+/**
+ * Styles pour les icônes de la bibliothèque Lucide.
+ */
 [data-lucide] {
   width: var(--icon-size);
   height: var(--icon-size);
@@ -198,12 +205,13 @@ body {
   fill: none;
 }
 
-
+/**
+ * Style pour les titres de section principaux.
+ */
 .header {
   text-align: center;
   margin-bottom: 25px;
 }
-
 .header h1 {
   font-size: 2rem;
   color: var(--main-blue);
@@ -212,106 +220,49 @@ body {
   gap: 10px;
 }
 
-// pour les notifications
+/**
+ * Personnalisation des notifications (snackbar) d'Angular Material.
+ */
 mat-snack-bar-container{
-
   color: white;
   font-size: 1rem;
   font-weight: 500;
   border-radius: 4px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+
+  /* Style pour les notifications de type "erreur". */
   &.error .mat-mdc-snackbar-surface {
     background-color: #f44336;
     border-left: 5px solid #d32f2f;
   }
+  /* Style pour les notifications de type "succès". */
   &.valid .mat-mdc-snackbar-surface {
     background-color: #4caf50;
     border-left: 5px solid #388e3c;
   }
+  /* Style pour les notifications de type "avertissement". */
   &.warning .mat-mdc-snackbar-surface {
     background-color: #ff9800;
     border-left: 5px solid #f57c00;
   }
+  /* Style pour les notifications de type "information". */
   &.info .mat-mdc-snackbar-surface {
     background-color: #2196f3;
     border-left: 5px solid #1976d2;
   }
 }
 
-
-
-/* styles.scss */
-
-/* ==========================================================================
-   Documentation des Styles Globaux pour UserLayoutComponent
-   ==========================================================================
-
-   Ce bloc SCSS définit les styles communs pour toutes les pages rendues
-   à l'intérieur du composant UserLayoutComponent. Il utilise le sélecteur
-   `.user-layout-container .main-content` pour s'assurer que ces styles
-   ne s'appliquent qu'à cette partie de l'application et n'affectent pas
-   d'autres sections comme la Landing Page.
-
-   **Structure de Page Principale (Basé sur le template HTML standardisé):**
-   - `.page-header`: Conteneur pour le titre principal de la page (H1).
-     - `.page-title`: Le H1 lui-même.
-   - `.filters-section`: Section optionnelle pour les contrôles de filtre/tri.
-   - `.main-section`: Conteneur principal pour le contenu spécifique de la page (grille, tableau, formulaire...).
-   - `nav.pagination-section`: Conteneur pour le composant de pagination.
-
-   **Éléments d'Interface Communs:**
-   - `.card`: Conteneur générique avec fond blanc, bordures arrondies et ombre légère.
-   - `.loading-indicator`: Style pour afficher un message/spinner de chargement.
-   - `.no-data-message`: Style pour les messages type "Aucun résultat", "Vide".
-   - `.tabs`: Conteneur pour une barre d'onglets de navigation.
-     - `button`: Style des boutons d'onglets individuels (actifs ou non).
-
-   **Boutons:**
-   - `.btn`: Classe de base pour tous les boutons. Définit padding, taille, transition, etc.
-   - `.btn-primary`: Style principal (orange par défaut). Utiliser pour l'action principale.
-   - `.btn-secondary`: Style secondaire (bleu par défaut).
-   - `.btn-danger`: Style pour actions destructrices (rouge par défaut).
-   - `.btn-accept`, `.btn-reject`, `.btn-edit`, etc.: Styles spécifiques pour actions communes (souvent utilisés dans les tableaux).
-   - **États:** Les styles :hover, :active, :disabled, :focus-visible sont gérés.
-
-   **Formulaires:**
-   - `fieldset.card-section`: Structure une section de formulaire comme une carte.
-     - `legend.section-header`: En-tête de la section formulaire (titre H2 + description).
-   - `.card-content`: Conteneur pour les champs à l'intérieur d'une `card-section`.
-   - `.form-row`: Pour aligner des groupes de formulaires côte à côte (utilise Flexbox).
-   - `.form-group`: Conteneur pour un label + input + messages d'erreur/aide.
-     - `.half`, `.third`: Classes pour créer des colonnes dans un `.form-row`.
-   - `label`: Style des étiquettes de champ.
-     - `.required-indicator`: Astérisque rouge pour champs obligatoires.
-   - `.form-control`: Classe commune pour les inputs (text, email, password, date, etc.), textarea, select. Gère les états :focus, .is-invalid, :disabled.
-   - `.form-text` / `.text-muted`: Texte d'aide sous un champ.
-   - `.invalid-feedback`: Message d'erreur pour un champ invalide (caché par défaut).
-   - `.form-actions`: Conteneur pour les boutons principaux du formulaire (Submit, Cancel...).
-
-   **Tableaux:**
-   - `.table-wrapper`: Conteneur nécessaire pour activer le défilement horizontal sur petits écrans.
-   - `table.data-table`: Classe principale pour styliser les tableaux de données.
-     - `thead`: En-tête du tableau (fond bleu, texte blanc).
-     - `tbody tr:hover`: Effet de survol sur les lignes.
-     - `td.actions-cell` / `td:last-child`: Cellule contenant les boutons d'action.
-     - `.btn-actions`: Conteneur DANS la cellule d'action pour aligner les boutons.
-     - `.empty-table-message`: Style pour la ligne affichée quand le tableau est vide.
-   - **Responsive:** Sur mobile (< 768px), les tableaux `.data-table` se transforment en liste de cartes. **Nécessite `[attr.data-label]` sur chaque `<td>` pour afficher les en-têtes.**
-
-   **Utilitaires:**
-   - `.visually-hidden`: (Doit être défini globalement) Masque visuellement mais reste accessible aux lecteurs d'écran.
-   - `.animate-spin`: Applique une animation de rotation continue (pour les spinners).
-
-   **NOTE:** Assurez-vous que les variables CSS (ex: `--main-orange`, `--main-orange-dark`, `--spacing-md`) sont définies globalement (souvent dans `:root {}`).
-
-   ========================================================================== */
-
-
-/* --- Début du scope spécifique au UserLayout --- */
+/**
+ * Début du périmètre de style spécifique à la mise en page utilisateur (`UserLayout`).
+ * Ces styles ne s'appliquent qu'aux éléments contenus dans `.user-layout-container .main-content`.
+ */
 .user-layout-container .main-content {
 
-  /* --- Core Page Layout --- */
+  /* --- Styles de la structure de base de la page --- */
 
+  /**
+   * En-tête de page, contenant le titre et éventuellement des actions.
+   */
   .page-header {
     display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
     margin-bottom: var(--spacing-lg, 24px); padding-bottom: var(--spacing-md, 16px);
@@ -322,26 +273,36 @@ mat-snack-bar-container{
       display: inline-flex; align-items: center; gap: var(--spacing-sm, 8px);
       flex-shrink: 0;
     }
-    lucide-icon { /* Styles si besoin */ }
   }
 
+  /**
+   * Section pour les contrôles de filtrage.
+   */
   .filters-section {
     margin-bottom: var(--spacing-lg, 24px);
-    /* Styles optionnels : background, padding, border-radius */
   }
 
+  /**
+   * Section principale contenant le contenu de la page (tableau, formulaire, etc.).
+   */
   .main-section {
     margin-bottom: var(--spacing-lg, 24px);
   }
 
+  /**
+   * Conteneur pour la pagination.
+   */
   nav.pagination-section {
     margin-top: var(--spacing-lg, 24px); padding-top: var(--spacing-md, 16px);
     border-top: 1px solid var(--border-color, #dee2e6);
     display: flex; justify-content: center;
   }
 
-  /* --- Éléments Communs --- */
+  /* --- Styles des éléments communs --- */
 
+  /**
+   * Classe générique pour les conteneurs de type "carte".
+   */
   .card {
     background-color: var(--main-white, #fff);
     border-radius: var(--border-radius, 8px);
@@ -350,6 +311,9 @@ mat-snack-bar-container{
     overflow: hidden;
   }
 
+  /**
+   * Styles pour les indicateurs de chargement ou les messages d'absence de données.
+   */
   .loading-indicator,
   .no-data-message {
     display: flex; justify-content: center; align-items: center;
@@ -361,6 +325,9 @@ mat-snack-bar-container{
     background-color: var(--bg-light-gray, #f8f9fa);
   }
 
+  /**
+   * Conteneur pour une barre de navigation par onglets.
+   */
   .tabs {
     display: flex; gap: var(--spacing-sm, 8px);
     margin-bottom: var(--spacing-lg, 24px);
@@ -368,41 +335,47 @@ mat-snack-bar-container{
     max-width: 100%;
     overflow-x: auto;
     scrollbar-width: none;
-     &::-webkit-scrollbar { display: none; }
+    &::-webkit-scrollbar { display: none; }
 
-  button {
-    padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
-    background-color: transparent; color: var(--text-medium, #666);
-    border: none; border-bottom: 3px solid transparent; cursor: pointer;
-    font-size: 1rem; font-weight: 500;
-    transition: var(--transition-standard);
-    margin-bottom: -1px; display: inline-flex; align-items: center;
-    gap: var(--spacing-sm, 8px);
+    /**
+     * Style pour un bouton d'onglet individuel.
+     */
+    button {
+      padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+      background-color: transparent; color: var(--text-medium, #666);
+      border: none; border-bottom: 3px solid transparent; cursor: pointer;
+      font-size: 1rem; font-weight: 500;
+      transition: var(--transition-standard);
+      margin-bottom: -1px; display: inline-flex; align-items: center;
+      gap: var(--spacing-sm, 8px);
 
-    &:hover:not(:disabled):not(.active) { color: var(--text-dark, #333); }
-    &.active { color: var(--main-orange, #f26122); border-bottom-color: var(--main-orange, #f26122); font-weight: 600; }
-    &:disabled { color: var(--text-light, #999999); cursor: not-allowed; opacity: 0.7; }
-    .icon, lucide-icon { display: block; }
+      &:hover:not(:disabled):not(.active) { color: var(--text-dark, #333); }
+      &.active { color: var(--main-orange, #f26122); border-bottom-color: var(--main-orange, #f26122); font-weight: 600; }
+      &:disabled { color: var(--text-light, #999999); cursor: not-allowed; opacity: 0.7; }
+      .icon, lucide-icon { display: block; }
+
+    }
   }
-}
 
+  /* --- Styles des boutons --- */
 
-  /* --- Styles Boutons Communs (Votre Règle Générale) --- */
+  /**
+   * Classe de base pour tous les boutons.
+   */
   .btn {
-    padding: 10px 20px; /* Padding par défaut */
+    padding: 10px 20px;
     border-radius: var(--border-radius, 8px);
     font-size: 0.95rem;
     cursor: pointer;
     font-weight: 600;
     border: 1px solid transparent;
     transition: var(--transition-standard);
-    /* Utilisation de Flexbox pour le cas général (texte + icône) */
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: var(--spacing-sm, 8px);
     text-decoration: none;
-    line-height: 1.5; // Hauteur de ligne standard
+    line-height: 1.5;
     white-space: nowrap;
 
     lucide-icon, .icon {
@@ -417,7 +390,7 @@ mat-snack-bar-container{
       }
     }
 
-    &:disabled { opacity: 0.65; cursor: not-allowed; box-shadow: none; transform: none; }
+    &:disabled { opacity: 0.65; cursor: not-allowed; }
     &:focus-visible {
       outline: none;
       box-shadow: 0 0 0 3px rgba(var(--main-orange-rgb, 255, 107, 53), 0.4);
@@ -426,44 +399,48 @@ mat-snack-bar-container{
     &:active:not(:disabled) { transform: translateY(0); }
   }
 
-  // -- Types de Boutons --
+  /**
+   * Bouton d'action principal (orange).
+   */
   .btn-primary {
     background-color: var(--main-orange); color: white; border-color: var(--main-orange);
     box-shadow: 0 2px 4px rgba(var(--main-orange-rgb, 255, 107, 53), 0.2);
     &:hover:not(:disabled) {
-      // Utilise une variable pour la couleur foncée, à définir dans :root
       background-color: var(--main-orange-dark);
       border-color: var(--main-orange-dark);
-      box-shadow: 0 4px 8px rgba(var(--main-orange-rgb, 255, 107, 53), 0.25);
     }
   }
+  /**
+   * Bouton d'action secondaire (bleu).
+   */
   .btn-secondary {
     background-color: var(--main-blue); color: white; border-color: var(--main-blue);
-    box-shadow: 0 2px 4px rgba(var(--main-blue-rgb, 26, 95, 122), 0.15);
     &:hover:not(:disabled) {
-      // Utilise une variable pour la couleur foncée, à définir dans :root
       background-color: var(--main-blue-dark);
       border-color: var(--main-blue-dark);
-      box-shadow: 0 4px 8px rgba(var(--main-blue-rgb, 26, 95, 122), 0.2);
     }
   }
+  /**
+   * Bouton pour les actions dangereuses (rouge).
+   */
   .btn-danger {
     background-color: var(--danger); color: white; border-color: var(--danger);
-    box-shadow: 0 2px 4px rgba(var(--danger-rgb, 220, 53, 69), 0.15);
     &:hover:not(:disabled) {
-      // Utilise une variable pour la couleur foncée, à définir dans :root
       background-color: var(--danger-dark);
       border-color: var(--danger-dark);
-      box-shadow: 0 4px 8px rgba(var(--danger-rgb, 220, 53, 69), 0.2);
     }
   }
-  // Boutons d'action spécifiques
-  .btn-accept { background-color: var(--success); color: white; border-color: var(--success); /* Ajouter var(--success-dark) pour hover */ }
-  .btn-reject, .btn-cancel, .btn-remove { /* Hérite de btn-danger ou utilise var(--danger-dark) */ }
+  /**
+   * Boutons sémantiques supplémentaires.
+   */
+  .btn-accept { background-color: var(--success); color: white; border-color: var(--success); }
   .btn-edit { background: var(--main-orange); border: none; color: white; padding: 8px; &:hover { color: var(--main-orange-dark); } }
 
-  /* --- Styles Formulaires Communs --- */
+  /* --- Styles des formulaires --- */
 
+  /**
+   * Structure une section de formulaire dans une carte.
+   */
   fieldset.card-section {
     border: none; padding: 0; margin: 0; background-color: var(--main-white, #fff);
     border-radius: var(--border-radius, 8px); box-shadow: var(--shadow-sm, 0 2px 4px rgba(0, 0, 0, 0.05));
@@ -471,6 +448,9 @@ mat-snack-bar-container{
     &.danger-zone { border-top-color: var(--danger); legend.section-header { background-color: rgba(var(--danger-rgb, 220, 53, 69), 0.05); h2 { color: var(--danger); } } }
   }
 
+  /**
+   * En-tête d'une section de formulaire.
+   */
   legend.section-header {
     width: 100%; padding: var(--spacing-md, 16px); background-color: rgba(var(--main-blue-rgb, 26, 95, 122), 0.05);
     border-bottom: 1px solid var(--border-color-light, #eee); float: none; margin-bottom: 0;
@@ -478,14 +458,41 @@ mat-snack-bar-container{
     .section-description { color: var(--text-dark, #333); font-size: 0.9rem; margin: 0; }
   }
 
+  /**
+   * Conteneur pour les champs à l'intérieur d'une section.
+   */
   .card-content { padding: var(--spacing-lg, 24px); display: flex; flex-direction: column; gap: var(--spacing-md, 16px); }
+  /**
+   * Permet d'aligner des champs de formulaire sur une même ligne.
+   */
   .form-row { display: flex; flex-wrap: wrap; gap: var(--spacing-md, 16px); }
-  .form-group { display: flex; flex-direction: column; flex-grow: 1; flex-shrink: 1; min-width: 0;
-    &.half { flex-basis: calc(50% - (#{var(--spacing-md, 16px)} / 2)); }
-    &.third { flex-basis: calc(33.333% - (#{var(--spacing-md, 16px)} * 2 / 3)); } }
+  /**
+   * Conteneur pour un champ de formulaire unique (label, input, erreur).
+   */
+  .form-group {
+    flex: 1 1 calc(50% - (var(--spacing-lg) / 2));
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+
+    /* Règle pour qu'un .form-group prenne 100% de la largeur s'il est un enfant direct de .form-section et non dans un .form-row */
+    .form-section > &:not(:within(.form-row)) {
+      flex-basis: 100%;
+    }
+  }
+  /**
+   * Style des étiquettes de champ.
+   */
   label { margin-bottom: var(--spacing-xs, 4px); font-weight: 500; color: var(--text-dark, #333); }
+  /**
+   * Style pour l'indicateur de champ obligatoire.
+   */
   .required-indicator { color: var(--danger, red); margin-left: 2px; }
 
+  /**
+   * Style commun à tous les champs de saisie (input, textarea, select).
+   */
   .form-control,
   input[type="text"], input[type="email"], input[type="tel"], input[type="password"],
   input[type="date"], input[type="time"], textarea, select {
@@ -497,180 +504,178 @@ mat-snack-bar-container{
     &.is-invalid { border-color: var(--danger); &:focus { box-shadow: 0 0 0 3px rgba(var(--danger-rgb, 220, 53, 69), 0.25); } }
     &:disabled { background-color: var(--bg-medium-gray, #e9ecef); cursor: not-allowed; }
   }
-  textarea { resize: vertical; } select { appearance: none; }
+  textarea { resize: vertical; }
 
+  /**
+   * Style pour les messages d'aide ou d'erreur sous les champs.
+   */
   .form-text, .text-muted { font-size: 0.85rem; margin-top: var(--spacing-xs, 4px); color: var(--text-medium, #6c757d); }
   .invalid-feedback { display: none; color: var(--danger); font-size: 0.85rem; margin-top: var(--spacing-xs, 4px); }
   input.is-invalid ~ .invalid-feedback, select.is-invalid ~ .invalid-feedback, textarea.is-invalid ~ .invalid-feedback { display: block; }
 
+  /**
+   * Conteneur pour les boutons d'action d'un formulaire.
+   */
   .form-actions { margin-top: var(--spacing-md); padding-top: var(--spacing-lg); border-top: 1px solid var(--border-color-light, #eee);
     display: flex; justify-content: flex-end; gap: var(--spacing-md, 16px); }
 
+  /* --- Styles des tableaux --- */
 
-  /* --- Styles Tableaux Communs --- */
-
+  /**
+   * Conteneur nécessaire pour permettre le défilement horizontal des tableaux sur mobile.
+   */
   .table-wrapper {
-    overflow-x: auto; /* Permet le défilement horizontal sur petits écrans */
+    overflow-x: auto;
     width: 100%;
   }
 
+  /**
+   * Style de base pour les tableaux de données.
+   */
   table.data-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.95rem; /* Taille de police de base pour le contenu du tableau */
-    background-color: var(--main-white, #ffffff); /* Fond blanc par défaut */
+    font-size: 0.95rem;
+    background-color: var(--main-white, #ffffff);
 
     thead {
-      background-color: var(--main-blue); /* Fond bleu distinctif pour l'en-tête */
-      color: white; /* Texte blanc sur fond bleu */
+      background-color: var(--main-blue);
+      color: white;
 
       th {
-        font-weight: 600; /* Texte en gras pour les en-têtes */
-        white-space: nowrap; /* Empêche le texte des en-têtes de passer à la ligne */
+        font-weight: 600;
+        white-space: nowrap;
       }
     }
 
     th, td {
-      padding: var(--spacing-md, 16px); /* Padding standard pour les cellules */
-      text-align: left; /* Alignement par défaut du texte */
-      border-bottom: 1px solid var(--border-color, #dee2e6); /* Ligne de séparation entre les lignes */
-      vertical-align: middle; /* Alignement vertical au centre pour les cellules */
+      padding: var(--spacing-md, 16px);
+      text-align: left;
+      border-bottom: 1px solid var(--border-color, #dee2e6);
+      vertical-align: middle;
     }
 
     tbody tr {
-      transition: background-color 0.3s ease; /* Transition douce au survol */
+      transition: background-color 0.3s ease;
 
-      /* Effet de survol sur les lignes, sauf message vide */
       &:hover:not(.empty-table-message) {
         background-color: var(--bg-light-gray, #f8f9fa);
       }
-
-      /* Supprime la bordure inférieure de la dernière ligne */
       &:last-child th,
       &:last-child td {
         border-bottom: none;
       }
     }
 
-    /* Style spécifique pour la cellule contenant les actions (souvent la dernière) */
+    /**
+     * Style pour la cellule contenant les boutons d'action.
+     */
     td:last-child,
     td.actions-cell {
-      text-align: center;  /* Centre le conteneur .btn-actions */
-      white-space: nowrap; /* Empêche les boutons de passer à la ligne */
-      width: 1%;           /* Réduit la largeur pour ne pas trop pousser les autres colonnes */
+      text-align: center;
+      white-space: nowrap;
+      width: 1%;
     }
 
-    /* Conteneur pour les boutons d'action à l'intérieur de la cellule */
+    /**
+     * Conteneur pour aligner les boutons d'action dans une cellule.
+     */
     .btn-actions {
-      display: inline-flex;      /* Aligne les boutons horizontalement */
-      justify-content: center;   /* Centre les boutons (utile si td > contenu) */
-      gap: var(--spacing-xs, 4px); /* Espace entre les boutons */
+      display: inline-flex;
+      justify-content: center;
+      gap: var(--spacing-xs, 4px);
 
-      /* Style spécifique pour les boutons DANS le conteneur .btn-actions */
       .btn {
-        font-size: 0.85rem;       /* Taille de police réduite pour les boutons d'action */
-        padding: 5px;             /* Padding réduit pour des boutons plus compacts (ajusté à 5px) */
-
-        /* Style spécifique pour les icônes DANS ces boutons d'action */
+        font-size: 0.85rem;
+        padding: 5px;
         lucide-icon, .icon {
-          width: 20px;            /* Largeur explicite de l'icône (ajusté à 20px) */
-          height: 20px;           /* Hauteur explicite de l'icône (ajusté à 20px) */
-          flex-shrink: 0;         /* Empêche l'icône de rétrécir */
-          display: inline-block;  /* Assure le respect de width/height */
-          vertical-align: middle; /* Aide à l'alignement vertical */
-
-
-          /* Assure que le SVG interne remplit correctement son conteneur */
-          svg {
-            display: block;       /* Évite les espaces blancs potentiels sous le SVG */
-            width: 100%;          /* Le SVG prend 100% de la largeur du conteneur (20px) */
-            height: 100%;         /* Le SVG prend 100% de la hauteur du conteneur (20px) */
-          }
+          width: 20px;
+          height: 20px;
         }
       }
     }
 
-    /* Style pour la ligne indiquant que le tableau est vide */
+    /**
+     * Style pour la ligne affichée lorsque le tableau est vide.
+     */
     .empty-table-message td {
       text-align: center;
       font-style: italic;
       color: var(--text-light, #999);
-      padding: var(--spacing-lg) 0; /* Padding vertical plus important */
-      border: none; /* Supprime les bordures de cellule */
-      background-color: transparent !important; /* Assure un fond transparent, écrase le :hover */
-    }
-  } /* Fin de table.data-table */
-
-
-  // @media (prefers-reduced-motion: reduce) { .animate-spin { animation: none; } } // Important pour l'accessibilité
-
-  /* --- Responsive --- */
-
-  @media screen and (max-width: 992px) { /* Tablettes */ }
-
-  @media screen and (max-width: 768px) { // Mobiles
-    .page-header .page-title { font-size: 1.5rem; }
-    .form-row { flex-direction: column; }
-    .form-group.half, .form-group.third { flex-basis: auto; }
-    .form-actions, .confirmation-actions { flex-direction: column; align-items: stretch; gap: var(--spacing-sm); }
-
-    table.data-table {
-      thead { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; white-space: nowrap; }
-      tr:not(.empty-table-message) { display: block; margin-bottom: var(--spacing-md, 16px); border: 1px solid var(--border-color, #dee2e6); border-radius: var(--border-radius); padding: var(--spacing-sm, 8px); background-color: var(--main-white); box-shadow: 0 1px 2px rgba(0,0,0,0.05); &:hover { background-color: var(--main-white); } }
-      td { display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-sm, 8px) 0; border-bottom: 1px dashed var(--border-color-light, #e0e0e0); text-align: right; white-space: normal;
-        &::before { content: attr(data-label); font-weight: 600; text-align: left; margin-right: var(--spacing-md, 16px); color: var(--main-blue); white-space: nowrap; flex-shrink: 0; }
-        &:last-child, &.actions-cell {
-          display: block;                // *** Retour à display: block pour le TD ***
-          width: 100%;                 // *** S'assurer qu'il prend toute la largeur ***
-          border-bottom: none;
-          padding: var(--spacing-md) 0 var(--spacing-sm) 0; // Padding haut/bas uniquement
-          margin-top: var(--spacing-sm);
-          &::before { display: none; }
-
-          // --- CIBLER L'ENFANT .btn-actions ---
-          > .btn-actions { // Cible le div .btn-actions DIRECTEMENT enfant du td
-            display: flex;            // Utilise Flexbox sur le conteneur des boutons
-            justify-content: center;  // Centre les boutons horizontalement DANS ce div
-            width: 100%;            // S'assurer que le conteneur prend la largeur
-            gap: var(--spacing-sm);   // Espacement entre les boutons géré globalement mais peut être ajusté ici si besoin
-          }
-        }        &:not(:last-child):empty { display: none; }
-      }
-      .empty-table-message { display: block; padding: var(--spacing-lg) 0; border: none; background: none !important; box-shadow: none; td { display: block; border: none; padding: 0; &::before { display: none; } } }
+      padding: var(--spacing-lg) 0;
+      border: none;
+      background-color: transparent !important;
     }
   }
 
-  @media screen and (max-width: 576px) { /* Petits Mobiles */ }
 
+  /* --- Section Responsive --- */
 
-} /* Fin du scope .user-layout-container .main-content */
+  /**
+   * Styles pour les écrans de type mobile (largeur maximale de 768px).
+   */
+  @media screen and (max-width: 768px) {
+    .page-header .page-title { font-size: 1.5rem; }
+    .form-row { flex-direction: column; }
+    .form-actions { flex-direction: column; align-items: stretch; }
+
+    /**
+     * Transformation du tableau en une liste de cartes sur mobile.
+     */
+    table.data-table {
+      /* Masque l'en-tête du tableau de manière accessible. */
+      thead { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; white-space: nowrap; }
+      /* Chaque ligne devient un bloc distinct. */
+      tr:not(.empty-table-message) { display: block; margin-bottom: var(--spacing-md, 16px); border: 1px solid var(--border-color, #dee2e6); border-radius: var(--border-radius); padding: var(--spacing-sm, 8px); background-color: var(--main-white); }
+      /* Chaque cellule s'affiche en ligne avec son étiquette. */
+      td { display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-sm, 8px) 0; border-bottom: 1px dashed var(--border-color-light, #e0e0e0); text-align: right; white-space: normal;
+        /* Affiche l'étiquette de la colonne (provenant de l'attribut data-label). */
+        &::before { content: attr(data-label); font-weight: 600; text-align: left; margin-right: var(--spacing-md, 16px); color: var(--main-blue); white-space: nowrap; flex-shrink: 0; }
+
+        /**
+         * Style spécifique pour la cellule d'actions sur mobile.
+         */
+        &:last-child, &.actions-cell {
+          display: block;
+          width: 100%;
+          border-bottom: none;
+          padding: var(--spacing-md) 0 var(--spacing-sm) 0;
+          margin-top: var(--spacing-sm);
+          &::before { display: none; }
+
+          > .btn-actions {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            gap: var(--spacing-sm);
+          }
+        }
+      }
+    }
+  }
+
+} /* --- Fin du périmètre de style .user-layout-container .main-content --- */
 
 /* ==========================================================================
-   Styles Globaux pour les Modales
-   ==========================================================================
+   Styles Globaux pour les Fenêtres Modales
+   ========================================================================== */
 
-   Styles de base pour la structure des fenêtres modales.
-   Utiliser ces classes dans les templates HTML des composants modaux.
-   Les styles internes (formulaires, boutons) doivent utiliser les classes
-   globales existantes (.form-group, .form-control, .btn, .btn-primary, etc.).
-*/
-
-/* --- Overlay de fond --- */
+/**
+ * Superposition de fond pour les modales.
+ */
 .modal-overlay {
   position: fixed;
-  inset: 0; // Raccourci pour top/right/bottom/left = 0
-  background-color: rgba(var(--neutral-blue-rgb, 44, 62, 80), 0.6); // Fond semi-transparent bleu neutre
+  inset: 0;
+  background-color: rgba(var(--neutral-blue-rgb, 44, 62, 80), 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1050; // Assure d'être au-dessus des autres éléments
-  padding: var(--spacing-md); // Petit padding pour ne pas coller aux bords écran
-  // Pour l'animation d'apparition/disparition (optionnel)
+  z-index: 1050;
+  padding: var(--spacing-md);
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0s linear 0.3s;
 
-  // État visible (ajouter/retirer cette classe via Angular [class.is-visible])
   &.is-visible {
     opacity: 1;
     visibility: visible;
@@ -678,154 +683,122 @@ mat-snack-bar-container{
   }
 }
 
-// Variante pour overlay avec effet blur (utiliser <div class="modal-overlay modal-overlay-blur">)
-.modal-overlay-blur {
-  background-color: rgba(var(--main-white-rgb, 255, 255, 255), 0.35); // Fond blanc semi-transparent
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
-}
-
-
-/* --- Conteneur Principal de la Modale --- */
+/**
+ * Conteneur principal du contenu de la modale.
+ */
 .modal-content {
   background-color: var(--main-white);
   border-radius: var(--border-radius);
-  width: 100%; // Prend la largeur disponible jusqu'au max-width
-  max-width: 700px; // Largeur max par défaut (ajustable avec modificateurs)
-  max-height: 90vh; // Hauteur max
+  width: 100%;
+  max-width: 700px;
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden; // Laisse le .modal-body gérer le scroll interne
+  overflow: hidden;
   box-shadow: 0 6px 20px rgba(var(--main-black-rgb, 0, 0, 0), 0.15);
-  // Pour l'animation d'apparition/disparition (optionnel)
   transform: scale(0.95);
   transition: transform 0.3s ease;
 
-  // Quand l'overlay est visible, la modale scale normalement
   .modal-overlay.is-visible & {
     transform: scale(1);
   }
 }
 
-// Modificateurs de taille pour .modal-content
+/* Modificateurs pour la taille de la modale. */
 .modal-content-lg { max-width: 1000px; }
 .modal-content-sm { max-width: 500px; }
 
 
-/* --- Entête de la Modale --- */
+/**
+ * En-tête de la modale.
+ */
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: var(--spacing-md) var(--spacing-lg);
   border-bottom: 1px solid var(--border-color);
-  flex-shrink: 0; // Empêche de rétrécir
+  flex-shrink: 0;
 
   h2 {
     margin: 0;
     font-size: 1.2rem;
     font-weight: 600;
-    color: var(--main-blue); // Titre bleu par défaut
-    display: inline-flex; // Pour aligner avec icône si ajoutée
+    color: var(--main-blue);
+    display: inline-flex;
     align-items: center;
     gap: var(--spacing-sm);
   }
 }
 
-// Variante pour header avec fond bleu
-.modal-header-primary {
-  background-color: var(--main-blue);
-  color: var(--main-white);
-  h2 { color: var(--main-white); }
-}
-
-
-/* --- Bouton de Fermeture Standard (dans .modal-header) --- */
-// Utiliser <button class="modal-close-button">...</button>
+/**
+ * Bouton de fermeture standard pour les modales.
+ */
 .modal-close-button {
   background: none;
   border: none;
-  color: inherit; // Hérite couleur du header (blanc ou gris)
-  font-size: 1.5rem; // Ajuste taille si besoin
+  color: inherit;
   line-height: 1;
-  padding: var(--spacing-xs); // Petite zone cliquable
-  margin: calc(-1 * var(--spacing-xs)); // Compense padding pour alignement visuel
+  padding: var(--spacing-xs);
   cursor: pointer;
   opacity: 0.7;
   transition: opacity 0.2s ease, transform 0.2s ease;
-  display: inline-flex; // Pour centrer l'icône
+  display: inline-flex;
 
-  lucide-icon { // Assumer une icône lucide, adapter si autre
+  lucide-icon {
     width: 20px; height: 20px;
   }
 
   &:hover {
     opacity: 1;
-    // transform: rotate(90deg); // Optionnel
-  }
-  &:focus-visible { // Style focus
-    opacity: 1;
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
-  }
-
-  // Couleur spécifique si le header est bleu
-  .modal-header-primary & {
-    color: var(--main-white);
-    &:focus-visible { outline-color: var(--main-white); }
-  }
-  // Couleur spécifique si header standard (blanc/gris)
-  .modal-header:not(.modal-header-primary) & {
-    color: var(--text-medium);
-    &:hover { color: var(--text-dark); }
-    &:focus-visible { outline-color: var(--main-blue); }
   }
 }
 
-
-/* --- Corps de la Modale --- */
+/**
+ * Corps de la modale, zone de contenu principal.
+ */
 .modal-body {
   padding: var(--spacing-lg);
-  overflow-y: auto; // *** Active le scroll UNIQUEMENT sur le corps ***
-  flex-grow: 1; // Prend l'espace vertical restant
-  background-color: var(--main-white); // Fond par défaut
-
+  overflow-y: auto;
+  flex-grow: 1;
+  background-color: var(--main-white);
 }
 
-
-/* --- Pied de page de la Modale --- */
+/**
+ * Pied de page de la modale, généralement pour les boutons d'action.
+ */
 .modal-footer {
   display: flex;
-  justify-content: flex-end; // Boutons alignés à droite par défaut
+  justify-content: flex-end;
   align-items: center;
   gap: var(--spacing-md);
   padding: var(--spacing-md) var(--spacing-lg);
   border-top: 1px solid var(--border-color);
-  background-color: var(--bg-light-gray); // Fond légèrement gris
-  flex-shrink: 0; // Empêche de rétrécir
-
+  background-color: var(--bg-light-gray);
+  flex-shrink: 0;
 }
 
-
-/* --- Responsive pour les Modales --- */
+/**
+ * Styles responsives pour les modales sur mobile.
+ */
 @media screen and (max-width: 768px) {
   .modal-content {
-    max-width: calc(100% - (var(--spacing-md) * 2)); // Prend presque toute la largeur
-    max-height: calc(100% - (var(--spacing-md) * 2)); // Prend presque toute la hauteur
-    margin: var(--spacing-md); // Centre avec marge
-    border-radius: var(--border-radius-sm, 4px); // Moins arrondi sur mobile
+    max-width: calc(100% - (var(--spacing-md) * 2));
+    max-height: calc(100% - (var(--spacing-md) * 2));
   }
+
+  /* Annule les tailles spécifiques sur mobile. */
   .modal-content-lg,
   .modal-content-sm {
-    max-width: calc(100% - (var(--spacing-md) * 2)); // Annule les tailles spécifiques
+    max-width: calc(100% - (var(--spacing-md) * 2));
   }
 
   .modal-header { padding: var(--spacing-sm) var(--spacing-md); }
   .modal-body { padding: var(--spacing-md); }
-  .modal-footer { padding: var(--spacing-sm) var(--spacing-md); }
-
-  // Optionnel: Empiler les boutons du footer sur mobile
-   .modal-footer { flex-direction: column-reverse; align-items: stretch; gap: var(--spacing-sm); }
+  .modal-footer {
+    padding: var(--spacing-sm) var(--spacing-md);
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: var(--spacing-sm);
+  }
 }
-
-/* --- FIN Styles Globaux Modales --- */

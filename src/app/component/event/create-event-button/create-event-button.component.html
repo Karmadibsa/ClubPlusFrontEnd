@@ -1,10 +1,7 @@
-<!-- Le bouton lui-même -->
 <button class="btn btn-primary" (click)="openCreateModal()">
   <lucide-icon class="icon" name="circle-plus"></lucide-icon>
-  <!-- Optionnel: Ajouter un texte comme "Créer un événement" -->
 </button>
 
-<!-- La modale d'édition/création déclarée DANS le template du bouton -->
 @if (isModalVisible) {
   <app-edit-event
     [isVisible]="isModalVisible"

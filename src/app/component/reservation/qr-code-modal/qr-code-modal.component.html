@@ -1,29 +1,43 @@
 <!-- qr-code-modal.component.html -->
+
+<!--
+  Contrôle l'affichage de l'ensemble de la modale.
+-->
 @if (isOpen) {
-  <!-- Utilise les classes globales .modal-overlay et [class.is-visible] -->
+  <!--
+    Définit la superposition (overlay) qui couvre l'arrière-plan de la page.
+  -->
   <div class="modal-overlay"
        [class.is-visible]="isOpen"
        (click)="onClose()">
 
-    <!-- Utilise les classes globales .modal-content et .modal-content-sm -->
+    <!--
+      Conteneur principal du contenu de la modale.
+    -->
     <div class="modal-content modal-content-sm" (click)="stopPropagation($event)">
 
-      <!-- Utilise .modal-header global -->
+      <!--
+        Structure l'en-tête de la modale avec un titre et un bouton de fermeture.
+      -->
       <header class="modal-header">
         <h2>
           <lucide-icon name="ticket" aria-hidden="true"></lucide-icon>
           <span>QR Code de votre billet</span>
         </h2>
-        <!-- Utilise .modal-close-button global -->
         <button class="modal-close-button" type="button" (click)="onClose()" title="Fermer">
           <lucide-icon name="x"></lucide-icon>
         </button>
       </header>
 
-      <!-- Utilise .modal-body global -->
+      <!--
+        Corps de la modale où le contenu principal est affiché.
+      -->
       <main class="modal-body">
-        <!-- Conteneur spécifique -->
+        <!-- Conteneur dédié au style spécifique du QR code. -->
         <div class="zoomed-qr-container">
+          <!--
+            Intégration du composant externe de génération de QR code.
+          -->
           <qrcode
             [qrdata]="qrData"
             [width]="256"
@@ -31,11 +45,13 @@
           </qrcode>
         </div>
 
-        <!-- Informations (utilise @if et ?) -->
+        <!--
+          Affiche les détails du billet de manière conditionnelle.
+        -->
         @if (ticketInfo) {
           <div class="ticket-info">
             <p><strong>{{ ticketInfo.membre?.prenom }} {{ ticketInfo.membre?.nom }}</strong></p>
-            <p>{{ ticketInfo.event?.nom }}</p> <!-- Changé de title à nom pour correspondre à Reservation -->
+            <p>{{ ticketInfo.event?.nom }}</p>
             <p>{{ ticketInfo.event?.startTime | date:'dd/MM/yyyy HH:mm' }}</p>
             <p>{{ ticketInfo.event?.location }}</p>
             <p>{{ ticketInfo.categorie?.nom }}</p>
@@ -43,7 +59,9 @@
         }
       </main>
 
-      <!-- Utilise .modal-footer global -->
+      <!--
+        Définit le pied de page de la modale.
+      -->
       <footer class="modal-footer footer-notice">
         <p>Présentez ce QR code à l'entrée de l'événement.</p>
       </footer>

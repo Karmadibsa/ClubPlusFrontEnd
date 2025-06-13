@@ -1,32 +1,39 @@
-<!-- app-reservation-row.component.html -->
 
+<!--
+  Affiche les informations de base de la réservation dans des cellules de tableau.
+-->
 <td [attr.data-label]="'Date'">{{ reservation.event.startTime | date:'dd/MM/yyyy' }}</td>
 <td [attr.data-label]="'Heure'">{{ reservation.event.startTime | date:'HH:mm' }}</td>
 <td [attr.data-label]="'Nom de l\'événement'">{{ reservation.event.nom }}</td>
 <td [attr.data-label]="'Catégorie'">{{ reservation.categorie.nom }}</td>
 
-<!-- Cellule Actions -->
+<!--
+  Cellule contenant les boutons d'action pour une réservation spécifique.
+  Chaque bouton déclenche une méthode différente, illustrant deux patrons de communication :
+-->
 <td class="actions-cell" [attr.data-label]="'Actions'">
   <div class="btn-actions">
-    <!-- Bouton QR Code : appelle la méthode locale -->
+
     <button type="button" class="btn btn-primary btn-sm" (click)="openQrCodeModalHandler()" title="Afficher le QR Code">
       <lucide-icon name="qr-code"></lucide-icon>
       <span class="visually-hidden">Afficher QR Code</span>
     </button>
-    <!-- Bouton PDF : émet au parent -->
+
     <button type="button" class="btn btn-secondary btn-sm" (click)="onGeneratePDF()" title="Télécharger le PDF">
       <lucide-icon name="download"></lucide-icon>
       <span class="visually-hidden">Télécharger PDF</span>
     </button>
-    <!-- Bouton Annuler : émet au parent -->
+
     <button type="button" class="btn btn-danger btn-sm" (click)="onDelete()" title="Annuler la réservation">
       <lucide-icon name="trash"></lucide-icon>
       <span class="visually-hidden">Annuler</span>
     </button>
-  </div> <!-- Fin .btn-actions -->
+  </div>
 </td>
 
-<!-- Modale QR Code gérée par cette ligne -->
+<!--
+  Intégration du composant de la modale pour le QR code.
+-->
 @if (isQrModalOpen) {
   <app-qr-code-modal
     [isOpen]="isQrModalOpen"
@@ -35,4 +42,3 @@
     (close)="closeQrModalHandler()">
   </app-qr-code-modal>
 }
-

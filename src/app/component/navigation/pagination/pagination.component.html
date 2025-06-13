@@ -1,10 +1,16 @@
+<!--
+  Ce template affiche les contrôles de navigation pour une liste paginée.
+  Il n'est rendu que si le nombre total de pages est supérieur à un.
+-->
 @if (totalPages > 1) {
   <div class="pagination-controls">
+
+    <!-- Bouton pour naviguer vers la page précédente, désactivé sur la première page. -->
     <button class="btn btn-secondary" (click)="goToPrevious()" [disabled]="currentPage === 1">
       Précédent
     </button>
 
-    <!-- Affichage simplifié des pages -->
+    <!-- Affichage des numéros de page. -->
     @for (page of pages; track page) {
       <button
         class="btn page-number"
@@ -14,12 +20,13 @@
         {{ page }}
       </button>
     }
-    <!-- Amélioration possible : afficher "..." si trop de pages -->
 
+    <!-- Bouton pour naviguer vers la page suivante, désactivé sur la dernière page. -->
     <button class="btn btn-secondary" (click)="goToNext()" [disabled]="currentPage === totalPages">
       Suivant
     </button>
 
+    <!-- Informations sur la pagination actuelle. -->
     <span class="pagination-info">
       Page {{ currentPage }} sur {{ totalPages }} ({{ totalItems }} éléments)
     </span>

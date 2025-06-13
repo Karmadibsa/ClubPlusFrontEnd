@@ -1,22 +1,27 @@
+<!--
+  Ce template définit la barre de navigation principale (navbar) de l'application.
+  Elle est responsive et son contenu s'adapte en fonction de l'état de connexion de l'utilisateur.
+-->
 <nav class="navbar">
   <div class="navbar-container">
-    <!-- Logo à gauche -->
+
+    <!-- Logo à gauche, agissant comme un lien vers la page d'accueil. -->
     <div class="navbar-logo">
       <a routerLink="/">
         <img src="LogoClubPlussansfond.png" alt="Logo Club Plus"/>
       </a>
     </div>
 
-    <!-- Bouton Burger (visible sur mobile) -->
+    <!-- Bouton "Burger" pour le menu mobile. -->
     <button type="button" class="navbar-burger" (click)="toggleMenu()"
             [attr.aria-expanded]="isMenuOpen" aria-controls="navbarMenuContent">
-      <!-- Icône burger (peut être faite avec des spans, SVG, ou une font icon) -->
       <lucide-icon name="menu"></lucide-icon>
     </button>
 
-    <!-- Contenu du menu (incluant liens et boutons, caché sur mobile au début) -->
+    <!-- Conteneur du menu, qui devient visible sur mobile lors du clic sur le burger. -->
     <div class="navbar-menu-content" id="navbarMenuContent" [class.is-active]="isMenuOpen">
-      <!-- Liens de navigation au centre -->
+
+      <!-- Liens de navigation principaux. -->
       <ul class="navbar-menu">
         <li><a routerLink="/">Accueil</a></li>
         <li><a routerLink="/about">À propos</a></li>
@@ -24,13 +29,15 @@
         <li><a routerLink="/cgu">CGU</a></li>
       </ul>
 
-      <!-- Boutons d'action à droite -->
+      <!-- Section des boutons d'action, qui change selon l'état de connexion. -->
       <div class="navbar-buttons">
+        <!-- Cas: l'utilisateur n'est pas connecté. -->
         @if (auth.connecte === false) {
           <a routerLink="/inscription-club" class="btn btn-primary">Inscrire son club</a>
           <a routerLink="/inscription-membres" class="btn btn-secondary">Inscription</a>
           <a routerLink="/connexion" class="btn btn-outline">Connexion</a>
         }
+        <!-- Cas: l'utilisateur est connecté (quel que soit son rôle). -->
         @if (auth.role == "ROLE_ADMIN" || auth.role == "ROLE_RESERVATION" || auth.role == "ROLE_MEMBRE") {
           <a (click)="MoveToEspace()" routerLink="/connexion" class="btn btn-primary">Acceder a mon espace</a>
         }

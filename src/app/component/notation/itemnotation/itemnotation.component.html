@@ -9,8 +9,7 @@
         (click)="updateRating(itemIndex)"
         [attr.aria-label]="'Note ' + (itemIndex + 1) + ' sur 5'"
       >
-    ★ <!-- Vous pouvez utiliser une icône lucide ici si vous préférez -->
-        <!-- <lucide-icon name="star" [class.filled]="quantity() > index"></lucide-icon> -->
+         <lucide-icon name="star" [class.filled]="quantity() > itemIndex"></lucide-icon>
     </span>
     }
   </div>

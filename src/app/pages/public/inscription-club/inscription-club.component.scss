@@ -1,50 +1,42 @@
 /*------------------------------------*\
   #PAGE: INSCRIPTION CLUB
-  Styles spécifiques pour le formulaire d'inscription d'un nouveau club.
 \*------------------------------------*/
-
-// Importation des variables globales (si dans un fichier séparé, sinon définies ici ou dans :root)
-// @import 'path/to/variables';
 
 /*------------------------------------*\
   #CONTENEUR PRINCIPAL DU FORMULAIRE
 \*------------------------------------*/
 .form-container {
-  // Style de base du conteneur principal.
-  background: var(--main-white); // Utilisation d'un fond blanc pour plus de clarté.
-  padding: var(--spacing-lg) var(--spacing-xl); // Marges internes généreuses.
-  border-radius: var(--border-radius); // Coins arrondis standards.
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); // Ombre portée pour la profondeur.
-  width: 100%; // Prend toute la largeur disponible par défaut.
-  max-width: 900px; // Largeur maximale pour la lisibilité sur grands écrans.
-  margin: var(--spacing-xl) auto; // Centrage horizontal avec marge verticale.
-  box-sizing: border-box; // Assure que padding et border sont inclus dans la largeur/hauteur.
+  background: var(--main-white);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 900px;
+  margin: var(--spacing-xl) auto;
+  box-sizing: border-box;
 }
 
 /*------------------------------------*\
   #LIEN DE RETOUR
 \*------------------------------------*/
 .return-link {
-  // Style du lien permettant de revenir à la page précédente.
-  display: inline-flex; // Alignement de l'icône et du texte sur la même ligne.
-  align-items: center; // Centrage vertical des éléments.
-  gap: var(--spacing-xs); // Espace entre l'icône et le texte.
-  color: var(--main-blue); // Couleur bleue principale.
-  text-decoration: none; // Pas de soulignement.
-  font-size: 0.9rem; // Taille de police légèrement réduite.
-  font-weight: 600; // Texte en semi-gras.
-  margin-bottom: var(--spacing-lg); // Marge inférieure avant le titre principal.
-  transition: color var(--transition-standard); // Transition douce de la couleur.
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--main-blue);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-lg);
+  transition: color var(--transition-standard);
 
-  // Style de l'icône (compatible avec Lucide Icons ou une autre bibliothèque)
   [data-lucide="arrow-left"] {
-    width: 16px; // Taille de l'icône.
-    height: 16px; // Taille de l'icône.
-    stroke-width: 2.5px; // Épaisseur du trait de l'icône.
+    width: 16px;
+    height: 16px;
+    stroke-width: 2.5px;
   }
 
   &:hover {
-    // Changement de couleur au survol.
     color: var(--main-orange);
   }
 }
@@ -53,104 +45,92 @@
   #TITRES
 \*------------------------------------*/
 h1 {
-  // Style du titre principal de la page.
   text-align: center;
-  color: var(--main-orange); // Couleur orange principale.
-  font-size: 2rem; // Taille de police augmentée.
-  margin-bottom: var(--spacing-xl); // Marge inférieure importante.
+  color: var(--main-orange);
+  font-size: 2rem;
+  margin-bottom: var(--spacing-xl);
 }
 
 /*------------------------------------*\
   #FORMULAIRE ET SES COMPOSANTS
 \*------------------------------------*/
 form {
-  // Structure générale du formulaire.
   display: flex;
-  flex-direction: column; // Empilement vertical des sections et groupes.
-  gap: var(--spacing-lg); // Espace vertical entre les sections/groupes principaux.
+  flex-direction: column;
+  gap: var(--spacing-lg);
 }
 
 .form-section {
-  // Style pour les groupes de champs sémantiques (fieldset).
-  border: 1px solid var(--border-color); // Bordure légère pour délimiter la section.
-  border-radius: var(--border-radius); // Coins arrondis cohérents.
-  padding: var(--spacing-lg); // Marge interne de la section.
-  margin: 0; // Réinitialise la marge par défaut du fieldset.
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md); // Espace vertical entre les éléments à l'intérieur de la section.
+  gap: var(--spacing-md);
 
   &__title {
-    // Style pour le titre de la section (legend).
     font-size: 1.3rem;
-    color: var(--main-blue); // Couleur bleue pour les titres de section.
+    color: var(--main-blue);
     font-weight: 600;
-    padding: 0 var(--spacing-sm); // Léger padding horizontal pour dégager le texte de la bordure.
-    margin-left: var(--spacing-sm); // Aligne avec le padding interne.
-    width: auto; // Empêche le titre de prendre toute la largeur.
+    padding: 0 var(--spacing-sm);
+    margin-left: var(--spacing-sm);
+    width: auto;
   }
 }
 
 .form-row {
-  // Conteneur pour afficher des groupes de champs côte à côte.
   display: flex;
-  gap: var(--spacing-lg); // Espace horizontal entre les groupes dans la rangée.
-  flex-wrap: wrap; // Permet aux groupes de passer à la ligne sur petits écrans.
+  gap: var(--spacing-lg);
+  flex-wrap: wrap;
 }
 
 .form-group {
-  // Conteneur pour un label, un champ de saisie et son message d'erreur.
-  flex: 1 1 calc(50% - (var(--spacing-lg) / 2)); // Sur desktop, prend ~50% dans un .form-row.
-  min-width: 250px; // Largeur minimale pour éviter une compression excessive.
+  flex: 1 1 calc(50% - (var(--spacing-lg) / 2));
+  min-width: 250px;
   display: flex;
-  flex-direction: column; // Empile label, input, erreur.
-  gap: var(--spacing-xs); // Espace léger entre label, input et erreur.
+  flex-direction: column;
+  gap: var(--spacing-xs);
 
-  // Cas où un groupe n'est pas dans une row (prend toute la largeur).
-  .form-section > &:not(:within(.form-row)) {
+  .form-section > .form-group {
     flex-basis: 100%;
   }
 }
 
 .form-label {
-  // Style des étiquettes de champ.
   color: var(--text-dark);
   font-size: 0.9rem;
   font-weight: 600;
   font-family: var(--font-family);
 
-  strong { // Style spécifique pour le texte en gras dans les labels.
+  strong {
     font-weight: 700;
   }
 }
 
-.form-input, // Classe générique pour les inputs, selects, textareas
-select, // Si ajoutés plus tard
-textarea { // Si ajoutés plus tard
-  // Styles communs pour les champs de saisie.
-  padding: 10px 12px; // Marge interne confortable.
-  border: 1px solid var(--border-color); // Bordure standard.
-  border-radius: var(--border-radius); // Coins arrondis cohérents.
+.form-input,
+select,
+textarea {
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
   font-size: 0.9rem;
-  width: 100%; // Prend toute la largeur du .form-group.
+  width: 100%;
   box-sizing: border-box;
-  background-color: var(--main-white); // Fond blanc par défaut.
-  color: var(--text-dark); // Couleur du texte saisi.
-  transition: border-color 0.3s ease, box-shadow 0.3s ease; // Transitions douces.
+  background-color: var(--main-white);
+  color: var(--text-dark);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 
   &:focus {
-    // Style amélioré au focus pour accessibilité et clarté.
     border-color: var(--main-blue);
-    outline: none; // Suppression de l'outline navigateur.
-    box-shadow: 0 0 0 3px var(--input-focus-shadow); // Ombre externe bleue semi-transparente.
+    outline: none;
+    box-shadow: 0 0 0 3px var(--input-focus-shadow);
   }
 
-  // Style Angular pour les champs invalides après interaction.
   &.ng-invalid.ng-touched {
-    border-color: var(--danger); // Bordure rouge pour indiquer une erreur.
+    border-color: var(--danger);
   }
 
-  // Style pour les champs désactivés.
   &:disabled {
     background-color: var(--bg-light-gray);
     cursor: not-allowed;
@@ -162,65 +142,51 @@ textarea { // Si ajoutés plus tard
   #VALIDATION ET MESSAGES D'ERREUR
 \*------------------------------------*/
 .validation-error {
-  // Style des messages d'erreur de validation sous les champs.
-  color: var(--danger); // Couleur rouge standard pour les erreurs.
-  font-size: 0.8rem; // Texte plus petit.
-  // margin-top: 4px; // Déjà géré par le gap du form-group.
-  min-height: 1em; // Réserve l'espace pour éviter les sauts de mise en page.
-  text-align: left; // Alignement à gauche.
+  color: var(--danger);
+  font-size: 0.8rem;
+  min-height: 1em; /* Évite les sauts de mise en page */
+  text-align: left;
 
-  // Style spécifique pour une erreur s'appliquant à un groupe (ex: password mismatch).
   &.form-group__error--group {
-    width: 100%; // S'assure qu'il prend toute la largeur sous la rangée concernée.
-    margin-top: var(--spacing-sm); // Espace supplémentaire au-dessus.
+    width: 100%;
+    margin-top: var(--spacing-sm);
   }
 }
-
-// NOTE: L'erreur générale via .error-message a été retirée du HTML,
-// préférant l'utilisation d'un service de notification (Snackbar/Toast) pour une meilleure UX.
-// Si besoin de réintégrer un bandeau:
-// .error-message-banner { ... }
 
 /*------------------------------------*\
   #ACTIONS DU FORMULAIRE (BOUTON)
 \*------------------------------------*/
 .form-actions {
-  // Conteneur pour le(s) bouton(s) d'action du formulaire.
   display: flex;
-  justify-content: center; // Centre le bouton horizontalement.
-  margin-top: var(--spacing-lg); // Marge au-dessus du bouton.
+  justify-content: center;
+  margin-top: var(--spacing-lg);
 }
 
-// Utilisation des classes .btn globales définies précédemment (ex: dans la navbar).
-// Assurez-vous que ces styles sont disponibles globalement ou importés.
-// Si non, redéfinissez ici ou créez des styles spécifiques .form-button.
 .btn {
-  // Styles de base des boutons (si non définis globalement).
-  padding: 12px 25px; // Padding généreux.
+  padding: 12px 25px;
   border-radius: var(--border-radius);
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
   border: none;
   transition: var(--transition-standard);
-  min-width: 200px; // Largeur minimale.
+  min-width: 200px;
   text-align: center;
 
   &--primary {
-    // Style spécifique du bouton primaire.
     background-color: var(--main-blue);
     color: var(--main-white);
+    border-color: var(--main-blue);
 
     &:hover:not(:disabled) {
-      background-color: var(--main-orange); // Changement de couleur au survol.
-      transform: translateY(-2px); // Léger effet de soulèvement.
+      background-color: var(--main-orange);
+      transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
   }
 
-  // Style lorsque le bouton est désactivé.
   &:disabled {
-    background-color: var(--text-light); // Couleur grise pour désactivé.
+    background-color: var(--text-light);
     cursor: not-allowed;
     opacity: 0.7;
   }
@@ -232,53 +198,48 @@ textarea { // Si ajoutés plus tard
     margin-right: 5px;
   }
 }
-/* Style pour rendre le lien des CGU plus visible dans le formulaire */
+
 .form-label--checkbox a {
-  color: var(--main-blue); /* Utilise votre variable de couleur principale */
+  color: var(--main-blue);
   text-decoration: underline;
-  font-weight: 500; /* Un peu plus gras pour attirer l'œil */
+  font-weight: 500;
   transition: color 0.2s ease-in-out;
 }
 
-/* Effet au survol pour un retour visuel clair */
 .form-label--checkbox a:hover,
 .form-label--checkbox a:focus {
-  color: var(--main-orange); /* Changement de couleur au survol */
+  color: var(--main-orange);
 }
+
 /*------------------------------------*\
   #MEDIA QUERIES: RESPONSIVE
 \*------------------------------------*/
 @media (max-width: 768px) {
   .form-container {
-    // Réduction du padding sur mobile.
     padding: var(--spacing-lg) var(--spacing-md);
-    margin: var(--spacing-lg) auto; // Réduit la marge verticale.
+    margin: var(--spacing-lg) auto;
   }
 
   h1 {
-    font-size: 1.6rem; // Taille du titre principal réduite.
+    font-size: 1.6rem;
     margin-bottom: var(--spacing-lg);
   }
 
   .form-section__title {
-    font-size: 1.1rem; // Taille des titres de section réduite.
+    font-size: 1.1rem;
   }
 
   .form-row {
-    // Empilement des groupes dans une rangée sur mobile.
     flex-direction: column;
-    gap: var(--spacing-md); // Espace vertical entre les groupes empilés.
+    gap: var(--spacing-md);
   }
 
   .form-group {
-    // Assure que chaque groupe prend toute la largeur disponible.
     flex-basis: 100%;
   }
 
   .btn {
-    // Optionnel: Bouton pleine largeur sur mobile.
-    // width: 100%;
-    font-size: 1rem; // Taille de police du bouton légèrement réduite.
+    font-size: 1rem;
     padding: 10px 20px;
   }
 }

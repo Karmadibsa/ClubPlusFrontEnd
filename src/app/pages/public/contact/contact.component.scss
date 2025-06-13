@@ -1,13 +1,17 @@
-// Utilisation exclusive des variables globales de :root
+/*------------------------------------*\
+  #PAGE: CONTACT
+\*------------------------------------*/
 
 :host {
   display: block;
   background-color: var(--bg-global, #f5f5f5);
   color: var(--text-dark);
-  transition: background-color 0.3s ease, color 0.3s ease; // Transition dark mode
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* --- Section Héros Adaptée --- */
+/*------------------------------------*\
+  #SECTION: HERO
+\*------------------------------------*/
 .contact-hero-section {
   background: linear-gradient(135deg, var(--bg-light-gray) 0%, var(--main-white) 100%);
   padding: var(--spacing-xl, 32px) var(--spacing-lg, 24px);
@@ -15,7 +19,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 200px; // Encore moins haute
+  min-height: 200px;
   border-bottom: 1px solid var(--border-color);
   transition: background 0.3s ease, border-color 0.3s ease;
 }
@@ -29,14 +33,14 @@
   font-size: 2.5rem;
   color: var(--text-dark);
   margin-bottom: var(--spacing-md, 16px);
-  display: flex; // Pour aligner icône et texte
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--spacing-sm, 8px);
   transition: color 0.3s ease;
 
   lucide-icon {
-    color: var(--main-orange); // Icône orange
+    color: var(--main-orange);
     width: 32px;
     height: 32px;
   }
@@ -49,7 +53,9 @@
   transition: color 0.3s ease;
 }
 
-/* --- Styles Communs aux Sections --- */
+/*------------------------------------*\
+  #Sections Communes
+\*------------------------------------*/
 .contact-section {
   padding: var(--spacing-xl, 32px) var(--spacing-lg, 24px);
   transition: background-color 0.3s ease, border-color 0.3s ease;
@@ -59,7 +65,7 @@
   }
 }
 
-.section-title { // Titre pour la section formulaire
+.section-title {
   font-size: 2rem;
   color: var(--main-blue);
   margin-bottom: var(--spacing-lg, 24px);
@@ -67,11 +73,13 @@
   transition: color 0.3s ease;
 }
 
-/* --- Conteneur et Styles du Formulaire --- */
+/*------------------------------------*\
+  #Formulaire
+\*------------------------------------*/
 .contact-form-container {
-  max-width: 700px; // Limite la largeur du formulaire
-  margin: 0 auto; // Centre le formulaire
-  background-color: var(--main-white); // Fond blanc (s'adapte dark mode)
+  max-width: 700px;
+  margin: 0 auto;
+  background-color: var(--main-white);
   padding: var(--spacing-lg, 24px);
   border-radius: var(--border-radius, 8px);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
@@ -79,11 +87,10 @@
   transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Recréation des styles de formulaire basés sur styles.txt mais SANS .user-layout-container */
 form {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md, 16px); // Espace entre les groupes de formulaire
+  gap: var(--spacing-md, 16px);
 }
 
 .form-group {
@@ -110,8 +117,8 @@ label {
   border-radius: var(--border-radius-sm, 4px);
   font-size: 1rem;
   line-height: 1.5;
-  background-color: var(--main-white); // Fond de l'input
-  color: var(--text-dark); // Couleur du texte dans l'input
+  background-color: var(--main-white);
+  color: var(--text-dark);
   font-family: inherit;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease, color 0.3s ease;
 
@@ -124,7 +131,7 @@ label {
   &:focus {
     outline: none;
     border-color: var(--main-orange);
-    box-shadow: 0 0 0 3px var(--input-focus-shadow); // Utilise la variable globale
+    box-shadow: 0 0 0 3px var(--input-focus-shadow);
   }
 
   &.is-invalid {
@@ -143,24 +150,25 @@ label {
 
 textarea.form-control {
   resize: vertical;
-  min-height: 120px; // Hauteur minimale pour la zone de message
+  min-height: 120px;
 }
 
 .invalid-feedback {
-  display: none; // Sera affiché via *ngIf dans le HTML
+  display: none;
   color: var(--danger);
   font-size: 0.85rem;
   margin-top: var(--spacing-xs, 4px);
 }
-// Logique d'affichage gérée par [class.is-invalid] et *ngIf
 
 .form-actions {
-  margin-top: var(--spacing-sm); // Un peu moins d'espace avant le bouton
+  margin-top: var(--spacing-sm);
   display: flex;
-  justify-content: flex-end; // Bouton à droite par défaut
+  justify-content: flex-end;
 }
 
-/* Recréation des styles de boutons */
+/*------------------------------------*\
+  #Boutons
+\*------------------------------------*/
 .btn {
   padding: 10px 20px;
   border-radius: var(--border-radius, 8px);
@@ -214,7 +222,9 @@ textarea.form-control {
   }
 }
 
-/* Recréation des styles d'alerte */
+/*------------------------------------*\
+  #Alertes
+\*------------------------------------*/
 .alert {
   padding: var(--spacing-md, 16px);
   margin-bottom: var(--spacing-md, 16px);
@@ -236,18 +246,22 @@ textarea.form-control {
   border-color: rgba(var(--success-rgb, 40, 167, 69), 0.3);
 }
 
-/* Style pour le spinner */
+/*------------------------------------*\
+  #Animation Spinner
+\*------------------------------------*/
 .animate-spin lucide-icon {
   animation: spin 1s linear infinite;
 }
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .animate-spin lucide-icon { animation: none; } }
 
-/* --- Section Infos Additionnelles --- */
+/*------------------------------------*\
+  #Informations Additionnelles
+\*------------------------------------*/
 .contact-info-container {
   max-width: 700px;
   margin: 0 auto;
-  color: var(--text-medium); // Texte un peu plus discret
+  color: var(--text-medium);
   transition: color 0.3s ease;
 
   &.centered-text {
@@ -255,7 +269,7 @@ textarea.form-control {
   }
 
   h2 {
-    font-size: 1.6rem; // Titre plus petit
+    font-size: 1.6rem;
     color: var(--text-dark);
     margin-bottom: var(--spacing-md, 16px);
     transition: color 0.3s ease;
@@ -264,30 +278,53 @@ textarea.form-control {
   p {
     margin-bottom: var(--spacing-sm, 8px);
     line-height: 1.6;
-    display: flex; // Pour aligner icônes et texte si ajoutés
+    display: flex;
     align-items: center;
-    justify-content: center; // Centre si text-align: center
+    justify-content: center;
     gap: var(--spacing-sm, 8px);
 
     strong {
       font-weight: 600;
-      color: var(--text-dark); // Mettre en évidence le nom/projet
+      color: var(--text-dark);
       transition: color 0.3s ease;
     }
-    lucide-icon { // Style si vous ajoutez des icônes mail/phone
-      width: 18px; height: 18px; flex-shrink: 0; color: var(--main-blue);
+    lucide-icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: var(--main-blue);
     }
   }
 }
 
-/* --- Utilitaires (Assurez-vous qu'ils sont globaux ou définis ici) --- */
-.visually-hidden {
-  position: absolute !important; width: 1px !important; height: 1px !important;
-  padding: 0 !important; margin: -1px !important; overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important;
+.link-section {
+  display: flex;
+  justify-content: center;
+
+  p {
+    padding: 5%;
+    width: 100%;
+  }
 }
 
-/* --- Responsive simple --- */
+/*------------------------------------*\
+  #Utilitaires
+\*------------------------------------*/
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/*------------------------------------*\
+  #Responsive
+\*------------------------------------*/
 @media (max-width: 768px) {
   .contact-hero-title {
     font-size: 2rem;
@@ -299,20 +336,10 @@ textarea.form-control {
     padding: var(--spacing-md, 16px);
   }
   .form-actions {
-    justify-content: stretch; // Bouton pleine largeur sur mobile
+    justify-content: stretch;
     .btn { width: 100%; }
   }
-  .link-section{
+  .link-section {
     flex-wrap: wrap;
-  }
-}
-
-.link-section {
-  display: flex;
-  justify-content: center;
-
-  p{
-    padding: 5%;
-    width: 100%;
   }
 }

@@ -1,5 +1,10 @@
+<!--
+  Ce template définit un panneau de contrôles pour filtrer et trier une liste de membres.
+  Il inclut une recherche par texte, un tri et un composant de pagination.
+-->
 <div class="filters">
-  <!-- Champ de recherche -->
+
+  <!-- Champ de recherche par texte pour trouver un membre. -->
   <input
     type="text"
     placeholder="Rechercher un membre..."
@@ -8,10 +13,11 @@
     class="search-bar"
   />
 
-  <!-- Bouton de tri -->
+  <!-- Bouton pour trier la liste des membres par nom. -->
   <div class="sort-controls">
     <button (click)="toggleSortDirection()" class="sort-button">
       Trier par Nom
+      <!-- L'icône indique visuellement la direction actuelle du tri (ascendant/descendant). -->
       <lucide-icon
         [name]="sortDirection === 'asc' ? 'chevron-up' : 'chevron-down'"
         class="sort-icon">
@@ -19,5 +25,10 @@
     </button>
   </div>
 
+  <!--
+    Inclusion du composant de pagination.
+    Ce composant gérera l'affichage des pages et émettra des événements
+    lorsque l'utilisateur navigue entre elles.
+  -->
   <app-pagination></app-pagination>
 </div>

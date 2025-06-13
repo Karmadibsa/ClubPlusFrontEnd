@@ -1,168 +1,79 @@
-// ----- IMPORTATIONS -----
 import {
-  ChangeDetectorRef,       // Outil pour contrôler manuellement la détection de changements.
+  ChangeDetectorRef,
   Component,
-  inject,                   // Fonction moderne pour l'injection de dépendances.
+  inject,
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { CommonModule } from '@angular/common';         // Pour @if, @for (ou NgIf/NgForOf), pipes...
-import { FormsModule } from '@angular/forms';           // Pour [(ngModel)] sur les champs de recherche et d'ajout.
-import { finalize, Subscription } from 'rxjs';          // `finalize` pour exécuter du code après succès ou erreur, `Subscription` pour gérer la désinscription.
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { finalize, Subscription } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
-// Services
-import { MembreService } from '../../../service/crud/membre.service';     // Service pour les opérations liées au membre et à ses clubs.
-import { SweetAlertService } from '../../../service/sweet-alert.service'; // Pour les notifications et confirmations.
-// import { Clipboard } from '@angular/cdk/clipboard'; // Déjà importé dans votre code.
+import { MembreService } from '../../../service/crud/membre.service';
+import { SweetAlertService } from '../../../service/sweet-alert.service';
 
-// Modèles (Interfaces de données)
-import { Club } from '../../../model/club';             // Interface décrivant un club.
+import { Club } from '../../../model/club';
 
-// Autres (Icônes)
 import { LucideAngularModule } from 'lucide-angular';
-import {HttpErrorResponse} from '@angular/common/http';
 
 /**
  * @Component MesclubsComponent
- * @description
- * Page permettant à un utilisateur (membre) de visualiser et gérer les clubs auxquels il est affilié.
- * Il peut voir la liste de ses clubs, en rejoindre de nouveaux en utilisant leur code unique,
- * et quitter les clubs auxquels il ne souhaite plus appartenir.
- * Une fonctionnalité de recherche/filtrage sur la liste des clubs est également disponible.
- *
- * @example
- * <app-mesclubs></app-mesclubs> <!-- Typiquement utilisé comme composant de route -->
+ * @description Page de gestion des affiliations aux clubs.
+ * Permet de visualiser, rejoindre et quitter des clubs.
+ * Inclut une fonctionnalité de recherche/filtrage.
  */
 @Component({
   selector: 'app-mesclubs',
-  standalone: true,               // Indique que c'est un composant autonome.
-  imports: [                      // Dépendances nécessaires pour le template.
-    CommonModule,                 // Pour les directives @if, @for, etc.
-    LucideAngularModule,          // Pour les icônes.
-    FormsModule                   // Pour [(ngModel)] sur les champs de saisie.
+  standalone: true,
+  imports: [
+    CommonModule,
+    LucideAngularModule,
+    FormsModule
   ],
-  templateUrl: './mesclubs.component.html', // Chemin vers le fichier HTML du composant.
-  styleUrl: './mesclubs.component.scss',    // Chemin vers le fichier SCSS/CSS du composant.
-  // changeDetection: ChangeDetectionStrategy.OnPush, // Envisagez d'ajouter pour optimiser les performances.
+  templateUrl: './mesclubs.component.html',
+  styleUrl: './mesclubs.component.scss'
 })
-export class MesclubsComponent implements OnInit, OnDestroy { // Implémente OnInit et OnDestroy.
+export class MesclubsComponent implements OnInit, OnDestroy {
 
-  // --- INJECTIONS DE SERVICES via inject() ---
-  /**
-   * @private
-   * @description Service pour afficher des notifications (pop-ups) et des boîtes de dialogue de confirmation.
-   */
-  private notification = inject(SweetAlertService); // Déjà utilisé dans le code fourni.
-  /**
-   * @private
-   * @description Service pour les opérations liées au membre, y compris la gestion de ses clubs.
-   */
+  // --- INJECTIONS DE SERVICES ---
+  private notification = inject(SweetAlertService);
   private membreService = inject(MembreService);
-  /**
-   * @private
-   * @description Service Angular pour contrôler manuellement la détection de changements.
-   * Indispensable si `ChangeDetectionStrategy.OnPush` est activé.
-   */
   private cdr = inject(ChangeDetectorRef);
-  // private clipboard = inject(Clipboard); // L'import est là, mais l'injection via `inject()` serait `private clipboard = inject(Clipboard);` si besoin.
 
-  // --- ÉTAT DU COMPOSANT (DONNÉES ET UI) ---
-  /**
-   * @property {Club[]} userClubs
-   * @description Tableau stockant la liste originale des clubs auxquels l'utilisateur est affilié.
-   * Sert de source de vérité pour le filtrage.
-   * @default []
-   */
+  // --- ÉTAT DU COMPOSANT ---
+  /** Liste complète des clubs de l'utilisateur. */
   userClubs: Club[] = [];
-  /**
-   * @property {Club[]} filteredClubs
-   * @description Tableau stockant la liste des clubs à afficher après application du filtre de recherche.
-   * C'est cette liste qui est effectivement rendue dans le template.
-   * @default []
-   */
-  filteredClubs: Club[] = []; // Correction du nom de la propriété (était commenté dans votre code).
-  /**
-   * @property {boolean} isLoadingClubs
-   * @description Booléen indiquant si le chargement de la liste des clubs de l'utilisateur est en cours.
-   * @default false
-   */
+  /** Liste des clubs filtrée pour l'affichage. */
+  filteredClubs: Club[] = [];
+  /** Indique si le chargement des clubs est en cours. */
   isLoadingClubs = false;
-  /**
-   * @property {string | null} errorLoadingClubs
-   * @description Stocke un message d'erreur si le chargement de la liste des clubs échoue.
-   * @default null
-   */
+  /** Message d'erreur si le chargement des clubs échoue. */
   errorLoadingClubs: string | null = null;
 
-  /**
-   * @property {string} joinClubCode
-   * @description Le code club saisi par l'utilisateur pour tenter de rejoindre un nouveau club.
-   * Lié via `[(ngModel)]`. Initialisé avec un préfixe pour guider l'utilisateur.
-   * @default 'CLUB-'
-   */
+  /** Code saisi pour rejoindre un club. */
   joinClubCode: string = 'CLUB-';
-  /**
-   * @property {boolean} isJoiningClub
-   * @description Booléen indiquant si une opération pour rejoindre un club est en cours.
-   * @default false
-   */
+  /** Indique si une opération pour rejoindre un club est en cours. */
   isJoiningClub = false;
-  /**
-   * @property {string | null} errorJoiningClub
-   * @description Stocke un message d'erreur si la tentative pour rejoindre un club échoue.
-   * @default null
-   */
+  /** Message d'erreur si la tentative de rejoindre un club échoue. */
   errorJoiningClub: string | null = null;
 
-  /**
-   * @property {number | null} leavingClubId
-   * @description Stocke l'ID du club que l'utilisateur est en train de quitter.
-   * Utilisé pour afficher un indicateur de chargement spécifique à cette action.
-   * @default null
-   */
+  /** ID du club en cours de départ. */
   leavingClubId: number | null = null;
-  /**
-   * @property {Set<number>} errorLeavingClubIds
-   * @description Un ensemble (Set) stockant les IDs des clubs pour lesquels une tentative de départ a échoué.
-   * Permet d'afficher un message d'erreur spécifique à côté du bouton "Quitter" concerné.
-   * @default new Set()
-   */
+  /** IDs des clubs pour lesquels une tentative de départ a échoué. */
   errorLeavingClubIds = new Set<number>();
-  /**
-   * @property {string} clubSearchTerm
-   * @description Le terme de recherche saisi par l'utilisateur pour filtrer la liste de ses clubs.
-   * Lié via `[(ngModel)]`.
-   * @default ''
-   */
+  /** Terme de recherche pour filtrer les clubs. */
   clubSearchTerm: string = '';
 
   // --- ABONNEMENTS RxJS ---
-  /**
-   * @private
-   * @property {Subscription | null} clubsSub
-   * @description Abonnement à l'Observable pour le chargement de la liste des clubs de l'utilisateur.
-   */
   private clubsSub: Subscription | null = null;
-  /**
-   * @private
-   * @property {Subscription | null} joinSub
-   * @description Abonnement à l'Observable pour l'opération de rejoindre un club.
-   */
   private joinSub: Subscription | null = null;
-  /**
-   * @private
-   * @property {Subscription | null} leaveSub
-   * @description Abonnement à l'Observable pour l'opération de quitter un club.
-   */
   private leaveSub: Subscription | null = null;
 
   // --- CYCLE DE VIE ANGULAR ---
   /**
    * @method ngOnInit
-   * @description Crochet de cycle de vie Angular. Appelé une fois après l'initialisation.
-   * Déclenche le chargement initial de la liste des clubs de l'utilisateur.
-   * @see {@link loadUserClubs}
-   * @returns {void}
+   * @description Appelé après l'initialisation. Lance le chargement initial des clubs.
    */
   ngOnInit(): void {
     console.log("MesclubsComponent: Initialisation.");
@@ -171,9 +82,7 @@ export class MesclubsComponent implements OnInit, OnDestroy { // Implémente OnI
 
   /**
    * @method ngOnDestroy
-   * @description Crochet de cycle de vie Angular. Appelé avant la destruction du composant.
-   * Se désabonne de tous les abonnements RxJS actifs pour éviter les fuites de mémoire.
-   * @returns {void}
+   * @description Appelé avant la destruction du composant. Désabonne tous les Observables actifs.
    */
   ngOnDestroy(): void {
     console.log("MesclubsComponent: Destruction, désinscription des abonnements.");
@@ -185,39 +94,34 @@ export class MesclubsComponent implements OnInit, OnDestroy { // Implémente OnI
   // --- CHARGEMENT DES DONNÉES ---
   /**
    * @method loadUserClubs
-   * @description Charge la liste des clubs auxquels l'utilisateur est affilié via `MembreService`.
-   * Réinitialise les listes et le terme de recherche.
-   * Gère les états de chargement (`isLoadingClubs`) et d'erreur (`errorLoadingClubs`).
-   * Utilise `finalize` pour s'assurer que `isLoadingClubs` est remis à `false` après l'opération.
-   * @returns {void}
+   * @description Charge la liste des clubs de l'utilisateur.
+   * Gère les états de chargement et d'erreur.
    */
   loadUserClubs(): void {
     this.isLoadingClubs = true;
     this.errorLoadingClubs = null;
     this.userClubs = [];
     this.filteredClubs = [];
-    this.clubSearchTerm = ''; // Réinitialise la recherche lors du rechargement.
-    this.cdr.detectChanges(); // Met à jour l'UI pour montrer l'état de chargement.
+    this.clubSearchTerm = '';
+    this.cdr.detectChanges();
 
-    this.clubsSub?.unsubscribe(); // Annule l'abonnement précédent s'il existe.
+    this.clubsSub?.unsubscribe();
 
     this.clubsSub = this.membreService.getUserClubs().pipe(
-      finalize(() => { // S'exécute après la complétion ou l'erreur de l'Observable.
+      finalize(() => {
         this.isLoadingClubs = false;
-        this.cdr.detectChanges(); // Met à jour l'UI pour refléter la fin du chargement.
+        this.cdr.detectChanges();
       })
     ).subscribe({
       next: (clubs: Club[]) => {
         this.userClubs = clubs;
-        this.filterClubsList(); // Applique le filtre initial (qui affichera tout).
+        this.filterClubsList();
         console.log(`MesclubsComponent: ${this.userClubs.length} clubs utilisateur chargés.`);
-        // cdr.detectChanges() est déjà dans finalize.
       },
-      error: (error) => { // Type d'erreur plus générique pour flexibilité.
+      error: (error) => {
         console.error('MesclubsComponent: Erreur lors du chargement des clubs:', error);
         this.errorLoadingClubs = error?.message || "Impossible de charger la liste de vos clubs.";
-        this.filteredClubs = []; // Assure que la liste est vide en cas d'erreur.
-        // cdr.detectChanges() est déjà dans finalize.
+        this.filteredClubs = [];
       }
     });
   }
@@ -225,14 +129,12 @@ export class MesclubsComponent implements OnInit, OnDestroy { // Implémente OnI
   // --- ACTIONS SUR LES CLUBS ---
   /**
    * @method joinClub
-   * @description Tente de faire rejoindre un club à l'utilisateur en utilisant le `joinClubCode` saisi.
+   * @description Tente de faire rejoindre un club à l'utilisateur.
    * Valide la saisie, appelle `MembreService.joinClubByCode()`, et gère les notifications.
-   * Recharge la liste des clubs après succès.
-   * @returns {void}
    */
   joinClub(): void {
     const code = this.joinClubCode.trim();
-    if (!code || code === 'CLUB-' || this.isJoiningClub) { // Vérifie aussi le préfixe.
+    if (!code || code === 'CLUB-' || this.isJoiningClub) {
       if (!code || code === 'CLUB-') {
         this.notification.show("Veuillez entrer un code club valide.", "warning");
       }
@@ -241,10 +143,10 @@ export class MesclubsComponent implements OnInit, OnDestroy { // Implémente OnI
 
     this.isJoiningClub = true;
     this.errorJoiningClub = null;
-    this.errorLeavingClubIds.clear(); // Efface les erreurs de "quitter club" précédentes.
+    this.errorLeavingClubIds.clear();
     this.cdr.detectChanges();
 
-    this.joinSub?.unsubscribe(); // Annule l'abonnement précédent.
+    this.joinSub?.unsubscribe();
 
     this.joinSub = this.membreService.joinClubByCode(code).pipe(
       finalize(() => {
@@ -252,25 +154,22 @@ export class MesclubsComponent implements OnInit, OnDestroy { // Implémente OnI
         this.cdr.detectChanges();
       })
     ).subscribe({
-      next: (joinedClubResponse) => { // `joinedClubResponse` peut être un Club, un message, ou void.
-        // Adaptez en fonction de ce que votre API retourne réellement.
-        // Ici, on suppose qu'elle pourrait retourner l'objet Club rejoint ou un message.
-        let clubName = code; // Nom par défaut si l'API ne retourne pas le nom.
+      next: (joinedClubResponse) => {
+        let clubName = code;
         if (typeof joinedClubResponse === 'object' && joinedClubResponse !== null && 'nom' in joinedClubResponse) {
           clubName = (joinedClubResponse as Club).nom || code;
         }
         this.notification.show(`Vous avez rejoint le club "${clubName}" avec succès !`, 'success');
-        this.joinClubCode = 'CLUB-'; // Réinitialise le champ.
-        this.loadUserClubs();       // Recharge la liste des clubs (qui appellera filterClubsList).
+        this.joinClubCode = 'CLUB-';
+        this.loadUserClubs();
         console.log("MesclubsComponent: Club rejoint avec succès.");
       },
-      error: (error: HttpErrorResponse) => { // Typage plus précis de l'erreur.
+      error: (error: HttpErrorResponse) => {
         console.error('MesclubsComponent: Erreur pour rejoindre le club:', error);
         this.errorJoiningClub = error.error?.message || error.message || "Impossible de rejoindre le club. Vérifiez le code ou si vous êtes déjà membre.";
-        if (this.errorJoiningClub) { // Vérifie si un message d'erreur a été défini.
+        if (this.errorJoiningClub) {
           this.notification.show(this.errorJoiningClub, 'error');
         }
-        // cdr.detectChanges() est déjà dans finalize.
       }
     });
   }
@@ -278,69 +177,60 @@ export class MesclubsComponent implements OnInit, OnDestroy { // Implémente OnI
   /**
    * @method leaveClub
    * @description Gère la demande de l'utilisateur pour quitter un club.
-   * Affiche une boîte de dialogue de confirmation via `SweetAlertService`.
-   * Si confirmé, appelle `MembreService.leaveClub()` et met à jour la liste des clubs.
-   * Gère les états de chargement et d'erreur spécifiques à cette action.
-   * @param {Club} club - Le club que l'utilisateur souhaite quitter.
-   * @returns {void}
+   * Affiche une confirmation et met à jour la liste des clubs.
+   * @param club Le club que l'utilisateur souhaite quitter.
    */
   leaveClub(club: Club): void {
-    if (this.leavingClubId !== null) { // Empêche les actions multiples si une est déjà en cours.
+    if (this.leavingClubId !== null) {
       return;
     }
 
     this.notification.confirmAction(
       'Quitter ce club ?',
       `Êtes-vous sûr de vouloir quitter le club "${club.nom}" ? Cette action est irréversible.`,
-      () => { // Callback exécutée si l'utilisateur confirme.
+      () => {
         console.log(`MesclubsComponent: Confirmation reçue pour quitter le club ID: ${club.id}`);
-        this.leavingClubId = club.id; // Définit l'ID du club en cours de suppression (pour l'UI).
-        this.errorJoiningClub = null; // Efface l'erreur de "rejoindre" si elle était affichée.
-        this.errorLeavingClubIds.delete(club.id); // Efface une erreur précédente pour CE club.
-        this.cdr.detectChanges(); // Met à jour l'UI pour montrer l'état "leaving".
+        this.leavingClubId = club.id;
+        this.errorJoiningClub = null;
+        this.errorLeavingClubIds.delete(club.id);
+        this.cdr.detectChanges();
 
-        this.leaveSub?.unsubscribe(); // Annule l'abonnement précédent.
+        this.leaveSub?.unsubscribe();
 
         this.leaveSub = this.membreService.leaveClub(club.id).pipe(
           finalize(() => {
-            this.leavingClubId = null; // Réinitialise l'ID en cours de suppression.
-            this.cdr.detectChanges(); // Met à jour l'UI.
+            this.leavingClubId = null;
+            this.cdr.detectChanges();
           })
         ).subscribe({
           next: () => {
             this.notification.show(`Vous avez quitté le club "${club.nom}" avec succès.`, 'success');
-            this.loadUserClubs(); // Recharge la liste des clubs.
+            this.loadUserClubs();
             console.log(`MesclubsComponent: Club ID ${club.id} quitté.`);
           },
           error: (error: HttpErrorResponse) => {
             console.error(`MesclubsComponent: Erreur pour quitter le club ${club.id}:`, error);
-            this.errorLeavingClubIds.add(club.id); // Marque ce club comme ayant eu une erreur.
+            this.errorLeavingClubIds.add(club.id);
             const message = error.error?.message || error.message || `Impossible de quitter le club "${club.nom}".`;
             this.notification.show(message, 'error');
-            // cdr.detectChanges() est déjà dans finalize.
           }
         });
       },
-      'Oui, quitter', // Texte du bouton de confirmation.
-      // 'Annuler' // Texte du bouton d'annulation (par défaut ou personnalisable).
+      'Oui, quitter',
     );
   }
 
   // --- LOGIQUE DE FILTRAGE ---
   /**
    * @method filterClubsList
-   * @description Filtre la liste `userClubs` basée sur `clubSearchTerm`
-   * (recherche sur nom, ville, code postal, code club, rue).
-   * Met à jour `filteredClubs` qui est la liste affichée dans le template.
-   * Appelée lorsque `clubSearchTerm` change ou après le chargement des clubs.
-   * @returns {void}
+   * @description Filtre la liste des clubs par nom, ville, code postal, code club ou rue.
    */
   filterClubsList(): void {
     const searchTerm = this.clubSearchTerm.trim().toLowerCase();
     console.log(`MesclubsComponent: Filtrage de la liste des clubs avec le terme: "${searchTerm}"`);
 
     if (!searchTerm) {
-      this.filteredClubs = [...this.userClubs]; // Affiche tous les clubs si la recherche est vide.
+      this.filteredClubs = [...this.userClubs];
     } else {
       this.filteredClubs = this.userClubs.filter(club =>
         (club.nom && club.nom.toLowerCase().includes(searchTerm)) ||
@@ -350,16 +240,14 @@ export class MesclubsComponent implements OnInit, OnDestroy { // Implémente OnI
         (club.rue && club.rue.toLowerCase().includes(searchTerm))
       );
     }
-    this.cdr.detectChanges(); // Assure la mise à jour de l'affichage avec la liste filtrée.
+    this.cdr.detectChanges();
   }
 
   // --- MÉTHODES UTILITAIRES POUR LE TEMPLATE ---
   /**
    * @method hasLeaveError
-   * @description Vérifie si une erreur s'est produite lors de la tentative de quitter un club spécifique.
-   * Utilisé dans le template pour afficher conditionnellement un message d'erreur.
-   * @param {number} clubId - L'ID du club à vérifier.
-   * @returns {boolean} `true` si une erreur est associée à ce clubId, `false` sinon.
+   * @description Vérifie si une erreur est survenue lors de la tentative de quitter un club.
+   * @param clubId L'ID du club à vérifier.
    */
   hasLeaveError(clubId: number): boolean {
     return this.errorLeavingClubIds.has(clubId);
@@ -367,25 +255,20 @@ export class MesclubsComponent implements OnInit, OnDestroy { // Implémente OnI
 
   /**
    * @method copyCode
-   * @description Copie le code club fourni (ou le code ami de l'utilisateur) dans le presse-papiers.
-   * Utilise `navigator.clipboard` (API moderne) ou `@angular/cdk/clipboard` (si injecté).
-   * Affiche une notification de succès ou d'erreur.
-   * @param {string | null | undefined} code - Le code à copier.
-   * @param {number} [clubId] - Optionnel: L'ID du club pour un feedback visuel spécifique (non implémenté dans ce TS).
-   * @returns {void}
+   * @description Copie le code fourni dans le presse-papiers et affiche une notification.
+   * @param code Le code à copier.
+   * @param clubId L'ID du club (optionnel, pour feedback UI).
    */
-  copyCode(code: string | null | undefined, clubId?: number): void { // clubId est optionnel et pour feedback UI.
+  copyCode(code: string | null | undefined, clubId?: number): void {
     if (!code) {
       this.notification.show('Code non disponible pour la copie.', 'warning');
       return;
     }
 
-    // Utilisation de l'API Clipboard native du navigateur.
     navigator.clipboard.writeText(code).then(
       () => {
         this.notification.show(`Code "${code}" copié dans le presse-papiers !`, 'success');
         console.log(`MesclubsComponent: Code "${code}" copié.`);
-        // Si vous voulez un feedback visuel sur la carte du club spécifique :
         if (clubId) {
           const feedbackEl = document.getElementById(`copy-feedback-${clubId}`);
           if (feedbackEl) {

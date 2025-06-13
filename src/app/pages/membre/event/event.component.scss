@@ -1,20 +1,26 @@
-/* --- Styles pour la Grille des Événements --- */
-/* Ceci est spécifique à la façon dont les événements sont affichés sur cette page
-   et n'est donc PAS dans les styles globaux. */
+/*------------------------------------*\
+  #Styles spécifiques à la page Événements
+\*------------------------------------*/
+
+:host {
+  display: block;
+}
+
+/*------------------------------------*\
+  #Grille des Événements
+\*------------------------------------*/
 .event-grid {
   display: grid;
-  // Utilisation de minmax avec une taille minimale et 1fr pour la flexibilité
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); // Ajusté pour 1fr max
-  gap: var(--spacing-lg, 24px); // Espace généreux entre les cartes
-  /* margin-bottom est géré par la marge de .main-section */
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-lg, 24px);
 }
 
-/* --- Responsive Spécifique à la Grille --- */
+/*------------------------------------*\
+  #Responsive Grille
+\*------------------------------------*/
 @media screen and (max-width: 768px) {
   .event-grid {
-    /* Une seule colonne sur mobile */
     grid-template-columns: 1fr;
-    gap: var(--spacing-md, 16px); // Espace réduit entre les cartes sur mobile
+    gap: var(--spacing-md, 16px);
   }
 }
-

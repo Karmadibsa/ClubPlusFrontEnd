@@ -1,23 +1,25 @@
-// Utilisation exclusive des variables globales de :root
-
+/*------------------------------------*\
+  #Styles spécifiques à la page À Propos
+\*------------------------------------*/
 
 :host {
   display: block;
-  background-color: var(--bg-global, #f5f5f5); // Fond global
-  color: var(--text-dark); // Couleur de texte par défaut
+  background-color: var(--bg-global, #f5f5f5);
+  color: var(--text-dark);
 }
 
-/* --- Section Héros Adaptée --- */
+/*------------------------------------*\
+  #Section Héros
+\*------------------------------------*/
 .about-hero-section {
-  // Similaire à .hero-section mais peut-être plus simple
   background: linear-gradient(135deg, var(--bg-light-gray) 0%, var(--main-white) 100%);
   padding: var(--spacing-xl, 32px) var(--spacing-lg, 24px);
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 250px; // Moins haute que la page d'accueil
-  transition: background-color 0.3s ease; // Pour dark mode
+  min-height: 250px;
+  transition: background-color 0.3s ease;
 }
 
 .about-hero-content {
@@ -26,13 +28,13 @@
 }
 
 .about-hero-title {
-  font-size: 2.8rem; // Légèrement plus petit que l'accueil
+  font-size: 2.8rem;
   color: var(--text-dark);
   margin-bottom: var(--spacing-md, 16px);
   transition: color 0.3s ease;
 
   strong {
-    color: var(--main-orange); // Garde l'accent orange
+    color: var(--main-orange);
     transition: color 0.3s ease;
   }
 }
@@ -44,10 +46,12 @@
   transition: color 0.3s ease;
 }
 
-/* --- Styles Communs aux Sections --- */
+/*------------------------------------*\
+  #Sections Communes
+\*------------------------------------*/
 .about-section {
   padding: var(--spacing-xl, 32px) var(--spacing-lg, 24px);
-  transition: background-color 0.3s ease, border-color 0.3s ease; // Transition couleur
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 
   .section-title {
     text-align: center;
@@ -55,42 +59,37 @@
   }
 }
 
-// Section avec fond alterné
 .bg-alternate {
   background-color: var(--bg-light-gray);
 }
 
-// Section avec fond coloré (bleu)
 .bg-colored {
-  background-color: var(--main-blue); // Fond bleu principal
-  color: var(--main-white); // Texte blanc par défaut sur fond bleu
-  transition: background-color 0.3s ease, color 0.3s ease; // Inclut transition couleur texte
+  background-color: var(--main-blue);
+  color: var(--main-white);
+  transition: background-color 0.3s ease, color 0.3s ease;
 
-  // Ajuste la couleur des liens ou éléments spécifiques si nécessaire sur fond bleu
-  a { color: var(--secondary-blue); } // Exemple: liens en bleu plus clair
+  a { color: var(--secondary-blue); }
 
-  // Les titres et textes utilisent la couleur blanche définie ci-dessus
   h2, p {
     color: var(--main-white);
   }
 }
 
 .about-section-content {
-  max-width: 900px; // Limite la largeur du contenu
-  margin: 0 auto; // Centre le contenu
+  max-width: 900px;
+  margin: 0 auto;
 
   &.centered-text {
     text-align: center;
   }
 
-  // Contenu spécifique pour la section colorée (pour s'assurer que le texte est bien blanc)
   &.colored-section-content {
     h2, p { color: var(--main-white); transition: color 0.3s ease; }
   }
 
-  h2, .section-title { // Styles communs pour les titres de section
+  h2, .section-title {
     font-size: 2rem;
-    color: var(--main-blue); // Titre bleu par défaut
+    color: var(--main-blue);
     margin-bottom: var(--spacing-lg, 24px);
     text-align: center;
     transition: color 0.3s ease;
@@ -98,113 +97,119 @@
 
   p {
     font-size: 1rem;
-    color: var(--text-medium); // Texte medium par défaut
+    color: var(--text-medium);
     line-height: 1.6;
     margin-top: 0;
     margin-bottom: var(--spacing-md, 16px);
-    max-width: 700px; // Limite largeur des paragraphes pour lisibilité
+    max-width: 700px;
     margin-left: auto;
     margin-right: auto;
     transition: color 0.3s ease;
 
     strong {
       font-weight: 600;
-      color: var(--main-orange); // Orange pour mise en évidence
+      color: var(--main-orange);
       transition: color 0.3s ease;
     }
   }
 }
 
-/* --- Grille pour les Fonctionnalités (Style "Features Grid") --- */
-.about-grid { // On garde le nom de classe pour l'instant, mais on applique Flexbox
-  display: flex; // *** CHANGEMENT ICI: Utilise Flexbox ***
-  flex-wrap: wrap; // Permet aux éléments de passer à la ligne
-  justify-content: center; // Centre les éléments horizontalement
-  gap: var(--spacing-lg, 24px); // Espace entre les éléments
-  max-width: 1100px; // Limite la largeur totale
-  margin: 0 auto; // Centre la zone flex
+/*------------------------------------*\
+  #Grille Fonctionnalités
+\*------------------------------------*/
+.about-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-lg, 24px);
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
 .about-item {
-  background-color: var(--main-white); // Fond blanc (s'adapte au dark mode)
+  background-color: var(--main-white);
   padding: var(--spacing-md, 16px);
   border-radius: var(--border-radius, 8px);
   text-align: center;
-  border: 1px solid var(--border-color, #eee); // Bordure légère
+  border: 1px solid var(--border-color, #eee);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  display: flex; // Pour aligner icône et texte
-  flex-direction: column; // Icône au-dessus du texte
+  display: flex;
+  flex-direction: column;
   align-items: center;
   gap: var(--spacing-sm, 8px);
   min-height:  125px;
   transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 
   lucide-icon {
-    width: 32px; // Icônes un peu plus grandes
+    width: 32px;
     height: 32px;
-    color: var(--main-orange); // Icônes orange
+    color: var(--main-orange);
     margin-bottom: var(--spacing-xs, 4px);
     transition: color 0.3s ease;
   }
 
   p {
     font-size: 0.95rem;
-    color: var(--text-dark); // Texte standard
+    color: var(--text-dark);
     margin-bottom: 0;
-    max-width: 100%; // Prend toute la largeur de l'item
+    max-width: 100%;
     transition: color 0.3s ease;
   }
 }
 
-/* --- Liste des Technologies (Similaire à page d'accueil) --- */
+/*------------------------------------*\
+  #Liste Technologies
+\*------------------------------------*/
 .techno-list {
   list-style: none;
   padding-left: 0;
   margin: var(--spacing-md, 16px) auto 0 auto;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center; // Centre les tags
+  justify-content: center;
   gap: var(--spacing-sm, 8px) var(--spacing-md, 16px);
-  max-width: 700px; // Limite la largeur de la zone des tags
+  max-width: 700px;
 
   li {
-    // Tags avec fond blanc/contraste sur fond bleu
-    background-color: rgba(255, 255, 255, 0.15); // Fond blanc très transparent
-    color: var(--main-white); // Texte blanc
+    background-color: rgba(255, 255, 255, 0.15);
+    color: var(--main-white);
     padding: var(--spacing-xs, 4px) var(--spacing-sm, 8px);
     border-radius: var(--border-radius-sm, 4px);
     font-size: 0.9rem;
-    border: 1px solid rgba(255, 255, 255, 0.3); // Bordure blanche transparente
+    border: 1px solid rgba(255, 255, 255, 0.3);
     transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   }
 }
-// Style pour le conteneur de pagination de Swiper
+
+/*------------------------------------*\
+  #Swiper Pagination
+\*------------------------------------*/
+/* Styles pour la pagination de Swiper. */
 :host ::ng-deep .swiper-pagination {
-  position: relative; // Change de 'absolute' à 'relative' ou 'static' pour qu'il prenne de la place dans le flux normal
-  bottom: auto;       // Annule le positionnement 'bottom' par défaut
-  left: auto;         // Annule le positionnement 'left' par défaut
-  transform: none;    // Annule la transformation par défaut
+  position: relative;
+  bottom: auto;
+  left: auto;
+  transform: none;
   width: 100%;
   text-align: center;
-  margin-top: var(--spacing-lg, 24px); // Crée un espace entre le carrousel et les points
-  // Ajustez cette valeur selon vos besoins.
-  // var(--spacing-lg) vient de vos variables globales.
+  margin-top: var(--spacing-lg, 24px);
 }
 
-// Optionnel: Style pour les points individuels (si vous voulez changer leur apparence)
 :host ::ng-deep .swiper-pagination-bullet {
-  background-color: var(--text-light, #999999); // Couleur par défaut des points
+  background-color: var(--text-light, #999999);
   opacity: 0.7;
-  margin: 0 var(--spacing-xs, 4px); // Espace entre les points
+  margin: 0 var(--spacing-xs, 4px);
   transition: background-color 0.3s ease, opacity 0.3s ease;
 }
 
 :host ::ng-deep .swiper-pagination-bullet-active {
-  background-color: var(--main-orange, #f26115); // Couleur du point actif (utilise votre variable)
+  background-color: var(--main-orange, #f26115);
   opacity: 1;
 }
 
-/* --- Responsive (Similaire à l'accueil) --- */
+/*------------------------------------*\
+  #Responsive
+\*------------------------------------*/
 @media (max-width: 768px) {
   .about-hero-title {
     font-size: 2rem;
@@ -216,15 +221,10 @@
 
   .about-section {
     padding: var(--spacing-lg, 24px) var(--spacing-md, 16px);
-
   }
 
   .about-section-content h2,
   .about-section-content .section-title {
     font-size: 1.6rem;
   }
-
-
 }
-
-

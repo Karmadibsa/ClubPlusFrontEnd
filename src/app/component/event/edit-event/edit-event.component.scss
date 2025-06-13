@@ -1,113 +1,107 @@
-/* edit-event.component.scss */
-
-// --- Utilisation des variables globales de styles.txt ---
-// @import 'path/to/variables'; // Généralement importé globalement dans angular.json
-
 :host {
-  display: block; // Assure que le composant prend sa place
+  display: block;
 }
 
 // --------------------------------------------------
 // Styles SPÉCIFIQUES au contenu de EditEventComponent
 // --------------------------------------------------
 
-// --- Section Catégories ---
+/* --- Section Catégories --- */
 
-// Label principal de la section catégorie
+// Titre de la section.
 .categories-label {
   font-weight: 600;
   color: var(--main-blue);
-  font-size: 1rem; // Un peu plus grand que les labels normaux
+  font-size: 1rem;
   margin-bottom: var(--spacing-sm);
-  display: block; // Assure l'espacement correct
+  display: block;
 }
 
-// Conteneur scrollable pour la liste des catégories
+// Conteneur scrollable pour la liste des catégories.
 .scrollable-categories {
-  max-height: 250px; // Hauteur max pour la liste scrollable
+  max-height: 250px;
   overflow-y: auto;
   border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-sm); // Utilise le rayon des inputs
-  padding: var(--spacing-sm); // Padding interne plus léger
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-sm);
   background-color: var(--bg-light-gray);
-  margin-bottom: var(--spacing-md); // Espace avant les actions catégorie
+  margin-bottom: var(--spacing-md);
 
-  // Style scrollbar optionnel (hérite potentiellement du global)
+  /* Personnalisation de la barre de défilement. */
   scrollbar-width: thin;
   scrollbar-color: var(--text-light) transparent;
 
   &::-webkit-scrollbar {
     width: 6px;
   }
-
   &::-webkit-scrollbar-track {
     background: transparent;
   }
-
   &::-webkit-scrollbar-thumb {
     background-color: var(--text-light);
     border-radius: 3px;
   }
 }
 
-// Un item (ligne) dans la liste des catégories
+// Style d'une ligne de catégorie.
 .category-item {
   display: flex;
-  flex-wrap: wrap; // Pour responsivité interne
-  align-items: flex-start; // Align au début pour que les labels/inputs s'alignent bien
-  gap: var(--spacing-sm); // Espace réduit entre les éléments de la ligne
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
   background-color: var(--main-white);
   padding: var(--spacing-md);
-  border-radius: var(--border-radius-sm); // Cohérent avec inputs
-  border: 1px solid var(--border-color-light, #eee); // Bordure légère
-  margin-bottom: var(--spacing-sm); // Espace entre items
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-color-light, #eee);
+  margin-bottom: var(--spacing-sm);
 }
 
+// Supprime la marge du dernier élément.
 .category-item:last-child {
   margin-bottom: 0;
 }
 
-// Conteneur pour les inputs Nom et Capacité
+// Conteneur pour les champs de la catégorie.
 .category-inputs {
   display: flex;
-  flex-wrap: wrap; // Permet aux inputs de s'empiler si manque de place
-  flex-grow: 1; // Prend l'espace disponible
-  gap: var(--spacing-sm); // Espace entre Nom et Capacité
+  flex-wrap: wrap;
+  flex-grow: 1;
+  gap: var(--spacing-sm);
 }
 
-// Groupes formulaire spécifiques dans la catégorie
+// Layout des champs dans une ligne de catégorie.
 .category-item .form-group {
-  margin-bottom: 0; // Pas de marge sous les inputs dans la ligne
-  flex-grow: 1; // Permet de grandir
+  margin-bottom: 0;
+  flex-grow: 1;
 
+  // Layout du champ nom.
   &.category-name {
-    min-width: 150px; // Largeur minimale pour le nom
-    flex-basis: 200px; // Base de largeur
+    min-width: 150px;
+    flex-basis: 200px;
   }
 
+  // Layout du champ capacité.
   &.category-capacity {
-    min-width: 80px; // Largeur minimale capacité
-    flex-basis: 100px; // Base de largeur plus petite
-    flex-grow: 0; // Ne grandit pas autant que le nom
+    min-width: 80px;
+    flex-basis: 100px;
+    flex-grow: 0;
   }
 
-  // Style spécifique pour l'erreur dans la catégorie (peut-être plus petit)
+  // Style des messages d'erreur.
   .invalid-feedback {
     font-size: 0.8rem;
   }
 }
 
-// Bouton supprimer catégorie (utilise .btn .btn-danger .btn-sm)
+// Style du bouton de suppression.
 .btn-delete-category {
-  // Utilise .btn-sm qui doit être défini globalement ou ici
-  // On s'assure qu'il est petit et aligné
-  padding: 4px; // Très petit padding pour icône seule
-  flex-shrink: 0; // Empêche de rétrécir
-  margin-left: auto; // Pousse à droite si flex-wrap n'agit pas
-  align-self: center; // Centre verticalement par rapport aux inputs
+  flex-shrink: 0;
+  margin-left: auto;
+  align-self: center;
+  padding: 4px;
 }
 
-// Message si aucune catégorie
+// Message pour la liste vide.
 .no-categories-message {
   text-align: center;
   font-style: italic;
@@ -115,25 +109,16 @@
   padding: var(--spacing-md) 0;
 }
 
-// Erreur sur le FormArray lui-même
+// Erreur globale pour le groupe de catégories.
 .form-array-error.invalid-feedback {
-  display: block; // Assure qu'elle est visible
+  display: block; // Assure la visibilité du message.
   text-align: center;
   margin-top: var(--spacing-sm);
 }
 
-
-// Actions spécifiques aux catégories (bouton "Ajouter")
+// Conteneur pour le bouton d'ajout.
 .category-actions {
   display: flex;
-  justify-content: flex-start; // Aligne à gauche
-  margin-top: var(--spacing-sm); // Espace après la liste scrollable
-
-  // Style bouton ajouter (utilise .btn .btn-secondary .btn-sm)
-  .btn {
-    // S'assurer qu'il est de petite taille (.btn-sm)
-  }
+  justify-content: flex-start;
+  margin-top: var(--spacing-sm);
 }
-
-
-

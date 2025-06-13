@@ -8,17 +8,15 @@ import { Reservation } from '../../../model/reservation';
  * @Component décorateur qui configure le composant.
  */
 @Component({
-  selector: '[app-reservation-row]', // Sélecteur d'attribut.
-  // Utilisation : <tr app-reservation-row [reservation]="maReservation"></tr>
-  standalone: true,                   // Indique que c'est un composant autonome.
+  selector: '[app-reservation-row]',
+  standalone: true,
   imports: [
-    LucideAngularModule,              // Pour les icônes.
-    DatePipe,                         // Ou `CommonModule` qui inclut DatePipe.
-    QrCodeModalComponent              // Pour pouvoir utiliser <app-qr-code-modal> dans le template.
+    LucideAngularModule,
+    DatePipe,
+    QrCodeModalComponent
   ],
-  templateUrl: './reservation-row.component.html', // Template HTML pour afficher une ligne de réservation.
-  styleUrls: ['./reservation-row.component.scss']  // Styles SCSS spécifiques à cette ligne.
-  // changeDetection: ChangeDetectionStrategy.OnPush, // Pourrait être ajouté si nécessaire et géré avec cdr.detectChanges()
+  templateUrl: './reservation-row.component.html',
+  styleUrls: ['./reservation-row.component.scss']
 })
 export class ReservationRowComponent {
   // --- INPUTS ---
@@ -26,9 +24,6 @@ export class ReservationRowComponent {
   /**
    * @Input() reservation!: Reservation
    * @description L'objet `Reservation` à afficher dans cette ligne.
-   *              Le `!` (definite assignment assertion) indique à TypeScript que cette propriété
-   *              sera toujours fournie par le composant parent avant d'être utilisée.
-   *              Le typage précis avec `Reservation` est une bonne pratique.
    */
   @Input() reservation!: Reservation;
 
@@ -37,18 +32,12 @@ export class ReservationRowComponent {
   /**
    * @Output() generatePDF
    * @description Événement émis vers le composant parent lorsque l'utilisateur demande
-   *              la génération d'un PDF pour cette réservation.
-   *              Le parent se chargera de la logique de génération du PDF.
-   *              La valeur émise est l'objet `Reservation` concerné.
    */
   @Output() generatePDF = new EventEmitter<Reservation>();
 
   /**
    * @Output() deleteReservation
    * @description Événement émis vers le composant parent lorsque l'utilisateur demande
-   *              la suppression (ou l'annulation) de cette réservation.
-   *              Le parent se chargera de l'appel API et de la confirmation.
-   *              La valeur émise est l'objet `Reservation` concerné.
    */
   @Output() deleteReservation = new EventEmitter<Reservation>();
 
@@ -60,9 +49,6 @@ export class ReservationRowComponent {
    *              spécifique à CETTE réservation.
    */
   isQrModalOpen = false;
-
-  // Le commentaire "Pas besoin de selectedTicket séparé si reservation contient tout" est pertinent.
-  // L'objet `this.reservation` contient déjà toutes les informations nécessaires.
 
   // --- MÉTHODES DE GESTION DE LA MODALE QR CODE ---
 
@@ -85,10 +71,6 @@ export class ReservationRowComponent {
   /**
    * @method closeQrModalHandler
    * @description Ferme la modale `QrCodeModalComponent`.
-   *              Cette méthode est appelée lorsque la modale enfant (`QrCodeModalComponent`)
-   *              émet son propre événement `close`.
-   *              Dans le template de `ReservationRowComponent`:
-   *              `<app-qr-code-modal (close)="closeQrModalHandler()"></app-qr-code-modal>`
    */
   closeQrModalHandler(): void {
     console.log(`ReservationRowComponent: Fermeture de la modale QR code pour la réservation ID ${this.reservation?.reservationUuid}`);
@@ -101,7 +83,6 @@ export class ReservationRowComponent {
   /**
    * @method onGeneratePDF
    * @description Émet l'événement `generatePDF` avec l'objet `reservation` de cette ligne.
-   *              Le composant parent sera responsable de la logique de génération du PDF.
    */
   onGeneratePDF(): void {
     if (!this.reservation) {
@@ -115,8 +96,6 @@ export class ReservationRowComponent {
   /**
    * @method onDelete
    * @description Émet l'événement `deleteReservation` avec l'objet `reservation` de cette ligne.
-   *              Le composant parent sera responsable de la logique de suppression/annulation
-   *              (y compris la confirmation utilisateur via SweetAlert, par exemple).
    */
   onDelete(): void {
     if (!this.reservation) {
@@ -125,16 +104,5 @@ export class ReservationRowComponent {
     }
     console.log(`ReservationRowComponent: Demande de suppression pour la réservation ID ${this.reservation.reservationUuid}`);
     this.deleteReservation.emit(this.reservation);
-    // Note: La confirmation (ex: SweetAlert) est généralement gérée par le composant
-    // qui effectue réellement l'action (le parent ici), car c'est lui qui fera l'appel API.
-    // Si la confirmation devait se faire ici, il faudrait injecter SweetAlertService.
   }
-
-  // Pas de `ChangeDetectorRef` (cdr) injecté ou utilisé explicitement dans ce code.
-  // Si ce composant ou ses parents utilisent `ChangeDetectionStrategy.OnPush`, il faudrait
-  // injecter `cdr` et appeler `cdr.detectChanges()` après avoir modifié `isQrModalOpen`.
-  // Exemple (à ajouter si nécessaire) :
-  // private cdr = inject(ChangeDetectorRef);
-  // ... et dans openQrCodeModalHandler() / closeQrModalHandler() :
-  // this.cdr.detectChanges();
 }

@@ -1,6 +1,5 @@
 <app-navbar></app-navbar>
-<!-- En-tête de la page -->
-<!-- Section Introduction (Style "Hero" adapté) -->
+<!-- En-tête de la page. -->
 <section class="about-hero-section">
   <div class="about-hero-content">
     <h1 class="about-hero-title">
@@ -12,7 +11,7 @@
   </div>
 </section>
 
-<!-- Section Le Projet (Style "Features" adapté) -->
+<!-- Section "Le Projet". -->
 <section class="about-section bg-alternate">
   <div class="about-section-content centered-text">
     <h2>Le Projet</h2>
@@ -24,28 +23,23 @@
   </div>
 </section>
 
-<!-- Section Fonctionnalités (Style "Features Grid") -->
+<!-- Section "Fonctionnalités Clés". -->
 <section class="about-section">
-    <h2 class="section-title">Fonctionnalités Clés</h2>
-    <swiper-container
-        #swiperContainer
-    >
-        @for (feature of features; track feature) {
-            <swiper-slide>
-                <div class="about-item">
-                    <lucide-icon name="badge-check" aria-hidden="true"></lucide-icon>
-                    <p>{{ feature }}</p>
-                </div>
-            </swiper-slide>
-        }
-    </swiper-container>
+  <h2 class="section-title">Fonctionnalités Clés</h2>
+  <swiper-container #swiperContainer>
+    @for (feature of features; track feature) {
+      <swiper-slide>
+        <div class="about-item">
+          <lucide-icon name="badge-check" aria-hidden="true"></lucide-icon>
+          <p>{{ feature }}</p>
+        </div>
+      </swiper-slide>
+    }
+  </swiper-container>
 </section>
 
-
-
-
-<!-- Section Technologies (Style "App Download" adapté) -->
-<section class="about-section bg-colored"> <!-- Utilise --main-blue comme fond -->
+<!-- Section "Technologies Utilisées". -->
+<section class="about-section bg-colored">
   <div class="about-section-content centered-text colored-section-content">
     <h2>Technologies Utilisées</h2>
     <p>

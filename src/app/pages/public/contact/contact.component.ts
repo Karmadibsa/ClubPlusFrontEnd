@@ -1,36 +1,26 @@
-// ----- IMPORTATIONS -----
 import {
   Component,
-  inject,         // Fonction moderne pour l'injection de dépendances.
+  inject,
   OnInit,
-  OnDestroy       // Ajouté pour la désinscription
+  OnDestroy
 } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'; // Pour les formulaires réactifs.
-import { NgIf, CommonModule } from '@angular/common'; // NgIf pour l'affichage conditionnel, CommonModule pour la base.
-import { HttpClientModule } from '@angular/common/http'; // **AJOUT IMPORTANT**
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
-// Service
+import { NavbarComponent } from '../../../component/navigation/navbar/navbar.component';
+import { FooterComponent } from '../../../component/navigation/footer/footer.component';
 
-// Composants de Navigation/Layout
-import { NavbarComponent } from '../../../component/navigation/navbar/navbar.component'; // Barre de navigation.
-import { FooterComponent } from '../../../component/navigation/footer/footer.component'; // Pied de page.
-
-// Autres (Icônes)
-import { LucideAngularModule } from 'lucide-angular'; // Pour les icônes Lucide.
+import { LucideAngularModule } from 'lucide-angular';
 import { Subscription } from 'rxjs';
-import {ContactFormData, ContactService} from '../../../service/contact.service'; // **AJOUT pour la désinscription**
+import { ContactService} from '../../../service/contact.service';
+import {ContactFormData} from '../../../model/contact';
 
 
 /**
  * @Component ContactComponent
- * @description
- * Page "Contact" de l'application. Affiche les informations de contact du développeur/de l'application
- * et fournit un formulaire permettant aux utilisateurs d'envoyer un message.
- * Le formulaire est construit avec les formulaires réactifs d'Angular et inclut la validation.
- * La soumission du formulaire est connectée au ContactService pour envoyer les données au backend.
- *
- * @example
- * <app-contact></app-contact> <!-- Typiquement utilisé comme composant de route, ex: '/contact' -->
+ * @description Page "Contact" de l'application.
+ * Affiche les informations de contact et fournit un formulaire pour envoyer un message.
+ * Utilise les formulaires réactifs d'Angular pour la validation et la soumission au backend.
  */
 @Component({
   selector: 'app-contact',
@@ -40,17 +30,15 @@ import {ContactFormData, ContactService} from '../../../service/contact.service'
     FooterComponent,
     LucideAngularModule,
     ReactiveFormsModule,
-    NgIf,
     CommonModule,
-    HttpClientModule // **AJOUT IMPORTANT : Nécessaire pour HttpClient dans le service si pas globalement fourni**
   ],
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.scss'
 })
-export class ContactComponent implements OnInit, OnDestroy { // **AJOUT : Implémente OnDestroy**
+export class ContactComponent implements OnInit, OnDestroy {
 
   private fb = inject(FormBuilder);
-  private contactService = inject(ContactService); // **AJOUT : Injection du ContactService**
+  private contactService = inject(ContactService);
 
   contactForm!: FormGroup;
   isLoading = false;
@@ -65,13 +53,22 @@ export class ContactComponent implements OnInit, OnDestroy { // **AJOUT : Implé
   developerName: string = 'Axel MOMPER';
   projectContext: string = 'Projet CDA-JAVA 2024-2025';
 
-  private contactSubscription: Subscription | undefined; // **AJOUT pour la gestion de la souscription**
+  private contactSubscription: Subscription | undefined;
 
+  /**
+   * @method ngOnInit
+   * @description Appelé après l'initialisation du composant. Initialise le formulaire de contact.
+   */
   ngOnInit(): void {
     console.log("ContactComponent: Initialisation.");
     this.initForm();
   }
 
+  /**
+   * @private
+   * @method initForm
+   * @description Initialise la structure du formulaire réactif avec ses contrôles et validateurs.
+   */
   private initForm(): void {
     this.contactForm = this.fb.group({
       name: ['', Validators.required],
@@ -87,6 +84,11 @@ export class ContactComponent implements OnInit, OnDestroy { // **AJOUT : Implé
   get subject() { return this.contactForm.get('subject'); }
   get message() { return this.contactForm.get('message'); }
 
+  /**
+   * @method onSubmit
+   * @description Gère la soumission du formulaire de contact.
+   * Valide le formulaire et envoie les données via le ContactService.
+   */
   onSubmit(): void {
     this.errorMessage = null;
     this.successMessage = null;
@@ -101,12 +103,10 @@ export class ContactComponent implements OnInit, OnDestroy { // **AJOUT : Implé
     const formData: ContactFormData = this.contactForm.value;
     console.log('ContactComponent: Formulaire soumis, envoi des données via service:', formData);
 
-    // **MODIFICATION : Appel au service au lieu de la simulation**
     this.contactSubscription = this.contactService.sendContactMessage(formData)
       .subscribe({
         next: (response) => {
           this.isLoading = false;
-          // La réponse du backend est une chaîne de caractères si ResponseEntity<String>
           const messageFromBackend = typeof response === 'string' ? response : (response as any).message;
           this.successMessage = messageFromBackend || 'Votre message a bien été envoyé. Nous vous répondrons rapidement.';
           this.contactForm.reset();
@@ -126,9 +126,7 @@ export class ContactComponent implements OnInit, OnDestroy { // **AJOUT : Implé
 
   /**
    * @method ngOnDestroy
-   * @description Crochet de cycle de vie Angular. Appelé juste avant que le composant ne soit détruit.
-   * Se désabonne de la souscription au service de contact pour éviter les fuites de mémoire.
-   * @returns {void}
+   * @description Appelé avant la destruction du composant. Désabonne `contactSubscription` pour éviter les fuites de mémoire.
    */
   ngOnDestroy(): void {
     if (this.contactSubscription) {

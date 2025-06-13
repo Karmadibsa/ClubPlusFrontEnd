@@ -1,152 +1,47 @@
 /*------------------------------------*\
   #PAGE: ACCUEIL
-  Styles spécifiques à la page d'accueil.
 \*------------------------------------*/
+
+:host {
+  display: block;
+}
 
 /*------------------------------------*\
   #SECTION: HERO
-  Styles pour la section principale (bandeau d'en-tête).
 \*------------------------------------*/
 .hero-section {
-  // Arrière-plan en dégradé léger et padding généreux.
   background: linear-gradient(135deg, var(--bg-light-gray) 0%, var(--main-white) 100%);
-  padding: var(--spacing-xl) var(--spacing-lg); // Utilisation des variables pour les marges internes.
-  text-align: center; // Centre le contenu textuel.
-
-  // Utilisation de flexbox pour centrer verticalement le contenu.
+  padding: var(--spacing-xl) var(--spacing-lg);
+  text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 400px; // Hauteur minimale pour assurer la visibilité, plus flexible qu'une hauteur fixe.
+  min-height: 400px;
 
   .hero-content {
-    // Conteneur du contenu principal pour gérer les marges.
-    max-width: 800px; // Limite la largeur pour une meilleure lisibilité sur les grands écrans.
-    margin: 0 auto; // Centre le conteneur.
-    padding: var(--spacing-lg); // Marge interne pour aérer le contenu.
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
 
     .hero-title {
-      // Style du titre principal.
-      font-size: 3rem; // Taille de police importante pour l'impact.
-      color: var(--text-dark); // Couleur de texte sombre définie dans les variables.
-      margin-bottom: var(--spacing-md); // Marge inférieure.
-
+      font-size: 3rem;
+      color: var(--text-dark);
+      margin-bottom: var(--spacing-md);
 
       strong {
-        // Mise en évidence d'une partie du titre avec la couleur orange principale.
         color: var(--main-orange);
       }
     }
 
     .hero-description {
-      // Style du paragraphe descriptif.
-      font-size: 1.2rem; // Taille de police lisible.
-      color: var(--text-medium); // Couleur de texte moyenne.
-      line-height: 1.6; // Hauteur de ligne pour une meilleure lisibilité.
-      margin-bottom: var(--spacing-lg); // Marge inférieure.
-    }
-
-    // NOTE: La classe .cta-btn est définie ci-dessous mais n'est pas présente
-    // dans l'extrait HTML fourni. Si un bouton d'appel à l'action est ajouté,
-    // il devrait utiliser une classe cohérente (ex: .btn .btn-primary de la navbar).
-    .cta-btn {
-      // Style pour un bouton d'appel à l'action (potentiellement manquant en HTML).
-      background-color: var(--main-orange);
-      color: var(--main-white);
-      border: none;
-      padding: var(--spacing-md) var(--spacing-xl);
-      font-size: 1.1rem;
-      border-radius: var(--border-radius);
-      cursor: pointer;
-      transition: var(--transition-standard); // Transition standard pour les effets.
-
-      &:hover {
-        // Effet au survol : Assombrissement léger pour feedback visuel.
-        // Utilisation d'un filtre pour éviter de définir une nouvelle variable de couleur.
-        filter: brightness(90%);
-        // Alternative si une variable de hover existe: background-color: var(--main-orange-dark);
-      }
-    }
-  }
-}
-
-/*------------------------------------*\
-  #SECTION: FEATURES (Caractéristiques)
-  Styles pour la section présentant les chiffres clés ou caractéristiques.
-\*------------------------------------*/
-.features-section {
-  // Mise en page flexible pour aligner les éléments horizontalement sur desktop.
-  display: flex;
-  justify-content: center;
-  padding: var(--spacing-lg) var(--spacing-md); // Marges internes verticales et horizontales réduites.
-  background-color: var(--bg-light-gray); // Couleur de fond légère.
-  text-align: center; // Centre le texte dans chaque item.
-
-  .feature-item {
-    // Style de chaque bloc de caractéristique.
-    padding: var(--spacing-md);
-    border-radius: var(--border-radius); // Coins arrondis.
-    transition: var(--transition-standard); // Transition pour l'effet au survol.
-    flex: 1; // Permet aux items de prendre une part égale de l'espace disponible.
-    max-width: 300px; // Limite la largeur maximale de chaque item.
-    margin: 0 var(--spacing-sm); // Légère marge horizontale entre les items.
-
-    &:hover {
-      // Effet d'ombre subtil au survol pour indiquer l'interactivité.
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      transform: translateY(-4px); // Léger déplacement vers le haut.
-    }
-
-    h3 {
-      // Style des chiffres/titres des caractéristiques.
-      font-size: 2rem; // Taille de police large pour les chiffres.
-      color: var(--main-blue); // Utilisation de la couleur bleue principale.
-      margin-bottom: var(--spacing-sm); // Marge inférieure.
-    }
-
-    p {
-      // Style de la description de la caractéristique.
-      font-size: 1rem;
-      color: var(--text-medium); // Couleur de texte moyenne.
-    }
-  }
-}
-
-/*------------------------------------*\
-  #SECTION: APP DOWNLOAD (Téléchargement Application)
-  Styles pour la section incitant au téléchargement de l'application.
-\*------------------------------------*/
-.app-download {
-  // Arrière-plan utilisant la couleur bleue principale et texte blanc.
-  background-color: var(--main-blue);
-  color: var(--main-white);
-  padding: var(--spacing-xl) var(--spacing-lg); // Marges internes généreuses.
-  text-align: center; // Centre le contenu.
-
-  .download-content {
-    // Conteneur pour limiter la largeur et centrer.
-    max-width: 700px; // Largeur maximale pour la lisibilité.
-    margin: 0 auto; // Centrage horizontal.
-    padding: var(--spacing-lg); // Marge interne.
-
-    h2 {
-      // Style du titre de la section.
-      font-size: 2.5rem;
-      margin-bottom: var(--spacing-md);
-    }
-
-    // NOTE: Paragraphe stylisé ci-dessous mais non présent dans l'extrait HTML fourni.
-    p {
-      // Style du paragraphe descriptif (potentiellement manquant en HTML).
       font-size: 1.2rem;
+      color: var(--text-medium);
       line-height: 1.6;
       margin-bottom: var(--spacing-lg);
     }
 
-    .download-btn {
-      // Style du bouton de téléchargement.
-      // Utilisation d'une classe spécifique, pourrait être standardisée avec .btn .btn-secondary par exemple.
-      background-color: var(--secondary-blue); // Utilisation de la couleur bleue secondaire.
+    .cta-btn {
+      background-color: var(--main-orange);
       color: var(--main-white);
       border: none;
       padding: var(--spacing-md) var(--spacing-xl);
@@ -156,37 +51,109 @@
       transition: var(--transition-standard);
 
       &:hover {
-        // Effet au survol : changement vers l'orange principal (choix de design à confirmer pour la cohérence UX).
-        background-color: var(--main-orange);
-        transform: scale(1.05); // Léger agrandissement pour feedback.
+        filter: brightness(90%);
       }
     }
   }
 }
 
 /*------------------------------------*\
-  #MEDIA QUERIES: AJUSTEMENTS RESPONSIVES (Mobile First Approach)
-  Styles appliqués aux écrans plus petits (ex: mobiles, tablettes).
+  #SECTION: FEATURES
+\*------------------------------------*/
+.features-section {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-lg) var(--spacing-md);
+  background-color: var(--bg-light-gray);
+  text-align: center;
+
+  .feature-item {
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    transition: var(--transition-standard);
+    flex: 1;
+    max-width: 300px;
+    margin: 0 var(--spacing-sm);
+
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-4px);
+    }
+
+    h3 {
+      font-size: 2rem;
+      color: var(--main-blue);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    p {
+      font-size: 1rem;
+      color: var(--text-medium);
+    }
+  }
+}
+
+/*------------------------------------*\
+  #SECTION: APP DOWNLOAD
+\*------------------------------------*/
+.app-download {
+  background-color: var(--main-blue);
+  color: var(--main-white);
+  padding: var(--spacing-xl) var(--spacing-lg);
+  text-align: center;
+
+  .download-content {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+
+    h2 {
+      font-size: 2.5rem;
+      margin-bottom: var(--spacing-md);
+    }
+
+    p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .download-btn {
+      background-color: var(--secondary-blue);
+      color: var(--main-white);
+      border: none;
+      padding: var(--spacing-md) var(--spacing-xl);
+      font-size: 1.1rem;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: var(--transition-standard);
+
+      &:hover {
+        background-color: var(--main-orange);
+        transform: scale(1.05);
+      }
+    }
+  }
+}
+
+/*------------------------------------*\
+  #MEDIA QUERIES: RESPONSIVE
 \*------------------------------------*/
 @media (max-width: 768px) {
 
   .hero-section {
-    // Réduction du padding et de la hauteur minimale sur mobile.
     padding: var(--spacing-lg) var(--spacing-md);
     min-height: 300px;
 
     .hero-content {
       .hero-title {
-        // Réduction de la taille de police du titre principal.
         font-size: 2.2rem;
       }
 
       .hero-description {
-        // Réduction de la taille de police de la description.
         font-size: 1rem;
       }
 
-      // Ajustement potentiel du padding du bouton si présent.
       .cta-btn {
         padding: var(--spacing-sm) var(--spacing-lg);
         font-size: 1rem;
@@ -195,46 +162,37 @@
   }
 
   .features-section {
-    // Passage en disposition verticale (colonne).
     flex-direction: column;
-    align-items: center; // Centre les items horizontalement dans la colonne.
-    gap: var(--spacing-lg); // Ajoute de l'espace vertical entre les items empilés.
-    padding: var(--spacing-lg) var(--spacing-sm); // Ajuste le padding horizontal.
+    align-items: center;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg) var(--spacing-sm);
 
     .feature-item {
-      // Assure que les items prennent la largeur disponible et supprime la marge latérale.
       max-width: 90%;
       margin: 0;
 
       h3 {
-        // Légère réduction de la taille des chiffres si nécessaire.
         font-size: 1.8rem;
       }
     }
   }
 
   .app-download {
-    // Réduction du padding sur mobile.
     padding: var(--spacing-lg) var(--spacing-md);
 
     .download-content {
       h2 {
-        // Réduction de la taille de police du titre.
         font-size: 2rem;
       }
 
-      // Ajustement potentiel de la description si présente.
       p {
         font-size: 1rem;
       }
 
       .download-btn {
-        // Ajustement du padding et de la taille de police du bouton.
         padding: var(--spacing-sm) var(--spacing-lg);
         font-size: 1rem;
       }
     }
   }
 }
-
-// Fin des Media Queries
